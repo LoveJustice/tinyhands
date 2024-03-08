@@ -1,3 +1,4 @@
+import json
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
@@ -15,8 +16,12 @@ class CommitteeMemberTests(RestApiTestCase):
     fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.committee_member = CommitteeMemberFactory.create()
-        self.committee_member.save()
+        border_station = self.committee_member.border_station
+        self.committee_member.member_projects.add(border_station)
         self.other_committee_members = CommitteeMemberFactory.create_batch(4)
+        for member in self.other_committee_members:
+            member.member_projects.add(border_station)
+        
 
     # Authentication Methods
 
@@ -29,7 +34,7 @@ class CommitteeMemberTests(RestApiTestCase):
     # Viewset Methods
 
     def test_return_all_CommitteeMembers(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'SUBCOMMITTEE', 'action':'VIEW_BASIC', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('CommitteeMember')
 
@@ -39,27 +44,30 @@ class CommitteeMemberTests(RestApiTestCase):
         self.assertEqual(response.data['count'], 5)
 
     def test_create_CommitteeMember(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'ADD', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'SUBCOMMITTEE', 'action':'VIEW_BASIC', 'country': None, 'station': None},{'group':'SUBCOMMITTEE', 'action':'ADD', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('CommitteeMember')
+        email = "TEST@TEST.COM"
 
         data = {
-            "email": "TEST@TEST.COM",
-            "first_name": "asdf",
-            "last_name": "asdf",
-            "phone": "204-123-123",
-            "position": "asdf",
-            "receives_money_distribution_form": True,
-            "border_station": self.committee_member.border_station_id,
+            "member":json.dumps({
+                "email": email,
+                "first_name": "asdf",
+                "last_name": "asdf",
+                "phone": "204-123-123",
+                "position": "asdf",
+                "receives_money_distribution_form": True,
+                "border_station": self.committee_member.border_station_id,
+            })
         }
 
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(data['email'], response.data['email'])
+        self.assertEqual(email, response.data['email'])
 
     def test_get_CommitteeMember(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'SUBCOMMITTEE', 'action':'VIEW_BASIC', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('CommitteeMemberDetail', args=[self.committee_member.id])
         self.committee_member.save()
@@ -69,40 +77,43 @@ class CommitteeMemberTests(RestApiTestCase):
         self.assertEqual(self.committee_member.email, response.data['email'])
 
     def test_update_CommitteeMember(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'SUBCOMMITTEE', 'action':'VIEW_BASIC', 'country': None, 'station': None},{'group':'SUBCOMMITTEE', 'action':'EDIT_BASIC', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('CommitteeMemberDetail', args=[self.committee_member.id])
+        email = "TEST@TEST.COM"
 
         data = {
-            "email": "TEST@TEST.COM",
-            "first_name": "asdf",
-            "last_name": "asdf",
-            "phone": "204-123-123",
-            "position": "asdf",
-            "receives_money_distribution_form": True,
-            "border_station": self.committee_member.border_station_id,
+            "member":json.dumps({
+                "email": email,
+                "first_name": "asdf",
+                "last_name": "asdf",
+                "phone": "204-123-123",
+                "position": "asdf",
+                "receives_money_distribution_form": True,
+                "border_station": self.committee_member.border_station_id,
+            })
         }
 
         response = self.client.put(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(data['email'], response.data['email'])
+        self.assertEqual(email, response.data['email'])
 
     def test_delete_CommitteeMember(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'SUBCOMMITTEE', 'action':'VIEW_BASIC', 'country': None, 'station': None},{'group':'SUBCOMMITTEE', 'action':'DELETE', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('CommitteeMemberDetail', args=[self.committee_member.id])
 
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_get_CommitteeMember_by_border_station(self):
         for mem in self.other_committee_members:
             mem.border_station = self.committee_member.border_station
             mem.save()
 
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'SUBCOMMITTEE', 'action':'VIEW_BASIC', 'country': None, 'station': None},])
         self.login(usr)
-        url = reverse('CommitteeMember') + "?border_station=" + str(self.committee_member.border_station_id)
+        url = reverse('CommitteeMember') + "?project_id=" + str(self.committee_member.border_station_id)
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

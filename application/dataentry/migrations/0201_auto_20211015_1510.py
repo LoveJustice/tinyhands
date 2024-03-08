@@ -12,5 +12,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('NOTIFICATIONS','COMMITTEE','STATION',-1)"),
+        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('NOTIFICATIONS','SUBCOMMITTEE','STATION',-1)"),
     ]

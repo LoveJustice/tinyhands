@@ -351,26 +351,6 @@ class PersonForm(models.Model):
                         form_entry.content_object = interceptee.interception_record
                         forms.append(form_entry)
             
-            legal_forms = Form.objects.filter(form_type__name="LEGAL_CASE")
-            for legal_form in legal_forms:
-                form_categories = FormCategory.objects.filter(form=legal_form, name='Suspects')
-                if len(form_categories) == 1:
-                    suspect_class = form_categories[0].storage.get_form_storage_class()
-                    suspects = suspect_class.objects.filter(person=person, legal_case__station__in=legal_form.stations.all())
-                    for suspect in suspects:
-                        form_entry = PersonForm()
-                        form_entry.content_object = suspect.legal_case
-                        forms.append(form_entry)
-                
-                form_categories = FormCategory.objects.filter(form=legal_form, name='Victims')
-                if len(form_categories) == 1:
-                    victim_class = form_categories[0].storage.get_form_storage_class()
-                    victims = victim_class.objects.filter(person=person, legal_case__station__in=legal_form.stations.all())
-                    for victim in victims:
-                        form_entry = PersonForm()
-                        form_entry.content_object = victim.legal_case
-                        forms.append(form_entry)
-            
             if len(forms) > 0:
                 for form in forms:
                     form.person = person

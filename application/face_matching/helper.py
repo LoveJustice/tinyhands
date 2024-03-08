@@ -1,12 +1,12 @@
-# import pandas as pd
-# import numpy as np
+import pandas as pd
+import numpy as np
 from io import BytesIO
 from PIL import Image
-# # import face_recognition
-# from urllib.parse import quote
-import toml
-# import requests
+import face_recognition
+from urllib.parse import quote
+import requests
 import base64
+import os
 
 from django.core.cache import cache
 
@@ -14,14 +14,13 @@ from .models import MatchingPerson, FaceEncoding
 from . import helper_analysis
 
 
-# QS_TO_DF_MAPPING = {"person": "person_id", "person__person__master_person": "master_person_id", "person__interception_record__station__operating_country__name": "country", "person__person__full_name": "full_name", "person__person__role": "role", "person__person__photo": "photo",
-#                     "person__person__gender": "gender", "person__person__age": "age", "person__interception_record__irf_number": "irf_number", "person__interception_record__date_time_entered_into_system": "date_time_entered_into_system", "face_encoding": "face_encoding", "outcome": "outcome"}
+QS_TO_DF_MAPPING = {"person": "person_id", "person__person__master_person": "master_person_id", "person__interception_record__station__operating_country__name": "country", "person__person__full_name": "full_name", "person__person__role": "role", "person__person__photo": "photo",
+                    "person__person__gender": "gender", "person__person__age": "age", "person__interception_record__irf_number": "irf_number", "person__interception_record__date_time_entered_into_system": "date_time_entered_into_system", "face_encoding": "face_encoding", "outcome": "outcome"}
 
-
-with open('secrets.toml') as f:
-    secrets = toml.load(f)
-
-curl = secrets["face_matcher"]["curl"]
+curl = {}
+curl['url'] = os.environ["FACE_MATCHER_URL"]
+curl['email'] = os.environ["FACE_MATCHER_EMAIL"]
+curl['password'] = os.environ["FACE_MATCHER_PASSWORD"]
 
 
 # Extract parameters from submitted form
@@ -33,9 +32,9 @@ def handle_select_params(data):
     return params
 
 
-# def queryset_to_dataframe(qs):
-#     rows = list(qs.values_list(*(list(QS_TO_DF_MAPPING.keys()))))
-#     return pd.DataFrame(rows, columns=list(QS_TO_DF_MAPPING.values()))
+def queryset_to_dataframe(qs):
+    rows = list(qs.values_list(*(list(QS_TO_DF_MAPPING.keys()))))
+    return pd.DataFrame(rows, columns=list(QS_TO_DF_MAPPING.values()))
 
 
 # Get dataframe of matching records based on params
@@ -65,15 +64,15 @@ def get_matching_records(params):
     return df
 
 
-# def to_data_uri(image_pil):
-#     data = BytesIO()
-#     image_pil.save(data, "JPEG")  # pick your format
-#     data64 = base64.b64encode(data.getvalue())
-#     return u'data:img/jpeg;base64,'+data64.decode('utf-8')
+def to_data_uri(image_pil):
+    data = BytesIO()
+    image_pil.save(data, "JPEG")  # pick your format
+    data64 = base64.b64encode(data.getvalue())
+    return u'data:img/jpeg;base64,'+data64.decode('utf-8')
 
-# def uri_data_image(image_uri):
-#     image = base64.b64decode(image_uri)
-#     return image
+def uri_data_image(image_uri):
+    image = base64.b64decode(image_uri)
+    return image
 
 
 def image_summary(image):
@@ -114,32 +113,32 @@ def image_summary(image):
     return narrative
 
 
-# def get_face(image_np):
-#     try:
-#         # Get face landmarks and face region
-#         face_landmarks, face_region = helper_analysis.face_landmarks_regions(
-#             image_np)
+def get_face(image_np):
+    try:
+        # Get face landmarks and face region
+        face_landmarks, face_region = helper_analysis.face_landmarks_regions(
+            image_np)
 
-#         # Ensure there are face landmarks detected
-#         if not face_landmarks:
-#             return
+        # Ensure there are face landmarks detected
+        if not face_landmarks:
+            return
 
-#         # Extract bounding box of the detected face directly from face_landmarks_regions
-#         # face_location = face_recognition.face_locations(image_np, model="hog")[0]
-#         # top, right, bottom, left = face_location
+        # Extract bounding box of the detected face directly from face_landmarks_regions
+        # face_location = face_recognition.face_locations(image_np, model="hog")[0]
+        # top, right, bottom, left = face_location
 
-#         # Draw a red rectangle around the detected face on the original image
-#         # draw = ImageDraw.Draw(image_pil)
+        # Draw a red rectangle around the detected face on the original image
+        # draw = ImageDraw.Draw(image_pil)
 
-#         # draw.rectangle(((left, top), (right, bottom)), outline="red", width=3)
+        # draw.rectangle(((left, top), (right, bottom)), outline="red", width=3)
 
-#     except Exception as e:
-#         return
+    except Exception as e:
+        return
 
-#     # Convert face region numpy array to PIL Image
-#     face_image_pil = Image.fromarray(face_region)
+    # Convert face region numpy array to PIL Image
+    face_image_pil = Image.fromarray(face_region)
 
-#     return face_image_pil
+    return face_image_pil
 
 
 def get_image(photo_url, curl, timeout_duration=10):
@@ -169,57 +168,57 @@ def get_image(photo_url, curl, timeout_duration=10):
         return None, None
 
 
-# def get_photo_and_encoding(selected_person):
-#     """
-#     Retrieves the photo URL and face encoding for a given person.
+def get_photo_and_encoding(selected_person):
+    """
+    Retrieves the photo URL and face encoding for a given person.
 
-#     Args:
-#         selected_person (str/int): The ID of the person for whom to retrieve the photo and encoding.
+    Args:
+        selected_person (str/int): The ID of the person for whom to retrieve the photo and encoding.
 
-#     Returns:
-#         tuple: A tuple containing the photo_url and the face encoding.
-#               Returns (None, None) if the person is not found.
-#     """
-#     try:
-#         matching_records = cache.get('matching_records')
-#         filtered_photos = matching_records[
-#             matching_records.person_id == int(selected_person)
-#         ].photo
-#         filtered_encoding = matching_records[
-#             matching_records.person_id == int(selected_person)
-#         ].face_encoding
+    Returns:
+        tuple: A tuple containing the photo_url and the face encoding.
+              Returns (None, None) if the person is not found.
+    """
+    try:
+        matching_records = cache.get('matching_records')
+        filtered_photos = matching_records[
+            matching_records.person_id == int(selected_person)
+        ].photo
+        filtered_encoding = matching_records[
+            matching_records.person_id == int(selected_person)
+        ].face_encoding
 
-#         # Check if the person was found and data is available
-#         if not filtered_photos.empty and not filtered_encoding.empty:
-#             given_encoding = np.array(filtered_encoding.iloc[0])
-#             raw_url = filtered_photos.iloc[0]
+        # Check if the person was found and data is available
+        if not filtered_photos.empty and not filtered_encoding.empty:
+            given_encoding = np.array(filtered_encoding.iloc[0])
+            raw_url = filtered_photos.iloc[0]
 
-#             return raw_url, given_encoding
-#         else:
-#             print(f"No data found for person ID: {selected_person}")
-#             return None, None
+            return raw_url, given_encoding
+        else:
+            print(f"No data found for person ID: {selected_person}")
+            return None, None
 
-#     except Exception as e:
-#         print(
-#             f"An error occurred while retrieving data for person ID {selected_person}: {e}"
-#         )
-#         return None, None
+    except Exception as e:
+        print(
+            f"An error occurred while retrieving data for person ID {selected_person}: {e}"
+        )
+        return None, None
 
 
-# def retrieve_photo_and_encoding(selected_person):
-#     """Retrieve photo URL and encoding for a given person."""
-#     selected_photo_url, given_encoding = get_photo_and_encoding(
-#         selected_person)
-#     if selected_photo_url and given_encoding is not None and given_encoding.size > 0:
-#         safe_url = quote(selected_photo_url, safe=":/")
-#         selected_person_image, selected_person_np = get_image(
-#             safe_url, curl, timeout_duration=20
-#         )
-#         selected_person_pil_image = Image.fromarray(
-#             selected_person_image.astype("uint8")
-#         )
-#         return given_encoding, selected_person_pil_image, selected_person_np
-#     return None, None, None
+def retrieve_photo_and_encoding(selected_person):
+    """Retrieve photo URL and encoding for a given person."""
+    selected_photo_url, given_encoding = get_photo_and_encoding(
+        selected_person)
+    if selected_photo_url and given_encoding is not None and given_encoding.size > 0:
+        safe_url = quote(selected_photo_url, safe=":/")
+        selected_person_image, selected_person_np = get_image(
+            safe_url, curl, timeout_duration=20
+        )
+        selected_person_pil_image = Image.fromarray(
+            selected_person_image.astype("uint8")
+        )
+        return given_encoding, selected_person_pil_image, selected_person_np
+    return None, None, None
 
 
 def get_closest_face_matches(encoding, limit):
@@ -299,7 +298,6 @@ def get_closest_face_matches(encoding, limit):
 #     )
 
 
-# TODO: handle summary
 def get_display_data(image_pil, image_np):
     """Display the image and its face rectangle in the given column.
     :param summary:
@@ -378,111 +376,111 @@ def get_matches_display_data(given_encoding, limit):
     return matches
 
 
-# def display_selected_and_closest_match_images(
-#     given_encoding, selected_person, selected_person_image
-# ):
-#     """Display the selected image and its closest match."""
-#     print("--\t-- display_selected_and_closest_match_image()")
+def display_selected_and_closest_match_images(
+    given_encoding, selected_person, selected_person_image
+):
+    """Display the selected image and its closest match."""
+    print("--\t-- display_selected_and_closest_match_image()")
 
-#     # handle_voting(user_id, selected_person, closest_match)
-
-
-# def handle_params_form_submission(request):
-#     context = {}
-#     request.session['submitted-params'] = request.GET
-
-#     # Show previous selections
-#     context['params_form'] = helper_forms.params_form(request)
-
-#     # TODO: if form.is_valid():
-#     params = handle_select_params(request.GET)
-
-#     # Filter for records based on given parameters
-#     matching_records = get_matching_records(params)
-#     cache.set('matching_records', matching_records)
-
-#     # Count matching records
-#     num_matching_records = len(matching_records)
-#     context['num_matching_records'] = num_matching_records
-
-#     # Get list of IRFs from matching records
-#     irfs = list(matching_records['irf_number'].sort_values().drop_duplicates())
-#     request.session['irfs'] = irfs
-
-#     # Display empty form
-#     context['irf_form'] = helper_forms.irf_form(request, initial=True)
-#     return request, context
+    # handle_voting(user_id, selected_person, closest_match)
 
 
-# def handle_irf_form_submission(request):
-#     context = {}
-#     request.session['submitted-irf'] = request.GET
+def handle_params_form_submission(request):
+    context = {}
+    request.session['submitted-params'] = request.GET
 
-#     # Show previous selections
-#     context['params_form'] = helper_forms.params_form(request)
-#     context['irf_form'] = helper_forms.irf_form(request)
+    # Show previous selections
+    context['params_form'] = helper_forms.params_form(request)
 
-#     # Display empty form
-#     context['person_form'] = helper_forms.person_form(request, initial=True)
-#     return request, context
+    # TODO: if form.is_valid():
+    params = handle_select_params(request.GET)
 
+    # Filter for records based on given parameters
+    matching_records = get_matching_records(params)
+    cache.set('matching_records', matching_records)
 
-# def handle_person_form_submission(request):
-#     # TODO: auto submit if there is only one person_id
-#     context = {}
+    # Count matching records
+    num_matching_records = len(matching_records)
+    context['num_matching_records'] = num_matching_records
 
-#     # Show previous selections
-#     context['params_form'] = helper_forms.params_form(request)
-#     context['irf_form'] = helper_forms.irf_form(request)
-#     request.session['submitted-person'] = request.GET
-#     context['person_form'] = helper_forms.person_form(request)
+    # Get list of IRFs from matching records
+    irfs = list(matching_records['irf_number'].sort_values().drop_duplicates())
+    request.session['irfs'] = irfs
 
-#     selected_person = request.GET.get('person')
-#     context['selected_person'] = selected_person
-
-#     # Get encoding and other data for selected person
-#     (image_uri, summary, face_image_uri, image_summary_text,
-#      given_encoding) = get_selected_person_display_data(selected_person)
-
-#     context['selected_image_uri'] = image_uri
-#     context['selected_summary'] = summary
-#     context['selected_face_image_uri'] = face_image_uri
-#     context['selected_image_summary_text'] = image_summary_text
-
-#     # if given_encoding is not None and given_encoding.size > 0 and selected_person_image:
-#     # context['facematcher_form'] = helper.facematcher_form()
-#     # TODO: Remove me
-#     limit = 5
-
-#     # Get encoding and other data for matches to selected person
-#     matches = get_matches_display_data(given_encoding, limit)
-#     context['matches'] = matches
-
-#     # helper.display_selected_and_closest_match_images(
-#     #     given_encoding, selected_person, selected_person_image
-#     # )
-
-#     # TODO: Figure out how to render images in template
-#     return request, context
+    # Display empty form
+    context['irf_form'] = helper_forms.irf_form(request, initial=True)
+    return request, context
 
 
-# # # Run function manually to refresh list of roles to filter by
-# # # Roles are queried from DataentryPerson roles, parsed by semicolon, normalized by case.
-# # # Remove roles iwth more than one space
-# # # Search for "suspect" or "Suspect" should match roles of "SUSPECT", "suspect", "Broker; suspect", etc
-# # # NOTE: Potential matches that have roles spelled incorrectly or roles that are only used once will be omitted
-# # #TODO: Call somewhere
-# # def generate_roles():
-# #     # list of roles
-# #     initial_roles = DataentryPerson.objects.values_list('role', flat=True).distinct()
-# #     initial_roles = [r.lower() for r in initial_roles if r]
-# #     roles = []
+def handle_irf_form_submission(request):
+    context = {}
+    request.session['submitted-irf'] = request.GET
 
-# #     # Parse roles by semicolon
-# #     for item in initial_roles:
-# #         split_item = item.split(';')
-# #         for role in split_item:
-# #             if role not in roles and role.count(' ') < 2:
-# #                 roles.append(role)
+    # Show previous selections
+    context['params_form'] = helper_forms.params_form(request)
+    context['irf_form'] = helper_forms.irf_form(request)
 
-# #     return roles.sort()
+    # Display empty form
+    context['person_form'] = helper_forms.person_form(request, initial=True)
+    return request, context
+
+
+def handle_person_form_submission(request):
+    # TODO: auto submit if there is only one person_id
+    context = {}
+
+    # Show previous selections
+    context['params_form'] = helper_forms.params_form(request)
+    context['irf_form'] = helper_forms.irf_form(request)
+    request.session['submitted-person'] = request.GET
+    context['person_form'] = helper_forms.person_form(request)
+
+    selected_person = request.GET.get('person')
+    context['selected_person'] = selected_person
+
+    # Get encoding and other data for selected person
+    (image_uri, summary, face_image_uri, image_summary_text,
+     given_encoding) = get_selected_person_display_data(selected_person)
+
+    context['selected_image_uri'] = image_uri
+    context['selected_summary'] = summary
+    context['selected_face_image_uri'] = face_image_uri
+    context['selected_image_summary_text'] = image_summary_text
+
+    # if given_encoding is not None and given_encoding.size > 0 and selected_person_image:
+    # context['facematcher_form'] = helper.facematcher_form()
+    # TODO: Remove me
+    limit = 5
+
+    # Get encoding and other data for matches to selected person
+    matches = get_matches_display_data(given_encoding, limit)
+    context['matches'] = matches
+
+    # helper.display_selected_and_closest_match_images(
+    #     given_encoding, selected_person, selected_person_image
+    # )
+
+    # TODO: Figure out how to render images in template
+    return request, context
+
+
+# # Run function manually to refresh list of roles to filter by
+# # Roles are queried from DataentryPerson roles, parsed by semicolon, normalized by case.
+# # Remove roles iwth more than one space
+# # Search for "suspect" or "Suspect" should match roles of "SUSPECT", "suspect", "Broker; suspect", etc
+# # NOTE: Potential matches that have roles spelled incorrectly or roles that are only used once will be omitted
+# #TODO: Call somewhere
+# def generate_roles():
+#     # list of roles
+#     initial_roles = DataentryPerson.objects.values_list('role', flat=True).distinct()
+#     initial_roles = [r.lower() for r in initial_roles if r]
+#     roles = []
+
+#     # Parse roles by semicolon
+#     for item in initial_roles:
+#         split_item = item.split(';')
+#         for role in split_item:
+#             if role not in roles and role.count(' ') < 2:
+#                 roles.append(role)
+
+#     return roles.sort()

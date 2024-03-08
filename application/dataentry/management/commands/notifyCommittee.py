@@ -16,7 +16,7 @@ class Command(BaseCommand):
             stations = BorderStation.objects.filter(operating_country=country, features__contains='hasSubcommittee').order_by("station_name")
             station_list = ''
             for station in stations:
-                committee_count = CommitteeMember.objects.filter(border_station=station).count();
+                committee_count = CommitteeMember.objects.filter(member_projects=station).count();
                 if committee_count < 3:
                     if len(station_list) > 0:
                         station_list += ', '
