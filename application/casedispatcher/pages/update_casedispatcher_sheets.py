@@ -48,7 +48,7 @@ drive_service = build("drive", "v3", credentials=credentials)
 links = {
     "Uganda": "https://docs.google.com/spreadsheets/d/14hqbt082EHYklnFUSksNDXmSNllYoL66okvXweU1FRQ/edit?usp=drive_link",
     "Nepal": "https://docs.google.com/spreadsheets/d/1OA98ZiDuSTa3KaQwiRCMEg8ZRXWHcAycN9JgSeqpGb0/edit?usp=drive_link",
-    "Malawi": "https://docs.google.com/spreadsheets/d/1ytp8dJzEO1jMXRt_J7LEkW3K4RJgiEboLKMH9hJFfTA/edit?usp=drive_link",
+    "Malawi": "https://docs.google.com/spreadsheets/d/1TRe8q9Dx0ruSYCuZGqQXraTDPNfgUZiX0h6_VXGJIOo/edit?usp=drive_link",
     "Namibia": "https://docs.google.com/spreadsheets/d/1x-TycO5lQtuTysdqYGOPVweZ-bJ9OBQ7jAnauhiDbpY/edit?usp=drive_link",
 }
 
@@ -256,6 +256,7 @@ def get_priority_weights():
 
 
 def main():
+    counter = 20
     # Initialize session state variables if they don't exist
     if "country" not in st.session_state:
         st.session_state["country"] = None
@@ -293,6 +294,8 @@ def main():
             return
         st.write(f"Selected {country} has operating_country_id: {operating_country_id}, continuing...")
         case_dispatcher_soc_df = st.session_state['case_dispatcher_soc_df'][st.session_state['case_dispatcher_soc_df'].operating_country_id==operating_country_id]
+        counter += 1
+        case_dispatcher_soc_df.to_csv(f'data_trace/case_dispatcher_soc_{counter}_{country}_df.csv', index=False)
         st.session_state["country"] = country
         st.write("You selected:", country)
         st.session_state["spreadsheet_name"] = f"Case Dispatcher 6.0 - {country}"
@@ -319,11 +322,14 @@ def main():
 
             db_vics = load_data(drive_service, 'new_victims.pkl')
             db_vics= db_vics[db_vics['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
+            counter += 1
+            db_vics.to_csv(f'data/db_vics_{counter}_{country}.csv', index=False)
             db_sus = load_data(drive_service, 'new_suspects.pkl')
             db_sus = db_sus[db_sus['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
+            db_sus.to_csv(f'data/db_sus_{counter}_{country}.csv', index=False)
             irf_case_notes = load_data(drive_service, 'irf_case_notes.pkl')
             irf_case_notes = irf_case_notes[irf_case_notes['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
-
+            irf_case_notes.to_csv(f'data_trace/irf_case_notes_{counter}_{country}.csv', index=False)
 
             case_dispatcher_model = load_data(drive_service, 'case_dispatcher_model.pkl')
             case_dispatcher_model_cols = load_data(drive_service, 'case_dispatcher_model_cols.pkl')
@@ -338,7 +344,6 @@ def main():
             victims_entity = EntityGroup(
                 "victim_id", new_victims, "victims", "closed_victims", dfs
             )
-
             victims_entity.new = data_prep.set_vic_id(victims_entity.new)
 
             st.write(f"Create the suspects entity from db_sus")
@@ -348,7 +353,6 @@ def main():
                 "suspect_id", new_suspects, "suspects", "closed_suspects", dfs
             )
             suspects_entity.new = data_prep.set_suspect_id(suspects_entity.new, db_sus)
-
             EntityGroup.set_case_id()
 
             st.write(
@@ -359,8 +363,14 @@ def main():
             police = EntityGroup(
                 "suspect_id", new_police, "police", "closed_police", dfs
             )
+            counter += 1
+            police.new.to_csv(f'data_trace/police_new_{counter}_{country}.csv', index=False)
 
             EntityGroup.combine_sheets()
+            suspects_entity.active = suspects_entity.active[~(suspects_entity.active["case_id"] == '')]
+            counter += 1
+            suspects_entity.active.to_csv(f'data_trace/suspects_entity_1_{counter}_{country}.csv', index=False)
+
             st.write(f"Add irf_case_notes")
             EntityGroup.add_irf_notes(irf_case_notes)
             st.write(f"Move closed cases")
@@ -371,11 +381,19 @@ def main():
             EntityGroup.move_other_closed(suspects_entity, police, victims_entity)
             st.write(f"Get victims willing to testify")
             vics_willing = data_prep.get_vics_willing_to_testify(victims_entity.active)
+            counter += 1
+            vics_willing.to_csv(f'data_trace/vics_willing_{counter}_{country}.csv', index=False)
             st.write(f"Add victim names")
             police.active = data_prep.add_vic_names(police.active, vics_willing)
+            counter += 1
+            police.active.to_csv(f'data_trace/police_active_{counter}_{country}.csv', index=False)
+
             suspects_entity.active = data_prep.add_vic_names(
                 suspects_entity.active, vics_willing
             )
+            suspects_entity.active = suspects_entity.active.drop_duplicates()
+            counter += 1
+            suspects_entity.active.to_csv(f'data_trace/suspects_entity_2_{counter}_{country}.csv', index=False)
             st.write(f"Get located suspects")
             sus_located = data_prep.get_sus_located(suspects_entity.active)
             victims_entity.active = data_prep.add_sus_located(
@@ -431,6 +449,12 @@ def main():
                 "suspect_id",
             )
             # -------------------------------------------------------------------------------------
+            counter += 1
+            suspects_entity.active.to_csv(f'data_trace/suspects_entity_{counter}_{country}.csv', index=False)
+            counter += 1
+            victims_entity.active.to_csv(f'data_trace/victims_entity_{counter}_{country}.csv', index=False)
+            counter += 1
+            police.active.to_csv(f'data_trace/police_entity_{counter}_{country}.csv', index=False)
             st.write(f"Derive active cases")
             active_cases = data_prep.update_active_cases(
                 suspects_entity.active, police.active
@@ -438,23 +462,35 @@ def main():
             EntityGroup.add_case_name_formula()
             # st.dataframe(soc_df[["irf_number", "days"]])
             st.write("Update Case Dispatcher Google Sheet")
-            # active_cases["priority"] = (
-            #     active_cases["priority"] - active_cases["priority"].min()
-            # ) / (active_cases["priority"].max() - active_cases["priority"].min())
+            active_cases["priority"] = (
+                active_cases["priority"] - active_cases["priority"].min()
+            ) / (active_cases["priority"].max() - active_cases["priority"].min())
+            counter += 1
+            active_cases.to_csv(f'data_trace/active_cases_{counter}_{country}.csv', index=False)
+
             active_cases = active_cases.merge(
                 case_dispatcher_soc_df[["irf_number", "days"]].drop_duplicates(),
                 left_on="case_id",
                 right_on="irf_number",
                 how="left",
             ).drop(columns=["irf_number"])
+            numeric_days = pd.to_numeric(active_cases['days'], errors='coerce')
+
+            # Filter out rows where 'days' is greater than 365 and is not NaN (thus a number)
+            # Also, implicitly keeps rows where 'days' is NaN or None, since comparison with NaN is false
+            filtered_active_cases = active_cases[(numeric_days <= 365) | numeric_days.isna()]
+            filtered_active_cases = filtered_active_cases[~(filtered_active_cases["case_id"]=='')]
+            counter += 1
+            filtered_active_cases.to_csv(f'data_trace/filtered_active_cases_{counter}_{country}.csv', index=False)
+            filtered_active_cases = filtered_active_cases.drop_duplicates()
             EntityGroup.update_gsheets(
-                credentials, st.session_state["spreadsheet_name"], active_cases
+                credentials, st.session_state["spreadsheet_name"], filtered_active_cases
             )
             # st.dataframe(active_cases)
             st.write(
                 f"Success! {st.session_state['spreadsheet_name']} has been updated."
             )
-            st.dataframe(active_cases)
+            st.dataframe(filtered_active_cases)
 
 
 if __name__ == "__main__":

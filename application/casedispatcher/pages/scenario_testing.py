@@ -75,17 +75,6 @@ def load_model_and_columns(drive_service, model_name, cols_name, data_name):
     return model, cols, data
 
 
-def get_country_selection(countries):
-    countries_list = ["Select a country..."] + sorted(countries["name"].values.tolist())
-    selected_country = st.selectbox("Select a country", countries_list)
-    if selected_country != "Select a country...":
-        country_id = countries[countries["name"] == selected_country]["id"].values[0]
-        st.write(f"You selected {selected_country} with country_id: {country_id}")
-    else:
-        country_id = None
-    return selected_country, country_id
-
-
 def main():
     if "case_dispatcher_model" not in st.session_state:
         (
@@ -120,52 +109,9 @@ def main():
         with st.expander("See feature importances:"):
             display_feature_importances(st.session_state["case_dispatcher_model"], st.session_state["case_dispatcher_model_cols"])
 
-    # Initialize the country list and selected country only once
-    if "countries" not in st.session_state:
-        st.session_state["countries"] = get_countries()
-        countries_list = ["Select a country..."] + sorted(
-            st.session_state["countries"]["name"].values.tolist()
-        )
-    else:
-        countries_list = ["Select a country..."] + sorted(
-            st.session_state["countries"]["name"].values.tolist()
-        )
-        if st.session_state["country"] not in countries_list:
-            st.session_state["country"] = "Select a country..."
-
-    # Country selection dropdown
-    st.session_state["country"] = st.selectbox(
-        "Select a country",
-        countries_list,
-        index=countries_list.index(
-            st.session_state.get("country", "Select a country...")
-        ),
-    )
-
-    operating_country_id = None
-    if st.session_state["country"] != "Select a country...":
-        filtered_countries = st.session_state["countries"][
-            st.session_state["countries"]["name"] == st.session_state["country"]
-        ]
-        if not filtered_countries.empty:
-            operating_country_id = filtered_countries["id"].values[0]
-            st.write("You selected:", st.session_state["country"])
-            st.write(
-                f"You selected country: {st.session_state['country']} with country_id: {operating_country_id}"
-            )
-        else:
-            st.error("Selected country not found in the list.")
-
-    # Define a mapping from the user-friendly options to the codes
-    gender_options = {"Male": 0, "Female": 1, "Unknown": 2}
-
-    # Create a list of the user-friendly gender options for display
-    options_list = list(gender_options.keys())  # ["Male", "Female", "Unknown"]
-
     # Initialize a dictionary to store form data
     form_data = {
         "age": st.number_input("Age of suspect", min_value=12, format="%i"),
-        "gender": st.selectbox("Gender of suspect", options=options_list),
         # Additional fields follow...
         "number_of_victims": st.number_input(
             "Number of Victims", min_value=0, format="%i"
@@ -173,8 +119,11 @@ def main():
         "number_of_traffickers": st.number_input(
             "Number of Traffickers", min_value=0, format="%i"
         ),
-        "operating_country_id": operating_country_id,
         # Checkbox fields
+
+        "female": st.checkbox("female"),
+        "male": st.checkbox("male"),
+        "unknown_gender": st.checkbox("unknown_gender"),
         "pv_believes_definitely_trafficked_many": st.checkbox(
             "pv_believes_definitely_trafficked_many"
         ),
@@ -200,80 +149,58 @@ def main():
         "role_other": st.checkbox("role_other"),
         "case_filed_against": st.checkbox("case_filed_against"),
         "pv_attempt": st.checkbox("pv_attempt"),
+
+        "country_reduced": st.checkbox("country_reduced"),
+        "country_Bangladesh": st.checkbox("country_Bangladesh"),
+        "country_India": st.checkbox("country_India"),
+        "country_India Network": st.checkbox("country_India Network"),
+        "country_Kenya": st.checkbox("country_Kenya"),
+        "country_Liberia": st.checkbox("country_Liberia"),
+        "country_Mozambique": st.checkbox("country_Mozambique"),
+        "country_Namibia": st.checkbox("country_Namibia"),
+        "country_Nepal": st.checkbox("country_Nepal"),
+        "country_Other": st.checkbox("country_Other"),
+        "country_South Africa": st.checkbox("country_South Africa"),
+        "country_Uganda": st.checkbox("country_Uganda"),
     }
 
-    # Update the gender in form_data to store the code instead of the user-friendly option
-    form_data["gender"] = gender_options[form_data["gender"]]
 
-    input_list = [
-        "gender",
-        "age",
-        "exploit_debt_bondage",
-        "exploit_forced_labor",
-        "exploit_physical_abuse",
-        "exploit_prostitution",
-        "exploit_sexual_abuse",
-        "pv_recruited_agency",
-        "pv_recruited_broker",
-        "pv_recruited_no",
-        "case_filed_against",
-        "operating_country_id",
-        "pv_attempt",
-        "number_of_victims",
-        "number_of_traffickers",
-        "pv_believes_definitely_trafficked_many",
-        "pv_believes_not_a_trafficker",
-        "pv_believes_trafficked_some",
-        "pv_believes_suspect_trafficker",
-        "transporter",
-        "missing_information",
-        "boss_trafficker",
-        "friend",
-        "suspect",
-        "facilitator",
-        "host",
-        "recruiter",
-        "role_other",
-    ]
 
     if st.button("Predict"):
-        if operating_country_id is not None:
-            st.write("Predicting...")
-            # Assume form_data and input_list are previously defined and valid
-            user_data = pd.DataFrame([form_data])
+        st.write("Predicting...")
+        # Assume form_data and input_list are previously defined and valid
+        user_data = pd.DataFrame([form_data])
 
-            # Transform the user input data with all pipeline steps except the classifier
-            user_data_transformed = st.session_state["best_pipeline"][:-1].transform(
-                user_data[st.session_state["case_dispatcher_model_cols"]]
-            )
-            # Make a prediction using only the classifier
+        # Transform the user input data with all pipeline steps except the classifier
+        user_data_transformed = st.session_state["best_pipeline"][:-1].transform(
+            user_data[st.session_state["case_dispatcher_model_cols"]]
+        )
+        # Make a prediction using only the classifier
 
-            prediction = st.session_state["clf"].predict_proba(user_data_transformed)[
-                :, 1
-            ]
-            st.write("Prediction:", prediction)
+        prediction = st.session_state["clf"].predict_proba(user_data_transformed)[
+            :, 1
+        ]
+        st.write("Prediction:", prediction)
 
-            # Transform the model data with all pipeline steps except the classifier
+        # Transform the model data with all pipeline steps except the classifier
 
-            # Initialize SHAP explainer with the model and the transformed model data
-            explainer = shap.Explainer(
-                st.session_state["clf"],
-                st.session_state["model_data_transformed"],
-                feature_names=st.session_state["case_dispatcher_model_cols"],
-            )
+        # Initialize SHAP explainer with the model and the transformed model data
+        explainer = shap.Explainer(
+            st.session_state["clf"],
+            st.session_state["model_data_transformed"],
+            feature_names=st.session_state["case_dispatcher_model_cols"],
+        )
 
-            # Calculate SHAP values for the transformed user data
-            shap_values = explainer(user_data_transformed, check_additivity=False)
+        # Calculate SHAP values for the transformed user data
+        shap_values = explainer(user_data_transformed, check_additivity=False)
 
-            # Plot SHAP values for the user's data
-            fig, ax = plt.subplots()
-            shap.plots.waterfall(
-                shap_values[0, :, 1]
-            )  # Optionally limit the number of features displayed
-            st.pyplot(fig, bbox_inches="tight")
+        # Plot SHAP values for the user's data
+        fig, ax = plt.subplots()
+        shap.plots.waterfall(
+            shap_values[0, :, 1]
+        )  # Optionally limit the number of features displayed
+        st.pyplot(fig, bbox_inches="tight")
 
-        else:
-            st.error("Please select a valid country before predicting.")
 
 
 if __name__ == "__main__":

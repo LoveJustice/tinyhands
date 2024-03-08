@@ -110,27 +110,19 @@ class EntityGroup(GetAttr):
         Adds new cases to data already in the corresponding Google Sheet."""
 
         for sheet in cls.sheets:
-            logger.info(f"1. combine_sheets: New Columns: {sheet.new.columns}")
-            logger.info(f"2. combine_sheets: GSheet Columns: {sheet.gsheet.columns}")
+
             sheet.newcopy = deepcopy(sheet.new)
-            logger.info(
-                f"3. combine_sheets: NewCopy Columns BEFORE reindexing: {sheet.newcopy.columns}"
-            )
+
             sheet.newcopy = sheet.newcopy.reindex(
                 columns=sheet.new.columns.tolist() + list(sheet.gsheet.columns)
             )
-            logger.info(
-                f"4. combine_sheets: NewCopy Columns AFTER reindexing: {sheet.newcopy.columns}"
-            )
+
             sheet.newcopy = sheet.newcopy.iloc[:, 7 : len(sheet.newcopy.columns)]
-            logger.info(
-                f"5. combine_sheets: NewCopy Columns AFTER sheet.newcopy = sheet.newcopy.iloc[:, 7 : len(sheet.newcopy.columns)]: {sheet.newcopy.columns}"
-            )
+
             sheet.active = pd.concat([sheet.gsheet, sheet.newcopy], sort=False)
             sheet.active.drop_duplicates(subset=sheet.uid, inplace=True)
-            # logger.info(f"New Columns: {sheet.new.columns}")
-            # logger.info(f"GSheet Columns: {sheet.gsheet.columns}")
-            logger.info(f"6. combine_sheets: NewCopy Columns: {sheet.newcopy.columns}")
+
+
 
     @classmethod
     def move_closed(cls, soc_df):
@@ -165,7 +157,7 @@ class EntityGroup(GetAttr):
         """Moves closed cases to closed sheet for each Entity Group instance."""
 
         for sheet in cls.sheets:
-            logger.info(f"sheet.newcopy.columns = {sheet.newcopy.columns}")
+
             prev_closed = sheet.newcopy[
                 sheet.newcopy[sheet.uid].isin(soc_df[soc_df.arrested == 1].suspect_id)
             ]
@@ -234,12 +226,12 @@ class EntityGroup(GetAttr):
     def update_gsheets(cls, credentials, gs_name, active_cases):
         """Update Google Sheets with new data."""
         client = gspread.authorize(credentials)
-        logger.info(f"active_cases.columns = {active_cases.columns}")
+
         for sheet in cls.sheets:
-            logger.info(f"sheet.active_name = {sheet.active_name}")
+
             target_sheet = client.open(gs_name).worksheet(sheet.active_name)
             up_sheet = sheet.active.iloc[:, : len(sheet.active.columns) - 1]
-            logger.info(f"up_sheet.columns = {up_sheet.columns}")
+
             gd.set_with_dataframe(target_sheet, up_sheet)
             target_sheet = client.open(gs_name).worksheet(sheet.closed_name)
             gd.set_with_dataframe(target_sheet, sheet.closed)
@@ -251,7 +243,7 @@ class EntityGroup(GetAttr):
     def add_irf_notes(cls, irf_notes):
         """Update Google Sheets with new data."""
         for sheet in cls.sheets:
-            logger.info(f"sheet.active_name = {sheet.active_name}")
+
             sheet.active = pd.merge(
                 sheet.active,
                 irf_notes,

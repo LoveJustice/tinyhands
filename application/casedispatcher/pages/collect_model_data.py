@@ -64,7 +64,7 @@ values_and_weights = {
     "sheet_names": sheet_names,
 }
 
-cutoff_days = 90
+
 toml_config_dict = attrdict_to_dict(access_token)
 creds_json = json.dumps(toml_config_dict)
 credentials = OAuth2Credentials.from_json(creds_json)
@@ -119,16 +119,25 @@ def make_lgbm_predictions(model, X):
 def main():
     # Initialize session state variables if they don't exist
     country = None
+    counter = 0
     if st.button("Extract model data"):
         # Assuming get_gsheets and get_dfs are defined and take the necessary arguments
         st.write("Retrieve vdf data ...")
         db_vdf = get_vdf(country)
+        counter+=1
+        db_vdf.to_csv(f"data_trace/vdf_{counter}.csv", index=False)
         st.write("Retrieve suspect data ...")
         db_sus = get_suspects(country)
+        counter+=1
+        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         st.write("Retrieve irf data ...")
         db_irf = get_irf(country)
+        counter+=1
+        db_irf.to_csv(f"data_trace/irf_{counter}.csv", index=False)
         st.write("Retrieve suspect_evaluations data ...")
         suspect_evaluations = get_suspect_evaluations(country)
+        counter+=1
+        suspect_evaluations.to_csv(f"data_trace/suspect_evaluations_{counter}.csv", index=False)
         st.write("Start data manipulation  ...")
         db_sus = db_sus.dropna(subset=["suspect_arrested"])
         # Create the 'any_arrest' column
@@ -192,22 +201,28 @@ def main():
         ]
         db_sus["sf_number_group"] = db_sus["sf_number"].str[:6]
         # db_vdf = db_vdf.merge(db_irf[merge_cols], left_on='sf_number_group', right_on="irf_number", how="inner")
-
+        counter+=1
+        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         db_sus = db_sus.merge(
             db_irf[merge_cols],
             left_on=["sf_number_group"],
             right_on=["irf_number"],
             how="inner",
         )
+        counter+=1
+        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         db_sus = db_sus.drop_duplicates()
-        db_sus = db_sus[~db_sus.arrested.isna()]
+        counter+=1
+        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
+        # db_sus = db_sus[~db_sus.arrested.isna()]
 
         # Merge db_sus with suspect_evaluation_types on 'suspect_id'
 
         db_sus = db_sus.merge(
             suspect_evaluation_types, on="master_person_id", how="left"
         )
-
+        counter+=1
+        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         # Define mappings for processing columns
         st.write(
             f"Define mappings for processing columns and expanding to a wide format ..."
@@ -278,6 +293,8 @@ def main():
                 "irf_number",
             ]
         ].merge(db_sus, left_on="irf_number", right_on="irf_number", how="inner")
+        counter+=1
+        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         # ======================================================================
         st.write("Create the suspect_id column in db_sus: ...")
         db_sus["suspect_id"] = (
@@ -299,7 +316,8 @@ def main():
 
         # Now, concatenate these new columns back to the original DataFrame
         db_sus = pd.concat([db_sus, gender_dummies], axis=1)
-
+        counter+=1
+        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
 
         # Determine the top N countries to keep
         top_n_countries = db_sus['country'].value_counts().nlargest(10).index
@@ -318,6 +336,8 @@ def main():
 
         # Copy the dataframe
         st.write("Create soc_df from db_sus: ...")
+        counter+=1
+        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         soc_df = db_sus.copy()
         list(soc_df.columns)
         # Merge the dataframes on 'master_person_id' and filter out duplicated rows
@@ -344,6 +364,8 @@ def main():
             on="master_person_id",
             how="left",
         )
+        counter+=1
+        soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
         soc_df["job_promised_amount"] = soc_df["job_promised_amount"].apply(
             remove_non_numeric
         )
@@ -356,7 +378,8 @@ def main():
             on="master_person_id",
             how="left",
         )
-
+        counter+=1
+        soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
         st.write("Calculate days since interview: ...")
         today = pd.Timestamp(date.today())
         # Convert 'interview_date' to datetime, errors='coerce' will turn incorrect formats to NaT
@@ -385,7 +408,8 @@ def main():
         ]
         st.write(f"Drop irrelevant columns {columns_to_drop}")
         soc_df = soc_df.drop(columns=columns_to_drop)
-
+        counter+=1
+        soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
         boolean_features = list(
             set(soc_df.columns) - set(num_features) - set(non_boolean_features)
         )
@@ -408,7 +432,20 @@ def main():
         soc_df["irf_number"].astype(str)
         st.write("Drop columns that have only False values")
         soc_df = soc_df.loc[:, (soc_df != False).any(axis=0)]
+        counter+=1
+        soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
         # TODO: Rework the model to use the new features
+        soc_df = soc_df.drop_duplicates()
+        counter+=1
+        soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
+        counter+=1
+        db_vics.to_csv(f"data_trace/db_vics_{counter}.csv", index=False)
+        db_vics = db_vics.drop_duplicates()
+        counter+=1
+        db_vics.to_csv(f"data_trace/db_vics_{counter}.csv", index=False)
+        db_sus = db_sus.drop_duplicates()
+        irf_case_notes = irf_case_notes.drop_duplicates()
+
 
         file_bytes = make_file_bytes(soc_df)
         file_metadata = {"name": "case_dispatcher_soc_df.pkl"}
@@ -421,11 +458,15 @@ def main():
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
         st.write(f"Save new_victims to cloud with file_id: {file_id}")
 
+        counter+=1
+        db_sus.to_csv(f"data_trace/new_suspects_{counter}.csv", index=False)
         file_bytes = make_file_bytes(db_sus)
         file_metadata = {"name": "new_suspects.pkl"}
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
         st.write(f"Save new_suspects to cloud with file_id: {file_id}")
 
+        counter+=1
+        irf_case_notes.to_csv(f"data_trace/irf_case_notes_{counter}.csv", index=False)
         file_bytes = make_file_bytes(irf_case_notes)
         file_metadata = {"name": "irf_case_notes.pkl"}
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
