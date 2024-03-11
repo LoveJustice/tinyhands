@@ -299,7 +299,8 @@ class FormViewSet(viewsets.ModelViewSet):
         stations = form.stations.filter(operating_country__id=country_id)
         version_list = storage_class.objects.filter(station__in=stations).values_list('form_version', flat=True)
         version_set = set(version_list)
-        version_set.remove(None)
+        if None in version_set:
+            version_set.remove(None)
         return Response(sorted(version_set))
         
 class FormExportCsv (viewsets.ViewSet):
