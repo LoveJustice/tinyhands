@@ -159,7 +159,12 @@ class CommitteeMemberViewSet(viewsets.ModelViewSet):
         serializer = CommitteeMemberSerializer(committee_member)
         return Response(serializer.data)
     
-    
+    def save_file(self, file_obj, subdirectory):
+        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        
+        return  subdirectory + file_obj.name
     
     def create(self, request):
         request_string = request.data['member']
