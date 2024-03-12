@@ -209,8 +209,7 @@ def main():
             right_on=["irf_number"],
             how="inner",
         )
-        counter+=1
-        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
+
         db_sus = db_sus.drop_duplicates()
         counter+=1
         db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
@@ -221,8 +220,7 @@ def main():
         db_sus = db_sus.merge(
             suspect_evaluation_types, on="master_person_id", how="left"
         )
-        counter+=1
-        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
+
         # Define mappings for processing columns
         st.write(
             f"Define mappings for processing columns and expanding to a wide format ..."
@@ -293,8 +291,7 @@ def main():
                 "irf_number",
             ]
         ].merge(db_sus, left_on="irf_number", right_on="irf_number", how="inner")
-        counter+=1
-        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
+
         # ======================================================================
         st.write("Create the suspect_id column in db_sus: ...")
         db_sus["suspect_id"] = (
@@ -316,8 +313,7 @@ def main():
 
         # Now, concatenate these new columns back to the original DataFrame
         db_sus = pd.concat([db_sus, gender_dummies], axis=1)
-        counter+=1
-        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
+
 
         # Determine the top N countries to keep
         top_n_countries = db_sus['country'].value_counts().nlargest(10).index
@@ -336,8 +332,6 @@ def main():
 
         # Copy the dataframe
         st.write("Create soc_df from db_sus: ...")
-        counter+=1
-        db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         soc_df = db_sus.copy()
         list(soc_df.columns)
         # Merge the dataframes on 'master_person_id' and filter out duplicated rows
@@ -364,8 +358,7 @@ def main():
             on="master_person_id",
             how="left",
         )
-        counter+=1
-        soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
+
         soc_df["job_promised_amount"] = soc_df["job_promised_amount"].apply(
             remove_non_numeric
         )
@@ -378,8 +371,7 @@ def main():
             on="master_person_id",
             how="left",
         )
-        counter+=1
-        soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
+
         st.write("Calculate days since interview: ...")
         today = pd.Timestamp(date.today())
         # Convert 'interview_date' to datetime, errors='coerce' will turn incorrect formats to NaT

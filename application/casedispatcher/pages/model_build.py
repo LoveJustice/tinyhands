@@ -18,7 +18,7 @@ from sklearn.metrics import roc_curve, auc
 from datetime import datetime
 import os
 from oauth2client.client import OAuth2Credentials
-from libraries.case_dispatcher_model import TypeSelector
+from libraries.case_dispatcher_model import TypeSelector,build_transformer, get_cls_pipe
 
 # from .case_dispatcher_logging import setup_logger
 import pickle
@@ -58,69 +58,6 @@ def check_grid_search_cv(soc_df, gscv, cutoff_days):
         best_model, x_cols, X_Validation = full_gridsearch_pipe(soc_df, cutoff_days)
     return best_model, x_cols, X_Validation
 
-
-def build_transformer():
-    """
-    This function builds a transformer that processes boolean and numerical features.
-
-    The transformer first separates boolean and numerical features using a TypeSelector.
-    Numerical features are then standardized using a StandardScaler.
-
-    Returns:
-        Pipeline: The transformer pipeline.
-    """
-    transformer = Pipeline(
-        [
-            (
-                "features",
-                FeatureUnion(
-                    transformer_list=[
-                        # Select boolean features and pass them through the pipeline unchanged
-                        (
-                            "boolean",
-                            Pipeline(
-                                [
-                                    ("selector", TypeSelector("bool")),
-                                ]
-                            ),
-                        ),
-                        # Select numerical features and standardize them
-                        (
-                            "numericals",
-                            Pipeline(
-                                [
-                                    ("selector", TypeSelector(np.number)),
-                                    ("scaler", StandardScaler()),
-                                ]
-                            ),
-                        ),
-                    ],
-                    n_jobs=1,
-                ),
-            ),
-        ]
-    )
-    return transformer
-
-
-def get_cls_pipe(clf=RandomForestClassifier()):
-    """
-    Builds a pipeline with a transformer and a classifier algorithm.
-
-    Args:
-        clf (object, optional): The classifier algorithm to use in the pipeline. Defaults to a RandomForestClassifier.
-
-    Returns:
-        object: A pipeline with a transformer and classifier.
-    """
-    # Build the transformer
-    transformer = build_transformer()
-
-    # Create the pipeline with the transformer and classifier
-    cls_pipeline = Pipeline([("transformer", transformer), ("clf", clf)])
-
-    # Return the pipeline
-    return cls_pipeline
 
 
 def remove_recent(soc_df, cutoff_days):
@@ -272,8 +209,7 @@ def make_new_predictions(X, soc_model):
     return soc_model.predict_proba(X)[:, 1]
 
 
-import matplotlib.pyplot as plt
-from sklearn.metrics import roc_curve, auc
+
 
 
 def plot_roc_curve_altair(y_true, model_predictions, model_names):

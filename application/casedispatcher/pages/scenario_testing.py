@@ -170,11 +170,17 @@ def main():
         st.write("Predicting...")
         # Assume form_data and input_list are previously defined and valid
         user_data = pd.DataFrame([form_data])
-
+        user_data.reindex(columns=st.session_state["case_dispatcher_model_cols"])
+        with st.expander("See scenario data:"):
+            st.dataframe(user_data)
         # Transform the user input data with all pipeline steps except the classifier
         user_data_transformed = st.session_state["best_pipeline"][:-1].transform(
-            user_data[st.session_state["case_dispatcher_model_cols"]]
+            user_data
         )
+        with st.expander("See transformed data:"):
+            display_user_data_transformed = pd.DataFrame(user_data_transformed.copy())
+            display_user_data_transformed.columns = st.session_state["case_dispatcher_model_cols"]
+            st.dataframe(display_user_data_transformed)
         # Make a prediction using only the classifier
 
         prediction = st.session_state["clf"].predict_proba(user_data_transformed)[

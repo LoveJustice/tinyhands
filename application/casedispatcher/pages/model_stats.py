@@ -64,6 +64,10 @@ def main():
         'x_validation.pkl', drive_service
     )
     x_validation = load_from_cloud(drive_service=drive_service, file_id=x_validation_id)
+
+    with st.expander("See validation data:"):
+        st.dataframe(x_validation)
+
     y_validation_id = get_file_id(
         'y_validation.pkl', drive_service
     )

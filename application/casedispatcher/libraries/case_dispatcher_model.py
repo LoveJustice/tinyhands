@@ -222,20 +222,7 @@ def train_test_val_split(sub_df, te_size=0.2, val_size=0.1):
     X_train, X_validation, y_train, y_validation = train_test_split(
         X_train, y_train, test_size=val_size
     )
-    logger.info("Case Dispatcher 3.0: Training, validation, and testing sets created.")
-    logger.info(f"Case Dispatcher 3.0: Training set size: {len(X_train)}")
-    logger.info(f"Case Dispatcher 3.0: Validation set size: {len(X_validation)}")
-    logger.info(f"Case Dispatcher 3.0: Testing set size: {len(X_test)}")
-    logger.info(
-        f"Case Dispatcher 3.0: Total cases: {len(X_train) + len(X_validation) + len(X_test)}"
-    )
-    logger.info(f"Case Dispatcher 3.0: Arrests in training set: {sum(y_train)}")
-    logger.info(f"Case Dispatcher 3.0: Arrests in validation set: {sum(y_validation)}")
-    logger.info(f"Case Dispatcher 3.0: Arrests in testing set: {sum(y_test)}")
-    logger.info(
-        f"Case Dispatcher 3.0: Total arrests: {sum(y_train) + sum(y_validation) + sum(y_test)}"
-    )
-    logger.info(f"Case Dispatcher 3.0: feature set: {sum(y_train) / len(y_train)}")
+
     # Return the training, validation, and testing sets
     return X_train, X_validation, y_train, y_validation
 
@@ -255,7 +242,7 @@ def get_cls_pipe(clf=RandomForestClassifier()):
 
     # Create the pipeline with the transformer and classifier
     cls_pipeline = Pipeline([("transformer", transformer), ("clf", clf)])
-    logger.info(f"Case Dispatcher 3.0: Built cls pipeline")
+    logger.info(f"Case Dispatcher 6.0: Built cls pipeline")
 
     # Return the pipeline
     return cls_pipeline
