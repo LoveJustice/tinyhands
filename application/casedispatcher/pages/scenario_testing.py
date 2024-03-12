@@ -173,6 +173,7 @@ def main():
         user_data.reindex(columns=st.session_state["case_dispatcher_model_cols"])
         with st.expander("See scenario data:"):
             st.dataframe(user_data)
+            st.write(user_data.dtypes)
         # Transform the user input data with all pipeline steps except the classifier
         user_data_transformed = st.session_state["best_pipeline"][:-1].transform(
             user_data
@@ -181,6 +182,7 @@ def main():
             display_user_data_transformed = pd.DataFrame(user_data_transformed.copy())
             display_user_data_transformed.columns = st.session_state["case_dispatcher_model_cols"]
             st.dataframe(display_user_data_transformed)
+            st.write(display_user_data_transformed.dtypes)
         # Make a prediction using only the classifier
 
         prediction = st.session_state["clf"].predict_proba(user_data_transformed)[

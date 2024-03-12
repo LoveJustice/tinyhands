@@ -18,7 +18,7 @@ from sklearn.metrics import roc_curve, auc
 from datetime import datetime
 import os
 from oauth2client.client import OAuth2Credentials
-from libraries.case_dispatcher_model import TypeSelector,build_transformer, get_cls_pipe
+from libraries.case_dispatcher_model import get_cls_pipe
 
 # from .case_dispatcher_logging import setup_logger
 import pickle
