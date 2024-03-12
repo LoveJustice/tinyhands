@@ -131,6 +131,8 @@ class EntityGroup(GetAttr):
             prev_closed = sheet.newcopy[
                 sheet.newcopy[sheet.uid].isin(soc_df[soc_df.arrested == 1].suspect_id)
             ].copy()
+            prev_closed["case_status"] = prev_closed["case_status"].fillna("").astype(str)
+
             prev_closed.loc[:, "case_status"] = "Closed: Already in Legal Cases Sheet"
 
             newly_closed = sheet.gsheet[sheet.gsheet["date_closed"].str.len() > 1]

@@ -1050,7 +1050,7 @@ def calc_priority(new_suspects, weights, existing_suspects):
     new_suspects["priority"] = sum(weighted_scores).round(decimals=3)
 
     logger.info(f"""new_suspects.columns {new_suspects.columns}""")
-    new_suspects["priority"].fillna(0, inplace=True)
+    new_suspects["priority"] = new_suspects["priority"].fillna(0)
 
     logger.info(f"""new_suspects.columns {new_suspects.columns}""")
     new_suspects.sort_values("priority", ascending=False, inplace=True)
