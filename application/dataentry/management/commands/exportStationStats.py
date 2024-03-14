@@ -17,8 +17,8 @@ def fmt(value):
         return value
 
 def get_station_stats_export_rows(objs):
+    enter = datetime.datetime.now()
     key = objs[0]['key']
-    station_id = objs[0]['station_id']
     year_month = objs[0]['year_month']
     
     station_stats_headers = ['Key', 'Station', 'Station Code', 'Category', 'Country', 'Year Month', 'Convictions', 'Empowerment', 'Budget', 'gospel', '#Active Monitoring Locations', '#Active Shelters', 'Committee']
@@ -31,16 +31,19 @@ def get_station_stats_export_rows(objs):
     rows = []
     rows.append(headers)
     
-    row = []
-    row.append(key)
+    station_stats_list = StationStatistics.objects.filter(year_month=year_month)
     
-    work_days = 21
-    
-    try:
-        station_stats = StationStatistics.objects.get(station__id=station_id, year_month=year_month)
+    for station_stats in station_stats_list:
+        work_days = 21
+        row = []
+        row.append(key)
         row.append(fmt(station_stats.station.station_name))
         row.append(fmt(station_stats.station.station_code))
-        row.append(fmt(station_stats.station.project_category.name))
+        try:
+            category_name = station_stats.station.project_category.name
+        except:
+            category_name = ''
+        row.append(fmt(category_name))
         row.append(fmt(station_stats.station.operating_country.name))
         row.append(fmt(station_stats.year_month))
         row.append(fmt(station_stats.convictions))
@@ -53,37 +56,37 @@ def get_station_stats_export_rows(objs):
         work_days = station_stats.work_days
         if work_days is None or work_days == 0:
             work_days = 21
-    except ObjectDoesNotExist:
-        # If no StationStatistics then ignore
-        return rows;
     
-    sums = LocationStatistics.objects.filter(location__border_station__id = station_id, year_month = year_month).aggregate(
-        Sum('intercepts'), Sum('arrests'), Sum('intercepts_evidence'), Sum('intercepts_high_risk'),Sum('intercepts_invalid'))
-    row.append(fmt(sums['intercepts__sum']))
-    row.append(fmt(sums['arrests__sum']))
-    row.append(fmt(sums['intercepts_evidence__sum']))
-    row.append(fmt(sums['intercepts_high_risk__sum']))
-    row.append(fmt(sums['intercepts_invalid__sum']))
+   
+        sums = LocationStatistics.objects.filter(location__border_station__id = station_stats.station.id, year_month = year_month).aggregate(
+            Sum('intercepts'), Sum('arrests'), Sum('intercepts_evidence'), Sum('intercepts_high_risk'),Sum('intercepts_invalid'))
+        row.append(fmt(sums['intercepts__sum']))
+        row.append(fmt(sums['arrests__sum']))
+        row.append(fmt(sums['intercepts_evidence__sum']))
+        row.append(fmt(sums['intercepts_high_risk__sum']))
+        row.append(fmt(sums['intercepts_invalid__sum']))
     
-    sums = LocationStaff.objects.filter(location__border_station__id = station_id, year_month = year_month).aggregate(Sum('work_fraction'))
-    if sums['work_fraction__sum'] is not None:
-        row.append(fmt(sums['work_fraction__sum']/work_days))
-    else:
-        row.append('')
     
-    try:
-        monthly_report = MonthlyReport.objects.get(station__id=station_id, year = year_month//100, month=year_month%100)
-        row.append(fmt(monthly_report.average_points))
-    except ObjectDoesNotExist:
-        row.append('')
+        sums = LocationStaff.objects.filter(location__border_station__id = station_stats.station.id, year_month = year_month).aggregate(Sum('work_fraction'))
+        if sums['work_fraction__sum'] is not None:
+            row.append(fmt(sums['work_fraction__sum']/work_days))
+        else:
+            row.append('')
     
-    try:
-        exchange = CountryExchange.objects.get(year_month=year_month, country=station_stats.station.operating_country)
-        row.append(exchange.exchange_rate)
-    except:
-        row.append('');
+        try:
+            monthly_report = MonthlyReport.objects.get(station__id=station_stats.station.id, year = year_month//100, month=year_month%100)
+            row.append(fmt(monthly_report.average_points))
+        except ObjectDoesNotExist:
+            row.append('')
     
-    rows.append(row)
+        try:
+            exchange = CountryExchange.objects.get(year_month=year_month, country=station_stats.station.operating_country)
+            row.append(exchange.exchange_rate)
+        except:
+            row.append('');
+    
+        rows.append(row)
+        
     return rows
 
 
@@ -96,6 +99,7 @@ class Command(BaseCommand):
         )
     
     def handle(self, *args, **options):
+        start = datetime.datetime.now()
         site_setting_name = 'station_statistics_export'
         run_time = datetime.datetime.now()
         print ('starting at ' + run_time.isoformat())
@@ -129,34 +133,33 @@ class Command(BaseCommand):
         location_staff_headers = ['Staff']
         station_headers = ['#Active Monitoring Locations']
         headers = station_stats_headers + location_stats_headers + location_staff_headers + station_headers
-         
+        
+        exchange_list = CountryExchange.objects.filter(date_time_last_updated__gte = last_exported).order_by('year_month')
+        for entry in exchange_list:
+            if entry.year_month not in to_process:
+                to_process[entry.year_month] = True
+        
         station_stats = StationStatistics.objects.filter(modified_date__gte = last_exported)
         for entry in station_stats:
             if entry.year_month not in to_process:
-               to_process[entry.year_month] = []
-            if entry.station not in to_process[entry.year_month]:
-               to_process[entry.year_month].append(entry.station)
-         
+               to_process[entry.year_month] = True
+        
         location_stats = LocationStatistics.objects.filter(modified_date__gte = last_exported)
         for entry in location_stats:
             if entry.year_month not in to_process:
-               to_process[entry.year_month] = []
-            if entry.location.border_station not in to_process[entry.year_month]:
-               to_process[entry.year_month].append(entry.location.border_station)
+               to_process[entry.year_month] = True
+         
         location_staff = LocationStaff.objects.filter(modified_date__gte = last_exported)
         for entry in location_staff:
             if entry.year_month not in to_process:
-               to_process[entry.year_month] = []
-            if entry.location.border_station not in to_process[entry.year_month]:
-                to_process[entry.year_month].append(entry.location.border_station)
+               to_process[entry.year_month] = True
         
-
         time.sleep(5)
         for year_month in to_process.keys():
-            for station in to_process[year_month]:
-                key = station.station_code + ' ' + str(year_month)
-                sheet.update(key, {'key':key, 'station_id':station.id, 'year_month':year_month})
-                time.sleep(5)
+            print('exporting year_month:', year_month)
+            key = str(year_month)
+            sheet.update(key, {'key':key, 'year_month':year_month})
+            time.sleep(5)
         
         site_settings.set_setting_value_by_name(site_setting_name, run_time.isoformat())
         site_settings.save()

@@ -6,7 +6,7 @@ from budget.models import ProjectRequest
 import budget.mdf_constants as constants
 from dataentry.models import BorderStation, CountryExchange, UserLocationPermission
 from static_border_stations.models import Staff, StaffAttachment, StaffProject, StaffReview, CommitteeMember, Location, StaffMiscellaneous, StaffMiscellaneousTypes, WorksOnProject
-from budget.models import ProjectRequest, StaffBudgetItem
+from budget.models import MonthlyDistributionForm, ProjectRequest, StaffBudgetItem
 import budget.mdf_constants as constants
 
 class StaffProjectSerializer(serializers.ModelSerializer):
@@ -56,7 +56,7 @@ class StaffSerializer(serializers.ModelSerializer):
                   'receives_money_distribution_form', 'border_station', 'country',
                   'first_date', 'last_date', 'birth_date', 'total_years',
                   'education', 'id_card_expiration', 'staffproject_set', 'miscellaneous',
-                  'contract_data', 'knowledge_data', 'review_data']
+                  'contract_data', 'knowledge_data', 'review_data', 'has_pbs']
     
     total_years = serializers.SerializerMethodField(read_only=True)
     staffproject_set = StaffProjectSerializer(many=True)
@@ -64,6 +64,7 @@ class StaffSerializer(serializers.ModelSerializer):
     knowledge_data = serializers.SerializerMethodField(read_only=True)
     review_data = serializers.SerializerMethodField(read_only=True)
     miscellaneous = serializers.SerializerMethodField(read_only=True)
+    has_pbs = serializers.SerializerMethodField(read_only=True)
     
     def view_section(self, obj, data_type):
         result = False
@@ -170,6 +171,9 @@ class StaffSerializer(serializers.ModelSerializer):
         
         serializer = StaffMiscellaneousSerializer(misc_items, many=True)
         return serializer.data
+    
+    def get_has_pbs(self, obj):
+        return MonthlyDistributionForm.objects.filter(border_station__operating_country = obj.country).exists()
        
     
     def to_internal_value(self, data):
