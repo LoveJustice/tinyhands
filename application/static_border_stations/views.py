@@ -236,6 +236,53 @@ class StaffViewSet(viewsets.ModelViewSet):
         'first_name', 'last_name', )
     ordering = ('first_name',)
     
+    def save_file(self, file_obj, subdirectory):
+        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        
+        return  subdirectory + file_obj.name
+    
+    def create(self, request):
+        request_string = request.data['staff']
+        request_json = json.loads(request_string)
+        
+        photo_file = None
+        if 'attachment_file' in request.data:
+            file_obj = request.data['attachment_file']
+            photo_file = self.save_file(file_obj, 'staff_photos/')
+        
+        del request_json['photo'] 
+        serializer = StaffSerializer(data=request_json)
+        serializer.is_valid(raise_exception=True)
+        new_staff = serializer.save()
+        if photo_file is not None:
+            new_staff.photo.name = photo_file
+            new_staff.save()
+        serializer_new = StaffSerializer(new_staff, context={'request':request})
+        return Response(serializer_new.data)
+    
+    def update(self, request, pk):
+        request_string = request.data['staff']
+        request_json = json.loads(request_string)
+        staff = Staff.objects.get(id=pk)
+        
+        photo_file = None
+        if 'attachment_file' in request.data:
+            file_obj = request.data['attachment_file']
+            photo_file = self.save_file(file_obj, 'staff_photos/')
+        
+        del request_json['photo'] 
+        serializer = StaffSerializer(staff, data=request_json)
+        serializer.is_valid(raise_exception=True)
+        new_staff = serializer.save()
+        if photo_file is not None:
+            new_staff.photo.name = photo_file
+            new_staff.save()
+        serializer_new = StaffSerializer(new_staff, context={'request':request})
+        return Response(serializer_new.data)
+        
+    
     def get_queryset(self):
         countries = UserLocationPermission.get_countries_with_permission(self.request.user.id, 'STAFF','VIEW_BASIC')
         stations = UserLocationPermission.get_stations_with_permission(self.request.user.id, 'STAFF','VIEW_BASIC')

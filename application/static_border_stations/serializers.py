@@ -54,7 +54,7 @@ class StaffSerializer(serializers.ModelSerializer):
         model = Staff
         fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'position',
                   'receives_money_distribution_form', 'border_station', 'country',
-                  'first_date', 'last_date', 'birth_date', 'total_years',
+                  'first_date', 'last_date', 'birth_date', 'photo', 'total_years',
                   'education', 'id_card_expiration', 'staffproject_set', 'miscellaneous',
                   'contract_data', 'knowledge_data', 'review_data', 'has_pbs']
     

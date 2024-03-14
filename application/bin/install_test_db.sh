@@ -15,6 +15,9 @@ fi
 
 # destination directories
 PHOTO="${TOP}/media/interceptee_photos"
+STAFF_PHOTO="${TOP}/media/staff_photos"
+STAFF_ATTACHMENT="${TOP}/media/staff_attachment"
+PHOTO="${TOP}/media/interceptee_photos"
 PUBLIC_PHOTO="${TOP}/public/interceptee_photos"
 IRF_FORM="${TOP}/media/scanned_irf_forms"
 CIF_FORM="${TOP}/media/cif_attachments"
@@ -30,6 +33,8 @@ mkdir -p "${VDF_FORM}"
 mkdir -p "${MP_FORM}"
 mkdir -p "${MR_FORM}"
 mkdir -p "${TOP}/dreamsuite/static"
+mkdir -p "${STAFF_PHOTO}"
+mkdir -p "${STAFF_ATTACHMENT}"
 
 cd "${PHOTO_SRC}"
 cp * "${PHOTO}"
