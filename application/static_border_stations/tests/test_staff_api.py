@@ -1,3 +1,4 @@
+import json
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
@@ -52,10 +53,13 @@ class StaffTests(RestApiTestCase):
             "border_station": self.staff.border_station_id,
             "first_date":"2019-03-15",
             "last_date":None,
+            "photo":None,
         }
+        
+        data_string = json.dumps(data)
 
-        response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.client.post(url, data={'staff':data_string})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertEqual(data['email'], response.data['email'])
 
@@ -81,9 +85,12 @@ class StaffTests(RestApiTestCase):
             "position": "asdf",
             "receives_money_distribution_form": True,
             "border_station": self.staff.border_station_id,
+            "photo":None,
         }
+        
+        data_string = json.dumps(data)
 
-        response = self.client.put(url, data=data)
+        response = self.client.put(url, data={'staff':data_string})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data['email'], response.data['email'])
 

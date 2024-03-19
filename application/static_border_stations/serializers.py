@@ -54,7 +54,7 @@ class StaffSerializer(serializers.ModelSerializer):
         model = Staff
         fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'position',
                   'receives_money_distribution_form', 'border_station', 'country',
-                  'first_date', 'last_date', 'birth_date', 'total_years',
+                  'first_date', 'last_date', 'birth_date', 'photo', 'total_years',
                   'education', 'id_card_expiration', 'staffproject_set', 'miscellaneous',
                   'contract_data', 'knowledge_data', 'review_data', 'has_pbs']
     
@@ -295,7 +295,7 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
     
     def get_sc_agreement(self, obj):
         result = None
-        if self.can_view_contract(obj):
+        if obj.sc_agreement is not None and obj.sc_agreement != '' and self.can_view_contract(obj):
             result=serializers.ImageField(use_url=True).to_representation(obj.sc_agreement)
             if 'request' in self.context:
                 result = self.context['request'].build_absolute_uri(result)
@@ -304,7 +304,7 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
     
     def get_misconduct_agreement(self, obj):
         result = None
-        if self.can_view_contract(obj):
+        if obj.misconduct_agreement is not None and obj.misconduct_agreement != '' and self.can_view_contract(obj):
             result =serializers.ImageField().to_representation(obj.misconduct_agreement)
             if 'request' in self.context:
                 result = self.context['request'].build_absolute_uri(result)
