@@ -205,6 +205,7 @@ urlpatterns = [
         re_path(r'^incident/$', IncidentViewSet.as_view(list), name='Incident'),
         re_path(r'^incident/(?P<pk>\d+)/$', IncidentViewSet.as_view(detail), name='Incidentdetail'),
         re_path(r'^incident/names/$', IncidentViewSet.as_view({'get':'get_names_and_addresses'}), name='IncidentNames'),
+        re_path(r'^incident/change_incident/(?P<pk>\d+)/$', IncidentViewSet.as_view({'put':'change_incident_forms'}), name='change_incident_forms'),
         
         re_path(r'^diagnostic/$', ClientDiagnosticViewSet.as_view(list), name='Diagnostic'),
         re_path(r'^monitor-form/$', MonitorAppViewSet.as_view({'post':'create'}), name='MonitorApp'),

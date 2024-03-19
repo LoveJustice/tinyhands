@@ -3,6 +3,7 @@ from django.db.models import JSONField
 from .person import Person
 from .form import BaseCard
 from .form import BaseForm
+from .form import ConflictException
 from .incident import Incident
 
 class Suspect(BaseForm):
@@ -38,6 +39,38 @@ class Suspect(BaseForm):
     
     def get_form_date(self):
         return self.date_time_last_updated.date()
+    
+    def change_incident(self, current_incident, new_incident):
+        assert self.sf_number.startswith(current_incident.incident_number), 'SF number does not start with previous incident number'
+        new_number = self.sf_number.replace(current_incident.incident_number, new_incident.incident_number)
+        match = Suspect.objects.filter(sf_number=new_number)
+        if len(match) > 0:
+            conflict = ConflictException('SF already exists with number ' + new_number)
+        self.sf_number = new_number
+        self.save()
+        
+        for information in self.suspectinformation_set.all():
+            information.incident = new_incident
+            information.save()
+        
+        for assoc in self.suspectassociation_set.all():
+            assoc.incident = new_incident
+            assoc.save()
+        
+        for eval in self.suspectevaluation_set.all():
+            eval.incident = new_incident
+            eval.save()
+        
+        for legal in self.suspectlegal_set.all():
+            legal.incident = new_incident
+            legal.save()
+        
+        for attach in self.suspectattachment_set.all():
+            attach.incident = new_incident
+            attach.save()
+        
+        self.incidents.remove(current_incident)
+        self.incidents.add(new_incident)
     
     @staticmethod
     def key_field_name():

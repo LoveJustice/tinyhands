@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import JSONField
 from .form import BaseCard
 from .form import BaseForm
+from .form import ConflictException
 from .incident import Incident
 
 class LocationForm(BaseForm):
@@ -48,6 +49,35 @@ class LocationForm(BaseForm):
     
     def get_form_date(self):
         return self.date_time_last_updated.date()
+    
+    def change_incident(self, current_incident, new_incident):
+        assert self.lf_number.startswith(current_incident.incident_number), 'LF number does not start with previous incident number'
+        new_number = self.lf_number.replace(current_incident.incident_number, new_incident.incident_number)
+        match = LocationForm.objects.filter(lf_number=new_number)
+        if len(match) > 0:
+            conflict = ConflictException('LF already exists with number ' + new_number)
+            raise conflict
+        self.lf_number = new_number
+        self.save()
+        
+        for information in self.locationinformation_set.all():
+            information.incident = new_incident
+            information.save()
+        
+        for assoc in self.locationassociation_set.all():
+            assoc.incident = new_incident
+            assoc.save()
+        
+        for eval in self.locationevaluation_set.all():
+            eval.incident = new_incident
+            eval.save()
+        
+        for attach in self.locationattachment_set.all():
+            attach.incident = new_incident
+            attach.save()
+        
+        self.incidents.remove(current_incident)
+        self.incidents.add(new_incident)
     
     @staticmethod
     def key_field_name():

@@ -1,5 +1,6 @@
 import pytz
 import datetime
+from rest_framework.exceptions import APIException
 from django.db import models
 from django.db.models import Q
 from django.db.models import JSONField
@@ -554,6 +555,13 @@ class ExportImportField(models.Model):
         qs = ExportImportField.objects.filter(export_import__in=export_imports).distinct().order_by('id')
         return qs
 
+class ConflictException(APIException):
+    status_code = 409
+    default_detail = 'Conflict occurred'
+    default_code = 'conflict'
+    def __init__(self, detail):
+        self.detail = detail
+
 class BaseForm(models.Model):
     status = models.CharField('Status', max_length=20, default='pending')
     station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
@@ -578,6 +586,9 @@ class BaseForm(models.Model):
         pass
     
     def post_save(self, form_data):
+        pass      
+    
+    def change_incident(self, current_incident, new_incident):
         pass
         
 class BaseResponse(models.Model):

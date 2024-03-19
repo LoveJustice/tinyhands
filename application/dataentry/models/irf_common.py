@@ -5,6 +5,7 @@ from imagekit.processors import ResizeToFill
 from .person import Person
 from .form import BaseCard
 from .form import BaseForm
+from .form import ConflictException
 from .form import FormCategory
 from accounts.models import Account
 
@@ -234,6 +235,16 @@ class IrfCommon(BaseForm):
             return 'None'
         else:
             return str(value)
+    
+    def change_incident(self, current_incident, new_incident):
+        assert self.irf_number.startswith(current_incident.incident_number), 'IRF number does not start with previous incident number'
+        new_number = self.irf_number.replace(current_incident.incident_number, new_incident.incident_number)
+        match = IrfCommon.objects.filter(irf_number=new_number)
+        if len(match) > 0:
+            conflict = ConflictException("IRF already exists with number " + new_number)
+            raise conflict
+        self.irf_number = new_number
+        self.save()
     
     def __str__(self):
         return self.to_str(self.id) + ":" + self.to_str(self.irf_number) + ", " + self.to_str(self.number_of_victims) + ", " + self.to_str(self.location )+ ", " + self.to_str(self.number_of_traffickers) + ", " + self.to_str(self.staff_name)

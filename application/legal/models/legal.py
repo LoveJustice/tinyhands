@@ -2,6 +2,7 @@ from django.db import models
 
 from dataentry.models import BaseCard, BaseForm, Country
 from dataentry.models import Incident, Suspect, VdfCommon
+from dataentry.models import ConflictException
 
 class LegalCharge(BaseForm):
     incident = models.ForeignKey(Incident, on_delete=models.CASCADE)
@@ -23,6 +24,17 @@ class LegalCharge(BaseForm):
     
     def get_form_date(self):
         return self.charge_sheet_date
+    
+    def change_incident(self, current_incident, new_incident):
+        assert self.incident == current_incident, 'LEGAL_CASE incident does not match'
+        assert self.legal_charge_number.startswith(current_incident.incident_number), 'LEGAL_CASE number does not start with previous incident number'
+        new_number = self.legal_charge_number.replace(current_incident.incident_number, new_incident.incident_number)
+        match = LegalCharge.objects.filter(legal_charge_number = new_number)
+        if len(match) > 0:
+            conflict = ConflictException('LEGAL_CASE already exists with number ' + new_number)
+        self.legal_charge_number = new_number
+        self.incident = new_incident
+        self.save()
     
     @staticmethod
     def key_field_name():

@@ -2,6 +2,7 @@ from django.db import models
 
 from .person import Person
 from .form import BaseCard, BaseForm
+from .form import ConflictException
 
 # Class to store an instance of the VDF data.
 # This should contain data that is common for all VDFs and is not expected to be changed
@@ -173,6 +174,15 @@ class VdfCommon(BaseForm):
     
     def get_form_date(self):
         return self.interview_date
+    
+    def change_incident(self, current_incident, new_incident):
+        assert self.vdf_number.startswith(current_incident.incident_number), 'VDF/PVF number does not start with previous incident number'
+        new_number = self.vdf_number.replace(current_incident.incident_number, new_incident.incident_number)
+        match = VdfCommon.objects.filter(vdf_number = new_number)
+        if len(match) > 0:
+            conflict = ConflictException('PVF already exists with number ' + new_number)
+        self.vdf_number = new_number
+        self.save()
     
     @staticmethod
     def key_field_name():

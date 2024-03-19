@@ -1,11 +1,16 @@
+import sys
+import traceback
 from rest_framework import filters as fs
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 
-from dataentry.models import Incident, IntercepteeCommon, LocationForm, LocationInformation, Suspect, SuspectInformation, VdfCommon
+from dataentry.models import Form, Incident, IntercepteeCommon, LocationForm, LocationInformation, Suspect, SuspectInformation, VdfCommon
+from dataentry.form_data import FormData
 from dataentry.serializers import IncidentSerializer
+from wheel.metadata import pkginfo_to_metadata
 
 class IncidentViewSet(viewsets.ModelViewSet):
     queryset = Incident.objects.all()
@@ -99,5 +104,45 @@ class IncidentViewSet(viewsets.ModelViewSet):
                 if location_info.address is not None and 'address' in location_info.address:
                     names['address']['forms'].append({'text':location_info.address['address'], 'title':'LF ' + lf.lf_number})
                 
-
         return Response(names)
+    
+    def change_incident_forms(self, request, pk):
+        from dataentry.dataentry_signals import form_done
+        original_incident = Incident.objects.get(id=pk)
+        destination_incident_number = request.data['newIncidentNumber']
+        assert original_incident.incident_number != destination_incident_number, 'Original and destination incident numbers match'
+        assert original_incident.incident_number[0:3] == destination_incident_number[0:3], 'Original and destination incident station codes do not match'
+        
+        with transaction.atomic():
+            try:
+                destination_incident = Incident.objects.get(incident_number=destination_incident_number)
+            except:
+                destination_incident = Incident()
+                destination_incident.incident_number = destination_incident_number
+                destination_incident.incident_date = original_incident.incident_date
+                destination_incident.station = original_incident.station
+                destination_incident.save()
+            
+            google_sheet_remove = []
+            google_sheet_add = []
+            for form_type in ['IRF','PVF','SF','LF','LEGAL_CASE']:
+                if form_type in request.data:
+                    entries = request.data[form_type]
+                    for entry in entries:
+                        form = Form.objects.get(form_name=entry['formName'])
+                        form_instance = FormData.find_object_by_id(entry['id'], form)
+                        form_remove = type(form_instance).objects.get(id=form_instance.id)
+                        google_sheet_remove.append(FormData(form_remove, form))
+                        form_instance.change_incident(original_incident, destination_incident)
+                        google_sheet_add.append(FormData(form_instance,form))
+            
+            for form_data in google_sheet_remove:
+                form_done.send_robust(sender=self.__class__, form_data=form_data, remove=True)
+            
+            for form_data in google_sheet_add:
+                form_done.send_robust(sender=self.__class__, form_data=form_data)
+        
+        updated_incident = Incident.objects.get(id=pk)
+        serializer = IncidentSerializer(updated_incident)
+        return Response(serializer.data)
+            
