@@ -8,7 +8,7 @@ class LegalChargeSerializer(serializers.ModelSerializer):
         model = LegalCharge
         fields = [field.name for field in model._meta.fields] # all the model fields
         fields = fields + ['form_name','incident_number', 'country_id','station_code','number_victims','number_suspects','number_arrests',
-                           'number_cases', 'number_convictions', 'charges']
+                           'number_cases', 'number_convictions', 'charges', 'last_timeline_date']
     
     form_name = serializers.SerializerMethodField(read_only=True)
     incident_number = serializers.SerializerMethodField(read_only=True)
@@ -20,6 +20,7 @@ class LegalChargeSerializer(serializers.ModelSerializer):
     number_cases = serializers.SerializerMethodField(read_only=True)
     number_convictions = serializers.SerializerMethodField(read_only=True)
     charges = serializers.SerializerMethodField(read_only=True)
+    last_timeline_date = serializers.SerializerMethodField(read_only=True)
     
     def get_form_name(self, obj):
         forms = Form.objects.filter(form_type__name='LEGAL_CASE', stations__id=obj.station.id)
@@ -62,6 +63,13 @@ class LegalChargeSerializer(serializers.ModelSerializer):
     
     def get_number_convictions(self, obj):
         return LegalChargeSuspectCharge.objects.filter(legal_charge=obj, verdict='Conviction').count()
+    
+    def get_last_timeline_date(self, obj):
+        result = None
+        timelines = obj.legalchargetimeline_set.filter(date_removed__isnull=True).order_by('-comment_date')
+        if len(timelines) > 0:
+            result = timelines[0].comment_date
+        return result
 
 class LegalChargeIncidentSfSerializer(serializers.ModelSerializer):
     class Meta:
