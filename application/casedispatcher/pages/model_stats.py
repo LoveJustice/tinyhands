@@ -115,18 +115,21 @@ def main():
     st.altair_chart(roc_chart, use_container_width=True)
     # Use Markdown for headings
     st.markdown("## Model Performance Metrics")
+    baseline_accuracy = (st.session_state["case_dispatcher_soc_df"].shape[0] - st.session_state["case_dispatcher_soc_df"]['arrested'].sum()) / st.session_state["case_dispatcher_soc_df"].shape[0]
 
     # Use Streamlit's metric function for a dashboard-like display
     col1, col2 = st.columns(2)
     with col1:
         st.metric("ROC-AUC Score", f"{roc_auc_rf:.3f}")
+        st.metric("F1 Score", f"{f1_rf:.3f}")
         st.metric("Accuracy", f"{accuracy_rf:.3f}")
 
     with col2:
         st.metric("Precision", f"{precision_rf:.3f}")
         st.metric("Recall", f"{recall_rf:.3f}")
+        st.metric("Baseline Accuracy", f"{baseline_accuracy:.3f}")
 
-    st.metric("F1 Score", f"{f1_rf:.3f}")
+
 
     df_arrested = st.session_state["case_dispatcher_soc_df"][st.session_state["case_dispatcher_soc_df"]['arrested'] == 1]
 
@@ -157,6 +160,8 @@ def main():
     )
 
     st.altair_chart(chart, use_container_width=True)
+
+
 
 if __name__ == "__main__":
     main()

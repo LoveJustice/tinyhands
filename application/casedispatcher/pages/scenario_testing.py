@@ -6,10 +6,58 @@ import matplotlib.pyplot as plt
 from googleapiclient.discovery import build
 from sklearn.tree import export_text
 from oauth2client.client import OAuth2Credentials
-from libraries.case_dispatcher_data import (
 
-    get_countries,
-)
+feedback_options = [
+    "pv_believes_definitely_trafficked_many",
+    "pv_believes_not_a_trafficker",
+    "pv_believes_trafficked_some",
+    "pv_believes_suspect_trafficker",
+    "pv_attempt",
+]
+
+
+exploitation_options = [
+    "exploit_debt_bondage",
+    "exploit_forced_labor",
+    "exploit_physical_abuse",
+    "exploit_prostitution",
+    "exploit_sexual_abuse",
+]
+
+
+recruitment_options = [
+    "pv_recruited_agency",
+    "pv_recruited_broker",
+    "pv_recruited_no",
+]
+
+roles_options = [
+    "friend",
+    "suspect",
+    "missing_information",
+    "transporter",
+    "boss_trafficker",
+    "recruiter",
+    "host",
+    "facilitator",
+    "role_other",
+]
+
+country_options_map = {
+    "country_reduced": "Reduced",
+    "country_Bangladesh": "Bangladesh",
+    "country_India": "India",
+    "country_India Network": "India Network",
+    "country_Kenya": "Kenya",
+    "country_Liberia": "Liberia",
+    "country_Mozambique": "Mozambique",
+    "country_Namibia": "Namibia",
+    "country_Nepal": "Nepal",
+    "country_Other": "Other",
+    "country_South Africa": "South Africa",
+    "country_Uganda": "Uganda",
+}
+
 from pages.model_build import display_feature_importances
 
 from libraries.google_lib import (
@@ -90,13 +138,17 @@ def main():
 
     if "country_stats" not in st.session_state:
         st.session_state["country_stats"] = pd.read_csv('data/final_data.csv')
-        country_list = list(st.session_state["country_stats"]['Country'])
+        st.session_state["country_stats"]['IBR12'] = st.session_state["country_stats"]['IBR12'].str.rstrip('%').astype(float) / 100
+
+    if "country_list" not in st.session_state:
+        st.session_state["country_list"] = list(st.session_state["country_stats"]['Country'])
 
     if "country" not in st.session_state:
         st.session_state["country"] = "Nepal"
 
-    st.session_state["country"] = st.selectbox("Select country stats", country_list, index = country_list.index('Nepal'))
-    country_stats = st.session_state["country_stats"][st.session_state["country_stats"]['Country'] == st.session_state["country"]].to_dict('records')
+    st.session_state["country"] = st.selectbox("Select country stats", st.session_state["country_stats"], index = st.session_state["country_list"].index('Nepal'))
+    country_stats = st.session_state["country_stats"][st.session_state["country_stats"]['Country'] == st.session_state["country"]].to_dict('records', into=dict)[0]
+
 
     st.session_state['tree'] = st.session_state["case_dispatcher_model"].best_estimator_.named_steps["clf"].estimators_[0]
 
@@ -125,66 +177,51 @@ def main():
     with st.expander("See feature importances:"):
         display_feature_importances(st.session_state["case_dispatcher_model"], st.session_state["case_dispatcher_model_cols"])
 
-    # Initialize a dictionary to store form data
-    form_data = {
-        "age": st.number_input("Age of suspect", min_value=40, format="%i"),
+    station_data = {
+    'IBR12': st.number_input('IBR12', min_value=-100.0, max_value=100.0, value=country_stats['IBR12'], format="%f"),}
+
+    demographics = {"age": st.number_input("Age of suspect", min_value=10, max_value=100, value=40,format="%i"),
         # Additional fields follow...
         "number_of_victims": st.number_input(
-            "Number of Victims", min_value=4, format="%i"
+            "Number of Victims", min_value=0, max_value=100, value=2, format="%i"
         ),
         "number_of_traffickers": st.number_input(
-            "Number of Traffickers", min_value=2, format="%i"
+            "Number of Traffickers", min_value=0, max_value=100, value=2, format="%i",
         ),
+        "case_filed_against": st.checkbox("case_filed_against"),
         # Checkbox fields
-
         "female": st.checkbox("female"),
         "male": st.checkbox("male"),
-        "unknown_gender": st.checkbox("unknown_gender"),
-        "pv_believes_definitely_trafficked_many": st.checkbox(
-            "pv_believes_definitely_trafficked_many"
-        ),
-        "pv_believes_not_a_trafficker": st.checkbox("pv_believes_not_a_trafficker"),
-        "pv_believes_trafficked_some": st.checkbox("pv_believes_trafficked_some"),
-        "pv_believes_suspect_trafficker": st.checkbox("pv_believes_suspect_trafficker"),
-        "exploit_debt_bondage": st.checkbox("exploit_debt_bondage"),
-        "exploit_forced_labor": st.checkbox("exploit_forced_labor"),
-        "exploit_physical_abuse": st.checkbox("exploit_physical_abuse"),
-        "exploit_prostitution": st.checkbox("exploit_prostitution"),
-        "exploit_sexual_abuse": st.checkbox("exploit_sexual_abuse"),
-        "pv_recruited_agency": st.checkbox("pv_recruited_agency"),
-        "pv_recruited_broker": st.checkbox("pv_recruited_broker"),
-        "pv_recruited_no": st.checkbox("pv_recruited_no"),
-        "friend": st.checkbox("friend"),
-        "suspect": st.checkbox("suspect"),
-        "missing_information": st.checkbox("missing_information"),
-        "transporter": st.checkbox("transporter"),
-        "boss_trafficker": st.checkbox("boss_trafficker"),
-        "recruiter": st.checkbox("recruiter"),
-        "host": st.checkbox("host"),
-        "facilitator": st.checkbox("facilitator"),
-        "role_other": st.checkbox("role_other"),
-        "case_filed_against": st.checkbox("case_filed_against"),
-        "pv_attempt": st.checkbox("pv_attempt"),
+        "unknown_gender": st.checkbox("unknown_gender"),}
+    # Create the multiselect widget for potential victim feedback
+    selected_feedback = st.multiselect("Select potential victim feedback:", feedback_options)
 
-        "country_reduced": st.checkbox("country_reduced"),
-        "country_Bangladesh": st.checkbox("country_Bangladesh"),
-        "country_India": st.checkbox("country_India"),
-        "country_India Network": st.checkbox("country_India Network"),
-        "country_Kenya": st.checkbox("country_Kenya"),
-        "country_Liberia": st.checkbox("country_Liberia"),
-        "country_Mozambique": st.checkbox("country_Mozambique"),
-        "country_Namibia": st.checkbox("country_Namibia"),
-        "country_Nepal": st.checkbox("country_Nepal"),
-        "country_Other": st.checkbox("country_Other"),
-        "country_South Africa": st.checkbox("country_South Africa"),
-        "country_Uganda": st.checkbox("country_Uganda"),
-        'IBR12': st.number_input('IBR12', min_value=-100.0, max_value=100.0, value=country_stats['IBR12'], format="%f"),
+    # Construct the dictionary with True for selected feedback options and False for unselected ones
+    potential_victim_feedback = {feedback_option: feedback_option in selected_feedback for feedback_option in
+                                 feedback_options}
+
+    selected_exploitation_types = st.multiselect("Select exploitation types:", exploitation_options)
+
+    # Construct the dictionary with True for selected exploitation types and False for unselected ones
+    exploitation_type = {exploitation_option: exploitation_option in selected_exploitation_types for exploitation_option
+                         in exploitation_options}
+
+    selected_recruitment_types = st.multiselect("Select recruitment types:", recruitment_options)
+    # Construct the dictionary with True for selected recruitment types and False for unselected ones
+    recruitment_type = {recruitment_option: recruitment_option in selected_recruitment_types for recruitment_option in
+                        recruitment_options}
+    # Create the multiselect widget for roles
+    selected_roles = st.multiselect("Select roles:", roles_options)
+    # Construct the dictionary with True for selected roles and False for unselected ones
+    role = {role_option: role_option in selected_roles for role_option in roles_options}
+
+    criminal_data = {
         'eco_ind': st.number_input('Economic Indicator', min_value=-100.0, max_value=100.0, value=country_stats['eco_ind'], format="%f"),
-        'edu_human_dev': st.number_input('Education and Human Development', min_value=-100.0, max_value=100.0,
+        'edu_human_dev': st.number_input('Education and Human Development', min_value=-500.0, max_value=500.0,
                                          value=country_stats['edu_human_dev'], format="%f"),
-        'demo_environ': st.number_input('Demographic Environment', min_value=-100.0, max_value=100.0, value=country_stats['demo_environ'],
+        'demo_environ': st.number_input('Demographic Environment', min_value=-500.0, max_value=500.0, value=country_stats['demo_environ'],
                                         format="%f"),
-        'adult_migr': st.number_input('Adult Migration', min_value=-100.0, max_value=100.0, value=country_stats['adult_migr'], format="%f"),
+        'adult_migr': st.number_input('Adult Migration', min_value=-500.0, max_value=500.0, value=country_stats['adult_migr'], format="%f"),
         'child_migr': st.number_input('Child Migration', min_value=-100.0, max_value=100.0, value=country_stats['child_migr'], format="%f"),
         'refugee_asylum': st.number_input('Refugee and Asylum Seekers', min_value=-100.0, max_value=100.0, value=country_stats['refugee_asylum'],
                                           format="%f"),
@@ -194,11 +231,23 @@ def main():
         'criminal_actors': st.number_input('Criminal Actors', min_value=-100.0, max_value=100.0, value=country_stats['criminal_actors'],
                                            format="%f"),
         'gov_rol': st.number_input('Governance and Rule of Law', min_value=-100.0, max_value=100.0, value=country_stats['gov_rol'],
-                                   format="%f"),
-    }
+                                   format="%f"),}
+    # Initialize a dictionary to store form data
 
+    # Mapping internal identifiers to user-friendly names
 
+    # Convert mapping keys to a list for the multiselect options
+    country_options = list(country_options_map.values())
 
+    # Use the multiselect widget with user-friendly names
+    selected_country_names = st.multiselect("Select countries:", country_options)
+
+    # Creating a new dictionary where the values are True if the country was selected, False otherwise
+    country_selection = {key: value in selected_country_names for key, value in country_options_map.items()}
+
+    # Display the selected countriesform_data
+    form_data = station_data|demographics|potential_victim_feedback|exploitation_type|recruitment_type|role|criminal_data|country_selection
+    print(form_data)
 
     if st.button("Predict"):
         st.write("Predicting...")
@@ -208,6 +257,7 @@ def main():
         user_data_transformed = st.session_state["best_pipeline"][:-1].transform(
             user_data
         )
+        st.write(user_data)
         display_model_data_transformed = pd.DataFrame(st.session_state["model_data_transformed"].copy())
         with st.expander("See model_data_transformed:"):
 
@@ -253,7 +303,7 @@ def main():
         # Plot SHAP values for the user's data
         fig, ax = plt.subplots()
         shap.plots.waterfall(
-            shap_values[0, :, 1]
+            shap_values[0, :, 1], max_display=20
         )  # Optionally limit the number of features displayed
         st.pyplot(fig, bbox_inches="tight")
 
