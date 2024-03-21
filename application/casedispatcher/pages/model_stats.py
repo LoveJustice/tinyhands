@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 import altair as alt
 import json
@@ -51,6 +52,12 @@ def main():
         )
         st.write(st.session_state["case_dispatcher_model_cols"])
 
+    with st.expander("See model_data_transformed:"):
+        display_model_data_transformed = pd.DataFrame(st.session_state["model_data_transformed"].copy())
+        display_model_data_transformed.columns = st.session_state["case_dispatcher_model_cols"]
+        st.dataframe(display_model_data_transformed)
+        st.write(display_model_data_transformed.dtypes)
+
     with st.expander("See decision tree rules:"):
         tree = st.session_state['case_dispatcher_model'].best_estimator_.named_steps["clf"].estimators_[0]
         tree_rules = export_text(tree, feature_names=st.session_state["case_dispatcher_model_cols"])
@@ -66,7 +73,14 @@ def main():
     x_validation = load_from_cloud(drive_service=drive_service, file_id=x_validation_id)
 
     with st.expander("See validation data:"):
-        st.dataframe(x_validation)
+        display_x_validation = pd.DataFrame(x_validation)
+        st.dataframe(display_x_validation[st.session_state["case_dispatcher_model_cols"]])
+
+    with st.expander("See case_dispatcher_model_cols:"):
+        st.dataframe(st.session_state["case_dispatcher_model_cols"])
+
+    with st.expander("case_dispatcher_soc_df:"):
+        st.dataframe(st.session_state["case_dispatcher_soc_df"][st.session_state["case_dispatcher_model_cols"]])
 
     y_validation_id = get_file_id(
         'y_validation.pkl', drive_service

@@ -87,37 +87,53 @@ def main():
             "case_dispatcher_model_cols.pkl",
             "case_dispatcher_soc_df.pkl",
         )
-        st.session_state['tree'] = st.session_state["case_dispatcher_model"].best_estimator_.named_steps["clf"].estimators_[0]
-        st.session_state["best_pipeline"] = st.session_state[
-            "case_dispatcher_model"
-        ].best_estimator_
-        st.session_state["clf"] = st.session_state["best_pipeline"].named_steps["clf"]
-        st.session_state["model_data_transformed"] = st.session_state["best_pipeline"][
-            :-1
-        ].transform(
-            st.session_state["case_dispatcher_soc_df"][
-                st.session_state["case_dispatcher_model_cols"]
-            ]
-        )
-        st.write(st.session_state["case_dispatcher_model_cols"])
 
-        with st.expander("See decision tree rules:"):
-            tree = st.session_state['tree'].best_estimator_.named_steps["clf"].estimators_[0]
-            tree_rules = export_text(tree, feature_names=st.session_state["case_dispatcher_model_cols"])
-            st.text(tree_rules)
+    if "country_stats" not in st.session_state:
+        st.session_state["country_stats"] = pd.read_csv('data/final_data.csv')
+        country_list = list(st.session_state["country_stats"]['Country'])
 
-        with st.expander("See feature importances:"):
-            display_feature_importances(st.session_state["case_dispatcher_model"], st.session_state["case_dispatcher_model_cols"])
+    if "country" not in st.session_state:
+        st.session_state["country"] = "Nepal"
+
+    st.session_state["country"] = st.selectbox("Select country stats", country_list, index = country_list.index('Nepal'))
+    country_stats = st.session_state["country_stats"][st.session_state["country_stats"]['Country'] == st.session_state["country"]].to_dict('records')
+
+    st.session_state['tree'] = st.session_state["case_dispatcher_model"].best_estimator_.named_steps["clf"].estimators_[0]
+
+    st.session_state["best_pipeline"] = st.session_state[
+        "case_dispatcher_model"
+    ].best_estimator_
+    st.session_state["clf"] = st.session_state["best_pipeline"].named_steps["clf"]
+
+    transformed_array = st.session_state["best_pipeline"][:-1].transform(
+        st.session_state["case_dispatcher_soc_df"][st.session_state["case_dispatcher_model_cols"]]
+    )
+
+    # Assuming 'case_dispatcher_model_cols' maintains the original desired column order
+    model_data_transformed = pd.DataFrame(
+        transformed_array,
+        columns=st.session_state["case_dispatcher_model_cols"]
+    )
+
+    st.session_state["model_data_transformed"] = model_data_transformed
+
+    with st.expander("See decision tree rules:"):
+        tree = st.session_state['tree']
+        tree_rules = export_text(tree, feature_names=st.session_state["case_dispatcher_model_cols"])
+        st.text(tree_rules)
+
+    with st.expander("See feature importances:"):
+        display_feature_importances(st.session_state["case_dispatcher_model"], st.session_state["case_dispatcher_model_cols"])
 
     # Initialize a dictionary to store form data
     form_data = {
-        "age": st.number_input("Age of suspect", min_value=12, format="%i"),
+        "age": st.number_input("Age of suspect", min_value=40, format="%i"),
         # Additional fields follow...
         "number_of_victims": st.number_input(
-            "Number of Victims", min_value=0, format="%i"
+            "Number of Victims", min_value=4, format="%i"
         ),
         "number_of_traffickers": st.number_input(
-            "Number of Traffickers", min_value=0, format="%i"
+            "Number of Traffickers", min_value=2, format="%i"
         ),
         # Checkbox fields
 
@@ -162,7 +178,25 @@ def main():
         "country_Other": st.checkbox("country_Other"),
         "country_South Africa": st.checkbox("country_South Africa"),
         "country_Uganda": st.checkbox("country_Uganda"),
+        'IBR12': st.number_input('IBR12', min_value=-100.0, max_value=100.0, value=country_stats['IBR12'], format="%f"),
+        'eco_ind': st.number_input('Economic Indicator', min_value=-100.0, max_value=100.0, value=country_stats['eco_ind'], format="%f"),
+        'edu_human_dev': st.number_input('Education and Human Development', min_value=-100.0, max_value=100.0,
+                                         value=country_stats['edu_human_dev'], format="%f"),
+        'demo_environ': st.number_input('Demographic Environment', min_value=-100.0, max_value=100.0, value=country_stats['demo_environ'],
+                                        format="%f"),
+        'adult_migr': st.number_input('Adult Migration', min_value=-100.0, max_value=100.0, value=country_stats['adult_migr'], format="%f"),
+        'child_migr': st.number_input('Child Migration', min_value=-100.0, max_value=100.0, value=country_stats['child_migr'], format="%f"),
+        'refugee_asylum': st.number_input('Refugee and Asylum Seekers', min_value=-100.0, max_value=100.0, value=country_stats['refugee_asylum'],
+                                          format="%f"),
+        'resilience': st.number_input('Resilience', min_value=-100.0, max_value=100.0, value=country_stats['resilience'], format="%f"),
+        'criminal_markets': st.number_input('Criminal Markets', min_value=-100.0, max_value=100.0, value=country_stats['criminal_markets'],
+                                            format="%f"),
+        'criminal_actors': st.number_input('Criminal Actors', min_value=-100.0, max_value=100.0, value=country_stats['criminal_actors'],
+                                           format="%f"),
+        'gov_rol': st.number_input('Governance and Rule of Law', min_value=-100.0, max_value=100.0, value=country_stats['gov_rol'],
+                                   format="%f"),
     }
+
 
 
 
@@ -171,31 +205,45 @@ def main():
         # Assume form_data and input_list are previously defined and valid
         user_data = pd.DataFrame([form_data])
         user_data.reindex(columns=st.session_state["case_dispatcher_model_cols"])
+        user_data_transformed = st.session_state["best_pipeline"][:-1].transform(
+            user_data
+        )
+        display_model_data_transformed = pd.DataFrame(st.session_state["model_data_transformed"].copy())
+        with st.expander("See model_data_transformed:"):
+
+            # display_model_data_transformed.columns = st.session_state["case_dispatcher_model_cols"]
+            st.dataframe(display_model_data_transformed)
+            st.write(display_model_data_transformed.dtypes)
+
         with st.expander("See scenario data:"):
             st.dataframe(user_data)
             st.write(user_data.dtypes)
         # Transform the user input data with all pipeline steps except the classifier
-        user_data_transformed = st.session_state["best_pipeline"][:-1].transform(
-            user_data
-        )
+
         with st.expander("See transformed data:"):
             display_user_data_transformed = pd.DataFrame(user_data_transformed.copy())
-            display_user_data_transformed.columns = st.session_state["case_dispatcher_model_cols"]
+            # display_user_data_transformed.columns = st.session_state["case_dispatcher_model_cols"]
             st.dataframe(display_user_data_transformed)
+            st.write(display_user_data_transformed.dtypes)
+
+        with st.expander("See transformed array:"):
+            st.write(transformed_array)
             st.write(display_user_data_transformed.dtypes)
         # Make a prediction using only the classifier
 
-        prediction = st.session_state["clf"].predict_proba(user_data_transformed)[
-            :, 1
-        ]
-        st.write("Prediction:", prediction)
+        # prediction = st.session_state["clf"].predict_proba(user_data_transformed)[
+        #     :, 1
+        # ]
+        # st.write("Prediction:", prediction)
 
         # Transform the model data with all pipeline steps except the classifier
 
         # Initialize SHAP explainer with the model and the transformed model data
+        transformed_array = transformed_array.astype(
+            {col: 'int' for col in transformed_array.select_dtypes(['bool']).columns})
         explainer = shap.Explainer(
             st.session_state["clf"],
-            st.session_state["model_data_transformed"],
+            transformed_array,
             feature_names=st.session_state["case_dispatcher_model_cols"],
         )
 

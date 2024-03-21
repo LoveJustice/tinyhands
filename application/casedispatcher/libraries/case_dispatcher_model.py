@@ -12,6 +12,8 @@ from .case_dispatcher_logging import setup_logger
 from pathlib import Path
 import pickle
 from datetime import datetime
+from sklearn.preprocessing import FunctionTransformer
+
 
 logger = setup_logger("model_logging", "model")
 
@@ -98,50 +100,48 @@ def save_results(best_model, X_validation):
 
 # You can then call this function with your model and validation data
 # save_results(your_model, your_validation_data)
-
-
 def build_transformer():
     """
-    This function builds a transformer that processes boolean and numerical features.
-
-    The transformer first separates boolean and numerical features using a TypeSelector.
-    Numerical features are then standardized using a StandardScaler.
-
-    Returns:
-        Pipeline: The transformer pipeline.
+    Builds a transformer that applies a no-operation (identity function) to the data,
+    preserving both the data and column order exactly as is.
     """
-    transformer = Pipeline(
-        [
-            (
-                "features",
-                FeatureUnion(
-                    transformer_list=[
-                        # Select boolean features and pass them through the pipeline unchanged
-                        (
-                            "boolean",
-                            Pipeline(
-                                [
-                                    ("selector", TypeSelector("bool")),
-                                ]
-                            ),
-                        ),
-                        # Select numerical features and standardize them
-                        (
-                            "numericals",
-                            Pipeline(
-                                [
-                                    ("selector", TypeSelector(np.number)),
-                                    ("scaler", StandardScaler()),
-                                ]
-                            ),
-                        ),
-                    ],
-                    n_jobs=1,
-                ),
-            ),
-        ]
-    )
+    # No-op transformer for the entire DataFrame
+    no_op_transformer = FunctionTransformer()
+
+    # Wrap the no-op transformer in a pipeline (optional, depending on further needs)
+    transformer = Pipeline([
+        ("no_op", no_op_transformer),
+    ])
+
     return transformer
+
+def build_transformer_depr():
+    """
+    Builds a transformer for processing data without altering the original types of boolean and integer columns.
+    """
+    transformer = Pipeline([
+        ("features", FeatureUnion(
+            transformer_list=[
+                ("boolean",
+                    Pipeline([
+                        ("selector", TypeSelector("bool")),
+                        # Potentially add steps if needed, but none are needed now
+                    ])
+                ),
+                ("integers",
+                    Pipeline([
+                        ("selector", TypeSelector('int')),
+                        # No scaling or further steps for integers
+                    ])
+                ),
+                # Add a branch for floats if any specific processing is required for float columns
+            ],
+            n_jobs=1,
+        )),
+    ])
+
+    return transformer
+
 
 
 def remove_recent(soc_df, cutoff_days):
@@ -247,47 +247,6 @@ def get_cls_pipe(clf=RandomForestClassifier()):
     # Return the pipeline
     return cls_pipeline
 
-
-def build_transformer():
-    """
-    Builds a transformer that processes boolean and numerical features.
-
-    Returns:
-        object: A transformer that processes boolean and numerical features.
-    """
-    # Create a transformer that processes boolean and numerical features
-    transformer = Pipeline(
-        [
-            (
-                "features",
-                FeatureUnion(
-                    transformer_list=[
-                        (
-                            "boolean",
-                            Pipeline(
-                                [
-                                    ("selector", TypeSelector("bool")),
-                                ]
-                            ),
-                        ),
-                        (
-                            "numericals",
-                            Pipeline(
-                                [
-                                    ("selector", TypeSelector(np.number)),
-                                    ("scaler", StandardScaler()),
-                                ]
-                            ),
-                        ),
-                    ],
-                    n_jobs=1,
-                ),
-            ),
-        ]
-    )
-
-    # Return the transformer
-    return transformer
 
 
 def pipe_predict(cls_pipeline, X_train, y_train, X_validation):
