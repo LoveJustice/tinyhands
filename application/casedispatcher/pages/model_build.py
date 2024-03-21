@@ -406,21 +406,7 @@ def save_model_to_cloud(model, model_name, drive_service):
     file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
     return file_id
 
-def add_country_stats(model_data, country_stats):
-    # Simplify country replacement using `np.where`
-    import numpy as np
-    model_data['country'] = np.where(model_data['country'] == 'India Network', 'India', model_data['country'])
 
-    # Merge with country_stats and directly replace 'country' without creating a 'dummy_country'
-    merged_data = model_data.merge(country_stats, left_on='country', right_on='Country', how='left')
-
-    # Drop the now redundant 'Country' column from country_stats
-    merged_data.drop(columns=['Country'], inplace=True)
-
-    # Convert 'IBR12' percentage strings to float
-    merged_data['IBR12'] = merged_data['IBR12'].str.rstrip('%').astype(float) / 100
-
-    return merged_data
 def main():
     # Create a slider for selecting cutoff_days
     cutoff_days = st.sidebar.slider(
@@ -432,7 +418,6 @@ def main():
 
     if st.button("Build model"):
         case_dispatcher_soc_df = load_data()
-        case_dispatcher_soc_df = add_country_stats(case_dispatcher_soc_df, pd.read_csv('data/final_data.csv'))
         (
             case_dispatcher_model,
             case_dispatcher_model_cols,

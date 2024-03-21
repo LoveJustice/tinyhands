@@ -7,6 +7,20 @@ from datetime import date
 
 logger = setup_logger("data_prep_logging", "data_prep_logging")
 
+def add_country_stats(model_data, country_stats):
+    # Simplify country replacement using `np.where`
+    import numpy as np
+    model_data['country'] = np.where(model_data['country'] == 'India Network', 'India', model_data['country'])
+
+    # Merge with country_stats and directly replace 'country' without creating a 'dummy_country'
+    merged_data = model_data.merge(country_stats, left_on='country', right_on='Country', how='left')
+
+    # Drop the now redundant 'Country' column from country_stats
+    merged_data.drop(columns=['Country'], inplace=True)
+
+    # Convert 'IBR12' percentage strings to float
+    merged_data['IBR12'] = merged_data['IBR12'].str.rstrip('%').astype(float) / 100
+    return merged_data
 
 def extract_role_series(role_series):
     default_value = "missing information"

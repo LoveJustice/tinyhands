@@ -438,7 +438,7 @@ def main():
         db_sus = db_sus.drop_duplicates()
         irf_case_notes = irf_case_notes.drop_duplicates()
 
-
+        soc_df = data_prep.add_country_stats(model_data = soc_df, country_stats=pd.read_csv('data/final_data.csv'))
         file_bytes = make_file_bytes(soc_df)
         file_metadata = {"name": "case_dispatcher_soc_df.pkl"}
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
