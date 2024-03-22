@@ -123,9 +123,12 @@ def main():
             st.session_state["country"] = "Select a country..."
 
     if "irf" not in st.session_state:
-        st.session_state["irf"] = "Select an IRF ..."
+        st.session_state["irf"] = "Select an IRF..."
     # Country selection dropdown
-    st.session_state["country"] = st.selectbox(
+    # Track the previous country selection
+    # Track the previous country selection
+    previous_country = st.session_state.get("previous_country", None)
+    current_country_selection = st.selectbox(
         "Select a country",
         countries_list,
         index=countries_list.index(
@@ -133,33 +136,48 @@ def main():
         ),
     )
 
+    # Update the country selection and previous country in session state
+    st.session_state["previous_country"] = st.session_state.get("country", None)
+    st.session_state["country"] = current_country_selection
+
     operating_country_id = None
     if st.session_state["country"] != "Select a country...":
         filtered_countries = st.session_state["countries"][
             st.session_state["countries"]["name"] == st.session_state["country"]
-        ]
+            ].copy()
         if not filtered_countries.empty:
             operating_country_id = filtered_countries["id"].values[0]
             st.write("You selected:", st.session_state["country"])
             st.write(
                 f"You selected country: {st.session_state['country']} with country_id: {operating_country_id}"
             )
-            irf_list = list(
-                set(st.session_state["case_dispatcher_soc_df"]["irf_number"])
-            )
+            irf_list = list(set(st.session_state["case_dispatcher_soc_df"][
+                                    st.session_state["case_dispatcher_soc_df"][
+                                        "operating_country_id"] == operating_country_id]['irf_number']))
             irf_list.sort()
-            st.session_state["irfs"] = ["Select an IRF ..."] + irf_list
+
+            # Ensure 'Select an IRF ...' is always the first item in the list
+            st.session_state["irfs"] = ["Select an IRF..."] + irf_list
+
+            # Reset the IRF selectbox if the country has changed
+            if previous_country != st.session_state["country"]:
+                st.session_state["irf"] = "Select an IRF..."
         else:
             st.error("Selected country not found in the list.")
+            if previous_country != st.session_state["country"]:
+                st.session_state["irf"] = "Select an IRF..."
 
     if st.session_state["country"] != "Select a country...":
-        st.session_state["irf"] = st.selectbox(
+        # Compute the correct index for the current selection or default
+        irf_index = st.session_state["irfs"].index(st.session_state.get("irf", "Select an IRF..."))
+
+        selected_irf = st.selectbox(
             "Select an IRF ...",
             st.session_state["irfs"],
-            index=st.session_state["irfs"].index(
-                st.session_state.get("irf", "Select an IRF...")
-            ),
+            index=irf_index,
         )
+        # Update the IRF selection in session state
+        st.session_state["irf"] = selected_irf
 
     if st.session_state["irf"] != "Select an IRF ...":
         st.write("You selected:", st.session_state["irf"])
@@ -175,12 +193,13 @@ def main():
 
         st.write(form_data)
 
+
     if st.button("Predict") and st.session_state["irf"] != "Select an IRF ...":
         if operating_country_id is not None:
             st.write("Predicting...")
             # Assume form_data and input_list are previously defined and valid
             user_data = pd.DataFrame(form_data)
-
+            st.write(user_data.dtypes)
             # Transform the user input data with all pipeline steps except the classifier
             form_data_transformed = st.session_state["best_pipeline"][:-1].transform(
                 form_data
@@ -193,7 +212,8 @@ def main():
             st.write("Prediction:", prediction)
 
             # Transform the model data with all pipeline steps except the classifier
-
+            st.session_state["model_data_transformed"] = st.session_state["model_data_transformed"].astype(
+                {col: 'int' for col in st.session_state["model_data_transformed"].select_dtypes(['bool']).columns})
             # Initialize SHAP explainer with the model and the transformed model data
             explainer = shap.Explainer(
                 st.session_state["clf"],

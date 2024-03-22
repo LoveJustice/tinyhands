@@ -315,18 +315,18 @@ def main():
         db_sus = pd.concat([db_sus, gender_dummies], axis=1)
 
 
-        # Determine the top N countries to keep
-        top_n_countries = db_sus['country'].value_counts().nlargest(10).index
-
-        # Create a new column where less common countries are labeled as 'Other'
-        db_sus['country_reduced'] = db_sus['country'].apply(
-            lambda x: x if x in top_n_countries else 'Other')
-
-        # Apply one-hot encoding to the reduced country column
-        country_dummies = pd.get_dummies(db_sus['country_reduced'], prefix='country')
-
-        # Concatenate these new columns back to the original DataFrame
-        db_sus = pd.concat([db_sus, country_dummies], axis=1)
+        # # Determine the top N countries to keep
+        # top_n_countries = db_sus['country'].value_counts().nlargest(10).index
+        #
+        # # Create a new column where less common countries are labeled as 'Other'
+        # db_sus['country_reduced'] = db_sus['country'].apply(
+        #     lambda x: x if x in top_n_countries else 'Other')
+        #
+        # # Apply one-hot encoding to the reduced country column
+        # country_dummies = pd.get_dummies(db_sus['country_reduced'], prefix='country')
+        #
+        # # Concatenate these new columns back to the original DataFrame
+        # db_sus = pd.concat([db_sus, country_dummies], axis=1)
 
         db_sus["age"] = db_sus["age"].fillna(-99)  # Fill missing values with -99
 

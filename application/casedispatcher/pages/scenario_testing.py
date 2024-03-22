@@ -236,17 +236,17 @@ def main():
 
     # Mapping internal identifiers to user-friendly names
 
-    # Convert mapping keys to a list for the multiselect options
-    country_options = list(country_options_map.values())
-
-    # Use the multiselect widget with user-friendly names
-    selected_country_names = st.multiselect("Select countries:", country_options)
-
-    # Creating a new dictionary where the values are True if the country was selected, False otherwise
-    country_selection = {key: value in selected_country_names for key, value in country_options_map.items()}
+    # # Convert mapping keys to a list for the multiselect options
+    # country_options = list(country_options_map.values())
+    #
+    # # Use the multiselect widget with user-friendly names
+    # selected_country_names = st.multiselect("Select countries:", country_options)
+    #
+    # # Creating a new dictionary where the values are True if the country was selected, False otherwise
+    # country_selection = {key: value in selected_country_names for key, value in country_options_map.items()}
 
     # Display the selected countriesform_data
-    form_data = station_data|demographics|potential_victim_feedback|exploitation_type|recruitment_type|role|criminal_data|country_selection
+    form_data = station_data|demographics|potential_victim_feedback|exploitation_type|recruitment_type|role|criminal_data
     print(form_data)
 
     if st.button("Predict"):
