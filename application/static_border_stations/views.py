@@ -334,8 +334,8 @@ class StaffViewSet(viewsets.ModelViewSet):
         return staff
     
     def retrieve_blank(self, request):
-        staff = Staff()
-                
+        staff = Staff.objects.create()
+
         serializer = StaffSerializer(staff)
         return Response(serializer.data)
     
