@@ -23,7 +23,7 @@ from dataentry.models import BorderStation, Country, CountryExchange, UserLocati
 from dataentry.serializers import BorderStationSerializer
 from rest_api.authentication_expansion import HasPermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import Staff, CommitteeMember, Location, StaffProject, WorksOnProject, StaffReview, StaffMiscellaneous, StaffMiscellaneousTypes, StaffAttachment
-from static_border_stations.serializers import StaffSerializer, StaffKnowledgeSerializer, StaffReviewSerializer, StaffAttachmentSerializer, CommitteeMemberSerializer, LocationSerializer
+from static_border_stations.serializers import BlankStaffSerializer, StaffSerializer, StaffKnowledgeSerializer, StaffReviewSerializer, StaffAttachmentSerializer, CommitteeMemberSerializer, LocationSerializer
 from static_border_stations.serializers import StaffMiscellaneousSerializer, StaffMiscellaneousTypesSerializer
 from budget.models import ProjectRequest, StaffBudgetItem
 import budget.mdf_constants as constants
@@ -335,8 +335,8 @@ class StaffViewSet(viewsets.ModelViewSet):
     
     def retrieve_blank(self, request):
         staff = Staff()
-                
-        serializer = StaffSerializer(staff)
+
+        serializer = BlankStaffSerializer(staff)
         return Response(serializer.data)
     
     def build_csv_headers(self, row):

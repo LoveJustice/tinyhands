@@ -49,7 +49,7 @@ class StaffReviewSerializer(serializers.ModelSerializer):
         
         return result;
 
-class StaffSerializer(serializers.ModelSerializer):
+class BaseStaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
         fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'position',
@@ -59,7 +59,7 @@ class StaffSerializer(serializers.ModelSerializer):
                   'contract_data', 'knowledge_data', 'review_data', 'has_pbs']
     
     total_years = serializers.SerializerMethodField(read_only=True)
-    staffproject_set = StaffProjectSerializer(many=True)
+    #staffproject_set = StaffProjectSerializer(many=True)
     contract_data = serializers.SerializerMethodField(read_only=True)
     knowledge_data = serializers.SerializerMethodField(read_only=True)
     review_data = serializers.SerializerMethodField(read_only=True)
@@ -233,6 +233,16 @@ class StaffSerializer(serializers.ModelSerializer):
             entry.save()
         
         return obj
+
+class StaffSerializer(BaseStaffSerializer):
+    staffproject_set = StaffProjectSerializer(many=True)
+    
+class BlankStaffSerializer(BaseStaffSerializer):
+    staffproject_set = serializers.SerializerMethodField(read_only=True)
+    
+    def get_staffproject_set(self, obj):
+        return []
+
 
 class MiniBorderStationSerializer(serializers.ModelSerializer):
     class Meta:
