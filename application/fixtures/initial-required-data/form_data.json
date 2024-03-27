@@ -5291,7 +5291,7 @@
                "question_id": 785,
                "prompt_format": "col-md-3 control-label",
                "points_possible": 10,
-               "improvement_text": "Ensure case discussion doesn\u2019t take place outside staff and subcommittee."
+               "improvement_text": "Ensure case discussion doesn’t take place outside staff and subcommittee."
             },
             {
                "type": "header",
@@ -5300,7 +5300,7 @@
             },
             {
                "type": "radio",
-               "prompt": "NGO in victims\u2019 areas contacted",
+               "prompt": "NGO in victims’ areas contacted",
                "options": [
                   {
                      "label": "no",
@@ -8282,7 +8282,7 @@
             },
             {
                "type": "radio",
-               "prompt": "\u201cVerified\u201d phone numbers (victim / suspect) percentage",
+               "prompt": "“Verified” phone numbers (victim / suspect) percentage",
                "options": [
                   {
                      "label": "<60%",
@@ -8733,7 +8733,7 @@
                "question_id": 785,
                "prompt_format": "col-md-3 control-label",
                "points_possible": 8,
-               "improvement_text": "Ensure case discussion doesn\u2019t take place outside staff and subcommittee."
+               "improvement_text": "Ensure case discussion doesn’t take place outside staff and subcommittee."
             },
             {
                "type": "header",
@@ -8742,7 +8742,7 @@
             },
             {
                "type": "radio",
-               "prompt": "NGO in victims\u2019 areas contacted",
+               "prompt": "NGO in victims’ areas contacted",
                "options": [
                   {
                      "label": "no",
@@ -10813,7 +10813,7 @@
                "question_id": 785,
                "prompt_format": "col-md-3 control-label",
                "points_possible": 10,
-               "improvement_text": "Ensure case discussion doesn\u2019t take place outside staff and subcommittee."
+               "improvement_text": "Ensure case discussion doesn’t take place outside staff and subcommittee."
             },
             {
                "type": "header",
@@ -10822,7 +10822,7 @@
             },
             {
                "type": "radio",
-               "prompt": "Church/NGO in victims\u2019 areas contacted",
+               "prompt": "Church/NGO in victims’ areas contacted",
                "options": [
                   {
                      "label": "no",
@@ -20726,11 +20726,11 @@
    "pk": 786,
    "fields": {
       "form_tag": "question786",
-      "prompt": "NGO in victims\u2019 areas contacted",
+      "prompt": "NGO in victims’ areas contacted",
       "description": null,
       "answer_type": 4,
       "params": null,
-      "export_name": "NGO in victims\u2019 areas contacted",
+      "export_name": "NGO in victims’ areas contacted",
       "export_params": null
    }
 },
@@ -22262,6 +22262,32 @@
 },
 {
    "model": "dataentry.question",
+   "pk": 975,
+   "fields": {
+      "form_tag": "irfIntercepteePhotoConsent",
+      "prompt": "Do you consent to us using your photo this way?",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "photo consent",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 976,
+   "fields": {
+      "form_tag": "irfInterepteeInformationConsent",
+      "prompt": "Do you consent to us using your information this way?",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "information consent",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
    "pk": 977,
    "fields": {
       "form_tag": "question977",
@@ -22594,11 +22620,11 @@
    "pk": 1056,
    "fields": {
       "form_tag": "question1056",
-      "prompt": "Did the PV spend time at LJ\u2019s short-term shelter?",
+      "prompt": "Did the PV spend time at LJ’s short-term shelter?",
       "description": null,
       "answer_type": 4,
       "params": null,
-      "export_name": "Did the PV spend time at LJ\u2019s short-term shelter?",
+      "export_name": "Did the PV spend time at LJ’s short-term shelter?",
       "export_params": null
    }
 },
@@ -23170,11 +23196,11 @@
    "pk": 1807,
    "fields": {
       "form_tag": "irfSfeResourcesAppliedDestinationUnknown",
-      "prompt": "Applied for job, but doesn\u2019t know destination",
+      "prompt": "Applied for job, but doesn’t know destination",
       "description": null,
       "answer_type": 6,
       "params": null,
-      "export_name": "Applied for job, but doesn\u2019t know destination",
+      "export_name": "Applied for job, but doesn’t know destination",
       "export_params": null
    }
 },
@@ -23183,11 +23209,11 @@
    "pk": 1808,
    "fields": {
       "form_tag": "irfSfeResourcesDoesntSpeakLocalLanguage",
-      "prompt": "Doesn\u2019t speak Nepali",
+      "prompt": "Doesn’t speak Nepali",
       "description": null,
       "answer_type": 6,
       "params": null,
-      "export_name": "Doesn\u2019t speak Nepali",
+      "export_name": "Doesn’t speak Nepali",
       "export_params": null
    }
 },
@@ -23222,11 +23248,11 @@
    "pk": 1811,
    "fields": {
       "form_tag": "irfSfeResourcesNoJobDetails",
-      "prompt": "Doesn\u2019t know what job they are applying for",
+      "prompt": "Doesn’t know what job they are applying for",
       "description": null,
       "answer_type": 6,
       "params": null,
-      "export_name": "Doesn\u2019t know what job they are applying for",
+      "export_name": "Doesn’t know what job they are applying for",
       "export_params": null
    }
 },
@@ -23616,11 +23642,11 @@
    "pk": 1841,
    "fields": {
       "form_tag": "irfSfeResultStayLocal",
-      "prompt": "PV decided to change plans and look for a job within Nepal due to SFE staff\u2019s counseling",
+      "prompt": "PV decided to change plans and look for a job within Nepal due to SFE staff’s counseling",
       "description": null,
       "answer_type": 6,
       "params": null,
-      "export_name": "PV decided to change plans and look for a job within Nepal due to SFE staff\u2019s counseling",
+      "export_name": "PV decided to change plans and look for a job within Nepal due to SFE staff’s counseling",
       "export_params": null
    }
 },
@@ -42063,6 +42089,24 @@
    }
 },
 {
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 975,
+      "category": 286,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 976,
+      "category": 286,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 1,
@@ -46144,6 +46188,20 @@
    }
 },
 {
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 975,
+      "field_name": "consent_to_use_photo"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 976,
+      "field_name": "consent_to_use_information"
+   }
+},
+{
    "model": "dataentry.answer",
    "fields": {
       "question": 82,
@@ -47160,25 +47218,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47187,7 +47237,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -47205,24 +47263,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47231,7 +47282,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -47249,24 +47307,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47275,7 +47326,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -47293,25 +47351,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47320,7 +47370,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -47338,25 +47396,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47365,7 +47415,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -47383,24 +47441,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47409,7 +47460,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -47427,24 +47485,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47453,7 +47504,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -47473,25 +47531,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47500,7 +47550,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -47520,25 +47578,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47547,7 +47597,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -47565,24 +47623,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47591,7 +47642,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -47609,25 +47667,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47636,7 +47686,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -47656,25 +47714,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47683,7 +47733,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -47882,25 +47940,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47909,7 +47959,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -47966,25 +48024,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -47993,7 +48043,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -48011,25 +48069,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48038,7 +48088,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -48056,25 +48114,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48083,7 +48133,15 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -48101,24 +48159,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48127,7 +48178,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -48145,24 +48203,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48171,7 +48222,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -48189,24 +48247,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48215,7 +48266,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -48235,24 +48293,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48261,7 +48312,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -48288,24 +48346,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48314,7 +48365,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -48341,24 +48399,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48367,7 +48418,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },
@@ -50004,33 +50062,33 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
-         71,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          37,
          44,
          46,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         147
       ]
    }
 },
@@ -50086,24 +50144,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -50112,7 +50163,14 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
       ]
    }
 },

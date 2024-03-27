@@ -49,17 +49,17 @@ class StaffReviewSerializer(serializers.ModelSerializer):
         
         return result;
 
-class StaffSerializer(serializers.ModelSerializer):
+class BaseStaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
         fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'position',
                   'receives_money_distribution_form', 'border_station', 'country',
-                  'first_date', 'last_date', 'birth_date', 'total_years',
+                  'first_date', 'last_date', 'birth_date', 'photo', 'total_years',
                   'education', 'id_card_expiration', 'staffproject_set', 'miscellaneous',
                   'contract_data', 'knowledge_data', 'review_data', 'has_pbs']
     
     total_years = serializers.SerializerMethodField(read_only=True)
-    staffproject_set = StaffProjectSerializer(many=True)
+    #staffproject_set = StaffProjectSerializer(many=True)
     contract_data = serializers.SerializerMethodField(read_only=True)
     knowledge_data = serializers.SerializerMethodField(read_only=True)
     review_data = serializers.SerializerMethodField(read_only=True)
@@ -112,10 +112,10 @@ class StaffSerializer(serializers.ModelSerializer):
         agreement = False
         attachments = StaffAttachment.objects.filter(staff=obj).order_by('-attach_date')
         for attachment in attachments:
-            if contract is None and attachment.option == 'Contract':
+            if contract is False and attachment.option == 'Contract':
                 contract = True
                 contract_date = attachment.attach_date
-            if agreement is None and attachment.option == 'C&M':
+            if agreement is False and attachment.option == 'C & M':
                 agreement = True
         
         result = {
@@ -234,6 +234,16 @@ class StaffSerializer(serializers.ModelSerializer):
         
         return obj
 
+class StaffSerializer(BaseStaffSerializer):
+    staffproject_set = StaffProjectSerializer(many=True)
+    
+class BlankStaffSerializer(BaseStaffSerializer):
+    staffproject_set = serializers.SerializerMethodField(read_only=True)
+    
+    def get_staffproject_set(self, obj):
+        return []
+
+
 class MiniBorderStationSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ['id','station_code','station_name', 'operating_country']
@@ -295,7 +305,7 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
     
     def get_sc_agreement(self, obj):
         result = None
-        if self.can_view_contract(obj):
+        if obj.sc_agreement is not None and obj.sc_agreement != '' and self.can_view_contract(obj):
             result=serializers.ImageField(use_url=True).to_representation(obj.sc_agreement)
             if 'request' in self.context:
                 result = self.context['request'].build_absolute_uri(result)
@@ -304,7 +314,7 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
     
     def get_misconduct_agreement(self, obj):
         result = None
-        if self.can_view_contract(obj):
+        if obj.misconduct_agreement is not None and obj.misconduct_agreement != '' and self.can_view_contract(obj):
             result =serializers.ImageField().to_representation(obj.misconduct_agreement)
             if 'request' in self.context:
                 result = self.context['request'].build_absolute_uri(result)

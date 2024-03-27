@@ -1,6 +1,8 @@
 import json
 import pytz
 import time
+import csv
+import io
 from datetime import date
 
 from PIL import Image
@@ -13,14 +15,15 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db.models import Q
 from django_filters import rest_framework as filters
 from django.core.files.storage import default_storage
+from django.http import HttpResponse
 from rest_framework import filters as fs
 from dateutil import parser
 
-from dataentry.models import BorderStation, CountryExchange, UserLocationPermission
+from dataentry.models import BorderStation, Country, CountryExchange, UserLocationPermission
 from dataentry.serializers import BorderStationSerializer
 from rest_api.authentication_expansion import HasPermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import Staff, CommitteeMember, Location, StaffProject, WorksOnProject, StaffReview, StaffMiscellaneous, StaffMiscellaneousTypes, StaffAttachment
-from static_border_stations.serializers import StaffSerializer, StaffKnowledgeSerializer, StaffReviewSerializer, StaffAttachmentSerializer, CommitteeMemberSerializer, LocationSerializer
+from static_border_stations.serializers import BlankStaffSerializer, StaffSerializer, StaffKnowledgeSerializer, StaffReviewSerializer, StaffAttachmentSerializer, CommitteeMemberSerializer, LocationSerializer
 from static_border_stations.serializers import StaffMiscellaneousSerializer, StaffMiscellaneousTypesSerializer
 from budget.models import ProjectRequest, StaffBudgetItem
 import budget.mdf_constants as constants
@@ -159,7 +162,12 @@ class CommitteeMemberViewSet(viewsets.ModelViewSet):
         serializer = CommitteeMemberSerializer(committee_member)
         return Response(serializer.data)
     
-    
+    def save_file(self, file_obj, subdirectory):
+        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        
+        return  subdirectory + file_obj.name
     
     def create(self, request):
         request_string = request.data['member']
@@ -231,6 +239,53 @@ class StaffViewSet(viewsets.ModelViewSet):
         'first_name', 'last_name', )
     ordering = ('first_name',)
     
+    def save_file(self, file_obj, subdirectory):
+        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        
+        return  subdirectory + file_obj.name
+    
+    def create(self, request):
+        request_string = request.data['staff']
+        request_json = json.loads(request_string)
+        
+        photo_file = None
+        if 'attachment_file' in request.data:
+            file_obj = request.data['attachment_file']
+            photo_file = self.save_file(file_obj, 'staff_photos/')
+        
+        del request_json['photo'] 
+        serializer = StaffSerializer(data=request_json)
+        serializer.is_valid(raise_exception=True)
+        new_staff = serializer.save()
+        if photo_file is not None:
+            new_staff.photo.name = photo_file
+            new_staff.save()
+        serializer_new = StaffSerializer(new_staff, context={'request':request})
+        return Response(serializer_new.data)
+    
+    def update(self, request, pk):
+        request_string = request.data['staff']
+        request_json = json.loads(request_string)
+        staff = Staff.objects.get(id=pk)
+        
+        photo_file = None
+        if 'attachment_file' in request.data:
+            file_obj = request.data['attachment_file']
+            photo_file = self.save_file(file_obj, 'staff_photos/')
+        
+        del request_json['photo'] 
+        serializer = StaffSerializer(staff, data=request_json)
+        serializer.is_valid(raise_exception=True)
+        new_staff = serializer.save()
+        if photo_file is not None:
+            new_staff.photo.name = photo_file
+            new_staff.save()
+        serializer_new = StaffSerializer(new_staff, context={'request':request})
+        return Response(serializer_new.data)
+        
+    
     def get_queryset(self):
         countries = UserLocationPermission.get_countries_with_permission(self.request.user.id, 'STAFF','VIEW_BASIC')
         stations = UserLocationPermission.get_stations_with_permission(self.request.user.id, 'STAFF','VIEW_BASIC')
@@ -280,9 +335,101 @@ class StaffViewSet(viewsets.ModelViewSet):
     
     def retrieve_blank(self, request):
         staff = Staff()
-                
-        serializer = StaffSerializer(staff)
+
+        serializer = BlankStaffSerializer(staff)
         return Response(serializer.data)
+    
+    def build_csv_headers(self, row):
+        headers = []
+        exclude = ['id','miscellaneous']
+        for key in row.keys():
+            if key in exclude:
+                continue
+            if key == 'contract_data':
+                headers += ['contract', 'contract expiration','last month local','last month USD','twelve month local','twelve month usd']
+            elif key == 'knowledge_data':
+                headers += ['general','awareness','security','awareness','security']
+            elif key == 'review_data':
+                pass
+            else:
+                headers.append(key)
+        
+        return headers
+            
+    
+    def retrieve_csv(self, request, pk):
+        country = Country.objects.get(id=pk)
+        export_name=country.name +'-staff.csv'
+        csv_file = io.StringIO()
+        writer = csv.writer(csv_file)
+        header_row = []
+        
+        staff_fields = []
+        staff_exclude = ['id','border_station', 'country']
+        for field in Staff._meta.get_fields():
+            value = str(field)
+            if 'ManyTo' in value or field.name in staff_exclude:
+                continue
+            staff_fields.append(field)
+            header_row.append(field.name.replace('_',' '))
+        
+        header_row.append('projects')
+        review_fields = []
+        review_exclude = ['id', 'staff']
+        for field in StaffReview._meta.get_fields():
+            value = str(field)
+            if field.name in review_exclude:
+                continue
+            review_fields.append(field)
+            header_row.append(field.name.replace('_',' '))
+        
+        header_row.append('contract')
+        header_row.append('contract expiration')
+        header_row.append('C & M')
+        writer.writerow(header_row)
+        
+        blank_review = StaffReview()
+        staff_list = Staff.objects.filter(country__id=pk).exclude(last_date__isnull=False).order_by('first_name','last_name')
+        for staff in staff_list:
+            if staff.last_name == '__general_staff':
+                continue
+            row = []
+            for field in staff_fields:
+                row.append(getattr(staff, field.name, ''))
+            
+            staff_projects = StaffProject.objects.filter(staff=staff)
+            projects = ''
+            sep = ''
+            for staff_project in staff_projects:
+                projects += sep + staff_project.border_station.station_code
+                sep = '/'
+            row.append(projects)
+            reviews = StaffReview.objects.filter(staff=staff).order_by('-review_date')
+            if len(reviews) > 0:
+                review = reviews[0]
+            else:
+                review = blank_review
+            for field in review_fields:
+                row.append(getattr(review, field.name, ''))
+            
+            contracts = StaffAttachment.objects.filter(staff=staff, option='Contract').order_by('-expiration_date')
+            if len(contracts) > 0:
+                row.append(True)
+                row.append(contracts[0].expiration_date)
+            else:
+                row.append(False)
+                row.append('')
+            c_and_m =  StaffAttachment.objects.filter(staff=staff, option='C & M')
+            if len(c_and_m) > 0:
+                row.append(True)
+            else:
+                row.append(False)
+            
+            writer.writerow(row)
+        csv_file.seek(0)
+        response = HttpResponse(csv_file.read(), content_type="text/csv")
+        response['Content-Disposition'] = 'attachment; filename=' + export_name
+        return response
     
     def getValue(self, data, path):
         current = data

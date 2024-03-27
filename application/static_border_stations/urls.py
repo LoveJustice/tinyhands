@@ -26,6 +26,7 @@ urlpatterns = [
         re_path(r'^staff/$', StaffViewSet.as_view(list_methods), name="Staff"),
         re_path(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail_methods), name="StaffDetail"),
         re_path(r'^staff/blank/$', StaffViewSet.as_view({'get':'retrieve_blank'}), name="StaffBlank"),
+        re_path(r'^staff/csv/(?P<pk>\d+)/$', StaffViewSet.as_view({'get':'retrieve_csv'}), name="StaffCsv"),
         re_path(r'^staff/contract/requests/(?P<pk>\d+)/(?P<year>\d+)/(?P<month>\d+)/$', StaffViewSet.as_view({'get':'get_contract_project_requests'}), name="StaffContractRequests"), 
         re_path(r'^staff/attachment/$', StaffAttachmentViewSet.as_view(list_methods), name="StaffAttachment"),
         re_path(r'^staff/attachment/(?P<pk>\d+)/$', StaffAttachmentViewSet.as_view(full_detail_methods), name="StaffAttachmentDetail"),
