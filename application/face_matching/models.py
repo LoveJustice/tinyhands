@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.contrib.postgres.fields import ArrayField, JSONField
+from django.db.models import JSONField
 # from dataentry.models.person import Person, Interceptee
 
 # class FaceEncoding(models.Model):
@@ -188,7 +189,7 @@ class DataentryIrfcommon(models.Model):
     who_noticed = models.CharField(max_length=127, blank=True, null=True)
     staff_who_noticed = models.CharField(max_length=255)
     which_contact = models.CharField(max_length=127)
-    contact_paid = models.NullBooleanField(blank=True)
+    contact_paid = models.BooleanField(null=True)
     contact_paid_how_much = models.CharField(max_length=255)
     evade_noticed_carrying_full_bags = models.BooleanField()
     control_status_known_trafficker = models.BooleanField()

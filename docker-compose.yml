@@ -24,6 +24,7 @@ services:
     env_file:
       - ./common.env
       - ./local.env
+      - ./face_matching.env
     depends_on:
       - db
 
