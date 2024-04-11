@@ -319,14 +319,6 @@ class MoneyDistributionFormProjectRequestHelper:
     @property
     def potential_victim_care_items(self):
         items = []
-            
-        intercepted_girls_total = self.budget.food_and_snacks_intercepted_pv_total()
-        
-        limbo_girls_total = self.budget.limbo_total()
-        if intercepted_girls_total > 0:
-            items.append(BudgetLineItem('Intercepted PVs', intercepted_girls_total,''))
-        if limbo_girls_total > 0:
-            items.append(BudgetLineItem('Limbo PVs', limbo_girls_total,'*1'))
         return items + self.get_request_items(constants.POTENTIAL_VICTIM_CARE, self.project)
     
     @property
@@ -345,8 +337,6 @@ class MoneyDistributionFormProjectRequestHelper:
     def supplies_and_awareness_items(self):
         items = []
         
-        if self.budget.stationary_total() > 0:
-            items.append(BudgetLineItem('Stationary', self.budget.stationary_total(),''))
         return items + self.get_request_items(constants.AWARENESS, self.project)
     
     @property
@@ -373,7 +363,10 @@ class MoneyDistributionFormProjectRequestHelper:
         for item in request_items:
             if item.status == 'Approved-Completed' and item.completed_date_time < self.budget.month_year:
                 continue
-            line_items.append(BudgetLineItem(item.description, item.cost,'') )
+            if section == constants.POTENTIAL_VICTIM_CARE or section == constants.AWARENESS:
+                line_items.append(BudgetLineItem(item.benefit_type_name + ':' + item.description, item.cost,'') )
+            else:
+                line_items.append(BudgetLineItem(item.description, item.cost,'') )
         return line_items
 
     def get_other_items(self, section, project):

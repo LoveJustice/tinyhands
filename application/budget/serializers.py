@@ -223,7 +223,7 @@ class MonthlyDistributionFormSerializer(serializers.ModelSerializer):
         fields = [field.name for field in model._meta.fields] # all the model fields
         fields = fields + ['station_name', 'requests', 'projectrequestcomment_set', 'mdfitem_set', 'related_projects', 'impact_projects',
                            'related_staff', 'country_id', 'country_currency', 'multiplier_types', 'drop_decimal', 'past_month_sent',
-                           'exchange_rate', 'last_months_total']
+                           'exchange_rate', 'last_months_total', 'guide_progress']
     
     station_name = serializers.SerializerMethodField(read_only=True)   
     requests = ProjectRequestSerializer(many=True, read_only=True)
@@ -238,7 +238,7 @@ class MonthlyDistributionFormSerializer(serializers.ModelSerializer):
     drop_decimal = serializers.SerializerMethodField(read_only=True)
     past_month_sent = serializers.SerializerMethodField(read_only=True)
     exchange_rate = serializers.SerializerMethodField(read_only=True)
-    last_months_total = serializers.SerializerMethodField(read_only=True)
+    last_months_total = serializers.SerializerMethodField(read_only=True)  
     
     def get_station_name(self, obj):
         return obj.border_station.station_name
