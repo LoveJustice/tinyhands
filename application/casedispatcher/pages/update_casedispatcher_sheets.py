@@ -50,6 +50,8 @@ links = {
     "Nepal": "https://docs.google.com/spreadsheets/d/1OA98ZiDuSTa3KaQwiRCMEg8ZRXWHcAycN9JgSeqpGb0/edit?usp=drive_link",
     "Malawi": "https://docs.google.com/spreadsheets/d/1TRe8q9Dx0ruSYCuZGqQXraTDPNfgUZiX0h6_VXGJIOo/edit?usp=drive_link",
     "Namibia": "https://docs.google.com/spreadsheets/d/1x-TycO5lQtuTysdqYGOPVweZ-bJ9OBQ7jAnauhiDbpY/edit?usp=drive_link",
+    "Mozambique": "https://docs.google.com/spreadsheets/d/1aQwpk5cEqcrP9l1AbjpwdcCoymIvdhGm2byDHBz1PNY/edit?usp=sharing",
+    "Lesotho": "https://docs.google.com/spreadsheets/d/1svXOIu5xkh9b3V6JaR6XxjIYfKW5pp_gAKMzIs-2GPA/edit?usp=sharing",
 }
 
 
