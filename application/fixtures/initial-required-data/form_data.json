@@ -15767,7 +15767,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 146,
-      "category": 145,
+      "category": 128,
       "name": "Profile",
       "order": 2,
       "form_category_question_config": null,
@@ -15789,7 +15789,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 146,
-      "category": 337,
+      "category": 145,
       "name": "Resources",
       "order": 4,
       "form_category_question_config": null,
