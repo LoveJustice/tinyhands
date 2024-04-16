@@ -17,8 +17,8 @@ class GospelViewSet(viewsets.ModelViewSet):
     put_permissions_required = []
     delete_permissions_required = []
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
-    search_fields = ('station__station_name','station__operating_country__name')
-    ordering_fields = ('date_time_entered_into_system', 'station__station_name', 'station__operating_country__name')
+    search_fields = ('station__station_name','station__operating_country__name', 'full_name')
+    ordering_fields = ('date_time_entered_into_system', 'station__station_name', 'station__operating_country__name', 'full_name')
     ordering = ('date_time_entered_into_system',)
                 
     def get_queryset(self):
