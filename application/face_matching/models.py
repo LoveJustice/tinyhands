@@ -3,50 +3,34 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.db.models import JSONField
-# from dataentry.models.person import Person, Interceptee
 
-# class FaceEncoding(models.Model):
-#     person = models.ForeignKey(Person, primary_key=True,
-#                                   to_field="id", db_column="person_id", on_delete=models.DO_NOTHING)
-#     face_encoding = ArrayField(models.FloatField(
-#         blank=True), blank=True, size=128)
-#     outcome = models.TextField(blank=True)
-
-#     class Meta:
-#         managed = False  # TODO: remove me
-#         db_table = 'face_encodings'
-
-#         def __str__(self):
-#             return self.person_id
-
-class AnalyzedPerson(models.Model):
-    face_photo = models.ImageField(width_field=300, height_field=300)
-    # TODO: Use file uploaded to client
-    full_photo = models.ImageField(width_field=300, height_field=300)
-    face_analysis = models.TextField()
+class AnalyzedPerson:
+    def __init__(self, full_photo, face_photo=None, face_analysis=None):
+        self.full_photo = full_photo
+        self.face_photo = face_photo
+        self.face_analysis = face_analysis
 
 
-class MatchingPerson(models.Model):
-    GENDER_CHOICES = [('M', 'm'), ('F', 'f')]
+class MatchingPerson():
+    def __init__(self, full_name, person_id, gender, role, face_photo, full_photo, irf_number, nationality, age_at_interception, date_of_interception, face_analysis, face_distance):
+        self.full_name = full_name 
+        self.person_id = person_id 
+        self.gender = gender 
+        self.role = role 
+        self.face_photo = face_photo 
+        self.full_photo = full_photo 
+        self.irf_number = irf_number 
+        self.nationality = nationality 
+        self.age_at_interception = age_at_interception 
+        self.date_of_interception = date_of_interception 
+        self.face_analysis = face_analysis 
+        self.face_distance = face_distance 
 
-    full_name = models.CharField(max_length=255, null=True, blank=True)
-    person_id = models.CharField(max_length=6)
-    gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
-    role = models.CharField(max_length=126, null=True)
-    face_photo = models.ImageField(width_field=300, height_field=300)
-    full_photo = models.ImageField(width_field=300, height_field=300)
-    irf_number = models.CharField(max_length=6)
-    nationality = models.CharField(max_length=127, blank=True, default='')
-    age_at_interception = models.PositiveIntegerField(null=True, blank=True)
-    date_of_interception = models.DateField('Interception date', null=True, default=None)
-    face_analysis = models.TextField()
-    face_distance = models.DecimalField(max_digits=2, decimal_places=2)
 
-
-class MatchingData(models.Model):
-    analyzedPerson = models.OneToOneField(AnalyzedPerson, on_delete=models.CASCADE)
-    matchingPersons = models.ForeignKey(MatchingPerson, on_delete=models.CASCADE)
-
+class MatchingData():
+    def __init__(self, analyzedPerson, matchingPersons):
+        self.analyzedPerson = analyzedPerson
+        self.matchingPersons = matchingPersons
 
 
 class DataentryIntercepteecommon(models.Model):
@@ -66,7 +50,7 @@ class DataentryIntercepteecommon(models.Model):
     class Meta:
         managed = False
         db_table = 'dataentry_intercepteecommon'
-
+ 
     def __str__(self):
         return f'DataentryIntercepteecommon: {self.id}, {self.person.id}'
 

@@ -18,9 +18,9 @@ QS_TO_DF_MAPPING = {"person": "person_id", "person__person__master_person": "mas
                     "person__person__gender": "gender", "person__person__age": "age", "person__interception_record__irf_number": "irf_number", "person__interception_record__date_time_entered_into_system": "date_time_entered_into_system", "face_encoding": "face_encoding", "outcome": "outcome"}
 
 curl = {}
-curl['url'] = os.environ["FACE_MATCHER_URL"]
-curl['email'] = os.environ["FACE_MATCHER_EMAIL"]
-curl['password'] = os.environ["FACE_MATCHER_PASSWORD"]
+curl['url'] = os.environ["FACE_MATCHING_URL"]
+curl['email'] = os.environ["FACE_MATCHING_EMAIL"]
+curl['password'] = os.environ["FACE_MATCHING_PASSWORD"]
 
 
 # Extract parameters from submitted form
@@ -143,10 +143,13 @@ def get_face(image_np):
 
 def get_image(photo_url, curl, timeout_duration=10):
     safe_url = curl["url"] + photo_url
+
+    # TODO: Fix username and password being encoded incorrectly
     try:
         response = requests.get(
-            safe_url, auth=(curl["email"], curl["password"]
-                            ), timeout=timeout_duration
+            # safe_url, auth=(curl["email"], curl["password"]
+            #                 ), timeout=timeout_duration
+            safe_url, headers={'Authorization': 'Basic Y2hyaXN0b0Bsb3ZlanVzdGljZS5uZ286STIlMFdPOU43aSQh'}, timeout=timeout_duration
         )
         response.raise_for_status()
         bytesio_obj = BytesIO(response.content)
@@ -347,7 +350,7 @@ def get_matches_display_data(given_encoding, limit):
         given_encoding, limit
     )
 
-    for (closest_match_person_id, face_distance, closest_photo_url) in (closest_matches, face_distances, closest_photo_urls):
+    for (closest_match_person_id, face_distance, closest_photo_url) in zip(closest_matches, face_distances, closest_photo_urls):
         safe_url = quote(closest_photo_url, safe=":/")
 
         # Get actual image from url
@@ -361,6 +364,8 @@ def get_matches_display_data(given_encoding, limit):
         # Get details related to matching person
         details = helper_analysis.get_person_details(
             closest_match_person_id)
+        
+        details = details[0]
 
         # Get processed full image, face image, and analysis
         # TODO: consider computing face image client side to reduce package size
@@ -370,7 +375,7 @@ def get_matches_display_data(given_encoding, limit):
         )
 
         matches.append(
-            MatchingPerson.objects.create(full_name=details['full_name'], person_id=closest_match_person_id, gender=details['gender'], role=details['role'], face_photo=face_image_uri, full_photo=full_image_uri, irf_number=details['irf_number'], nationality=details['country'], age_at_interception=['age'], date_of_interception=details['date_time_entered_into_system'], face_analysis=face_analysis, face_distance=face_distance)
+            MatchingPerson(full_name=details['full_name'], person_id=closest_match_person_id, gender=details['gender'], role=details['role'], face_photo=face_image_uri, full_photo=full_image_uri, irf_number=details['irf_number'], nationality=details['country'], age_at_interception=['age'], date_of_interception=details['date_time_entered_into_system'], face_analysis=face_analysis, face_distance=face_distance)
         )
 
     return matches

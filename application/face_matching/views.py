@@ -29,11 +29,12 @@ class FaceMatchingViewSet(viewsets.ModelViewSet):
     # return display data
     @action(detail=False, methods=['post'])
     def get_upload_matches(self, request):
-        print("get_upload_matches() called")
-
-        if request.body:
-            params = request.data.get('params')
-            file = request.FILES.get('file')
+        print("\n\nget_upload_matches() called")
+        if request.POST:
+            params = request.data.get("params")
+            file = request.FILES.get("file")
+            # convert params from string to JSON
+            params = params.replace('\\"', '"')
             params = json.loads(params)
 
             # 1. Get matching records for given parameters
@@ -48,25 +49,26 @@ class FaceMatchingViewSet(viewsets.ModelViewSet):
             (image_uri, face_image_uri, image_summary_text) = helper.get_display_data(selected_person_image, selected_person_np)
 
             # 4. Package analyzedPerson
-            analyzedPerson = AnalyzedPerson.objects.create(face_photo=face_image_uri, analysis=image_summary_text)
+            analyzedPerson = AnalyzedPerson(full_photo=file, face_photo=face_image_uri, face_analysis=image_summary_text)
+            # print("analyzedPerson", analyzedPerson.face_analysis)
 
             # 5. Get X matches with the given image encoding
             # TODO: Make limit dynamic
             matchingPersons = helper.get_matches_display_data(given_encoding, limit=5)
+            # print("matchingPersons", matchingPersons)
 
             # 6. Package MatchingData
             # TODO: check if data types match
-            matchingData = MatchingData.objects.create(analyzedPerson, matchingPersons)
+            matchingData = MatchingData(analyzedPerson, matchingPersons)
+            # print("matchingData", matchingData)
 
             # TODO: write serializer
             serializer = self.get_serializer(matchingData, many=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            json_data = json.dumps(matchingData, default=lambda matchingData: matchingData.__dict__)
+            return Response(json_data, status=status.HTTP_201_CREATED)
+
+            # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         else:
             # TODO: Handle if no request.body
             print("Error receiving uploaded image.")
-
-        return Response("TODO: return serialized matchingData object")

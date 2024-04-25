@@ -45,6 +45,8 @@ def get_image_formats_from_file(uploaded_file):
     and return its encoding along with other related information.
     """
 
+    print("get_image_formats_from_file()")
+
     # Initialize default return values
     given_encoding, selected_person_image, selected_person_np = None, None, None
 
@@ -79,5 +81,8 @@ def get_image_formats_from_file(uploaded_file):
                     )
         except Exception as e:  # Catch any other exceptions
             print(f"An error occurred: {e}")
-
+    else:
+        print(
+                "No file uploaded."
+            )
     return given_encoding, selected_person_image, selected_person_np
