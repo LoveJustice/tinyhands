@@ -213,8 +213,8 @@ class IrfCsv (ExportFormCsv):
     def perform_export(self):
         interceptees = IntercepteeCommon.objects.filter(
             interception_record__station__operating_country__in = self.country_list,
-            interception_record__date_of_interception__gte=self.start_date,
-            interception_record__date_of_interception__lte=self.end_date)
+            interception_record__verified_date__gte=self.start_date,
+            interception_record__verified_date__lte=self.end_date)
         if self.status is not None:
             if self.status == 'evidence':
                 interceptees = interceptees.filter(interception_record__verified_evidence_categorization='Evidence of Trafficking')
