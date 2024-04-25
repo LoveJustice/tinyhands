@@ -4,10 +4,11 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from django.apps import apps
-from django.db.models import Count
+from django.db.models import Count, Min
 
 from budget.models import BorderStationBudgetCalculation
-from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, Gospel, GospelVerification, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
+from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, Gospel, GospelVerification, IntercepteeCommon, LocationStatistics, StationStatistics
+from legal.models import LegalChargeSuspect, LegalChargeSuspectCharge
 from static_border_stations.models import  CommitteeMember, Location
 
 class Command(BaseCommand):
@@ -142,12 +143,12 @@ class Command(BaseCommand):
         for country in countries:
             if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
                 # Count arrests
-                suspects = LegalCaseSuspect.objects.filter(legal_case__station__operating_country=country, arrest_submitted_date__gte=start_date, arrest_submitted_date__lt=end_date)
+                suspects = LegalChargeSuspect.objects.filter(legal_charge__station__operating_country=country, arrest_submitted_date__gte=start_date, arrest_submitted_date__lt=end_date)
                 for suspect in suspects:
                     try:
-                        location = Location.objects.get(border_station=suspect.legal_case.station, name__iexact=suspect.legal_case.location)
+                        location = Location.objects.get(border_station=suspect.legal_charge.station, name__iexact=suspect.legal_charge.location)
                     except ObjectDoesNotExist:
-                        location = Location.get_or_create_other_location(suspect.legal_case.station)
+                        location = Location.get_or_create_other_location(suspect.legal_charge.station)
                     
                     try:
                         location_statistics = LocationStatistics.objects.get(location=location, year_month = year_month)
@@ -208,13 +209,17 @@ class Command(BaseCommand):
             # empowerment
             if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
                 # Count convictions
-                entry.convictions = LegalCaseSuspect.objects.filter(
-                        verdict='Conviction',
-                        legal_case__station = station,
-                        verdict_submitted_date__gte=start_date,
-                        verdict_submitted_date__lt=end_date
-                    ).count()
-            
+                suspects_with_convictions = LegalChargeSuspectCharge.objects.filter(
+                    verdict='Conviction',
+                    verdict_submitted_date__gte=start_date,
+                    verdict_submitted_date__lt=end_date
+                ).values('sf_id', 'legal_charge_id') .annotate(
+                    earliest_conviction_date=Min('verdict_submitted_date')
+                ).filter(
+                    earliest_conviction_date__gte=start_date,
+                    earliest_conviction_date__lt=end_date
+                )
+                entry.convictions = suspects_with_convictions.distinct().count()
             # cif count 
             
             entry.save()
