@@ -4593,11 +4593,11 @@
    "model": "dataentry.question",
    "fields": {
       "form_tag": "pvfReleaseShortTermShelter",
-      "prompt": "Did the PV spend time at LJ\u2019s short-term shelter?",
+      "prompt": "Did the PV spend time at LJ’s short-term shelter?",
       "description": null,
-      "answer_type": 4,
+      "answer_type": 6,
       "params": null,
-      "export_name": "Did the PV spend time at LJ\u2019s short-term shelter?",
+      "export_name": "Did the PV spend time at LJ’s short-term shelter?",
       "export_params": null
    }
 },
