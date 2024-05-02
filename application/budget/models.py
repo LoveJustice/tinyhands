@@ -388,6 +388,8 @@ class MonthlyDistributionForm(models.Model):
     last_month_number_of_intercepted_pvs = models.PositiveIntegerField('# last month PVs', default=0)
     number_of_pv_days = models.PositiveIntegerField(default=0)
     past_sent_approved = models.CharField(max_length=127, blank=True)
+    past_month_sent_reviewed = models.BooleanField(default=False)
+    money_not_spent_reviewed = models.BooleanField(default=False)
     
     requests = models.ManyToManyField(ProjectRequest)
     mdf_combined = GenericRelation('MdfCombined')
@@ -564,6 +566,53 @@ class MonthlyDistributionForm(models.Model):
         for past_sent in past_sent_list:
             total += past_sent.cost
         return total
+    
+    @staticmethod
+    def guide_total(border_station, year, month, category, subcategory):
+        total = 0
+        try:
+            mdf = MonthlyDistributionForm.objects.get(
+                border_station=border_station,
+                month_year__year = year,
+                month_year__month = month)    
+        except:
+            return total
+        
+        requests = mdf.requests.filter(category=category, benefit_type_name=subcategory)
+        for request in requests:
+            total = total + request.cost
+        return total
+        
+    @property
+    def guide_progress(self):
+        result = {}
+        
+        guides = self.requests.filter(category=constants.GUIDES)
+        for guide in guides:
+            year = self.month_year.year
+            month = self.month_year.month
+            if guide.description == 'PV Food':
+                category = constants.POTENTIAL_VICTIM_CARE
+            elif guide.description == 'Stationary':
+                 category = constants.AWARENESS
+            else:
+                # Unknown guide
+                continue
+            result[guide.description] = {"guide":guide.cost, "months":[], "six_month_total":0}
+            for loop in range(0,6):
+                entry = {
+                        "year":year,
+                        "month":month,
+                        "total":MonthlyDistributionForm.guide_total(self.border_station, year, month, category, guide.description)
+                    }
+                result[guide.description]["months"].append(entry)
+                result[guide.description]["six_month_total"] += entry['total']
+                month -= 1
+                if month < 1:
+                    month = 12
+                    year -= 1
+
+        return result
     
     def get_country_id(self):
         return self.project.operating_country.id
