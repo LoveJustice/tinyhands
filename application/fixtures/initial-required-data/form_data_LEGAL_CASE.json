@@ -2188,7 +2188,7 @@
       "trigger": "lcSuspectChargeVerdict",
       "trigger_value": "(Conviction|Acquittal)",
       "validation_type": 7,
-      "error_warning_message": "Should have attachment with option \"Verdict\" when there ihas been a verdict of \"Conviction\" or \"Acquittal\"",
+      "error_warning_message": "Should have attachment with option \"Verdict\" when there has been a verdict of \"Conviction\" or \"Acquittal\"",
       "params": {
          "filter": {
             "value": "Verdict",

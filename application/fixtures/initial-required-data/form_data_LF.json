@@ -4411,7 +4411,7 @@
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": "lfDateRecived",
-      "question": "lfComplianceDateComplete"
+      "question": "lfComplianceDateReceived"
    }
 }
 ]
