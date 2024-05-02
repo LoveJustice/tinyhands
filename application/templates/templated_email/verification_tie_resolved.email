@@ -3,7 +3,7 @@
 {% block html %}
 <p>Hi {{ account.first_name }},</p>
 
-<p><a href="{{ url }}">IRF {{ irf_number }}></a> had a disagreement between {{ initial_reviewers }} and was reviewed by {{ tie_break.verifier }}.  Below is a summary of the verificaitons and resolution:</p>
+<p><a href="{{ url }}">IRF {{ irf_number }}</a> had a disagreement between {{ initial_reviewers }} and was reviewed by {{ tie_break.verifier }}.  Below is a summary of the verifications and resolution:</p>
 {% for i in initial %}
 <p>Initial Verification - {{ i.verifier }}</p>
 <p>Verification Category - {{ i.evidence_category }}</p>
