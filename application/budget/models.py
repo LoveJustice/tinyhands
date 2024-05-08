@@ -584,7 +584,7 @@ class MonthlyDistributionForm(models.Model):
         return total
         
     @property
-    def guide_progress(self):
+    def guide_progress_old(self):
         result = {}
         
         guides = self.requests.filter(category=constants.GUIDES)
@@ -595,22 +595,86 @@ class MonthlyDistributionForm(models.Model):
                 category = constants.POTENTIAL_VICTIM_CARE
             elif guide.description == 'Stationary':
                  category = constants.AWARENESS
+    
             else:
                 # Unknown guide
                 continue
             result[guide.description] = {"guide":guide.cost, "months":[], "six_month_total":0}
             for loop in range(0,6):
-                entry = {
-                        "year":year,
-                        "month":month,
-                        "total":MonthlyDistributionForm.guide_total(self.border_station, year, month, category, guide.description)
-                    }
+                if 'Multiplier' in guide.description:
+                    try:
+                        mdf = MonthlyDistributionForm.objects.get(
+                            border_station=self.border_station,
+                            month_year__year = year,
+                            month_year__month = month)
+                        multiplier_total = guide.cost * mdf.last_month_number_of_intercepted_pvs
+                    except:
+                        multiplier_total = 0
+                    entry = {
+                            "year":year,
+                            "month":month,
+                            "guide":multiplier_total
+                        }
+                else:
+                    entry = {
+                            "year":year,
+                            "month":month,
+                            "total":MonthlyDistributionForm.guide_total(self.border_station, year, month, category, guide.description),
+                            "guide":guide.cost
+                        }
                 result[guide.description]["months"].append(entry)
                 result[guide.description]["six_month_total"] += entry['total']
                 month -= 1
                 if month < 1:
                     month = 12
                     year -= 1
+
+        return result
+    
+    @property
+    def guide_progress(self):
+        result = {}
+        
+        for guide_pair in [{'description':'PV Food', 'category':constants.POTENTIAL_VICTIM_CARE}, {'description':'Stationary', 'category':constants.AWARENESS}]:
+            found = False
+            year = self.month_year.year
+            month = self.month_year.month
+            
+            months = []
+            six_month = {'total':0, 'guide':0}
+            for loop in range(0,6):
+                entry = {'year':year, 'month':month, 'total':0, 'guide':0}
+                
+                try:
+                    mdf = MonthlyDistributionForm.objects.get(
+                        border_station=self.border_station,
+                        month_year__year = year,
+                        month_year__month = month)
+                    
+                    base_list = mdf.requests.filter(category=constants.GUIDES, description=guide_pair['description'])
+                    multiplier_list = mdf.requests.filter(description=guide_pair['description'] + ' Multiplier')
+                    if len(base_list) > 0 or len(multiplier_list) > 0:
+                        found = True 
+                        if len(base_list) > 0:
+                            entry['guide'] += base_list[0].cost
+                        if len(multiplier_list) > 0:
+                            entry['guide'] += multiplier_list[0].cost * mdf.last_month_number_of_intercepted_pvs
+                        entry['total'] = MonthlyDistributionForm.guide_total(self.border_station, year, month,
+                                            guide_pair['category'], guide_pair['description'])                  
+                except:
+                    pass
+                
+                months.append(entry)
+                six_month['total'] += entry['total']
+                six_month['guide'] += entry['guide']
+        
+                month -= 1
+                if month < 1:
+                    month = 12
+                    year -= 1
+                    
+            if found:
+                result[guide_pair['description']] = {'months':months, 'six_month':six_month}          
 
         return result
     
