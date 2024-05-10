@@ -460,7 +460,6 @@ class MonthlyDistributionForm(models.Model):
             if self.include_request(request):
                 total += request.cost
         
-        total += self.stationary_total()
         return total  
     
     def travel_total(self):
@@ -511,8 +510,6 @@ class MonthlyDistributionForm(models.Model):
     
     def pv_total(self):
         total = 0
-        total += self.food_and_snacks_intercepted_pv_total()
-        total += self.limbo_total()
         requests = self.requests.filter(project=self.border_station, category=constants.POTENTIAL_VICTIM_CARE).exclude(cost__isnull=True)
         for request in requests:
             if self.include_request(request):
@@ -554,7 +551,8 @@ class MonthlyDistributionForm(models.Model):
             total += self.pv_total()
         else:
             total += self.impact_multiplying_total(project)
-            
+         
+        print('total',total)   
         return total
     
     def distribution_total(self, project):
