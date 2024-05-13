@@ -13,7 +13,7 @@ from libraries.case_dispatcher_model import (
     save_results,
     make_new_predictions,
 )
-from libraries.data_prep import remove_non_numeric, process_columns
+from libraries.data_prep import remove_non_numeric, process_columns, do_audit
 from libraries.entity_model import EntityGroup
 from libraries.case_dispatcher_model import TypeSelector
 from libraries.case_dispatcher_data import (
@@ -97,6 +97,7 @@ non_boolean_features = [
 ]
 
 
+
 def refine_model_cols(cols):
     cols.pop(cols.index("arrested"))
     cols.pop(cols.index("lightgbm_arrest_prediction"))
@@ -120,6 +121,34 @@ def main():
     # Initialize session state variables if they don't exist
     country = None
     counter = 0
+    # Sidebar radio selection
+    st.sidebar.radio(
+        "Do you want to include an audit of a IRF case number?",
+        options=["No", "Yes"],
+        key="include_audit",
+    )
+
+    # Initialize case_number as None
+    irf_audit_number = None
+
+    # Conditionally display the text input if 'Yes' is selected
+    if st.session_state["include_audit"] == "Yes":
+        st.sidebar.text_input("Enter the case number:", key="irf_audit_number")
+
+        # Check if a case number is provided
+        if irf_audit_number:
+            # This is where you can place the rest of your app's functionality
+            # that depends on having a case number.
+            st.sidebar.write("You have entered a case number: ", irf_audit_number)
+            # Here you can add more code to process the case number.
+
+            # Example function call (you would define this function elsewhere in your code)
+            # process_case(case_number)
+        else:
+            st.sidebar.write("Please enter a case number to proceed.")
+    else:
+        st.sidebar.write("No case audit selected.")
+
     if st.button("Extract model data"):
         # Assuming get_gsheets and get_dfs are defined and take the necessary arguments
         st.write("Retrieve vdf data ...")
@@ -142,6 +171,9 @@ def main():
         db_sus = db_sus.dropna(subset=["suspect_arrested"])
         # Create the 'any_arrest' column
         st.write("Process the role column ...")
+        do_audit(db_irf["irf_number"], '*** Audit 1')
+        do_audit(db_sus["sf_number"].str[:6], '*** Audit original db_sus')
+
         (
             processed_series,
             db_sus["role"],
@@ -210,13 +242,17 @@ def main():
             how="inner",
         )
 
+        do_audit(db_sus["irf_number"], '*** Audit 2 on db_sus')
+
         db_sus = db_sus.drop_duplicates()
         counter+=1
         db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         # db_sus = db_sus[~db_sus.arrested.isna()]
 
         # Merge db_sus with suspect_evaluation_types on 'suspect_id'
-
+        st.write(
+            f"Merge db_sus with suspect_evaluation_types on 'master_person_id' ..."
+        )
         db_sus = db_sus.merge(
             suspect_evaluation_types, on="master_person_id", how="left"
         )
@@ -266,6 +302,8 @@ def main():
         ]
 
         db_vdf["irf_number"] = db_vdf["vdf_number"].str[:6]
+        do_audit(db_vdf["irf_number"])
+
         list_db_vdf_columns = list(db_vdf)
         st.write(f"A list of the db_vdf columns {list_db_vdf_columns}")
         db_vdf.query("role == 'PVOT'", inplace=True)
@@ -277,7 +315,7 @@ def main():
             "exploit_prostitution",
             "exploit_sexual_abuse",
         ]
-        st.write(f"Merge suspects and victims dataframes...")
+        st.write(f"Merge suspect and victim dataframes...")
         db_sus = db_vdf[
             [
                 "exploit_debt_bondage",
@@ -291,7 +329,7 @@ def main():
                 "irf_number",
             ]
         ].merge(db_sus, left_on="irf_number", right_on="irf_number", how="inner")
-
+        do_audit(db_sus["irf_number"], 'db_sus and db_vdf merge')
         # ======================================================================
         st.write("Create the suspect_id column in db_sus: ...")
         db_sus["suspect_id"] = (
@@ -358,10 +396,12 @@ def main():
             on="master_person_id",
             how="left",
         )
+        do_audit(db_sus["irf_number"], 'soc_df merge with grouped')
 
         soc_df["job_promised_amount"] = soc_df["job_promised_amount"].apply(
             remove_non_numeric
         )
+        do_audit(db_sus["irf_number"], 'remove_non_numeric')
 
         st.write(
             "Extract interview_date from the suspect_evaluations table and merge onto soc_df"
@@ -371,6 +411,7 @@ def main():
             on="master_person_id",
             how="left",
         )
+        do_audit(db_sus["irf_number"], 'suspect_evaluations merge with soc_df')
 
         st.write("Calculate days since interview: ...")
         today = pd.Timestamp(date.today())
@@ -423,7 +464,9 @@ def main():
         st.write("Convert 'irf_number' to string values")
         soc_df["irf_number"].astype(str)
         st.write("Drop columns that have only False values")
+        do_audit(db_sus["irf_number"], ' *** before excluding all false columns.')
         soc_df = soc_df.loc[:, (soc_df != False).any(axis=0)]
+        do_audit(db_sus["irf_number"], ' *** after excluding all false columns.')
         counter+=1
         soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
         # TODO: Rework the model to use the new features
@@ -456,6 +499,7 @@ def main():
         file_metadata = {"name": "new_suspects.pkl"}
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
         st.write(f"Save new_suspects to cloud with file_id: {file_id}")
+        do_audit(db_sus["irf_number"], ' *** last audit on db_sus.')
 
         counter+=1
         irf_case_notes.to_csv(f"data_trace/irf_case_notes_{counter}.csv", index=False)
@@ -464,6 +508,7 @@ def main():
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
         st.write(f"Save irf_case_notes to cloud with file_id: {file_id}")
         st.write(f"Success!  New victims, suspects, and irf_case_notes have been save to the cloud.")
+        do_audit(irf_case_notes["irf_number"], ' *** last audit on irf_case_notes.')
 
 
 

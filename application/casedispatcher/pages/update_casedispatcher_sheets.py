@@ -1,3 +1,5 @@
+import os
+
 import streamlit as st
 import json
 import pandas as pd
@@ -32,6 +34,9 @@ from libraries.google_lib import (
     load_data,
     get_matching_spreadsheets,
 )
+import dotenv
+dotenv_file = dotenv.find_dotenv()
+dotenv.load_dotenv(dotenv_file)
 
 countries = get_countries()
 country_list = ["Select a country..."] + ["Nepal", "Uganda", "Malawi", "Namibia"]
@@ -46,12 +51,12 @@ drive_service = build("drive", "v3", credentials=credentials)
 
 
 links = {
-    "Uganda": "https://docs.google.com/spreadsheets/d/14hqbt082EHYklnFUSksNDXmSNllYoL66okvXweU1FRQ/edit?usp=drive_link",
-    "Nepal": "https://docs.google.com/spreadsheets/d/1OA98ZiDuSTa3KaQwiRCMEg8ZRXWHcAycN9JgSeqpGb0/edit?usp=drive_link",
-    "Malawi": "https://docs.google.com/spreadsheets/d/1TRe8q9Dx0ruSYCuZGqQXraTDPNfgUZiX0h6_VXGJIOo/edit?usp=drive_link",
-    "Namibia": "https://docs.google.com/spreadsheets/d/1x-TycO5lQtuTysdqYGOPVweZ-bJ9OBQ7jAnauhiDbpY/edit?usp=drive_link",
-    "Mozambique": "https://docs.google.com/spreadsheets/d/1aQwpk5cEqcrP9l1AbjpwdcCoymIvdhGm2byDHBz1PNY/edit?usp=sharing",
-    "Lesotho": "https://docs.google.com/spreadsheets/d/1svXOIu5xkh9b3V6JaR6XxjIYfKW5pp_gAKMzIs-2GPA/edit?usp=sharing",
+    "Uganda": os.environ["UGANDA"],
+    "Nepal": os.environ["NEPAL"],
+    "Malawi": os.environ["MALAWI"],
+    "Namibia": os.environ["NAMIBIA"],
+    "Mozambique": os.environ["MOZAMBIQUE"],
+    "Lesotho": os.environ["LESOTHO"],
 }
 
 
@@ -323,7 +328,7 @@ def main():
 
             st.write(f"Get the data from collect_model_data.py")
             db_vics = load_data(drive_service, 'new_victims.pkl')
-            db_vics= db_vics[db_vics['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
+            db_vics = db_vics[db_vics['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
             db_sus = load_data(drive_service, 'new_suspects.pkl')
             db_sus = db_sus[db_sus['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
             irf_case_notes = load_data(drive_service, 'irf_case_notes.pkl')

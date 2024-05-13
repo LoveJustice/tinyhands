@@ -1,4 +1,5 @@
 import numpy as np
+import streamlit as st
 import pandas as pd
 import re
 from copy import deepcopy
@@ -6,6 +7,13 @@ from .case_dispatcher_logging import setup_logger
 from datetime import date
 
 logger = setup_logger("data_prep_logging", "data_prep_logging")
+
+
+def do_audit(audit_series, description = "audit"):
+    if st.session_state["include_audit"] == "Yes":
+        # audit = audit_series.isin([st.session_state['irf_audit_number']])
+        audit = st.session_state['irf_audit_number'] in audit_series.values
+        st.write(f"irf_audit_number = {st.session_state['irf_audit_number']} is in db_irf: {audit}, with description '{description}'")
 
 def add_country_stats(model_data, country_stats):
     # Simplify country replacement using `np.where`
