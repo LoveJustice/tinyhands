@@ -122,8 +122,6 @@ class EntityGroup(GetAttr):
             sheet.active = pd.concat([sheet.gsheet, sheet.newcopy], sort=False)
             sheet.active.drop_duplicates(subset=sheet.uid, inplace=True)
 
-
-
     @classmethod
     def move_closed(cls, soc_df):
         """Moves closed cases to closed sheet for each Entity Group instance."""
@@ -135,7 +133,16 @@ class EntityGroup(GetAttr):
 
             prev_closed.loc[:, "case_status"] = "Closed: Already in Legal Cases Sheet"
 
-            newly_closed = sheet.gsheet[sheet.gsheet["date_closed"].str.len() > 1]
+            # Update newly_closed to be data where "Case_Status" contains "Closed"
+            newly_closed = sheet.gsheet[sheet.gsheet["case_status"].str.contains("Closed", na=False)]
+
+            # Populate the 'date' column with today's date
+            today = pd.Timestamp.today().normalize()
+            newly_closed['date'] = today
+
+            today = pd.Timestamp.today().normalize()
+            newly_closed['supervisor_review'] = today
+
             prev_closed = prev_closed[
                 ~prev_closed[sheet.uid].isin(sheet.closed[sheet.uid])
             ]

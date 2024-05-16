@@ -478,7 +478,7 @@ def main():
 
             # Filter out rows where 'days' is greater than 365 and is not NaN (thus a number)
             # Also, implicitly keeps rows where 'days' is NaN or None, since comparison with NaN is false
-            filtered_active_cases = active_cases[(numeric_days <= 365) | numeric_days.isna()]
+            filtered_active_cases = active_cases[(numeric_days <= 60) | numeric_days.isna()]
             filtered_active_cases = filtered_active_cases[~(filtered_active_cases["case_id"]=='')]
             filtered_active_cases = filtered_active_cases.drop_duplicates()
 
