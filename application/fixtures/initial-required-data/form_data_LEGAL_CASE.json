@@ -246,7 +246,7 @@
       "form_tag": "lcSource",
       "prompt": "Source",
       "description": null,
-      "answer_type": 4,
+      "answer_type": 1,
       "params": {
          "textbox": "True"
       },
@@ -779,7 +779,9 @@
       "prompt": "Attachment",
       "description": null,
       "answer_type": 12,
-      "params": null,
+      "params": {
+         "subdirectory": "legal_case_attachments/"
+      },
       "export_name": "Attachment",
       "export_params": null
    }

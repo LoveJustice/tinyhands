@@ -11,6 +11,7 @@ MONEY_NOT_SPENT = 13
 IMPACT_MULTIPLYING = 14
 RENT_UTILITIES = 15
 MULTIPLIERS = 16
+GUIDES = 17
 CATEGORY_CHOICES = [
     (TRAVEL, 'Staff Travel'),
     (AWARENESS, 'Supplies & Awareness'),
@@ -24,6 +25,7 @@ CATEGORY_CHOICES = [
     (IMPACT_MULTIPLYING, 'Operational Expenses'),
     (RENT_UTILITIES, 'Rent & Utilities'),
     (MULTIPLIERS, 'Multipliers'),
+    (GUIDES, 'Guides')
 ]
 REQUEST_CATEGORY_CHOICES_MDF = [
     (STAFF_BENEFITS, 'Salaries & Benefits'),
@@ -33,7 +35,7 @@ REQUEST_CATEGORY_CHOICES_MDF = [
     (TRAVEL, 'Staff Travel'),
     (POTENTIAL_VICTIM_CARE, 'Potential Victim Care'),
     (IMPACT_MULTIPLYING, 'Operational Expenses'),
-    (MULTIPLIERS, 'Multipliers')
+    (GUIDES, 'Guides')
 ]
 REQUEST_CATEGORY_CHOICES_NO_MDF = [
     (STAFF_BENEFITS, 'Salaries & Benefits'),

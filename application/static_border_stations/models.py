@@ -33,6 +33,7 @@ class Person(models.Model):
     receives_money_distribution_form = models.BooleanField(default=False)
     border_station = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE)
     country = models.ForeignKey('dataentry.Country', null=True, on_delete=models.CASCADE)
+    
 
     class Meta:
         abstract = True
@@ -71,6 +72,7 @@ class Staff(Person):
     birth_date = models.CharField(max_length=127, blank=True)
     education = models.CharField(max_length=127, null=True)
     id_card_expiration = models.DateField(null=True)
+    photo = models.ImageField(upload_to='staff_photos', default='', blank=True)
     
     #contract
     last_month_local = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)

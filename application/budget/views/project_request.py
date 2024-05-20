@@ -68,6 +68,8 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
             my_discussions = set(ProjectRequestDiscussion.objects.filter(notify=self.request.user,
                     request__discussion_status='Open').exclude(response=self.request.user).values_list('request__id', flat=True))
             queryset = queryset.filter(id__in=my_discussions)
+            
+        queryset = queryset.exclude(category=constants.MULTIPLIERS)
 
         return queryset
     
