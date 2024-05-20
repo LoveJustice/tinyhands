@@ -9,7 +9,6 @@ urlpatterns = [
     # path('upload/', views.upload_photo, name='upload_photo'),
     # path('take/', views.take_photo, name='take_photo'),
 
-    #  Get list of person_ids with face_encodings
     #  Get matches for encoded 
     re_path(r'^face-matching/upload/$', FaceMatchingViewSet.as_view({'post': 'get_upload_matches'}), name='FaceMatchesList'),
 ]

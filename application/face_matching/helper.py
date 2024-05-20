@@ -4,10 +4,9 @@ from io import BytesIO
 from PIL import Image
 import face_recognition
 from urllib.parse import quote
-import requests
 import base64
-import os
 
+from django.conf import settings
 from django.core.cache import cache
 
 from .models import MatchingPerson, FaceEncoding
@@ -16,12 +15,6 @@ from . import helper_analysis
 
 QS_TO_DF_MAPPING = {"person": "person_id", "person__person__master_person": "master_person_id", "person__interception_record__station__operating_country__name": "country", "person__person__full_name": "full_name", "person__person__role": "role", "person__person__photo": "photo",
                     "person__person__gender": "gender", "person__person__age": "age", "person__interception_record__irf_number": "irf_number", "person__interception_record__date_time_entered_into_system": "date_time_entered_into_system", "face_encoding": "face_encoding", "outcome": "outcome"}
-
-curl = {}
-curl['url'] = os.environ["FACE_MATCHING_URL"]
-curl['email'] = os.environ["FACE_MATCHING_EMAIL"]
-curl['password'] = os.environ["FACE_MATCHING_PASSWORD"]
-
 
 # Extract parameters from submitted form
 def handle_select_params(data):
@@ -140,35 +133,19 @@ def get_face(image_np):
 
     return face_image_pil
 
+# query for an image not by URL, but by...
+def get_image(safe_url):
+        person_image = person_np = person_image_array = None
+        url = settings.MEDIA_ROOT + '/' + safe_url
+        try:
+            with open(url, "rb") as image_file:
+                person_image = Image.open(image_file)
+                person_np = face_recognition.load_image_file(image_file)
+                person_image_array = np.array(person_image)
+        except:
+            print('Error finding the photo or identifying a face in the photo: ' + safe_url)
 
-def get_image(photo_url, curl, timeout_duration=10):
-    safe_url = curl["url"] + photo_url
-
-    # TODO: Fix username and password being encoded incorrectly
-    try:
-        response = requests.get(
-            # safe_url, auth=(curl["email"], curl["password"]
-            #                 ), timeout=timeout_duration
-            safe_url, headers={'Authorization': 'Basic Y2hyaXN0b0Bsb3ZlanVzdGljZS5uZ286STIlMFdPOU43aSQh'}, timeout=timeout_duration
-        )
-        response.raise_for_status()
-        bytesio_obj = BytesIO(response.content)
-        person_image = Image.open(bytesio_obj)
-        person_np = face_recognition.load_image_file(bytesio_obj)
-        person_image_array = np.array(person_image)
         return person_image_array, person_np
-
-    except requests.Timeout:
-        print(
-            f"Request timed out after {timeout_duration} seconds when trying to retrieve: {safe_url}"
-        )
-        # Handle the timeout exception as needed, for example, return None or raise a custom exception
-        return None, None
-    except requests.RequestException as e:
-        print(
-            f"An error occurred while trying to retrieve: {safe_url}. Error: {e}")
-        # Handle other request exceptions as needed
-        return None, None
 
 
 def get_photo_and_encoding(selected_person):
@@ -214,9 +191,7 @@ def retrieve_photo_and_encoding(selected_person):
         selected_person)
     if selected_photo_url and given_encoding is not None and given_encoding.size > 0:
         safe_url = quote(selected_photo_url, safe=":/")
-        selected_person_image, selected_person_np = get_image(
-            safe_url, curl, timeout_duration=20
-        )
+        selected_person_image, selected_person_np = get_image(safe_url)
         selected_person_pil_image = Image.fromarray(
             selected_person_image.astype("uint8")
         )
@@ -354,9 +329,7 @@ def get_matches_display_data(given_encoding, limit):
         safe_url = quote(closest_photo_url, safe=":/")
 
         # Get actual image from url
-        match_person_image, match_person_np = get_image(
-            safe_url, curl, timeout_duration=20
-        )
+        match_person_image, match_person_np = get_image(safe_url)
 
         match_person_pil_image = Image.fromarray(
             match_person_image.astype("uint8"))
@@ -375,7 +348,7 @@ def get_matches_display_data(given_encoding, limit):
         )
 
         matches.append(
-            MatchingPerson(full_name=details['full_name'], person_id=closest_match_person_id, gender=details['gender'], role=details['role'], face_photo=face_image_uri, full_photo=full_image_uri, irf_number=details['irf_number'], nationality=details['country'], age_at_interception=['age'], date_of_interception=details['date_time_entered_into_system'], face_analysis=face_analysis, face_distance=face_distance)
+            MatchingPerson(full_name=details['full_name'], person_id=closest_match_person_id, gender=details['gender'], role=details['role'], face_photo=face_image_uri, full_photo=full_image_uri, irf_number=details['irf_number'], nationality=details['country'], age_at_interception=str(details['age']), date_of_interception=str(details['date_time_entered_into_system']), face_analysis=face_analysis, face_distance=face_distance)
         )
 
     return matches

@@ -10,7 +10,7 @@ from django.core.cache import cache
 from . import helper, helper_upload_photo
 
 from .serializers import MatchingDataSerializer
-from .models import AnalyzedPerson, MatchingData, MatchingPerson
+from .models import AnalyzedPerson, MatchingData
 
 
 class FaceMatchingViewSet(viewsets.ModelViewSet):
@@ -18,11 +18,6 @@ class FaceMatchingViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     permissions_required = []
     parser_classes = [MultiPartParser, FormParser]
-
-    # def get_queryset(self):
-    #     print("get_queryset() called")
-    #     queryset =  FaceEncoding.objects.filter(outcome="encoded")
-    #     return queryset
 
     # call functions to encode given image
     # find matching faces in database
@@ -50,17 +45,14 @@ class FaceMatchingViewSet(viewsets.ModelViewSet):
 
             # 4. Package analyzedPerson
             analyzedPerson = AnalyzedPerson(full_photo=file, face_photo=face_image_uri, face_analysis=image_summary_text)
-            # print("analyzedPerson", analyzedPerson.face_analysis)
 
             # 5. Get X matches with the given image encoding
             # TODO: Make limit dynamic
             matchingPersons = helper.get_matches_display_data(given_encoding, limit=5)
-            # print("matchingPersons", matchingPersons)
 
             # 6. Package MatchingData
             # TODO: check if data types match
             matchingData = MatchingData(analyzedPerson, matchingPersons)
-            # print("matchingData", matchingData)
 
             # TODO: write serializer
             serializer = self.get_serializer(matchingData, many=True)

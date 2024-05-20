@@ -17,14 +17,14 @@ class MatchingPerson():
         self.person_id = person_id 
         self.gender = gender 
         self.role = role 
-        self.face_photo = face_photo 
-        self.full_photo = full_photo 
         self.irf_number = irf_number 
         self.nationality = nationality 
         self.age_at_interception = age_at_interception 
         self.date_of_interception = date_of_interception 
         self.face_analysis = face_analysis 
         self.face_distance = face_distance 
+        self.face_photo = face_photo 
+        self.full_photo = full_photo 
 
 
 class MatchingData():
