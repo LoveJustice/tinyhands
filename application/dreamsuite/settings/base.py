@@ -15,6 +15,12 @@ BASE_DIR = Path(__file__).ancestor(3)
 
 SERVER_EMAIL = 'support@searchlightdata.org'
 
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_USE_TLS = os.environ['EMAIL_USE_TLS']
+EMAIL_HOST = os.environ['EMAIL_HOST']
+
 BORDER_STATION_EMAIL_SENDER = "sheital@tinyhands.org"
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
