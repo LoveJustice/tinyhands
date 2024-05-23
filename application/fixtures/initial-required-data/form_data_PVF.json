@@ -360,6 +360,18 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 9,
+      "storage": "VdfCommon2",
+      "start_date": "2024-03-01T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "pvfPhilippines",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "fields": {
       "form_tag": "pvfTop",
@@ -3512,6 +3524,116 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "pvfOpenSource",
+      "category": "pvfCompliance",
+      "name": "Compliance",
+      "order": 10,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
+      "category": "pvfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
+      "category": "pvfPvFamily",
+      "name": "PV & Family",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
+      "category": "pvfRecruitment",
+      "name": "Recruitment",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
+      "category": "pvTravelExploitation",
+      "name": "Travel/Exploitation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
+      "category": "pvfHomeAssessment",
+      "name": "Home Situation Assessment",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
+      "category": "pvfAwareness",
+      "name": "Awareness",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
+      "category": "pvfRelease",
+      "name": "Release Information",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
+      "category": "pvfStaffAssessment",
+      "name": "Staff Assessment",
+      "order": 8,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
+      "category": "pvfAttachment",
+      "name": "Attachments",
+      "order": 9,
+      "form_category_question_config": null,
+      "storage": "VdfAttachmentCommon2"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfPhilippines",
       "category": "pvfCompliance",
       "name": "Compliance",
       "order": 10,
@@ -7045,7 +7167,8 @@
          "pvfBangladesh",
          "pvfCambodia",
          "pvfUSA",
-         "pvfOpenSource"
+         "pvfOpenSource",
+         "pvfPhilippines"
       ]
    }
 },
