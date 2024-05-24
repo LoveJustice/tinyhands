@@ -68,7 +68,6 @@ error.log
 .vscode/*
 
 local.env
-face_matching.env
 deploybot_args.env
 /venv/*
 codeship.aes
