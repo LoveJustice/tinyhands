@@ -1064,6 +1064,7 @@ class CardCategorySerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['category_id'] = serializers.IntegerField().to_representation(instance.id)
+        ret['category_tag'] = instance.form_tag
         context = dict(self.context)
         context['category'] = instance
         form_data = context['form_data']

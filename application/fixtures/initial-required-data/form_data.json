@@ -15888,7 +15888,7 @@
    "model": "dataentry.question",
    "pk": 1,
    "fields": {
-      "form_tag": "question1",
+      "form_tag": "irfNumber",
       "prompt": "Irf Number",
       "description": null,
       "answer_type": 1,
@@ -15901,7 +15901,7 @@
    "model": "dataentry.question",
    "pk": 2,
    "fields": {
-      "form_tag": "question2",
+      "form_tag": "numberOfVictims",
       "prompt": "# of Victims",
       "description": null,
       "answer_type": 2,
@@ -15914,7 +15914,7 @@
    "model": "dataentry.question",
    "pk": 3,
    "fields": {
-      "form_tag": "question3",
+      "form_tag": "location",
       "prompt": "Location",
       "description": null,
       "answer_type": 1,
@@ -15927,7 +15927,7 @@
    "model": "dataentry.question",
    "pk": 5,
    "fields": {
-      "form_tag": "question5",
+      "form_tag": "numberOfTraffickers",
       "prompt": "# of Traffickers",
       "description": null,
       "answer_type": 2,
@@ -15940,7 +15940,7 @@
    "model": "dataentry.question",
    "pk": 6,
    "fields": {
-      "form_tag": "question6",
+      "form_tag": "staffName",
       "prompt": "Staff Name",
       "description": null,
       "answer_type": 1,
@@ -15953,7 +15953,7 @@
    "model": "dataentry.question",
    "pk": 9,
    "fields": {
-      "form_tag": "question9",
+      "form_tag": "person",
       "prompt": "",
       "description": "interceptee person",
       "answer_type": 14,
@@ -16029,7 +16029,7 @@
    "model": "dataentry.question",
    "pk": 10,
    "fields": {
-      "form_tag": "question10",
+      "form_tag": "controlDruggedOrDrowsy",
       "prompt": "Girl appears drugged or drowsy",
       "description": null,
       "answer_type": 6,
@@ -16042,7 +16042,7 @@
    "model": "dataentry.question",
    "pk": 17,
    "fields": {
-      "form_tag": "question17",
+      "form_tag": "controlWifeUnder18",
       "prompt": "Wife is under 18",
       "description": null,
       "answer_type": 6,
@@ -16055,7 +16055,7 @@
    "model": "dataentry.question",
    "pk": 23,
    "fields": {
-      "form_tag": "question23",
+      "form_tag": "controlTravelingWithSomeoneNotWithThem",
       "prompt": "Was travelling with someone not with her",
       "description": null,
       "answer_type": 6,
@@ -16068,7 +16068,7 @@
    "model": "dataentry.question",
    "pk": 24,
    "fields": {
-      "form_tag": "question24",
+      "form_tag": "controlMarriedInPast2Weeks",
       "prompt": "Married in the past 2 weeks",
       "description": null,
       "answer_type": 6,
@@ -16081,7 +16081,7 @@
    "model": "dataentry.question",
    "pk": 25,
    "fields": {
-      "form_tag": "question25",
+      "form_tag": "controlMarriedInPast28Weeks",
       "prompt": "Married within the past 2-8 weeks",
       "description": null,
       "answer_type": 6,
@@ -16094,7 +16094,7 @@
    "model": "dataentry.question",
    "pk": 26,
    "fields": {
-      "form_tag": "question26",
+      "form_tag": "controlLessThan2WeeksBeforeEloping",
       "prompt": "Less than 2 weeks before eloping",
       "description": null,
       "answer_type": 6,
@@ -16107,7 +16107,7 @@
    "model": "dataentry.question",
    "pk": 30,
    "fields": {
-      "form_tag": "question30",
+      "form_tag": "evadeCaughtInLie",
       "prompt": "Caught in a lie or contradiction",
       "description": null,
       "answer_type": 6,
@@ -16120,7 +16120,7 @@
    "model": "dataentry.question",
    "pk": 45,
    "fields": {
-      "form_tag": "question45",
+      "form_tag": "evadeStudyDoesntKnowSchoolDetails",
       "prompt": "Does not know details of school",
       "description": null,
       "answer_type": 6,
@@ -16133,7 +16133,7 @@
    "model": "dataentry.question",
    "pk": 55,
    "fields": {
-      "form_tag": "question55",
+      "form_tag": "controlPassportWithBroker",
       "prompt": "Passport is with a broker",
       "description": null,
       "answer_type": 6,
@@ -16146,7 +16146,7 @@
    "model": "dataentry.question",
    "pk": 57,
    "fields": {
-      "form_tag": "question57",
+      "form_tag": "controlNotRealJob",
       "prompt": "Not a real job",
       "description": null,
       "answer_type": 6,
@@ -16159,7 +16159,7 @@
    "model": "dataentry.question",
    "pk": 58,
    "fields": {
-      "form_tag": "question58",
+      "form_tag": "evadeCouldntConfirmJob",
       "prompt": "Could not confirm job",
       "description": null,
       "answer_type": 6,
@@ -16172,7 +16172,7 @@
    "model": "dataentry.question",
    "pk": 59,
    "fields": {
-      "form_tag": "question59",
+      "form_tag": "evadeNoBagsLongTrip",
       "prompt": "No bags through claim to be going for a long time",
       "description": null,
       "answer_type": 6,
@@ -16185,7 +16185,7 @@
    "model": "dataentry.question",
    "pk": 74,
    "fields": {
-      "form_tag": "question74",
+      "form_tag": "vulnerabilityRefusesFamilyInfo",
       "prompt": "Will not give family info",
       "description": null,
       "answer_type": 6,
@@ -16198,7 +16198,7 @@
    "model": "dataentry.question",
    "pk": 78,
    "fields": {
-      "form_tag": "question78",
+      "form_tag": "vulnerabilityUnder18FamilyDoesntKnow",
       "prompt": "Family doesn't know where they are going",
       "description": null,
       "answer_type": 6,
@@ -16211,7 +16211,7 @@
    "model": "dataentry.question",
    "pk": 79,
    "fields": {
-      "form_tag": "question79",
+      "form_tag": "controlUnder18FamilyUnwilling",
       "prompt": "Family unwilling to let them go",
       "description": null,
       "answer_type": 6,
@@ -16224,7 +16224,7 @@
    "model": "dataentry.question",
    "pk": 82,
    "fields": {
-      "form_tag": "question82",
+      "form_tag": "talkedToFamilyMember",
       "prompt": "Which family member did you talk to?",
       "description": null,
       "answer_type": 4,
@@ -16239,7 +16239,7 @@
    "model": "dataentry.question",
    "pk": 91,
    "fields": {
-      "form_tag": "question91",
+      "form_tag": "whoNoticed",
       "prompt": "How did you make the interception",
       "description": "who noticed",
       "answer_type": 4,
@@ -16252,7 +16252,7 @@
    "model": "dataentry.question",
    "pk": 92,
    "fields": {
-      "form_tag": "question92",
+      "form_tag": "whichContact",
       "prompt": "",
       "description": "contact who noticed",
       "answer_type": 4,
@@ -16267,7 +16267,7 @@
    "model": "dataentry.question",
    "pk": 102,
    "fields": {
-      "form_tag": "question102",
+      "form_tag": "contactPaid",
       "prompt": "Did you pay the contact for this information?",
       "description": null,
       "answer_type": 4,
@@ -16280,7 +16280,7 @@
    "model": "dataentry.question",
    "pk": 104,
    "fields": {
-      "form_tag": "question104",
+      "form_tag": "contactPaidHowMuch",
       "prompt": "How much?",
       "description": "How much paid for information",
       "answer_type": 1,
@@ -16293,7 +16293,7 @@
    "model": "dataentry.question",
    "pk": 106,
    "fields": {
-      "form_tag": "question106",
+      "form_tag": "staffWhoNoticed",
       "prompt": "Staff who noticed",
       "description": null,
       "answer_type": 1,
@@ -16306,7 +16306,7 @@
    "model": "dataentry.question",
    "pk": 117,
    "fields": {
-      "form_tag": "question117",
+      "form_tag": "evadeNoticedCarryingFullBags",
       "prompt": "Carrying Full bags",
       "description": null,
       "answer_type": 6,
@@ -16319,7 +16319,7 @@
    "model": "dataentry.question",
    "pk": 142,
    "fields": {
-      "form_tag": "question142",
+      "form_tag": "reasonForIntercept",
       "prompt": "What is the primary reason you believed this case qualified?",
       "description": "",
       "answer_type": 1,
@@ -16334,7 +16334,7 @@
    "model": "dataentry.question",
    "pk": 143,
    "fields": {
-      "form_tag": "question143",
+      "form_tag": "controlReportedTotalRedFlags",
       "prompt": "Reported Total Red Flag Points",
       "description": null,
       "answer_type": 2,
@@ -16347,7 +16347,7 @@
    "model": "dataentry.question",
    "pk": 144,
    "fields": {
-      "form_tag": "question144",
+      "form_tag": "computedTotalRedFlags",
       "prompt": "Total Red Flags",
       "description": "Computed Total Red Flags",
       "answer_type": 2,
@@ -16360,7 +16360,7 @@
    "model": "dataentry.question",
    "pk": 146,
    "fields": {
-      "form_tag": "question146",
+      "form_tag": "caseNotes",
       "prompt": "Case Narrative",
       "description": null,
       "answer_type": 1,
@@ -16373,7 +16373,7 @@
    "model": "dataentry.question",
    "pk": 147,
    "fields": {
-      "form_tag": "question147",
+      "form_tag": "howSureWasTrafficking",
       "prompt": "How sure are you that it was trafficking case?",
       "description": null,
       "answer_type": 5,
@@ -16386,7 +16386,7 @@
    "model": "dataentry.question",
    "pk": 148,
    "fields": {
-      "form_tag": "question148",
+      "form_tag": "convincedByFamily",
       "prompt": "Her parents used their authority and prevented victim",
       "description": null,
       "answer_type": 6,
@@ -16399,7 +16399,7 @@
    "model": "dataentry.question",
    "pk": 149,
    "fields": {
-      "form_tag": "question149",
+      "form_tag": "convincedByStaff",
       "prompt": "THN staff conviced victim not to go",
       "description": null,
       "answer_type": 6,
@@ -16412,7 +16412,7 @@
    "model": "dataentry.question",
    "pk": 150,
    "fields": {
-      "form_tag": "question150",
+      "form_tag": "convincedByPolice",
       "prompt": "The police forced the victim to stop",
       "description": null,
       "answer_type": 6,
@@ -16425,7 +16425,7 @@
    "model": "dataentry.question",
    "pk": 151,
    "fields": {
-      "form_tag": "question151",
+      "form_tag": "hasSignature",
       "prompt": "Scanned form has signature",
       "description": null,
       "answer_type": 6,
@@ -16438,7 +16438,7 @@
    "model": "dataentry.question",
    "pk": 167,
    "fields": {
-      "form_tag": "question167",
+      "form_tag": "evadeAppearanceAvoidOfficials",
       "prompt": "Avoiding officials/hesitant to talk",
       "description": null,
       "answer_type": 6,
@@ -16451,7 +16451,7 @@
    "model": "dataentry.question",
    "pk": 178,
    "fields": {
-      "form_tag": "question178",
+      "form_tag": "evadeVisaMisuse",
       "prompt": "Misuse - for purposes other than issued",
       "description": null,
       "answer_type": 6,
@@ -16464,7 +16464,7 @@
    "model": "dataentry.question",
    "pk": 186,
    "fields": {
-      "form_tag": "question186",
+      "form_tag": "vulnerabilitySupportingDocumentsOneWayTicket",
       "prompt": "One way ticket",
       "description": null,
       "answer_type": 6,
@@ -16477,7 +16477,7 @@
    "model": "dataentry.question",
    "pk": 197,
    "fields": {
-      "form_tag": "question197",
+      "form_tag": "vulnerabilityAfraidOfHost",
       "prompt": "Afraid of host/employer/recfuiter",
       "description": null,
       "answer_type": 6,
@@ -16490,7 +16490,7 @@
    "model": "dataentry.question",
    "pk": 216,
    "fields": {
-      "form_tag": "question216",
+      "form_tag": "controlRelationshipToGetMarried",
       "prompt": "Coming to get married",
       "description": null,
       "answer_type": 6,
@@ -16503,7 +16503,7 @@
    "model": "dataentry.question",
    "pk": 234,
    "fields": {
-      "form_tag": "question234",
+      "form_tag": "controlStatusKnownTrafficker",
       "prompt": "Is a know trafficker",
       "description": null,
       "answer_type": 6,
@@ -16516,7 +16516,7 @@
    "model": "dataentry.question",
    "pk": 242,
    "fields": {
-      "form_tag": "question242",
+      "form_tag": "vulnerabilityGroupMissedCall",
       "prompt": "Missed Call",
       "description": null,
       "answer_type": 6,
@@ -16529,7 +16529,7 @@
    "model": "dataentry.question",
    "pk": 243,
    "fields": {
-      "form_tag": "question243",
+      "form_tag": "vulnerabilityGroupFacebook",
       "prompt": "Facebook",
       "description": null,
       "answer_type": 6,
@@ -16542,7 +16542,7 @@
    "model": "dataentry.question",
    "pk": 244,
    "fields": {
-      "form_tag": "question244",
+      "form_tag": "vulnerabilityGroupOtherWebsite",
       "prompt": "Other website",
       "description": null,
       "answer_type": 6,
@@ -16557,7 +16557,7 @@
    "model": "dataentry.question",
    "pk": 245,
    "fields": {
-      "form_tag": "question245",
+      "form_tag": "whereGoingDestination",
       "prompt": "Destination",
       "description": null,
       "answer_type": 1,
@@ -16570,7 +16570,7 @@
    "model": "dataentry.question",
    "pk": 246,
    "fields": {
-      "form_tag": "question246",
+      "form_tag": "vulnerabilityWhereGoingDoesntKnow",
       "prompt": "Doesn't know where they are going",
       "description": null,
       "answer_type": 6,
@@ -16583,7 +16583,7 @@
    "model": "dataentry.question",
    "pk": 247,
    "fields": {
-      "form_tag": "question247",
+      "form_tag": "controlWhereGoingSomeonePaidExpenses",
       "prompt": "Someone (not a relative) paid their travel expenses",
       "description": null,
       "answer_type": 6,
@@ -16596,7 +16596,7 @@
    "model": "dataentry.question",
    "pk": 249,
    "fields": {
-      "form_tag": "question249",
+      "form_tag": "callSubcommittee",
       "prompt": "Call Subcommitte Chairperson/Vice-Chairperson/Secretary",
       "description": null,
       "answer_type": 6,
@@ -16609,7 +16609,7 @@
    "model": "dataentry.question",
    "pk": 251,
    "fields": {
-      "form_tag": "question251",
+      "form_tag": "vulnerabilityGroupNeverMetBefore",
       "prompt": "Meeting someone they haven't met before",
       "description": null,
       "answer_type": 6,
@@ -16622,7 +16622,7 @@
    "model": "dataentry.question",
    "pk": 256,
    "fields": {
-      "form_tag": "question256",
+      "form_tag": "callProjectManager",
       "prompt": "Call Project Manager to confirm interept",
       "description": null,
       "answer_type": 6,
@@ -16635,7 +16635,7 @@
    "model": "dataentry.question",
    "pk": 277,
    "fields": {
-      "form_tag": "question277",
+      "form_tag": "vulnerabilityMetOnTheWay",
       "prompt": "Met on the way",
       "description": null,
       "answer_type": 6,
@@ -16648,7 +16648,7 @@
    "model": "dataentry.question",
    "pk": 280,
    "fields": {
-      "form_tag": "question280",
+      "form_tag": "vulnerabilityPersonSpeakingOnTheirBehalf",
       "prompt": "Person speaking on their behalf",
       "description": null,
       "answer_type": 6,
@@ -19165,7 +19165,7 @@
    "model": "dataentry.question",
    "pk": 501,
    "fields": {
-      "form_tag": "question501",
+      "form_tag": "controlMobilePhoneTakenAway",
       "prompt": "Their phone was taken away",
       "description": null,
       "answer_type": 6,
@@ -19178,7 +19178,7 @@
    "model": "dataentry.question",
    "pk": 502,
    "fields": {
-      "form_tag": "question502",
+      "form_tag": "vulnerabilityDoesntSpeakDestinationLanguage",
       "prompt": "Doesn't speak language of destination",
       "description": null,
       "answer_type": 6,
@@ -19191,7 +19191,7 @@
    "model": "dataentry.question",
    "pk": 603,
    "fields": {
-      "form_tag": "question603",
+      "form_tag": "controlContradictionStories",
       "prompt": "Contradiction between stories",
       "description": null,
       "answer_type": 6,
@@ -19204,7 +19204,7 @@
    "model": "dataentry.question",
    "pk": 607,
    "fields": {
-      "form_tag": "question607",
+      "form_tag": "evidenceCategorizationMain",
       "prompt": "Interception categorization",
       "description": null,
       "answer_type": 4,
@@ -19217,7 +19217,7 @@
    "model": "dataentry.question",
    "pk": 610,
    "fields": {
-      "form_tag": "question610",
+      "form_tag": "attachmentNumber",
       "prompt": "attachment number",
       "description": null,
       "answer_type": 2,
@@ -19230,7 +19230,7 @@
    "model": "dataentry.question",
    "pk": 611,
    "fields": {
-      "form_tag": "question611",
+      "form_tag": "description",
       "prompt": "description",
       "description": null,
       "answer_type": 1,
@@ -19258,7 +19258,7 @@
    "model": "dataentry.question",
    "pk": 641,
    "fields": {
-      "form_tag": "question641",
+      "form_tag": "attachment",
       "prompt": "attachment",
       "description": null,
       "answer_type": 12,
@@ -19813,7 +19813,7 @@
    "model": "dataentry.question",
    "pk": 700,
    "fields": {
-      "form_tag": "question700",
+      "form_tag": "privateCard",
       "prompt": "Attachment contains private data",
       "description": null,
       "answer_type": 6,
@@ -19943,7 +19943,7 @@
    "model": "dataentry.question",
    "pk": 712,
    "fields": {
-      "form_tag": "question712",
+      "form_tag": "controlJobUnderqualified",
       "prompt": "Extremely underqualified for job",
       "description": null,
       "answer_type": 6,
@@ -19956,7 +19956,7 @@
    "model": "dataentry.question",
    "pk": 713,
    "fields": {
-      "form_tag": "question713",
+      "form_tag": "evadeJobDetailsChangedEnRoute",
       "prompt": "Job details were changed en route",
       "description": null,
       "answer_type": 6,
@@ -21152,7 +21152,7 @@
    "model": "dataentry.question",
    "pk": 810,
    "fields": {
-      "form_tag": "question810",
+      "form_tag": "logbookIncompleteQuestions",
       "prompt": "Were there incomplete questions on the IRF that prevented submission?",
       "description": null,
       "answer_type": 4,
@@ -21165,7 +21165,7 @@
    "model": "dataentry.question",
    "pk": 811,
    "fields": {
-      "form_tag": "question811",
+      "form_tag": "logbookIncompleteSections",
       "prompt": "Please list incomplete sections that prevented submission",
       "description": null,
       "answer_type": 1,
@@ -21178,7 +21178,7 @@
    "model": "dataentry.question",
    "pk": 812,
    "fields": {
-      "form_tag": "question812",
+      "form_tag": "logbookInformationComplete",
       "prompt": "Date Complete Information was Received",
       "description": null,
       "answer_type": 9,
@@ -21191,7 +21191,7 @@
    "model": "dataentry.question",
    "pk": 813,
    "fields": {
-      "form_tag": "question813",
+      "form_tag": "logbookNotes",
       "prompt": "notes",
       "description": null,
       "answer_type": 1,
@@ -21204,7 +21204,7 @@
    "model": "dataentry.question",
    "pk": 819,
    "fields": {
-      "form_tag": "question819",
+      "form_tag": "verifiedEvidenceCategorization",
       "prompt": "Verification",
       "description": null,
       "answer_type": 4,
@@ -21217,7 +21217,7 @@
    "model": "dataentry.question",
    "pk": 821,
    "fields": {
-      "form_tag": "question821",
+      "form_tag": "verifiedDateMain",
       "prompt": "Second Verification Date",
       "description": null,
       "answer_type": 9,
@@ -21321,7 +21321,7 @@
    "model": "dataentry.question",
    "pk": 861,
    "fields": {
-      "form_tag": "question861",
+      "form_tag": "logbookReceived",
       "prompt": "Date Form Received",
       "description": null,
       "answer_type": 9,
@@ -21334,7 +21334,7 @@
    "model": "dataentry.question",
    "pk": 862,
    "fields": {
-      "form_tag": "question862",
+      "form_tag": "logbookSubmitted",
       "prompt": "Date Form Submitted",
       "description": null,
       "answer_type": 9,
@@ -21529,7 +21529,7 @@
    "model": "dataentry.question",
    "pk": 900,
    "fields": {
-      "form_tag": "question900",
+      "form_tag": "option",
       "prompt": "Option",
       "description": null,
       "answer_type": 1,
@@ -21713,7 +21713,7 @@
    "model": "dataentry.question",
    "pk": 924,
    "fields": {
-      "form_tag": "question924",
+      "form_tag": "industry",
       "prompt": "Industry",
       "description": null,
       "answer_type": 6,
@@ -21728,7 +21728,7 @@
    "model": "dataentry.question",
    "pk": 925,
    "fields": {
-      "form_tag": "question925",
+      "form_tag": "vulnerabilityInsufficientResource",
       "prompt": "Insufficient resource to live/get home",
       "description": null,
       "answer_type": 6,
@@ -21741,7 +21741,7 @@
    "model": "dataentry.question",
    "pk": 926,
    "fields": {
-      "form_tag": "question926",
+      "form_tag": "vulnerabilityMinorWithoutGuardian",
       "prompt": "Minor unaccompanied by guardian",
       "description": null,
       "answer_type": 6,
@@ -21754,7 +21754,7 @@
    "model": "dataentry.question",
    "pk": 927,
    "fields": {
-      "form_tag": "question927",
+      "form_tag": "evadeSignsTreatment",
       "prompt": "Treatment - no documentation/knowledge",
       "description": null,
       "answer_type": 6,
@@ -21767,7 +21767,7 @@
    "model": "dataentry.question",
    "pk": 928,
    "fields": {
-      "form_tag": "question928",
+      "form_tag": "evadeSignsForgedFalseDocumentation",
       "prompt": "Forged or falsified documents",
       "description": null,
       "answer_type": 6,
@@ -21780,7 +21780,7 @@
    "model": "dataentry.question",
    "pk": 929,
    "fields": {
-      "form_tag": "question929",
+      "form_tag": "evadeSignsConfirmedDeception",
       "prompt": "Called place and confirmed deception",
       "description": null,
       "answer_type": 6,
@@ -21793,7 +21793,7 @@
    "model": "dataentry.question",
    "pk": 930,
    "fields": {
-      "form_tag": "question930",
+      "form_tag": "evadeSignsOther",
       "prompt": "Other",
       "description": null,
       "answer_type": 6,
@@ -21808,7 +21808,7 @@
    "model": "dataentry.question",
    "pk": 931,
    "fields": {
-      "form_tag": "question931",
+      "form_tag": "controlLedOtherCountry",
       "prompt": "Led to other country without their knowledge",
       "description": null,
       "answer_type": 6,
@@ -21821,7 +21821,7 @@
    "model": "dataentry.question",
    "pk": 932,
    "fields": {
-      "form_tag": "question932",
+      "form_tag": "controlTravelingBecauseOfThreat",
       "prompt": "Traveling because of threat",
       "description": null,
       "answer_type": 6,
@@ -21834,7 +21834,7 @@
    "model": "dataentry.question",
    "pk": 933,
    "fields": {
-      "form_tag": "question933",
+      "form_tag": "controlOwesDebt",
       "prompt": "Owes debt to person who recruited/paid travel",
       "description": null,
       "answer_type": 6,
@@ -21847,7 +21847,7 @@
    "model": "dataentry.question",
    "pk": 934,
    "fields": {
-      "form_tag": "question934",
+      "form_tag": "controlJob",
       "prompt": "Job",
       "description": null,
       "answer_type": 1,
@@ -21860,7 +21860,7 @@
    "model": "dataentry.question",
    "pk": 935,
    "fields": {
-      "form_tag": "question935",
+      "form_tag": "controlPromisedPay",
       "prompt": "Promised pay",
       "description": null,
       "answer_type": 1,
@@ -21873,7 +21873,7 @@
    "model": "dataentry.question",
    "pk": 936,
    "fields": {
-      "form_tag": "question936",
+      "form_tag": "controlNormalPay",
       "prompt": "Normal pay",
       "description": null,
       "answer_type": 1,
@@ -21886,7 +21886,7 @@
    "model": "dataentry.question",
    "pk": 937,
    "fields": {
-      "form_tag": "question937",
+      "form_tag": "controlPromisedDouble",
       "prompt": "Promised pay more than double normal pay",
       "description": null,
       "answer_type": 6,
@@ -21899,7 +21899,7 @@
    "model": "dataentry.question",
    "pk": 938,
    "fields": {
-      "form_tag": "question938",
+      "form_tag": "controlPromisedHigher",
       "prompt": "Promised pay a little higher than normal pay",
       "description": null,
       "answer_type": 6,
@@ -21912,7 +21912,7 @@
    "model": "dataentry.question",
    "pk": 939,
    "fields": {
-      "form_tag": "question939",
+      "form_tag": "controlNoAddressPhone",
       "prompt": "No address/phone number",
       "description": null,
       "answer_type": 6,
@@ -21925,7 +21925,7 @@
    "model": "dataentry.question",
    "pk": 940,
    "fields": {
-      "form_tag": "question940",
+      "form_tag": "convincedFamilyPhone",
       "prompt": "Family Phone #",
       "description": null,
       "answer_type": 1,
@@ -21938,7 +21938,7 @@
    "model": "dataentry.question",
    "pk": 942,
    "fields": {
-      "form_tag": "question942",
+      "form_tag": "vulnerabilityFamilyUnwilling",
       "prompt": "Family unwilling to let them go",
       "description": null,
       "answer_type": 6,
@@ -22003,7 +22003,7 @@
    "model": "dataentry.question",
    "pk": 948,
    "fields": {
-      "form_tag": "question948",
+      "form_tag": "open",
       "prompt": "Station Status",
       "description": null,
       "answer_type": 6,
@@ -22016,7 +22016,7 @@
    "model": "dataentry.question",
    "pk": 949,
    "fields": {
-      "form_tag": "question949",
+      "form_tag": "stationName",
       "prompt": "Station Name",
       "description": null,
       "answer_type": 1,
@@ -22029,7 +22029,7 @@
    "model": "dataentry.question",
    "pk": 950,
    "fields": {
-      "form_tag": "question950",
+      "form_tag": "stationCode",
       "prompt": "Station Code",
       "description": null,
       "answer_type": 1,
@@ -22042,7 +22042,7 @@
    "model": "dataentry.question",
    "pk": 951,
    "fields": {
-      "form_tag": "question951",
+      "form_tag": "dateEstablished",
       "prompt": "Date Established",
       "description": null,
       "answer_type": 9,
@@ -22055,7 +22055,7 @@
    "model": "dataentry.question",
    "pk": 952,
    "fields": {
-      "form_tag": "question952",
+      "form_tag": "hasShelter",
       "prompt": "Has Shelter",
       "description": null,
       "answer_type": 6,
@@ -22068,7 +22068,7 @@
    "model": "dataentry.question",
    "pk": 953,
    "fields": {
-      "form_tag": "question953",
+      "form_tag": "latitude",
       "prompt": "Latitude",
       "description": null,
       "answer_type": 3,
@@ -22081,7 +22081,7 @@
    "model": "dataentry.question",
    "pk": 954,
    "fields": {
-      "form_tag": "question954",
+      "form_tag": "longitude",
       "prompt": "Longitude",
       "description": null,
       "answer_type": 3,
@@ -22094,7 +22094,7 @@
    "model": "dataentry.question",
    "pk": 955,
    "fields": {
-      "form_tag": "question955",
+      "form_tag": "operatingCountryId",
       "prompt": "Operating Country",
       "description": null,
       "answer_type": 2,
@@ -22107,7 +22107,7 @@
    "model": "dataentry.question",
    "pk": 956,
    "fields": {
-      "form_tag": "question956",
+      "form_tag": "timeZone",
       "prompt": "Time Zone",
       "description": null,
       "answer_type": 1,
@@ -22120,7 +22120,7 @@
    "model": "dataentry.question",
    "pk": 957,
    "fields": {
-      "form_tag": "question957",
+      "form_tag": "firstName",
       "prompt": "First Name",
       "description": null,
       "answer_type": 1,
@@ -22133,7 +22133,7 @@
    "model": "dataentry.question",
    "pk": 958,
    "fields": {
-      "form_tag": "question958",
+      "form_tag": "lastName",
       "prompt": "Last Name",
       "description": null,
       "answer_type": 1,
@@ -22146,7 +22146,7 @@
    "model": "dataentry.question",
    "pk": 959,
    "fields": {
-      "form_tag": "question959",
+      "form_tag": "email",
       "prompt": "Email",
       "description": null,
       "answer_type": 1,
@@ -22159,7 +22159,7 @@
    "model": "dataentry.question",
    "pk": 960,
    "fields": {
-      "form_tag": "question960",
+      "form_tag": "phone",
       "prompt": "Phone",
       "description": null,
       "answer_type": 1,
@@ -22172,7 +22172,7 @@
    "model": "dataentry.question",
    "pk": 961,
    "fields": {
-      "form_tag": "question961",
+      "form_tag": "position",
       "prompt": "Position",
       "description": null,
       "answer_type": 1,
@@ -22185,7 +22185,7 @@
    "model": "dataentry.question",
    "pk": 962,
    "fields": {
-      "form_tag": "question962",
+      "form_tag": "receivesMoneyDistributionForm",
       "prompt": "Recieves Money Distribution Form",
       "description": null,
       "answer_type": 6,
@@ -22198,7 +22198,7 @@
    "model": "dataentry.question",
    "pk": 963,
    "fields": {
-      "form_tag": "question963",
+      "form_tag": "name",
       "prompt": "Name",
       "description": null,
       "answer_type": 1,
@@ -22211,7 +22211,7 @@
    "model": "dataentry.question",
    "pk": 964,
    "fields": {
-      "form_tag": "question964",
+      "form_tag": "formSet",
       "prompt": "Form Set",
       "description": null,
       "answer_type": 15,
@@ -22327,7 +22327,7 @@
    "model": "dataentry.question",
    "pk": 967,
    "fields": {
-      "form_tag": "question967",
+      "form_tag": "rescue",
       "prompt": "Rescue",
       "description": null,
       "answer_type": 6,
@@ -22340,7 +22340,7 @@
    "model": "dataentry.question",
    "pk": 968,
    "fields": {
-      "form_tag": "question968",
+      "form_tag": "profile",
       "prompt": "Profile",
       "description": null,
       "answer_type": 1,
@@ -22353,7 +22353,7 @@
    "model": "dataentry.question",
    "pk": 969,
    "fields": {
-      "form_tag": "question969",
+      "form_tag": "firstDate",
       "prompt": "First Date",
       "description": null,
       "answer_type": 9,
@@ -22366,7 +22366,7 @@
    "model": "dataentry.question",
    "pk": 970,
    "fields": {
-      "form_tag": "question970",
+      "form_tag": "lastDate",
       "prompt": "Last Date",
       "description": null,
       "answer_type": 9,
@@ -22379,7 +22379,7 @@
    "model": "dataentry.question",
    "pk": 971,
    "fields": {
-      "form_tag": "question971",
+      "form_tag": "locationType",
       "prompt": "Location Type",
       "description": null,
       "answer_type": 1,
@@ -22392,7 +22392,7 @@
    "model": "dataentry.question",
    "pk": 973,
    "fields": {
-      "form_tag": "question973",
+      "form_tag": "active",
       "prompt": "Active",
       "description": "Location Active",
       "answer_type": 6,
@@ -22405,7 +22405,7 @@
    "model": "dataentry.question",
    "pk": 974,
    "fields": {
-      "form_tag": "question974",
+      "form_tag": "vulnerabilityFirstTimeTravelingAbroad",
       "prompt": "First time traveling abroad",
       "description": null,
       "answer_type": 6,
@@ -22418,7 +22418,7 @@
    "model": "dataentry.question",
    "pk": 975,
    "fields": {
-      "form_tag": "irfIntercepteePhotoConsent",
+      "form_tag": "consentToUsePhoto",
       "prompt": "Do you consent to us using your photo this way?",
       "description": null,
       "answer_type": 1,
@@ -22431,7 +22431,7 @@
    "model": "dataentry.question",
    "pk": 976,
    "fields": {
-      "form_tag": "irfInterepteeInformationConsent",
+      "form_tag": "consentToUseInformation",
       "prompt": "Do you consent to us using your information this way?",
       "description": null,
       "answer_type": 1,
@@ -22444,7 +22444,7 @@
    "model": "dataentry.question",
    "pk": 977,
    "fields": {
-      "form_tag": "question977",
+      "form_tag": "vulnerabilityDoesntSpeakEnglish",
       "prompt": "Doesn't speak English",
       "description": null,
       "answer_type": 6,
@@ -22457,7 +22457,7 @@
    "model": "dataentry.question",
    "pk": 978,
    "fields": {
-      "form_tag": "question978",
+      "form_tag": "vulnerabilityNonRelativePaidFlight",
       "prompt": "Non-relative paid for flight",
       "description": null,
       "answer_type": 6,
@@ -22470,7 +22470,7 @@
    "model": "dataentry.question",
    "pk": 979,
    "fields": {
-      "form_tag": "question979",
+      "form_tag": "vulnerabilityConnectionHostUnclear",
       "prompt": "Connection to host/suspect limited or unclear",
       "description": null,
       "answer_type": 6,
@@ -22483,7 +22483,7 @@
    "model": "dataentry.question",
    "pk": 980,
    "fields": {
-      "form_tag": "question980",
+      "form_tag": "vulnerabilityDoesntHaveRequiredVisa",
       "prompt": "Doesn't have required visa/docs",
       "description": null,
       "answer_type": 6,
@@ -22496,7 +22496,7 @@
    "model": "dataentry.question",
    "pk": 988,
    "fields": {
-      "form_tag": "question988",
+      "form_tag": "vulnerabilityPaidFlightInCash",
       "prompt": "Flight paid for in cash",
       "description": null,
       "answer_type": 6,
@@ -22574,7 +22574,7 @@
    "model": "dataentry.question",
    "pk": 996,
    "fields": {
-      "form_tag": "question996",
+      "form_tag": "evadeSignsFakeDocumentation",
       "prompt": "Fake documentation",
       "description": null,
       "answer_type": 6,
@@ -22587,7 +22587,7 @@
    "model": "dataentry.question",
    "pk": 1024,
    "fields": {
-      "form_tag": "question1024",
+      "form_tag": "autoNumber",
       "prompt": "Auto Number",
       "description": null,
       "answer_type": 1,
@@ -22600,7 +22600,7 @@
    "model": "dataentry.question",
    "pk": 1033,
    "fields": {
-      "form_tag": "question1033",
+      "form_tag": "dateOfFollowup",
       "prompt": "Date followup completed",
       "description": null,
       "answer_type": 9,
@@ -22613,7 +22613,7 @@
    "model": "dataentry.question",
    "pk": 1034,
    "fields": {
-      "form_tag": "question1034",
+      "form_tag": "followupPerson",
       "prompt": "Followup by?",
       "description": null,
       "answer_type": 1,
@@ -22626,7 +22626,7 @@
    "model": "dataentry.question",
    "pk": 1042,
    "fields": {
-      "form_tag": "question1042",
+      "form_tag": "vulnerabilityFamilyFriendArrangedTravel",
       "prompt": "Friend/Family arranged travel/job/studies",
       "description": null,
       "answer_type": 6,
@@ -22827,7 +22827,7 @@
    "model": "dataentry.question",
    "pk": 1060,
    "fields": {
-      "form_tag": "question1060",
+      "form_tag": "formChanges",
       "prompt": "Are any changes to the original form required?",
       "description": null,
       "answer_type": 1,
@@ -22840,7 +22840,7 @@
    "model": "dataentry.question",
    "pk": 1061,
    "fields": {
-      "form_tag": "question1061",
+      "form_tag": "reasonForChange",
       "prompt": "This is a change from what was marked on the original VDF. Please explain why there is a change",
       "description": null,
       "answer_type": 1,
@@ -22853,7 +22853,7 @@
    "model": "dataentry.question",
    "pk": 1062,
    "fields": {
-      "form_tag": "question1062",
+      "form_tag": "staffWhoShared",
       "prompt": "LJ Station Staff that shared the gospel",
       "description": null,
       "answer_type": 1,
@@ -22866,7 +22866,7 @@
    "model": "dataentry.question",
    "pk": 1063,
    "fields": {
-      "form_tag": "question1063",
+      "form_tag": "howPvProfessed",
       "prompt": "Describe how the potential victim professed to accept the gospel\r\n",
       "description": null,
       "answer_type": 1,
@@ -22879,7 +22879,7 @@
    "model": "dataentry.question",
    "pk": 1064,
    "fields": {
-      "form_tag": "question1064",
+      "form_tag": "sharedResources",
       "prompt": "What resources were shared with them and how was it helpful?",
       "description": null,
       "answer_type": 1,
@@ -22892,7 +22892,7 @@
    "model": "dataentry.question",
    "pk": 1065,
    "fields": {
-      "form_tag": "question1065",
+      "form_tag": "connectWithChurch",
       "prompt": "Please note any efforst to connect with local church body",
       "description": null,
       "answer_type": 1,
@@ -22905,7 +22905,7 @@
    "model": "dataentry.question",
    "pk": 1066,
    "fields": {
-      "form_tag": "question1066",
+      "form_tag": "dateOfInterception",
       "prompt": "Date",
       "description": null,
       "answer_type": 9,
@@ -22920,7 +22920,7 @@
    "model": "dataentry.question",
    "pk": 1067,
    "fields": {
-      "form_tag": "question1067",
+      "form_tag": "timeOfInterception",
       "prompt": "Time",
       "description": null,
       "answer_type": 1,
@@ -22933,7 +22933,7 @@
    "model": "dataentry.question",
    "pk": 1068,
    "fields": {
-      "form_tag": "question1068",
+      "form_tag": "controlConnectedKnownTrafficker",
       "prompt": "Connected to known trafficker",
       "description": null,
       "answer_type": 6,
@@ -22946,7 +22946,7 @@
    "model": "dataentry.question",
    "pk": 1069,
    "fields": {
-      "form_tag": "question1069",
+      "form_tag": "flightNumber",
       "prompt": "Flight number",
       "description": null,
       "answer_type": 1,
@@ -22959,7 +22959,7 @@
    "model": "dataentry.question",
    "pk": 1070,
    "fields": {
-      "form_tag": "question1070",
+      "form_tag": "vulnerabilityNoId",
       "prompt": "Does not have any form of ID",
       "description": null,
       "answer_type": 6,
@@ -22972,7 +22972,7 @@
    "model": "dataentry.question",
    "pk": 1071,
    "fields": {
-      "form_tag": "question1071",
+      "form_tag": "vulnerabilityBusDriverPaymentAtDestination",
       "prompt": "Bus driver expecting payment for travel at destination",
       "description": null,
       "answer_type": 6,
@@ -22985,7 +22985,7 @@
    "model": "dataentry.question",
    "pk": 1072,
    "fields": {
-      "form_tag": "question1072",
+      "form_tag": "vulnerabilityFirstTimeTravelingToCity",
       "prompt": "Travelling to city from rural area for first time",
       "description": null,
       "answer_type": 6,
@@ -22998,7 +22998,7 @@
    "model": "dataentry.question",
    "pk": 1073,
    "fields": {
-      "form_tag": "question1073",
+      "form_tag": "vulnerabilityNoMobilePhone",
       "prompt": "Does not own mobile phone",
       "description": null,
       "answer_type": 6,
@@ -23037,7 +23037,7 @@
    "model": "dataentry.question",
    "pk": 1076,
    "fields": {
-      "form_tag": "question1076",
+      "form_tag": "controlAbducted",
       "prompt": "Abducted",
       "description": null,
       "answer_type": 6,
@@ -23050,7 +23050,7 @@
    "model": "dataentry.question",
    "pk": 1077,
    "fields": {
-      "form_tag": "question1077",
+      "form_tag": "pvStoppedOnOwn",
       "prompt": "PV decided to stop on their own prior to interception and needed resources to return home",
       "description": null,
       "answer_type": 6,
@@ -23063,7 +23063,7 @@
    "model": "dataentry.question",
    "pk": 1078,
    "fields": {
-      "form_tag": "question1078",
+      "form_tag": "vulnerabilityMeetingSomeoneMetOnline",
       "prompt": "Going to meet someone they met online",
       "description": null,
       "answer_type": 6,
@@ -23076,7 +23076,7 @@
    "model": "dataentry.question",
    "pk": 1079,
    "fields": {
-      "form_tag": "question1079",
+      "form_tag": "vulnerabilityTravelArrangedByOther",
       "prompt": "Transportation arranged by someone else",
       "description": null,
       "answer_type": 6,
@@ -23089,7 +23089,7 @@
    "model": "dataentry.question",
    "pk": 1080,
    "fields": {
-      "form_tag": "question1080",
+      "form_tag": "projectCategoryId",
       "prompt": "Project Category",
       "description": null,
       "answer_type": 2,
@@ -23102,7 +23102,7 @@
    "model": "dataentry.question",
    "pk": 1081,
    "fields": {
-      "form_tag": "question1081",
+      "form_tag": "features",
       "prompt": "Features",
       "description": null,
       "answer_type": 1,
@@ -23115,7 +23115,7 @@
    "model": "dataentry.question",
    "pk": 1082,
    "fields": {
-      "form_tag": "irfSfeControlUnder18Enticed",
+      "form_tag": "controlUnder18RecruitedForWork",
       "prompt": "Under 18 (enticed to work)",
       "description": null,
       "answer_type": 6,
@@ -23128,7 +23128,7 @@
    "model": "dataentry.question",
    "pk": 1083,
    "fields": {
-      "form_tag": "question1083",
+      "form_tag": "vulnerabilityTravelMetRecently",
       "prompt": "Is or was traveling with someone they met recently",
       "description": null,
       "answer_type": 6,
@@ -23141,7 +23141,7 @@
    "model": "dataentry.question",
    "pk": 1084,
    "fields": {
-      "form_tag": "question1084",
+      "form_tag": "vulnerabilityStrandedOrAbandoned",
       "prompt": "Stranded/abandoned",
       "description": null,
       "answer_type": 6,
@@ -23154,7 +23154,7 @@
    "model": "dataentry.question",
    "pk": 1085,
    "fields": {
-      "form_tag": "question1085",
+      "form_tag": "controlIdOrPermitWithBroker",
       "prompt": "ID or work permit with broker",
       "description": null,
       "answer_type": 6,
@@ -23167,7 +23167,7 @@
    "model": "dataentry.question",
    "pk": 1086,
    "fields": {
-      "form_tag": "question1086",
+      "form_tag": "controlUnder16RecruitedForWork",
       "prompt": "Under 16, recruited for work",
       "description": null,
       "answer_type": 6,
@@ -23180,7 +23180,7 @@
    "model": "dataentry.question",
    "pk": 1087,
    "fields": {
-      "form_tag": "question1087",
+      "form_tag": "mdfProjectId",
       "prompt": "MDF Project",
       "description": null,
       "answer_type": 2,
@@ -23193,7 +23193,7 @@
    "model": "dataentry.question",
    "pk": 1088,
    "fields": {
-      "form_tag": "question1088",
+      "form_tag": "verificationType",
       "prompt": "Verification type",
       "description": null,
       "answer_type": 2,
@@ -23206,7 +23206,7 @@
    "model": "dataentry.question",
    "pk": 1089,
    "fields": {
-      "form_tag": "question1089",
+      "form_tag": "followupCall",
       "prompt": "Follow-up call",
       "description": null,
       "answer_type": 1,
@@ -23219,7 +23219,7 @@
    "model": "dataentry.question",
    "pk": 1090,
    "fields": {
-      "form_tag": "question1090",
+      "form_tag": "followupDetails",
       "prompt": "Follow-up detail",
       "description": null,
       "answer_type": 1,
@@ -23232,7 +23232,7 @@
    "model": "dataentry.question",
    "pk": 1091,
    "fields": {
-      "form_tag": "question1091",
+      "form_tag": "evidenceCategorizationCard",
       "prompt": "Evidence category",
       "description": null,
       "answer_type": 1,
@@ -23245,7 +23245,7 @@
    "model": "dataentry.question",
    "pk": 1092,
    "fields": {
-      "form_tag": "question1092",
+      "form_tag": "reason",
       "prompt": "Reason",
       "description": null,
       "answer_type": 1,
@@ -23258,7 +23258,7 @@
    "model": "dataentry.question",
    "pk": 1093,
    "fields": {
-      "form_tag": "question1093",
+      "form_tag": "verifiedDateCard",
       "prompt": "Verified date",
       "description": null,
       "answer_type": 9,
@@ -23271,7 +23271,7 @@
    "model": "dataentry.question",
    "pk": 1094,
    "fields": {
-      "form_tag": "question1094",
+      "form_tag": "verifierId",
       "prompt": "Verifier",
       "description": null,
       "answer_type": 2,
@@ -23284,7 +23284,7 @@
    "model": "dataentry.question",
    "pk": 1331,
    "fields": {
-      "form_tag": "irfIntercepteeNotPresent",
+      "form_tag": "notPhysicallyPresent",
       "prompt": "Not physically present",
       "description": null,
       "answer_type": 4,
@@ -23297,7 +23297,7 @@
    "model": "dataentry.question",
    "pk": 1568,
    "fields": {
-      "form_tag": "irfFinalOfficialName",
+      "form_tag": "officialName",
       "prompt": "Official Name",
       "description": null,
       "answer_type": 1,
@@ -23310,7 +23310,7 @@
    "model": "dataentry.question",
    "pk": 1569,
    "fields": {
-      "form_tag": "irfFinalOfficialSignature",
+      "form_tag": "hasOfficalSignature",
       "prompt": "Official Signature",
       "description": null,
       "answer_type": 6,
@@ -23323,7 +23323,7 @@
    "model": "dataentry.question",
    "pk": 1570,
    "fields": {
-      "form_tag": "irfFinalRoute",
+      "form_tag": "route",
       "prompt": "Route",
       "description": null,
       "answer_type": 1,
@@ -23336,7 +23336,7 @@
    "model": "dataentry.question",
    "pk": 1571,
    "fields": {
-      "form_tag": "irfBangladeshLastName",
+      "form_tag": "vulnerabilityDifferentLastName",
       "prompt": "Last name different from alleged relative",
       "description": null,
       "answer_type": 6,
@@ -23349,7 +23349,7 @@
    "model": "dataentry.question",
    "pk": 1807,
    "fields": {
-      "form_tag": "irfSfeResourcesAppliedDestinationUnknown",
+      "form_tag": "vulnerabilityAppliedJobDoesntKnowDestination",
       "prompt": "Applied for job, but doesn’t know destination",
       "description": null,
       "answer_type": 6,
@@ -23362,7 +23362,7 @@
    "model": "dataentry.question",
    "pk": 1808,
    "fields": {
-      "form_tag": "irfSfeResourcesDoesntSpeakLocalLanguage",
+      "form_tag": "vulnerabilityDoesntSpeakLocalLanguage",
       "prompt": "Doesn’t speak Nepali",
       "description": null,
       "answer_type": 6,
@@ -23375,7 +23375,7 @@
    "model": "dataentry.question",
    "pk": 1809,
    "fields": {
-      "form_tag": "irfSfeResourcesViaIndia",
+      "form_tag": "vulnerabilityGoingViaIndia",
       "prompt": "Going to a third country via India",
       "description": null,
       "answer_type": 6,
@@ -23388,7 +23388,7 @@
    "model": "dataentry.question",
    "pk": 1810,
    "fields": {
-      "form_tag": "irfSfeResourcesCostOfLiving",
+      "form_tag": "vulnerabilityCostOfLivingHigherThanWages",
       "prompt": "Cost of living in destination much higher than wages",
       "description": null,
       "answer_type": 6,
@@ -23401,7 +23401,7 @@
    "model": "dataentry.question",
    "pk": 1811,
    "fields": {
-      "form_tag": "irfSfeResourcesNoJobDetails",
+      "form_tag": "vulnerabilityDoesntKnowJobDetails",
       "prompt": "Doesn’t know what job they are applying for",
       "description": null,
       "answer_type": 6,
@@ -23414,7 +23414,7 @@
    "model": "dataentry.question",
    "pk": 1812,
    "fields": {
-      "form_tag": "irfSfeResourcesUsingAgent",
+      "form_tag": "vulnerabilityUsingAgent",
       "prompt": "Using an agent",
       "description": null,
       "answer_type": 6,
@@ -23427,7 +23427,7 @@
    "model": "dataentry.question",
    "pk": 1813,
    "fields": {
-      "form_tag": "irfSfeResourcesMpaExcessiveTime",
+      "form_tag": "vulnerabilityMpaExcessiveTime",
       "prompt": "MPA taking excessive time to process/send migrant",
       "description": null,
       "answer_type": 6,
@@ -23440,7 +23440,7 @@
    "model": "dataentry.question",
    "pk": 1814,
    "fields": {
-      "form_tag": "irfSfeResourcesContractLanguage",
+      "form_tag": "agreementContractLanguage",
       "prompt": "Contract not in a language understood by the PV",
       "description": null,
       "answer_type": 6,
@@ -23453,7 +23453,7 @@
    "model": "dataentry.question",
    "pk": 1815,
    "fields": {
-      "form_tag": "irfSfeResourcesMpaNotBearingCost",
+      "form_tag": "agreementMpaNotBearingCost",
       "prompt": "Company/MPA not bearing cost to Gulf/Malaysia",
       "description": null,
       "answer_type": 6,
@@ -23466,7 +23466,7 @@
    "model": "dataentry.question",
    "pk": 1816,
    "fields": {
-      "form_tag": "irfSfeResourcesPaidAgent",
+      "form_tag": "agreementPaidAgent",
       "prompt": "Paid money to agent",
       "description": null,
       "answer_type": 6,
@@ -23479,7 +23479,7 @@
    "model": "dataentry.question",
    "pk": 1817,
    "fields": {
-      "form_tag": "irfSfeResourcesPaidMoreThanStandard",
+      "form_tag": "agreementPaidAboveStandard",
       "prompt": "Paid more than government standard cost",
       "description": null,
       "answer_type": 6,
@@ -23492,7 +23492,7 @@
    "model": "dataentry.question",
    "pk": 1818,
    "fields": {
-      "form_tag": "irfSfeResourcesNoReceipt",
+      "form_tag": "agreementNoReceipt",
       "prompt": "No bhaar pai (receipt) for full amount of payment",
       "description": null,
       "answer_type": 6,
@@ -23505,7 +23505,7 @@
    "model": "dataentry.question",
    "pk": 1819,
    "fields": {
-      "form_tag": "irfSfeResourcesUnawareOfProcess",
+      "form_tag": "preparationUnawareOfProcess",
       "prompt": "Unaware of official employment migration process",
       "description": null,
       "answer_type": 6,
@@ -23518,7 +23518,7 @@
    "model": "dataentry.question",
    "pk": 1820,
    "fields": {
-      "form_tag": "irfSfeResourcesNotPrepared",
+      "form_tag": "preparationDidNotComplete",
       "prompt": "Did not complete at least one of the following",
       "description": null,
       "answer_type": 1,
@@ -23531,7 +23531,7 @@
    "model": "dataentry.question",
    "pk": 1821,
    "fields": {
-      "form_tag": "irfSfeResourcesPreparedOther",
+      "form_tag": "preparationOther",
       "prompt": "Other",
       "description": null,
       "answer_type": 1,
@@ -23544,7 +23544,7 @@
    "model": "dataentry.question",
    "pk": 1822,
    "fields": {
-      "form_tag": "irfSfeControlVisaMisuse",
+      "form_tag": "controlVisaMisuse",
       "prompt": "Convinced by agent/MPA to work on visa other than work visa",
       "description": null,
       "answer_type": 6,
@@ -23557,7 +23557,7 @@
    "model": "dataentry.question",
    "pk": 1823,
    "fields": {
-      "form_tag": "irfSfeControlFacilitatedThirdCountry",
+      "form_tag": "controlFacilitatedViaThirdCountry",
       "prompt": "Process being fully facilitated by someone to travel to third country via India for work",
       "description": null,
       "answer_type": 6,
@@ -23570,7 +23570,7 @@
    "model": "dataentry.question",
    "pk": 1824,
    "fields": {
-      "form_tag": "irfSfeControlWomenEnticedDangerousArea",
+      "form_tag": "controlWomenEnticedUnsaveArea",
       "prompt": "Woman being enticed by agent/MPA to go for domestic work in Gulf/Malaysia",
       "description": null,
       "answer_type": 6,
@@ -23583,7 +23583,7 @@
    "model": "dataentry.question",
    "pk": 1825,
    "fields": {
-      "form_tag": "irfSfeControlBannedArea",
+      "form_tag": "controlEnticedBannedArea",
       "prompt": "Being enticed by agent/MPA to go to banned country for migrant worker",
       "description": null,
       "answer_type": 6,
@@ -23596,7 +23596,7 @@
    "model": "dataentry.question",
    "pk": 1826,
    "fields": {
-      "form_tag": "irfSfeControlJobPrepermissionMismatch",
+      "form_tag": "controlAgreementPrepermissionMismatch",
       "prompt": "Job agreement and pre-permission details do not match",
       "description": null,
       "answer_type": 6,
@@ -23609,7 +23609,7 @@
    "model": "dataentry.question",
    "pk": 1827,
    "fields": {
-      "form_tag": "irfSfeControlInvalidMpa",
+      "form_tag": "controlInvalidMpa",
       "prompt": "Using an invalid MPA",
       "description": null,
       "answer_type": 6,
@@ -23622,7 +23622,7 @@
    "model": "dataentry.question",
    "pk": 1828,
    "fields": {
-      "form_tag": "irfSfeControlInvalidLt",
+      "form_tag": "controlInvalidLt",
       "prompt": "No/invalid Lt number and/or demand letter",
       "description": null,
       "answer_type": 6,
@@ -23635,7 +23635,7 @@
    "model": "dataentry.question",
    "pk": 1829,
    "fields": {
-      "form_tag": "irfSfeControlSeasonal",
+      "form_tag": "controlEnticedNonSeasonal",
       "prompt": "Being enticed by MPA to go to South Korea or Israel for non-seasonal work",
       "description": null,
       "answer_type": 6,
@@ -23648,7 +23648,7 @@
    "model": "dataentry.question",
    "pk": 1830,
    "fields": {
-      "form_tag": "irfSfePeopleLtBefore",
+      "form_tag": "pvLtNumberBeforeCounsel",
       "prompt": "Lt # Before Counseling",
       "description": null,
       "answer_type": 1,
@@ -23661,7 +23661,7 @@
    "model": "dataentry.question",
    "pk": 1831,
    "fields": {
-      "form_tag": "irfSfePeopleLtAfter",
+      "form_tag": "pvLtNumberAfterCounsel",
       "prompt": "Lt # After Counseling",
       "description": null,
       "answer_type": 1,
@@ -23674,7 +23674,7 @@
    "model": "dataentry.question",
    "pk": 1832,
    "fields": {
-      "form_tag": "irfSfePeopleCloseContact",
+      "form_tag": "pvClosestContact",
       "prompt": "If/when the PV goes abroad in the future, with whom will they keep the closest contact? (Name/Number)",
       "description": null,
       "answer_type": 1,
@@ -23687,7 +23687,7 @@
    "model": "dataentry.question",
    "pk": 1833,
    "fields": {
-      "form_tag": "irfSfePeopleNoMpaAgent",
+      "form_tag": "mpaAgentNotUsed",
       "prompt": "Check if PV did not use a MPA or agent",
       "description": null,
       "answer_type": 6,
@@ -23700,7 +23700,7 @@
    "model": "dataentry.question",
    "pk": 1834,
    "fields": {
-      "form_tag": "irfSfePeopleMpaName",
+      "form_tag": "mpaName",
       "prompt": "MPA Name",
       "description": null,
       "answer_type": 1,
@@ -23713,7 +23713,7 @@
    "model": "dataentry.question",
    "pk": 1835,
    "fields": {
-      "form_tag": "irfSfePeopleMpaPhone",
+      "form_tag": "mpaPhone",
       "prompt": "MPA Phone",
       "description": null,
       "answer_type": 1,
@@ -23726,7 +23726,7 @@
    "model": "dataentry.question",
    "pk": 1836,
    "fields": {
-      "form_tag": "irfSfePeopleMpaInitiatedContact",
+      "form_tag": "mpaWhoInitiatedContact",
       "prompt": "Who initiated contact?",
       "description": null,
       "answer_type": 4,
@@ -23741,7 +23741,7 @@
    "model": "dataentry.question",
    "pk": 1837,
    "fields": {
-      "form_tag": "irfSfePeopleHowContact",
+      "form_tag": "mpaHowContacted",
       "prompt": "How",
       "description": null,
       "answer_type": 4,
@@ -23756,7 +23756,7 @@
    "model": "dataentry.question",
    "pk": 1838,
    "fields": {
-      "form_tag": "irfSfeResultTechTraining",
+      "form_tag": "resultPvTechTraining",
       "prompt": "PV was referred to technical/vocational training",
       "description": null,
       "answer_type": 6,
@@ -23769,7 +23769,7 @@
    "model": "dataentry.question",
    "pk": 1839,
    "fields": {
-      "form_tag": "irfSfeResultOtherEducation",
+      "form_tag": "resultPvOtherEducation",
       "prompt": "PV was referred to other education",
       "description": null,
       "answer_type": 6,
@@ -23782,7 +23782,7 @@
    "model": "dataentry.question",
    "pk": 1840,
    "fields": {
-      "form_tag": "irfSfeResultChangePlans",
+      "form_tag": "resultPvChangedPlans",
       "prompt": "PV decided to change plans and go abroad",
       "description": null,
       "answer_type": 1,
@@ -23795,7 +23795,7 @@
    "model": "dataentry.question",
    "pk": 1841,
    "fields": {
-      "form_tag": "irfSfeResultStayLocal",
+      "form_tag": "resultPvLocalJob",
       "prompt": "PV decided to change plans and look for a job within Nepal due to SFE staff’s counseling",
       "description": null,
       "answer_type": 6,
@@ -23808,7 +23808,7 @@
    "model": "dataentry.question",
    "pk": 2078,
    "fields": {
-      "form_tag": "irfSfePeopleAgentHowContact",
+      "form_tag": "agentHowContacted",
       "prompt": "How",
       "description": null,
       "answer_type": 4,
@@ -23823,7 +23823,7 @@
    "model": "dataentry.question",
    "pk": 2079,
    "fields": {
-      "form_tag": "irfSfePeopleAgentInitiatedContact",
+      "form_tag": "agentWhoInitiatedContact",
       "prompt": "Who initiated contact?",
       "description": null,
       "answer_type": 4,
@@ -23838,7 +23838,7 @@
    "model": "dataentry.question",
    "pk": 2080,
    "fields": {
-      "form_tag": "irfSfePeopleMpaSuspect",
+      "form_tag": "mpaIsSuspect",
       "prompt": "Do you suspect the MPA is attempting to traffic the PV (or others)?",
       "description": null,
       "answer_type": 4,
@@ -23851,7 +23851,7 @@
    "model": "dataentry.question",
    "pk": 2081,
    "fields": {
-      "form_tag": "irfSfePeopleAgentSuspect",
+      "form_tag": "agentIsSuspect",
       "prompt": "Do you suspect the Agent is attempting to traffic the PV (or others)?",
       "description": null,
       "answer_type": 4,
