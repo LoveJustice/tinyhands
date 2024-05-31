@@ -48258,7 +48258,7 @@
          "filter": {
             "value": "Original Form",
             "operation": "=",
-            "question_tag": "question900"
+            "question_tag": "option"
          },
          "min_count": 1,
          "category_name": "Attachments"
@@ -48299,7 +48299,7 @@
          "filter": {
             "value": "Original Form",
             "operation": "=",
-            "question_tag": "question900"
+            "question_tag": "option"
          },
          "min_count": 1,
          "category_name": "Attachments"
@@ -48353,7 +48353,7 @@
          "filter": {
             "value": "Original Form",
             "operation": "=",
-            "question_tag": "question900"
+            "question_tag": "option"
          },
          "min_count": 1,
          "category_name": "Attachments"
@@ -48720,10 +48720,10 @@
             "part": "role",
             "value": "PVOT",
             "operation": "=",
-            "question_tag": "question9"
+            "question_tag": "person"
          },
          "category_tag": "184",
-         "count_question_tag": "question2"
+         "count_question_tag": "numberOfVictims"
       },
       "retrieve": false,
       "update": true,
@@ -48775,10 +48775,10 @@
             "part": "role",
             "value": "Suspect",
             "operation": "=",
-            "question_tag": "question9"
+            "question_tag": "person"
          },
          "category_tag": "People",
-         "count_question_tag": "question5"
+         "count_question_tag": "numberOfTraffickers"
       },
       "retrieve": false,
       "update": true,
