@@ -19,6 +19,7 @@ from dataentry.models.master_person import MasterPerson
 from dataentry.models.match_history import MatchHistory, MatchAction
 from .form_data import FormData, CardData, PersonContainer
 from .validate_form import ValidateForm
+import xxsubtype
 
 logger = logging.getLogger(__name__)
 
@@ -887,7 +888,11 @@ class QuestionResponseSerializer(serializers.Serializer):
     
     def to_internal_value(self, data):
         question_id = data.get('question_id')
-        question = Question.objects.get(id=int(question_id))
+        if question_id is None:
+            question_tag = data.get('question_tag')
+            question = Question.objects.get(form_tag=question_tag)
+        else:
+            question = Question.objects.get(id=int(question_id))
         storage_id = data.get('storage_id')
         if storage_id is not None:
             storage_id = int(storage_id)
