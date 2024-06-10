@@ -440,7 +440,7 @@ class MonthlyDistributionForm(models.Model):
                 total += request.cost
         return total
     
-    def stationary_total(self):
+    def stationery_total(self):
         total = 0
         multiplier_type = MonthlyDistributionMultipliers.objects.get(category=constants.AWARENESS)
         
@@ -591,7 +591,7 @@ class MonthlyDistributionForm(models.Model):
             month = self.month_year.month
             if guide.description == 'PV Food':
                 category = constants.POTENTIAL_VICTIM_CARE
-            elif guide.description == 'Stationary':
+            elif guide.description == 'Stationery':
                  category = constants.AWARENESS
     
             else:
@@ -633,7 +633,7 @@ class MonthlyDistributionForm(models.Model):
     def guide_progress(self):
         result = {}
         
-        for guide_pair in [{'description':'PV Food', 'category':constants.POTENTIAL_VICTIM_CARE}, {'description':'Stationary', 'category':constants.AWARENESS}]:
+        for guide_pair in [{'description':'PV Food', 'category':constants.POTENTIAL_VICTIM_CARE}, {'description':'Stationery', 'category':constants.AWARENESS}]:
             found = False
             year = self.month_year.year
             month = self.month_year.month
