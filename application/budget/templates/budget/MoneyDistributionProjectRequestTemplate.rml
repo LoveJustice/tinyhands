@@ -99,9 +99,6 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             <lineStyle kind="grid" colorName="black" thickness="1" start="0,0" stop="-1,-1" />
             <blockTextColor start="-1,-1" stop="-1,-1" colorName="#c00000"/>
         </blockTableStyle>
-        <blockTableStyle id="signatureLine">
-            <lineStyle kind="LINEBELOW"  colorName="black" thickness="1" start="0,0" stop="-1,-1" />
-        </blockTableStyle>
     </stylesheet>
 
     <story>
@@ -300,7 +297,12 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 		        {% endif %}
 	        {% endfor %}
         {% endif %}
-        
+        <para style="monthlyTotal"><b>Spending General Rules Summary</b></para>
+        <para style="monthlyTotal"><u>Pre-approval Required for All Expenses:</u> All expenses must be pre-approved. Some exceptions apply, such as certain expenses that may have automatic approval. Always seek approval before spending, unless previously agreed upon for specific categories like PV travel or care. If unsure, consult with the national office.</para>
+        <para style="monthlyTotal"><u>No Overspending Without Approval:</u> Do not exceed the budgeted amount for any approved items without further approval. If costs exceed initial estimates, obtain approval before making a purchase.</para>
+        <para style="monthlyTotal"><u>Budgets Must Not Be Altered:</u> Funds allocated for specific budgeted items must not be transferred to cover other unapproved expenses. Stick to the approved budget allocations.</para>
+        <para style="monthlyTotal"><u>Report Unspent Funds:</u> Ensure any funds not utilized by the end of the month are reported to the national office.</para>
+
         <setNextTemplate name="budget" />
         <nextFrame/>
 		{% for mdf in mdfs %}
@@ -380,5 +382,10 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         {% for footnote in second_footnotes.footnotes %}
 			<para>{{ footnote }}</para>
 		{% endfor %}
+		<spacer length="30"/>
+        <spacer length="30"/>
+        <para style="finalTotal">_____________________________</para>
+        <para style="finalTotal"><b>Authorized Signature</b></para>
     </story>
+
 </document>
