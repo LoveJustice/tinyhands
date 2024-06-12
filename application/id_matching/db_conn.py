@@ -9,46 +9,72 @@ from django.db import connection
 from dataentry.models import Person
 
 
-class DB_Conn(object):
-    """This is a class for establishing a connection with the database."""
-    def __init__(self, db_filename, section='postgresql'):
-        
-        if db_filename is not None:
-            # create a parser
-            parser = ConfigParser()
-            # read config file
-            parser.read(str(db_filename))
-            #db = {}
-            if parser.has_section(section):
-                params = parser.items(section)
-                for param in params:
-                    db[param[0]] = param[1]
-            else:
-                raise Exception('Section {0} not found in the {1} file'.format(section, db_filename))
-    
-            params = db
-    
-            conn = psycopg2.connect(**params)
-            self.conn = conn
-            self.cur = conn.cursor()
-        else:
-            self.conn = None
-            self.cur = connection.cursor()
+import pandas as pd
+import psycopg2
+from configparser import ConfigParser
 
-    def ex_query(self, select_query):
-        """Execute query and return dataframe."""
-        query = select_query
-        cur = self.cur
-        cur.execute(query)
-        colnames = [desc[0] for desc in cur.description]
-        rows = cur.fetchall()
-        return pd.DataFrame(rows, columns=colnames)
+class DB_Conn(object):
+    """A class for establishing a connection with the database."""
+
+    def __init__(self, db_config=None, db_filename=None, section='postgresql'):
+        """
+        Initialize the connection with the database.
+        :param db_config: A dictionary containing the database connection parameters (optional).
+        :param db_filename: A filename from which to read the database configuration (optional).
+        :param section: The section of the configuration file to read for the database settings (optional).
+        """
+        if db_config:
+            self.db_config = db_config
+        elif db_filename:
+            self.db_config = self._get_db_config(db_filename, section)
+        else:
+            raise ValueError("Either db_config or db_filename must be provided.")
+        self._initialize_db_connection()
+
+    def _get_db_config(self, db_filename, section):
+        parser = ConfigParser()
+        parser.read(str(db_filename))
+        if parser.has_section(section):
+            return {param[0]: param[1] for param in parser.items(section)}
+        else:
+            raise Exception(f'Section {section} not found in the {db_filename} file')
+
+    def _initialize_db_connection(self):
+        try:
+            self.conn = psycopg2.connect(**self.db_config)
+            self.cur = self.conn.cursor()
+        except psycopg2.Error as e:
+            raise Exception(f"Database connection failed: {e}")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close_conn()
+
+    def ex_query(self, select_query, parameters=None):
+        """Execute query with parameters and return dataframe."""
+        self.cur.execute(select_query, parameters) if parameters else self.cur.execute(select_query)
+        if self.cur.description:
+            colnames = [desc[0] for desc in self.cur.description]
+            rows = self.cur.fetchall()
+            return pd.DataFrame(rows, columns=colnames)
+        else:
+            return None
+
+    def insert_query(self, insert_query, parameters=None):
+        """Execute insert query with parameters."""
+        try:
+            self.cur.execute(insert_query, parameters) if parameters else self.cur.execute(insert_query)
+            self.conn.commit()
+        except psycopg2.Error as e:
+            self.conn.rollback()
+            raise Exception(f"Insert query failed: {e}")
 
     def close_conn(self):
         """Close the cursor and the connection."""
         self.cur.close()
-        if self.conn is not None:
-            self.conn.close()
+        self.conn.close()
 
 #WIP Fix this
 def get_sl_data(db_cred):
