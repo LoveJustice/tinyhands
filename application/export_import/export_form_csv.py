@@ -426,6 +426,9 @@ class PvfCsv (ExportFormCsv):
             writer.writerow(row)
             exported += 1
     
+    def check_contact(self, value):
+        return value is not None and len(value) > 0 and value != '-' and value.lower() != 'n/a' and value.lower() != 'na'
+    
     def perform_export(self):
         pvfs = VdfCommon.objects.filter(
             station__operating_country__in = self.country_list,
@@ -448,6 +451,16 @@ class PvfCsv (ExportFormCsv):
             follow_up_pvfs = pvfs.filter(what_victim_believes_now='Came to believe that Jesus is the one true God')
             other_pvfs = pvfs.exclude(what_victim_believes_now='Came to believe that Jesus is the one true God')
             desired_sample = math.ceil(len(pvfs) * self.sample / 100.0)
+            # Include PVFs with phone number or guardian phone number before those without
+            follow_ups_with_contact = []
+            follow_ups_without_contact = []
+            for pvf in follow_up_pvfs:
+                if self.check_contact(pvf.victim.phone_contact) or self.check_contact(pvf.victim.guardian_phone):
+                    follow_ups_with_contact.append(pvf)
+                else:
+                    follow_ups_without_contact.append(pvf)
+            
+            follow_up_pvfs = follow_ups_with_contact + follow_ups_without_contact
             if len(follow_up_pvfs) > desired_sample:
                 rate = 0
             else:
