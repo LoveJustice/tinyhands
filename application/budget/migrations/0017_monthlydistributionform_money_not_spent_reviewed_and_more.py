@@ -31,7 +31,7 @@ def populate_food_and_stationary(apps, schema_editor):
         limbo_food_total = mdf.limbo_total()
         add_request(mdf, request_class, 5, 'PV Food', limbo_food_total, 'Total Limbo PV Cost')
         
-        stationary_total = mdf.stationary_total()
+        stationary_total = mdf.stationery_total()
         add_request(mdf, request_class, 3, 'Stationary', stationary_total, 'Stationary Total')
 
 

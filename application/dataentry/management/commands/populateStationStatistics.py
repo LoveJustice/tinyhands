@@ -8,7 +8,10 @@ from django.db.models import Count
 
 from budget.models import BorderStationBudgetCalculation
 from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, Gospel, GospelVerification, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
+from legal.models import LegalChargeSuspect
 from static_border_stations.models import  CommitteeMember, Location
+
+ARREST_VERIFICATION_START = '2024-07-01'
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -142,27 +145,56 @@ class Command(BaseCommand):
         for country in countries:
             if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
                 # Count arrests
-                suspects = LegalCaseSuspect.objects.filter(legal_case__station__operating_country=country, arrest_submitted_date__gte=start_date, arrest_submitted_date__lt=end_date)
-                for suspect in suspects:
-                    try:
-                        location = Location.objects.get(border_station=suspect.legal_case.station, name__iexact=suspect.legal_case.location)
-                    except ObjectDoesNotExist:
-                        location = Location.get_or_create_other_location(suspect.legal_case.station)
-                    
-                    try:
-                        location_statistics = LocationStatistics.objects.get(location=location, year_month = year_month)
-                    except ObjectDoesNotExist:
-                        location_statistics = LocationStatistics()
-                        location_statistics.year_month = year_month
-                        location_statistics.location = location
-                        location_statistics.intercepts = 0
-                        location_statistics.intercepts_evidence = 0
-                        location_statistics.intercepts_high_risk = 0
-                        location_statistics.intercepts_invalid = 0
-                        location_statistics.arrests = 0
-                    
-                    location_statistics.arrests += 1
-                    location_statistics.save()
+                if start_date >= ARREST_VERIFICATION_START:
+                    suspects = LegalChargeSuspect.objects.filter(
+                            legal_charge__station__operating_country=country,
+                            verified_date__gte=start_date,
+                            verified_date__lt=end_date,
+                            arrest_submitted_date__gte=ARREST_VERIFICATION_START
+                        )
+                    for suspect in suspects:
+                        try:
+                            location = Location.objects.get(border_station=suspect.legal_charge.station, name__iexact=suspect.legal_charge.location)
+                        except:
+                            location = Location.get_or_create_other_location(suspect.legal_charge.station)
+                            
+                        try:
+                            location_statistics = LocationStatistics.objects.get(location=location, year_month = year_month)
+                        except ObjectDoesNotExist:
+                            location_statistics = LocationStatistics()
+                            location_statistics.year_month = year_month
+                            location_statistics.location = location
+                            location_statistics.intercepts = 0
+                            location_statistics.intercepts_evidence = 0
+                            location_statistics.intercepts_high_risk = 0
+                            location_statistics.intercepts_invalid = 0
+                            location_statistics.arrests = 0
+                        
+                        location_statistics.arrests += 1
+                        location_statistics.save()
+                else:
+                    suspects = LegalCaseSuspect.objects.filter(
+                            legal_case__station__operating_country=country, arrest_submitted_date__gte=start_date, arrest_submitted_date__lt=end_date)
+                    for suspect in suspects:
+                        try:
+                            location = Location.objects.get(border_station=suspect.legal_case.station, name__iexact=suspect.legal_case.location)
+                        except ObjectDoesNotExist:
+                            location = Location.get_or_create_other_location(suspect.legal_case.station)
+                        
+                        try:
+                            location_statistics = LocationStatistics.objects.get(location=location, year_month = year_month)
+                        except ObjectDoesNotExist:
+                            location_statistics = LocationStatistics()
+                            location_statistics.year_month = year_month
+                            location_statistics.location = location
+                            location_statistics.intercepts = 0
+                            location_statistics.intercepts_evidence = 0
+                            location_statistics.intercepts_high_risk = 0
+                            location_statistics.intercepts_invalid = 0
+                            location_statistics.arrests = 0
+                        
+                        location_statistics.arrests += 1
+                        location_statistics.save()
         
         border_stations = BorderStation.objects.all().order_by('operating_country')
         for station in border_stations:

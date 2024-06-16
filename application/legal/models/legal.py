@@ -52,7 +52,11 @@ class LegalChargeSuspect(BaseCard):
     verified_attachment = models.CharField(max_length=127, null=True)
     taken_into_custody = models.CharField(max_length=127, null=True)
     charged_with_crime = models.CharField(max_length=127, null=True)
-    police_case_or_court_case = models.CharField(max_length=127, null=True)
+    how_do_you_know = models.TextField(null=True)
+    verified_by = models.CharField(max_length=127, null=True)
+    verified_date = models.DateField(null=True)
+    
+    
     
     def set_parent(self, the_parent):
         self.legal_charge = the_parent
