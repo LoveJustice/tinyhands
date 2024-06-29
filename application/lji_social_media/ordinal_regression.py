@@ -73,9 +73,27 @@ df = pd.read_csv(file_path)
 y = df["Monitor Rating"]
 
 # Prepare the independent variables (binary columns)
-X = df.iloc[:, 6:]
 
+
+features = [
+    "Recruiting young people who are still in school",
+    "Paying more than the market rate for the skill level or type of job that they are hiring for",
+    "Not mentioning any skill requirements",
+    "Not mentioning the nature of the job",
+    "Not mentioning the name or the location of the hiring business",
+    "Paying the same salary for different job posts positions",
+    "Hiring for an organization such as ESKOM who has publicly stated that they don t advertise job posts on social media",
+    "Recruiting specifically females for a job that male or female applicants would qualify for",
+    "Unprofessional writing poor grammar spelling",
+    "Recruiting models",
+    "Changing from English to other languages in the middle of the post",
+    "Using a suspicious email address",
+    "Advertising for positions in several promises especially without detail",
+    "Looks Legit",
+]
 # Remove constant columns if any
+X = df[features]
+
 constant_columns = [col for col in X.columns if X[col].nunique() <= 1]
 X = X.drop(columns=constant_columns)
 
@@ -155,7 +173,7 @@ from sklearn.utils import resample
 # Load the dataset
 file_path = "results/advert_comparison_cleaned.csv"
 df = pd.read_csv(file_path)
-
+list(df)
 # Prepare the dependent variable
 y = df["Monitor Rating"]
 
