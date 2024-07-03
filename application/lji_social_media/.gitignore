@@ -13,6 +13,7 @@ Road_Graphs/
 results/
 data_sources/
 attachments/
+docs/
 
 poc-knowledge-graph-venv/bin/
 poc-knowledge-graph-venv/etc/

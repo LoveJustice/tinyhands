@@ -13,7 +13,9 @@ from llama_index.core.response.notebook_utils import display_source_node
 from llama_index.core.query_engine import RetrieverQueryEngine
 import re
 import ast
+from dotenv import load_dotenv
 
+load_dotenv()
 data = pd.read_csv("results/advert_comparison_cleaned.csv")
 
 
@@ -71,7 +73,7 @@ for idx, row in data.iterrows():
     metadata.append(meta)
 
 story = (
-    "A monitor is a person who assesses a online recruitment adverts and provides a Likert-style rating as to the likelihood "
+    "A Monitor is a trained individual who carefully assesses online recruitment adverts and provides a Likert-style rating as to the likelihood "
     "of this advert being used for the purposes of falsely luring respondents into trafficking.  The Likert scale"
     "ranges from 0 to 9, where 0 is not suspicious and 9 is likely fraudulent or fake.  The rating is known as the Monitor rating."
     "The Monitor also notes a reason for their rating."
@@ -269,3 +271,31 @@ columns = [
     "Looks Legit",
 ]
 df[columns].to_csv("results/RAG_advert_monitoring.csv", index=False)
+
+
+#
+
+query_str = (
+    f"Assistant as an experienced Monitor is there any evidence of  provide a Monitor rating and a Monitor reason for the following advert ```{advert}```"
+    "without using your pretrained knowledge about human trafficking but only the documentation given to you."
+    "Please provide your Monitor rating on an integer scale of 0 to 9, with 9 being the most likely to be used in human trafficking."
+    "Also provide a reason for your Monitor rating.  This reason must also NOT be extracted from anywhere else but the documentation given to you."
+    "You will also need to provide a list of ALL red flags that you have identified in the advert as per the documentation given to you."
+    "Features can ONLY be one OR more of the following, don't make up new ones :"
+    "[```Recruiting young people who are still in school```",
+    "```Paying more than the market rate for the skill level or type of job that they are hiring for```",
+    "```Not mentioning any skill requirements```",
+    "```Not mentioning the nature of the job```",
+    "```Not mentioning the name or the location of the hiring business```",
+    "```Paying the same salary for different job posts positions```",
+    "```Hiring for an organization such as ESKOM who has publicly stated that they don't advertise job posts on social media```",
+    "```Recruiting specifically females for a job that male or female applicants would qualify for```,",
+    "```Unprofessional writing poor grammar spelling```",
+    "```Recruiting models```",
+    "```Changing from English to other languages in the middle of the post```",
+    "```Using a suspicious email address```",
+    "```Advertising for positions in several promises especially without detail```, ```Looks Legit```]",
+    "Provide your response in JSON format and ensure it can be parsed correctly."
+    "Here is an example:"
+    '{"Monitor rating": integer, "Monitor reason": "reasoning", "features": ["feature one", "feature two", ...]}',
+)

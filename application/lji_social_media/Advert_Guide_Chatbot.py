@@ -12,6 +12,11 @@ llm = OpenAI(temperature=0, model="gpt-4o", max_tokens=128000)
 
 memory = ChatMemoryBuffer.from_defaults(token_limit=64000)
 
+st.set_page_config(
+    page_title="Welcome",
+    page_icon="👋",
+)
+
 
 def create_cv_documents(data):
     comparison = pd.read_csv("results/comparison.csv")
@@ -55,20 +60,27 @@ def create_chat_engine(index):
 
 
 def init_session():
+    if "features" not in st.session_state:
+        st.session_state["features"] = [
+            "Recruiting young people who are still in school",
+            "Paying more than the market rate for the skill level or type of job that they are hiring for",
+            "Not mentioning any skill requirements",
+            "Not mentioning the nature of the job",
+            "Not mentioning the name or the location of the hiring business",
+            "Paying the same salary for different job posts positions",
+            "Hiring for an organization such as ESKOM who has publicly stated that they don t advertise job posts on social media",
+            "Recruiting specifically females for a job that male or female applicants would qualify for",
+            "Unprofessional writing poor grammar spelling",
+            "Recruiting models",
+            "Changing from English to other languages in the middle of the post",
+            "Using a suspicious email address",
+            "Advertising for positions in several promises especially without detail",
+            "Looks Legit",
+        ]
     if "comparison_data" not in st.session_state:
-        comparison = pd.read_csv("results/comparison.csv")
-        rename = {
-            "advert_y": "text",
-            "Rating 1 - 10 (10 is most likely to be HT)": "rating",
-            "Reason": "reason",
-        }
-        comparison.rename(columns=rename, inplace=True)
-
-        st.dataframe(comparison)
-        documents = create_documents(comparison)
-        memory.reset()
-        index = VectorStoreIndex.from_documents(documents, llm=llm)
-        st.session_state.chat_engine = create_chat_engine(index)
+        st.session_state["comparison_data"] = pd.read_csv(
+            "results/advert_comparison_cleaned.csv"
+        ).fillna(0)
 
 
 def get_prompt():
@@ -117,57 +129,14 @@ def get_prompt():
 
 
 def main():
-    st.write("This platform helps to rank and rate suspicious recruitment adverts.")
-    # st.text_input("Enter the text of an advert here...", key="advert_text")
-    st.text_area(
-        "Enter the text of an advert here...",
-        key="advert_text",
-        height=200,
-        max_chars=5000,
-    )
-    st.sidebar.radio(
-        "A ranking/rating method", ["LJI RAG", "LJI-GPT RAG", "GPT"], key="method"
-    )
     init_session()
-    with st.expander("Click to reveal the original LJI sample adverts"):
-        st.dataframe(st.session_state.comparison_data[["text", "rating", "reason"]])
-
-    if st.button("Submit"):
-        st.write("The advert has been submitted.")
-        prompt = get_prompt()
-        if st.session_state.method in ["LJI RAG", "LJI-GPT RAG"]:
-            response = st.session_state.chat_engine.chat(prompt)
-            formatted_response = (
-                response.response.strip()
-            )  # Remove leading/trailing whitespace
-
-            s = json.loads(formatted_response)
-            st.write(f'The advert achieves a rating of {s["rating"]}')
-            st.markdown(s["reason"])
-        if st.session_state.method == "GPT":
-            document = Document(text=st.session_state["advert_text"])
-            memory.reset()
-            index = VectorStoreIndex.from_documents([document], llm=llm)
-            chat_engine = index.as_chat_engine(
-                chat_mode="context",
-                memory=memory,
-                system_prompt=(
-                    "As a career forensic analyst you have deep insight into crime and criminal activity especially the field of "
-                    "online human trafficking. "
-                    "You are careful and precise and can compare adverts in the finest detail."
-                    "You rate adverts on a scale of 1 to 10, with 10 being the most likely to be used in human trafficking."
-                    "You are specifically looking for perpetrators who are using employment advertisements to exploit victims. "
-                ),
-            )
-            response = chat_engine.chat(prompt)
-
-            formatted_response = (
-                response.response.strip()
-            )  # Remove leading/trailing whitespace
-
-            s = json.loads(formatted_response)
-            st.write(f'The advert achieves a rating of {s["rating"]}')
-            st.markdown(s["reason"])
+    st.markdown(
+        "This platform helps to compare and evaluate ML models for the purpose of rating online adverts "
+        "The different models are listed alongside.  Each one uses the same set of pre-labelled data."
+        "This data is found here in a Google sheet here."
+        "**👈 Select a model from the sidebar** to explore some outcomes"
+    )
+    st.sidebar.success("Select a demo above.")
 
 
 if __name__ == "__main__":
