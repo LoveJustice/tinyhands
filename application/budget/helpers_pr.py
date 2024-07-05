@@ -359,7 +359,7 @@ class MoneyDistributionFormProjectRequestHelper:
     
     def get_request_items(self, section, project):
         line_items = []
-        request_items = self.budget.requests.filter(category=section, project=project)
+        request_items = self.budget.requests.filter(category=section, project=project, status__startswith='Approved')
         for item in request_items:
             if item.status == 'Approved-Completed' and item.completed_date_time < self.budget.month_year:
                 continue
