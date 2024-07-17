@@ -5,29 +5,34 @@ from statsmodels.miscmodels.ordinal_model import OrderedModel
 
 # Load your data
 data = pd.read_csv("results/advert_comparison_2.csv")
-list(data.columns)
-list()
-data = data.replace({"TRUE": 1, "FALSE": 0})
+
 data = data.drop(index=0)
-print(data.dtypes)
+data.columns = [col.replace("• ", "") for col in data.columns]
+data = data.replace({"TRUE": 1, "FALSE": 0})
+rename_dict = {"Unnamed: 0": "IDn", "Unnamed: 1": "advert"}
+data.rename(columns=rename_dict, inplace=True)
+list(data)
+
 # Define your dependent and independent variables
 columns = [
+    "IDn",
     "Monitor Rating",
-    "• Recruiting young people who are still in school",
-    "• Paying more than the market rate for the skill level or type of job that they are hiring for",
-    "• Not mentioning any skill requirements",
-    "• Not mentioning the nature of the job",
-    "• Not mentioning the name or the location of the hiring business",
-    "• Paying the same salary for different job posts / positions",
-    "• Hiring for an organization (such as ESKOM) who has publicly stated that they don't advertise job posts on social media",
-    "• Recruiting specifically females for a job that male or female applicants would qualify for",
-    "• Unprofessional writing (poor grammar / spelling)",
-    "• Recruiting models",
-    "• Changing from English to other languages in the middle of the post",
-    "• Using a suspicious email address",
-    "• Advertising for positions in several promises (especially without detail)",
+    "Recruiting young people who are still in school",
+    "Paying more than the market rate for the skill level or type of job that they are hiring for",
+    "Not mentioning any skill requirements",
+    "Not mentioning the nature of the job",
+    "Not mentioning the name or the location of the hiring business",
+    "Paying the same salary for different job posts / positions",
+    "Hiring for an organization (such as ESKOM) who has publicly stated that they don't advertise job posts on social media",
+    "Recruiting specifically females for a job that male or female applicants would qualify for",
+    "Unprofessional writing (poor grammar / spelling)",
+    "Recruiting models",
+    "Changing from English to other languages in the middle of the post",
+    "Using a suspicious email address",
+    "Advertising for positions in several promises (especially without detail)",
     "Looks Legit",
 ]
+
 for col in columns:
     data[col] = data[col].astype(int)
 
@@ -35,19 +40,19 @@ data.to_csv("results/advert_comparison_cleaned.csv", index=False)
 y = data["Monitor Rating"]
 X = data[
     [
-        "• Recruiting young people who are still in school",
-        "• Paying more than the market rate for the skill level or type of job that they are hiring for",
-        "• Not mentioning any skill requirements",
-        "• Not mentioning the nature of the job",
-        "• Not mentioning the name or the location of the hiring business",
-        "• Paying the same salary for different job posts / positions",
-        "• Hiring for an organization (such as ESKOM) who has publicly stated that they don't advertise job posts on social media",
-        "• Recruiting specifically females for a job that male or female applicants would qualify for",
-        "• Unprofessional writing (poor grammar / spelling)",
-        "• Recruiting models",
-        "• Changing from English to other languages in the middle of the post",
-        "• Using a suspicious email address",
-        "• Advertising for positions in several promises (especially without detail)",
+        "Recruiting young people who are still in school",
+        "Paying more than the market rate for the skill level or type of job that they are hiring for",
+        "Not mentioning any skill requirements",
+        "Not mentioning the nature of the job",
+        "Not mentioning the name or the location of the hiring business",
+        "Paying the same salary for different job posts / positions",
+        "Hiring for an organization (such as ESKOM) who has publicly stated that they don't advertise job posts on social media",
+        "Recruiting specifically females for a job that male or female applicants would qualify for",
+        "Unprofessional writing (poor grammar / spelling)",
+        "Recruiting models",
+        "Changing from English to other languages in the middle of the post",
+        "Using a suspicious email address",
+        "Advertising for positions in several promises (especially without detail)",
         "Looks Legit",
     ]
 ]
@@ -66,6 +71,7 @@ from sklearn.preprocessing import StandardScaler
 from statsmodels.miscmodels.ordinal_model import OrderedModel
 
 # Load the dataset
+
 file_path = "results/advert_comparison_cleaned.csv"
 df = pd.read_csv(file_path)
 
@@ -75,24 +81,9 @@ y = df["Monitor Rating"]
 # Prepare the independent variables (binary columns)
 
 
-features = [
-    "Recruiting young people who are still in school",
-    "Paying more than the market rate for the skill level or type of job that they are hiring for",
-    "Not mentioning any skill requirements",
-    "Not mentioning the nature of the job",
-    "Not mentioning the name or the location of the hiring business",
-    "Paying the same salary for different job posts positions",
-    "Hiring for an organization such as ESKOM who has publicly stated that they don t advertise job posts on social media",
-    "Recruiting specifically females for a job that male or female applicants would qualify for",
-    "Unprofessional writing poor grammar spelling",
-    "Recruiting models",
-    "Changing from English to other languages in the middle of the post",
-    "Using a suspicious email address",
-    "Advertising for positions in several promises especially without detail",
-    "Looks Legit",
-]
 # Remove constant columns if any
-X = df[features]
+X = df[columns].fillna(0)
+# df[features].to_csv("results/advert_comparison_cleaned.csv", index=False)
 
 constant_columns = [col for col in X.columns if X[col].nunique() <= 1]
 X = X.drop(columns=constant_columns)

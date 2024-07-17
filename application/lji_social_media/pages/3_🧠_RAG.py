@@ -129,7 +129,7 @@ def main():
         Settings.llm = Anthropic(model=model, temperature=0.1)
 
     st.markdown(
-        "On this page an ADVERT can be give a MONITOR RATING using a RAG approsch and the advert_guide.pdf."
+        "On this page an ADVERT can be give a MONITOR RATING using a RAG approach and the advert_guide.pdf."
         "Using another BUTTON the standardized observations are extracted also using the guidelines from the same pdf."
     )
     # st.sidebar.success("Select a demo above.")
@@ -148,10 +148,10 @@ def main():
 
         if st.button("Get Standardized Observations"):
             response = st.session_state["query_engine"].query(
-                f"As a sessoned anti-human trafficking officer you stick to making observations that are strictly "
+                f"As a seasoned anti-human trafficking officer you stick to making observations that are strictly "
                 f"from the list as provided in the advert_guide.  "
-                f"Which standardized observations can you make for advert {st.session_state['advert_text']}?  "
-                f"Please provide your succint list in a json format."
+                f"Which standardized observations can you from the following advert {st.session_state['advert_text']}?  "
+                f"Please provide your carefully crafted list in a json format."
             )
             st.write(response.response)
 
