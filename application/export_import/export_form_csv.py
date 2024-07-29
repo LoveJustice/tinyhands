@@ -164,7 +164,6 @@ class IrfCsv (ExportFormCsv):
             "immigration_case_number",
             "immigration_entry",
             "immigration_transit",
-            "location",
             "reason_for_intercept",
             "rescue",
             "staff_name",
@@ -213,8 +212,8 @@ class IrfCsv (ExportFormCsv):
     def perform_export(self):
         interceptees = IntercepteeCommon.objects.filter(
             interception_record__station__operating_country__in = self.country_list,
-            interception_record__date_of_interception__gte=self.start_date,
-            interception_record__date_of_interception__lte=self.end_date)
+            interception_record__verified_date__gte=self.start_date,
+            interception_record__verified_date__lte=self.end_date)
         if self.status is not None:
             if self.status == 'evidence':
                 interceptees = interceptees.filter(interception_record__verified_evidence_categorization='Evidence of Trafficking')
@@ -356,7 +355,6 @@ class PvfCsv (ExportFormCsv):
         self.private = [
             "case_notes",
             "evidence_that_guardians_sold",
-            "location",
             "staff_name",
             "who_victim_released_name",
             "who_victim_released_phone",
