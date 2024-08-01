@@ -1,8 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
-from util.auth0 import create_auth0_user, create_all_auth0_users, delete_auth0_users_with_no_logins
 
-User = get_user_model()
+from util.auth0 import create_all_auth0_users, delete_auth0_users_with_no_logins
+
 
 # Taken from https://community.auth0.com/t/wrong-password-for-imported-users-from-django/61105/2
 class Command(BaseCommand):
