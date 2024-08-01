@@ -20,11 +20,12 @@ def save_attachment(response, filename):
 
 
 query = """SELECT irfcommon.date_of_interception AS date_of_interception \
+        ,irfcommon.irf_number AS irf_number \
         ,person.social_media AS social_media \
         ,person.role AS role \
         ,person.full_name AS full_name \
         ,person.nationality AS nationality \
-        ,person.adress_notes AS adress_notes \
+        ,person.address_notes AS adress_notes \
         ,irfatt.description AS attachment_description \
         ,irfatt."option" AS attachment_option \
         ,irfatt.attachment AS attachment \
