@@ -41,7 +41,6 @@ class FaceEncoding(models.Model):
     outcome = models.TextField(blank=True)
 
     class Meta:
-        managed = False  # TODO: remove me
         db_table = 'face_encodings'
 
         def __str__(self):
