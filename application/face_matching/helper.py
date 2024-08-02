@@ -36,8 +36,7 @@ def get_matching_records(params):
     roles = params.get('role')
     genders = params.get('gender')
 
-    qs = FaceEncoding.objects.select_related("person__interception_record", "person__person",
-                                             "person__interception_record__station", "person__interception_record__station__operating_country")
+    qs = FaceEncoding.objects.select_related("person__interception_record")
 
     # If the "All" option is in the list of parameters, skip filtering
     if "All" not in countries:
@@ -142,8 +141,13 @@ def get_image(safe_url):
                 person_image = Image.open(image_file)
                 person_np = face_recognition.load_image_file(image_file)
                 person_image_array = np.array(person_image)
-        except:
-            print('Error finding the photo or identifying a face in the photo: ' + safe_url)
+        except FileNotFoundError:
+            print('Error finding the photo:', safe_url)
+            # TODO: handle image not found
+            raise
+        except Exception as error:
+            print(error)
+            raise
 
         return person_image_array, person_np
 
@@ -212,6 +216,7 @@ def get_closest_face_matches(encoding, limit):
     """
     try:
         matching_records = cache.get('matching_records')
+        # print(matching_records[:10])
 
         known_encodings = np.array(
             matching_records["face_encoding"].tolist()
@@ -238,6 +243,8 @@ def get_closest_face_matches(encoding, limit):
             ].photo.iloc[0]
             for label in sorted_labels
         ]
+
+        print(sorted_labels[:10])
 
         upper_bound = min(limit, len(sorted_labels))
         return (
@@ -326,6 +333,7 @@ def get_matches_display_data(given_encoding, limit):
     )
 
     for (closest_match_person_id, face_distance, closest_photo_url) in zip(closest_matches, face_distances, closest_photo_urls):
+        print(closest_match_person_id, face_distance, closest_photo_url)
         safe_url = quote(closest_photo_url, safe=":/")
 
         # Get actual image from url
