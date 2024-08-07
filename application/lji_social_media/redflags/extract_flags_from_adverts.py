@@ -1,3 +1,5 @@
+import time
+
 import streamlit as st
 from typing import Dict, Any, Optional, List
 import json
@@ -189,15 +191,6 @@ def extract_list(response, key):
     return []
 
 
-from typing import Any, Dict, Optional
-import json
-import logging
-
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
 def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str, Any]:
     """
     Analyze an advertisement using a chat engine and a specific prompt.
@@ -212,10 +205,15 @@ def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str,
     """
     if not chat_engine:
         logger.error("Chat engine is not initialized")
-        return {"result": "error", "details": [], "explanation": "Chat engine not initialized", "confidence": 0.0}
+        return {
+            "result": "error",
+            "evidence": [],
+            "explanation": "Chat engine not initialized",
+            "confidence": 0.0,
+        }
 
     try:
-        prompt = CLAUDE_PROMPTS.get(prompt_name)
+        prompt = CLAUDE_PROMPTS.get(prompt_name) + ANALYSIS_STR
         if not prompt:
             raise ValueError(f"Invalid prompt name: {prompt_name}")
 
@@ -223,25 +221,34 @@ def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str,
         logger.info(f"Response to {prompt_name}: {response.response}")
 
         # Extract and parse JSON from the response
-        json_str = response.response.strip('`').strip()
-        if json_str.startswith('json'):
+        json_str = response.response.strip("`").strip()
+        if json_str.startswith("json"):
             json_str = json_str[4:]  # Remove 'json' prefix if present
         parsed_response = json.loads(json_str)
 
         # Standardize the output
         return {
             "result": parsed_response.get("result", ""),
-            "details": parsed_response.get("details") or parsed_response.get("evidence") or [],
+            "evidence": parsed_response.get("evidence")
+            or parsed_response.get("evidence")
+            or [],
             "explanation": parsed_response.get("explanation", ""),
-            "confidence": float(parsed_response.get("confidence", 0))
+            "confidence": float(parsed_response.get("confidence", 0)),
         }
 
     except Exception as e:
         logger.error(f"Error processing advert, prompt {prompt_name}: {str(e)}")
-        return {"result": "error", "details": [], "explanation": str(e), "confidence": 0.0}
+        return {
+            "result": "error",
+            "evidence": [],
+            "explanation": str(e),
+            "confidence": 0.0,
+        }
 
 
-def write_analysis_to_neo4j(IDn: int, prompt_name: str, analysis: Dict[str, Any]) -> None:
+def write_analysis_to_neo4j(
+    IDn: int, prompt_name: str, analysis: Dict[str, Any]
+) -> None:
     """
     Write analysis results to Neo4j.
 
@@ -256,7 +263,7 @@ def write_analysis_to_neo4j(IDn: int, prompt_name: str, analysis: Dict[str, Any]
     WITH posting AS posting
     MERGE (an:Analysis {
         result: $result,
-        details: $details,
+        evidence: $evidence,
         explanation: $explanation,
         confidence: $confidence
     })
@@ -268,9 +275,9 @@ def write_analysis_to_neo4j(IDn: int, prompt_name: str, analysis: Dict[str, Any]
         "IDn": IDn,
         "prompt_name": prompt_name,
         "result": analysis.get("result", "unknown"),
-        "details": analysis.get("details", []),
+        "evidence": analysis.get("evidence", []),
         "explanation": analysis.get("explanation", ""),
-        "confidence": analysis.get("confidence", 0.0)
+        "confidence": analysis.get("confidence", 0.0),
     }
 
     logger.info(f"Writing analysis to Neo4j: {parameters}")
@@ -279,74 +286,9 @@ def write_analysis_to_neo4j(IDn: int, prompt_name: str, analysis: Dict[str, Any]
         execute_neo4j_query(query, parameters)
     except Exception as e:
         logger.error(f"Error writing to Neo4j: {str(e)}")
-#         -----------------
-def analyse_advert(
-    chat_engine: Any, advert: str, prompt_name: str
-) -> Optional[Dict[str, Any]]:
-    """
-    Analyze an advertisement using a chat engine and a specific prompt.
-
-    Args:
-        chat_engine: The chat engine to use for analysis.
-        advert: The advertisement text to analyze.
-        prompt_name: The name of the prompt to use.
-
-    Returns:
-        A dictionary containing the analysis results, or None if analysis fails.
-    """
-    if not chat_engine:
-        return None
-
-    try:
-        prompt = CLAUDE_PROMPTS.get(prompt_name) + ANALYSIS_STR
-
-        if not prompt:
-            raise ValueError(f"Invalid prompt name: {prompt_name}")
-
-        response = chat_engine.chat(prompt + f"\n\nAdvertisement: {advert}")
-        print(f"Response to {prompt_name}: {response.response}")
-
-        # Extract and parse JSON from the response
-        json_str = response.response.strip("`").strip()
-        if json_str.startswith("json"):
-            json_str = json_str[4:]  # Remove 'json' prefix if present
-        parsed_response = json.loads(json_str)
-
-        # Standardize the output
-        analysis = {
-            "result": parsed_response.get("result", ""),
-            "evidence": parsed_response.get("evidence", []),
-            "explanation": parsed_response.get("explanation", ""),
-            "confidence": float(parsed_response.get("confidence", 0)),
-        }
-
-        return analysis
-
-    except Exception as e:
-        print(f"Error processing advert, prompt {prompt_name}: {str(e)}")
-        return None
 
 
 # The parse_confidence function is no longer needed as we handle the conversion in the analyse_advert function
-def write_analysis_to_neo4j(
-    IDn: int, prompt_name: str, analysis: Dict[str, Any]
-) -> None:
-    # Write analysis to Neo4j
-    query = """
-    MATCH (posting:Posting)
-    WHERE ID(posting) = $IDn
-    WITH posting AS posting
-    MERGE (an:Analysis {
-        result: $result,
-        evidence: $evidence,
-        explanation: $explanation,
-        confidence: $confidence
-    })
-    CREATE (posting)-[:HAS_ANALYSIS {type: $prompt_name}]->(an)
-    """
-    parameters = {"IDn": IDn, "prompt_name": prompt_name, **analysis}
-    print(f"Writing analysis to Neo4j: {parameters}")
-    execute_neo4j_query(query, parameters)
 
 
 def verify_analyis_existence(IDn: int, prompt_name: str) -> bool:
@@ -361,22 +303,25 @@ def verify_analyis_existence(IDn: int, prompt_name: str) -> bool:
 
 def process_adverts_from_dataframe(df: pd.DataFrame) -> None:
     for index, row in df.iterrows():
+        time.sleep(5)
         advert = row["advert"]  # Assuming 'advert' is the column name
         chat_engine = create_chat_engine(advert)
-        print(f"Processing advert {index}, length: {len(advert)}, advert: {advert}")
-        if chat_engine:
-            for prompt_name, prompt in CLAUDE_PROMPTS.items():
-                if verify_analyis_existence(IDn=row["IDn"], prompt_name=prompt_name):
-                    print(
-                        f"Analysis for {row['IDn']} and  prompt_name = {prompt_name} exists!"
-                    )
-                    continue
-                else:
+        for prompt_name, prompt in CLAUDE_PROMPTS.items():
+            if verify_analyis_existence(IDn=row["IDn"], prompt_name=prompt_name):
+                print(
+                    f"Analysis for {row['IDn']} and  prompt_name = {prompt_name} exists!"
+                )
+                continue
+            else:
+                print(
+                    f"Processing advert {index}, length: {len(advert)}, advert: {advert}"
+                )
+                if chat_engine:
                     advert_analysis = analyse_advert(chat_engine, advert, prompt_name)
                     print(f"Response to {prompt_name}: {advert_analysis}")
                     write_analysis_to_neo4j(row["IDn"], prompt_name, advert_analysis)
-        else:
-            print(f"Failed to create chat engine for advert {index}")
+                else:
+                    print(f"Failed to create chat engine for advert {index}")
     return None
 
 
@@ -386,31 +331,62 @@ def process_adverts_from_dataframe(df: pd.DataFrame) -> None:
 # Assuming you have a dataframe 'df' with an 'advert' column
 
 advert_100_comparison_with_regressor_predictions = pd.read_csv(
-    "results/advert_100_comparison_with_regressor_predictions.csv"
+    "../results/advert_100_comparison_with_regressor_predictions.csv"
 )
 
 process_adverts_from_dataframe(
-    advert_100_comparison_with_regressor_predictions[:20].copy()
+    advert_100_comparison_with_regressor_predictions[97:100].copy()
 )
+#
+df = advert_100_comparison_with_regressor_predictions.loc[
+    advert_100_comparison_with_regressor_predictions.IDn.isin(
+        [573528, 573388, 573334, 573204],
+    ),
+    :,
+].copy()
+process_adverts_from_dataframe(df)
+# ============================================================================================
+flag_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
+RETURN ID(posting) AS id, r.type as flag, analysis.result as result """
 
-all_lists = []
-for result in results:
-    row_list = []
-    for response in result:
-        row_list.append(extract_json_from_code_block(response.response))
-    all_lists.append(row_list)
-len(all_lists)
-# Flatten each inner list of dictionaries into a single row
-flattened_data = []
-for row in all_lists:
-    flattened_row = {}
-    for d in row:
-        flattened_row.update(d)
-    flattened_data.append(flattened_row)
+# flags = execute_neo4j_query(flag_query, parameters={})
+flags = (
+    pd.DataFrame(execute_neo4j_query(flag_query, parameters={}))
+    .pivot(index="id", columns="flag", values="result")
+    .reset_index()
+)
+flags.to_csv("results/advert_flags.csv", index=False)
 
-# Generate the DataFrame
-df = pd.DataFrame(flattened_data)
 
-df.to_csv("results/flag_analysis_results.csv", index=False)
+confidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
+RETURN ID(posting) AS id, r.type as flag, analysis.confidence as confidence """
 
-# ---------------------------------------------------------
+confidence = (
+    pd.DataFrame(execute_neo4j_query(confidence_query, parameters={}))
+    .pivot(index="id", columns="flag", values="confidence")
+    .reset_index()
+)
+confidence.to_csv("results/advert_confidence.csv", index=False)
+
+# ============================================================================================
+evidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
+RETURN ID(posting) AS id, r.type as flag, analysis.evidence as evidence """
+
+evidence = (
+    pd.DataFrame(execute_neo4j_query(evidence_query, parameters={}))
+    .pivot(index="id", columns="flag", values="evidence")
+    .reset_index()
+)
+evidence.to_csv("results/advert_evidence.csv", index=False)
+# ============================================================================================
+explanation_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
+RETURN ID(posting) AS id, r.type as flag, analysis.explanation as explanation """
+
+
+explanation = (
+    pd.DataFrame(execute_neo4j_query(explanation_query, parameters={}))
+    .pivot(index="id", columns="flag", values="explanation")
+    .reset_index()
+)
+explanation.to_csv("results/advert_explanation.csv", index=False)
+# flags = execute_neo4j_query(flag_query, parameters={})

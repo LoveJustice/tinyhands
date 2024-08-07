@@ -142,7 +142,7 @@ from sklearn.pipeline import Pipeline
 import numpy as np
 
 # Load the dataset
-file_path = "results/advert_comparison_cleaned.csv"
+file_path = "../results/advert_comparison_cleaned.csv"
 df = pd.read_csv(file_path)
 
 # Define the independent and dependent variables
@@ -216,7 +216,7 @@ df["Model Values"] = pipeline.predict(X)
 df.to_csv("results/advert_comparison_with_regressor_predictions.csv", index=False)
 
 
-file_path = "results/adverts_za_sample_scored.csv"
+file_path = "../results/adverts_za_sample_scored.csv"
 df = pd.read_csv(file_path)
 
 # Define the independent and dependent variables
