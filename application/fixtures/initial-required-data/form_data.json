@@ -44,7 +44,7 @@
    "pk": 6,
    "fields": {
       "name": "LEGAL_CASE",
-      "tag_enabled": false
+      "tag_enabled": true
    }
 },
 {
@@ -554,58 +554,6 @@
 },
 {
    "model": "dataentry.storage",
-   "pk": 197,
-   "fields": {
-      "form_tag": "LegalCase",
-      "module_name": "dataentry.models.legal_case",
-      "form_model_name": "LegalCase",
-      "response_model_name": null,
-      "parent_storage": null,
-      "foreign_key_field_parent": null,
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
-   "pk": 198,
-   "fields": {
-      "form_tag": "LegalCaseSuspect",
-      "module_name": "dataentry.models.legal_case",
-      "form_model_name": "LegalCaseSuspect",
-      "response_model_name": null,
-      "parent_storage": 197,
-      "foreign_key_field_parent": "legal_case",
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
-   "pk": 199,
-   "fields": {
-      "form_tag": "LegalCaseVictim",
-      "module_name": "dataentry.models.legal_case",
-      "form_model_name": "LegalCaseVictim",
-      "response_model_name": null,
-      "parent_storage": 197,
-      "foreign_key_field_parent": "legal_case",
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
-   "pk": 200,
-   "fields": {
-      "form_tag": "LegalCaseAttachment",
-      "module_name": "dataentry.models.legal_case",
-      "form_model_name": "LegalCaseAttachment",
-      "response_model_name": null,
-      "parent_storage": 197,
-      "foreign_key_field_parent": "legal_case",
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
    "pk": 201,
    "fields": {
       "form_tag": "GospelVerification",
@@ -614,19 +562,6 @@
       "response_model_name": null,
       "parent_storage": null,
       "foreign_key_field_parent": null,
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
-   "pk": 202,
-   "fields": {
-      "form_tag": "s",
-      "module_name": "dataentry.models.legal_case",
-      "form_model_name": "LegalCaseTimeline",
-      "response_model_name": null,
-      "parent_storage": 197,
-      "foreign_key_field_parent": "legal_case",
       "foreign_key_field_child": null
    }
 },
@@ -1321,19 +1256,6 @@
 },
 {
    "model": "dataentry.form",
-   "pk": 56,
-   "fields": {
-      "form_type": 6,
-      "storage": 197,
-      "start_date": "2020-10-09T04:00:00Z",
-      "end_date": "2118-12-31T00:00:00Z",
-      "form_name": "legalCaseCommon",
-      "version": null,
-      "stations": []
-   }
-},
-{
-   "model": "dataentry.form",
    "pk": 57,
    "fields": {
       "form_type": 3,
@@ -1550,6 +1472,19 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfSfeNepal",
       "version": "V2022.9",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "pk": 146,
+   "fields": {
+      "form_type": 1,
+      "storage": 181,
+      "start_date": "2024-03-13T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "irfPhilippines",
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -2126,6 +2061,15 @@
 },
 {
    "model": "dataentry.category",
+   "pk": 145,
+   "fields": {
+      "form_tag": "irfResourcesPhilippines",
+      "category_type": 1,
+      "description": "Resource/Safety for IRF Philippines"
+   }
+},
+{
+   "model": "dataentry.category",
    "pk": 146,
    "fields": {
       "form_tag": "irfResourcesTanzania",
@@ -2378,56 +2322,11 @@
 },
 {
    "model": "dataentry.category",
-   "pk": 208,
-   "fields": {
-      "form_tag": "legalMain",
-      "category_type": 1,
-      "description": "Legal Case"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 209,
-   "fields": {
-      "form_tag": "legalSuspect",
-      "category_type": 2,
-      "description": "Legal Case Suspect"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 210,
-   "fields": {
-      "form_tag": "legalVictim",
-      "category_type": 2,
-      "description": "Legal Case Victim"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 211,
-   "fields": {
-      "form_tag": "legalAttachment",
-      "category_type": 2,
-      "description": "Legal Case Attachment"
-   }
-},
-{
-   "model": "dataentry.category",
    "pk": 212,
    "fields": {
       "form_tag": "gospelVerification",
       "category_type": 1,
       "description": "Gospel Verification"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 213,
-   "fields": {
-      "form_tag": "legalTimeline",
-      "category_type": 2,
-      "description": "Legal Case Timeline"
    }
 },
 {
@@ -5414,7 +5313,7 @@
                "question_id": 785,
                "prompt_format": "col-md-3 control-label",
                "points_possible": 10,
-               "improvement_text": "Ensure case discussion doesn\u2019t take place outside staff and subcommittee."
+               "improvement_text": "Ensure case discussion doesn’t take place outside staff and subcommittee."
             },
             {
                "type": "header",
@@ -5423,7 +5322,7 @@
             },
             {
                "type": "radio",
-               "prompt": "NGO in victims\u2019 areas contacted",
+               "prompt": "NGO in victims’ areas contacted",
                "options": [
                   {
                      "label": "no",
@@ -8405,7 +8304,7 @@
             },
             {
                "type": "radio",
-               "prompt": "\u201cVerified\u201d phone numbers (victim / suspect) percentage",
+               "prompt": "“Verified” phone numbers (victim / suspect) percentage",
                "options": [
                   {
                      "label": "<60%",
@@ -8856,7 +8755,7 @@
                "question_id": 785,
                "prompt_format": "col-md-3 control-label",
                "points_possible": 8,
-               "improvement_text": "Ensure case discussion doesn\u2019t take place outside staff and subcommittee."
+               "improvement_text": "Ensure case discussion doesn’t take place outside staff and subcommittee."
             },
             {
                "type": "header",
@@ -8865,7 +8764,7 @@
             },
             {
                "type": "radio",
-               "prompt": "NGO in victims\u2019 areas contacted",
+               "prompt": "NGO in victims’ areas contacted",
                "options": [
                   {
                      "label": "no",
@@ -10936,7 +10835,7 @@
                "question_id": 785,
                "prompt_format": "col-md-3 control-label",
                "points_possible": 10,
-               "improvement_text": "Ensure case discussion doesn\u2019t take place outside staff and subcommittee."
+               "improvement_text": "Ensure case discussion doesn’t take place outside staff and subcommittee."
             },
             {
                "type": "header",
@@ -10945,7 +10844,7 @@
             },
             {
                "type": "radio",
-               "prompt": "Church/NGO in victims\u2019 areas contacted",
+               "prompt": "Church/NGO in victims’ areas contacted",
                "options": [
                   {
                      "label": "no",
@@ -13282,50 +13181,6 @@
 {
    "model": "dataentry.formcategory",
    "fields": {
-      "form": 56,
-      "category": 208,
-      "name": "Basic Case Details",
-      "order": 1,
-      "form_category_question_config": null,
-      "storage": null
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": 56,
-      "category": 209,
-      "name": "Suspects",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": 198
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": 56,
-      "category": 210,
-      "name": "Victims",
-      "order": 4,
-      "form_category_question_config": null,
-      "storage": 199
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": 56,
-      "category": 211,
-      "name": "Attachments",
-      "order": 5,
-      "form_category_question_config": null,
-      "storage": 200
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
       "form": 27,
       "category": 193,
       "name": "Contact/Staff",
@@ -13464,17 +13319,6 @@
       "order": 1,
       "form_category_question_config": null,
       "storage": null
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": 56,
-      "category": 213,
-      "name": "Timeline",
-      "order": 2,
-      "form_category_question_config": null,
-      "storage": 202
    }
 },
 {
@@ -15909,10 +15753,142 @@
    }
 },
 {
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 1,
+      "name": "Top Box",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 128,
+      "name": "Profile",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 190,
+      "name": "Area/Industry",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 145,
+      "name": "Resources",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 260,
+      "name": "Control",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 193,
+      "name": "Contact/Staff",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 286,
+      "name": "People",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": 182
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 194,
+      "name": "Reason",
+      "order": 8,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 58,
+      "name": "Attachments",
+      "order": 9,
+      "form_category_question_config": null,
+      "storage": 183
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 214,
+      "name": "Compliance",
+      "order": 10,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 232,
+      "name": "Verification",
+      "order": 11,
+      "form_category_question_config": null,
+      "storage": 204
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 146,
+      "category": 233,
+      "name": "Verification Main",
+      "order": 12,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
    "model": "dataentry.question",
    "pk": 1,
    "fields": {
-      "form_tag": "question1",
+      "form_tag": "irfNumber",
       "prompt": "Irf Number",
       "description": null,
       "answer_type": 1,
@@ -15925,7 +15901,7 @@
    "model": "dataentry.question",
    "pk": 2,
    "fields": {
-      "form_tag": "question2",
+      "form_tag": "numberOfVictims",
       "prompt": "# of Victims",
       "description": null,
       "answer_type": 2,
@@ -15938,7 +15914,7 @@
    "model": "dataentry.question",
    "pk": 3,
    "fields": {
-      "form_tag": "question3",
+      "form_tag": "location",
       "prompt": "Location",
       "description": null,
       "answer_type": 1,
@@ -15951,7 +15927,7 @@
    "model": "dataentry.question",
    "pk": 5,
    "fields": {
-      "form_tag": "question5",
+      "form_tag": "numberOfTraffickers",
       "prompt": "# of Traffickers",
       "description": null,
       "answer_type": 2,
@@ -15964,7 +15940,7 @@
    "model": "dataentry.question",
    "pk": 6,
    "fields": {
-      "form_tag": "question6",
+      "form_tag": "staffName",
       "prompt": "Staff Name",
       "description": null,
       "answer_type": 1,
@@ -15977,7 +15953,7 @@
    "model": "dataentry.question",
    "pk": 9,
    "fields": {
-      "form_tag": "question9",
+      "form_tag": "person",
       "prompt": "",
       "description": "interceptee person",
       "answer_type": 14,
@@ -16053,7 +16029,7 @@
    "model": "dataentry.question",
    "pk": 10,
    "fields": {
-      "form_tag": "question10",
+      "form_tag": "controlDruggedOrDrowsy",
       "prompt": "Girl appears drugged or drowsy",
       "description": null,
       "answer_type": 6,
@@ -16066,7 +16042,7 @@
    "model": "dataentry.question",
    "pk": 17,
    "fields": {
-      "form_tag": "question17",
+      "form_tag": "controlWifeUnder18",
       "prompt": "Wife is under 18",
       "description": null,
       "answer_type": 6,
@@ -16079,7 +16055,7 @@
    "model": "dataentry.question",
    "pk": 23,
    "fields": {
-      "form_tag": "question23",
+      "form_tag": "controlTravelingWithSomeoneNotWithThem",
       "prompt": "Was travelling with someone not with her",
       "description": null,
       "answer_type": 6,
@@ -16092,7 +16068,7 @@
    "model": "dataentry.question",
    "pk": 24,
    "fields": {
-      "form_tag": "question24",
+      "form_tag": "controlMarriedInPast2Weeks",
       "prompt": "Married in the past 2 weeks",
       "description": null,
       "answer_type": 6,
@@ -16105,7 +16081,7 @@
    "model": "dataentry.question",
    "pk": 25,
    "fields": {
-      "form_tag": "question25",
+      "form_tag": "controlMarriedInPast28Weeks",
       "prompt": "Married within the past 2-8 weeks",
       "description": null,
       "answer_type": 6,
@@ -16118,7 +16094,7 @@
    "model": "dataentry.question",
    "pk": 26,
    "fields": {
-      "form_tag": "question26",
+      "form_tag": "controlLessThan2WeeksBeforeEloping",
       "prompt": "Less than 2 weeks before eloping",
       "description": null,
       "answer_type": 6,
@@ -16131,7 +16107,7 @@
    "model": "dataentry.question",
    "pk": 30,
    "fields": {
-      "form_tag": "question30",
+      "form_tag": "evadeCaughtInLie",
       "prompt": "Caught in a lie or contradiction",
       "description": null,
       "answer_type": 6,
@@ -16144,7 +16120,7 @@
    "model": "dataentry.question",
    "pk": 45,
    "fields": {
-      "form_tag": "question45",
+      "form_tag": "evadeStudyDoesntKnowSchoolDetails",
       "prompt": "Does not know details of school",
       "description": null,
       "answer_type": 6,
@@ -16157,7 +16133,7 @@
    "model": "dataentry.question",
    "pk": 55,
    "fields": {
-      "form_tag": "question55",
+      "form_tag": "controlPassportWithBroker",
       "prompt": "Passport is with a broker",
       "description": null,
       "answer_type": 6,
@@ -16170,7 +16146,7 @@
    "model": "dataentry.question",
    "pk": 57,
    "fields": {
-      "form_tag": "question57",
+      "form_tag": "controlNotRealJob",
       "prompt": "Not a real job",
       "description": null,
       "answer_type": 6,
@@ -16183,7 +16159,7 @@
    "model": "dataentry.question",
    "pk": 58,
    "fields": {
-      "form_tag": "question58",
+      "form_tag": "evadeCouldntConfirmJob",
       "prompt": "Could not confirm job",
       "description": null,
       "answer_type": 6,
@@ -16196,7 +16172,7 @@
    "model": "dataentry.question",
    "pk": 59,
    "fields": {
-      "form_tag": "question59",
+      "form_tag": "evadeNoBagsLongTrip",
       "prompt": "No bags through claim to be going for a long time",
       "description": null,
       "answer_type": 6,
@@ -16209,7 +16185,7 @@
    "model": "dataentry.question",
    "pk": 74,
    "fields": {
-      "form_tag": "question74",
+      "form_tag": "vulnerabilityRefusesFamilyInfo",
       "prompt": "Will not give family info",
       "description": null,
       "answer_type": 6,
@@ -16222,7 +16198,7 @@
    "model": "dataentry.question",
    "pk": 78,
    "fields": {
-      "form_tag": "question78",
+      "form_tag": "vulnerabilityUnder18FamilyDoesntKnow",
       "prompt": "Family doesn't know where they are going",
       "description": null,
       "answer_type": 6,
@@ -16235,7 +16211,7 @@
    "model": "dataentry.question",
    "pk": 79,
    "fields": {
-      "form_tag": "question79",
+      "form_tag": "controlUnder18FamilyUnwilling",
       "prompt": "Family unwilling to let them go",
       "description": null,
       "answer_type": 6,
@@ -16248,7 +16224,7 @@
    "model": "dataentry.question",
    "pk": 82,
    "fields": {
-      "form_tag": "question82",
+      "form_tag": "talkedToFamilyMember",
       "prompt": "Which family member did you talk to?",
       "description": null,
       "answer_type": 4,
@@ -16263,7 +16239,7 @@
    "model": "dataentry.question",
    "pk": 91,
    "fields": {
-      "form_tag": "question91",
+      "form_tag": "whoNoticed",
       "prompt": "How did you make the interception",
       "description": "who noticed",
       "answer_type": 4,
@@ -16276,7 +16252,7 @@
    "model": "dataentry.question",
    "pk": 92,
    "fields": {
-      "form_tag": "question92",
+      "form_tag": "whichContact",
       "prompt": "",
       "description": "contact who noticed",
       "answer_type": 4,
@@ -16291,7 +16267,7 @@
    "model": "dataentry.question",
    "pk": 102,
    "fields": {
-      "form_tag": "question102",
+      "form_tag": "contactPaid",
       "prompt": "Did you pay the contact for this information?",
       "description": null,
       "answer_type": 4,
@@ -16304,7 +16280,7 @@
    "model": "dataentry.question",
    "pk": 104,
    "fields": {
-      "form_tag": "question104",
+      "form_tag": "contactPaidHowMuch",
       "prompt": "How much?",
       "description": "How much paid for information",
       "answer_type": 1,
@@ -16317,7 +16293,7 @@
    "model": "dataentry.question",
    "pk": 106,
    "fields": {
-      "form_tag": "question106",
+      "form_tag": "staffWhoNoticed",
       "prompt": "Staff who noticed",
       "description": null,
       "answer_type": 1,
@@ -16330,7 +16306,7 @@
    "model": "dataentry.question",
    "pk": 117,
    "fields": {
-      "form_tag": "question117",
+      "form_tag": "evadeNoticedCarryingFullBags",
       "prompt": "Carrying Full bags",
       "description": null,
       "answer_type": 6,
@@ -16343,7 +16319,7 @@
    "model": "dataentry.question",
    "pk": 142,
    "fields": {
-      "form_tag": "question142",
+      "form_tag": "reasonForIntercept",
       "prompt": "What is the primary reason you believed this case qualified?",
       "description": "",
       "answer_type": 1,
@@ -16358,7 +16334,7 @@
    "model": "dataentry.question",
    "pk": 143,
    "fields": {
-      "form_tag": "question143",
+      "form_tag": "controlReportedTotalRedFlags",
       "prompt": "Reported Total Red Flag Points",
       "description": null,
       "answer_type": 2,
@@ -16371,7 +16347,7 @@
    "model": "dataentry.question",
    "pk": 144,
    "fields": {
-      "form_tag": "question144",
+      "form_tag": "computedTotalRedFlags",
       "prompt": "Total Red Flags",
       "description": "Computed Total Red Flags",
       "answer_type": 2,
@@ -16384,7 +16360,7 @@
    "model": "dataentry.question",
    "pk": 146,
    "fields": {
-      "form_tag": "question146",
+      "form_tag": "caseNotes",
       "prompt": "Case Narrative",
       "description": null,
       "answer_type": 1,
@@ -16397,7 +16373,7 @@
    "model": "dataentry.question",
    "pk": 147,
    "fields": {
-      "form_tag": "question147",
+      "form_tag": "howSureWasTrafficking",
       "prompt": "How sure are you that it was trafficking case?",
       "description": null,
       "answer_type": 5,
@@ -16410,7 +16386,7 @@
    "model": "dataentry.question",
    "pk": 148,
    "fields": {
-      "form_tag": "question148",
+      "form_tag": "convincedByFamily",
       "prompt": "Her parents used their authority and prevented victim",
       "description": null,
       "answer_type": 6,
@@ -16423,7 +16399,7 @@
    "model": "dataentry.question",
    "pk": 149,
    "fields": {
-      "form_tag": "question149",
+      "form_tag": "convincedByStaff",
       "prompt": "THN staff conviced victim not to go",
       "description": null,
       "answer_type": 6,
@@ -16436,7 +16412,7 @@
    "model": "dataentry.question",
    "pk": 150,
    "fields": {
-      "form_tag": "question150",
+      "form_tag": "convincedByPolice",
       "prompt": "The police forced the victim to stop",
       "description": null,
       "answer_type": 6,
@@ -16449,7 +16425,7 @@
    "model": "dataentry.question",
    "pk": 151,
    "fields": {
-      "form_tag": "question151",
+      "form_tag": "hasSignature",
       "prompt": "Scanned form has signature",
       "description": null,
       "answer_type": 6,
@@ -16462,7 +16438,7 @@
    "model": "dataentry.question",
    "pk": 167,
    "fields": {
-      "form_tag": "question167",
+      "form_tag": "evadeAppearanceAvoidOfficials",
       "prompt": "Avoiding officials/hesitant to talk",
       "description": null,
       "answer_type": 6,
@@ -16475,7 +16451,7 @@
    "model": "dataentry.question",
    "pk": 178,
    "fields": {
-      "form_tag": "question178",
+      "form_tag": "evadeVisaMisuse",
       "prompt": "Misuse - for purposes other than issued",
       "description": null,
       "answer_type": 6,
@@ -16488,7 +16464,7 @@
    "model": "dataentry.question",
    "pk": 186,
    "fields": {
-      "form_tag": "question186",
+      "form_tag": "vulnerabilitySupportingDocumentsOneWayTicket",
       "prompt": "One way ticket",
       "description": null,
       "answer_type": 6,
@@ -16501,7 +16477,7 @@
    "model": "dataentry.question",
    "pk": 197,
    "fields": {
-      "form_tag": "question197",
+      "form_tag": "vulnerabilityAfraidOfHost",
       "prompt": "Afraid of host/employer/recfuiter",
       "description": null,
       "answer_type": 6,
@@ -16514,7 +16490,7 @@
    "model": "dataentry.question",
    "pk": 216,
    "fields": {
-      "form_tag": "question216",
+      "form_tag": "controlRelationshipToGetMarried",
       "prompt": "Coming to get married",
       "description": null,
       "answer_type": 6,
@@ -16527,7 +16503,7 @@
    "model": "dataentry.question",
    "pk": 234,
    "fields": {
-      "form_tag": "question234",
+      "form_tag": "controlStatusKnownTrafficker",
       "prompt": "Is a know trafficker",
       "description": null,
       "answer_type": 6,
@@ -16540,7 +16516,7 @@
    "model": "dataentry.question",
    "pk": 242,
    "fields": {
-      "form_tag": "question242",
+      "form_tag": "vulnerabilityGroupMissedCall",
       "prompt": "Missed Call",
       "description": null,
       "answer_type": 6,
@@ -16553,7 +16529,7 @@
    "model": "dataentry.question",
    "pk": 243,
    "fields": {
-      "form_tag": "question243",
+      "form_tag": "vulnerabilityGroupFacebook",
       "prompt": "Facebook",
       "description": null,
       "answer_type": 6,
@@ -16566,7 +16542,7 @@
    "model": "dataentry.question",
    "pk": 244,
    "fields": {
-      "form_tag": "question244",
+      "form_tag": "vulnerabilityGroupOtherWebsite",
       "prompt": "Other website",
       "description": null,
       "answer_type": 6,
@@ -16581,7 +16557,7 @@
    "model": "dataentry.question",
    "pk": 245,
    "fields": {
-      "form_tag": "question245",
+      "form_tag": "whereGoingDestination",
       "prompt": "Destination",
       "description": null,
       "answer_type": 1,
@@ -16594,7 +16570,7 @@
    "model": "dataentry.question",
    "pk": 246,
    "fields": {
-      "form_tag": "question246",
+      "form_tag": "vulnerabilityWhereGoingDoesntKnow",
       "prompt": "Doesn't know where they are going",
       "description": null,
       "answer_type": 6,
@@ -16607,7 +16583,7 @@
    "model": "dataentry.question",
    "pk": 247,
    "fields": {
-      "form_tag": "question247",
+      "form_tag": "controlWhereGoingSomeonePaidExpenses",
       "prompt": "Someone (not a relative) paid their travel expenses",
       "description": null,
       "answer_type": 6,
@@ -16620,7 +16596,7 @@
    "model": "dataentry.question",
    "pk": 249,
    "fields": {
-      "form_tag": "question249",
+      "form_tag": "callSubcommittee",
       "prompt": "Call Subcommitte Chairperson/Vice-Chairperson/Secretary",
       "description": null,
       "answer_type": 6,
@@ -16633,7 +16609,7 @@
    "model": "dataentry.question",
    "pk": 251,
    "fields": {
-      "form_tag": "question251",
+      "form_tag": "vulnerabilityGroupNeverMetBefore",
       "prompt": "Meeting someone they haven't met before",
       "description": null,
       "answer_type": 6,
@@ -16646,7 +16622,7 @@
    "model": "dataentry.question",
    "pk": 256,
    "fields": {
-      "form_tag": "question256",
+      "form_tag": "callProjectManager",
       "prompt": "Call Project Manager to confirm interept",
       "description": null,
       "answer_type": 6,
@@ -16659,7 +16635,7 @@
    "model": "dataentry.question",
    "pk": 277,
    "fields": {
-      "form_tag": "question277",
+      "form_tag": "vulnerabilityMetOnTheWay",
       "prompt": "Met on the way",
       "description": null,
       "answer_type": 6,
@@ -16672,7 +16648,7 @@
    "model": "dataentry.question",
    "pk": 280,
    "fields": {
-      "form_tag": "question280",
+      "form_tag": "vulnerabilityPersonSpeakingOnTheirBehalf",
       "prompt": "Person speaking on their behalf",
       "description": null,
       "answer_type": 6,
@@ -19189,7 +19165,7 @@
    "model": "dataentry.question",
    "pk": 501,
    "fields": {
-      "form_tag": "question501",
+      "form_tag": "controlMobilePhoneTakenAway",
       "prompt": "Their phone was taken away",
       "description": null,
       "answer_type": 6,
@@ -19202,7 +19178,7 @@
    "model": "dataentry.question",
    "pk": 502,
    "fields": {
-      "form_tag": "question502",
+      "form_tag": "vulnerabilityDoesntSpeakDestinationLanguage",
       "prompt": "Doesn't speak language of destination",
       "description": null,
       "answer_type": 6,
@@ -19215,7 +19191,7 @@
    "model": "dataentry.question",
    "pk": 603,
    "fields": {
-      "form_tag": "question603",
+      "form_tag": "controlContradictionStories",
       "prompt": "Contradiction between stories",
       "description": null,
       "answer_type": 6,
@@ -19228,7 +19204,7 @@
    "model": "dataentry.question",
    "pk": 607,
    "fields": {
-      "form_tag": "question607",
+      "form_tag": "evidenceCategorizationMain",
       "prompt": "Interception categorization",
       "description": null,
       "answer_type": 4,
@@ -19241,7 +19217,7 @@
    "model": "dataentry.question",
    "pk": 610,
    "fields": {
-      "form_tag": "question610",
+      "form_tag": "attachmentNumber",
       "prompt": "attachment number",
       "description": null,
       "answer_type": 2,
@@ -19254,7 +19230,7 @@
    "model": "dataentry.question",
    "pk": 611,
    "fields": {
-      "form_tag": "question611",
+      "form_tag": "description",
       "prompt": "description",
       "description": null,
       "answer_type": 1,
@@ -19282,7 +19258,7 @@
    "model": "dataentry.question",
    "pk": 641,
    "fields": {
-      "form_tag": "question641",
+      "form_tag": "attachment",
       "prompt": "attachment",
       "description": null,
       "answer_type": 12,
@@ -19837,7 +19813,7 @@
    "model": "dataentry.question",
    "pk": 700,
    "fields": {
-      "form_tag": "question700",
+      "form_tag": "privateCard",
       "prompt": "Attachment contains private data",
       "description": null,
       "answer_type": 6,
@@ -19967,7 +19943,7 @@
    "model": "dataentry.question",
    "pk": 712,
    "fields": {
-      "form_tag": "question712",
+      "form_tag": "controlJobUnderqualified",
       "prompt": "Extremely underqualified for job",
       "description": null,
       "answer_type": 6,
@@ -19980,7 +19956,7 @@
    "model": "dataentry.question",
    "pk": 713,
    "fields": {
-      "form_tag": "question713",
+      "form_tag": "evadeJobDetailsChangedEnRoute",
       "prompt": "Job details were changed en route",
       "description": null,
       "answer_type": 6,
@@ -20904,11 +20880,11 @@
    "pk": 786,
    "fields": {
       "form_tag": "question786",
-      "prompt": "NGO in victims\u2019 areas contacted",
+      "prompt": "NGO in victims’ areas contacted",
       "description": null,
       "answer_type": 4,
       "params": null,
-      "export_name": "NGO in victims\u2019 areas contacted",
+      "export_name": "NGO in victims’ areas contacted",
       "export_params": null
    }
 },
@@ -21176,7 +21152,7 @@
    "model": "dataentry.question",
    "pk": 810,
    "fields": {
-      "form_tag": "question810",
+      "form_tag": "logbookIncompleteQuestions",
       "prompt": "Were there incomplete questions on the IRF that prevented submission?",
       "description": null,
       "answer_type": 4,
@@ -21189,7 +21165,7 @@
    "model": "dataentry.question",
    "pk": 811,
    "fields": {
-      "form_tag": "question811",
+      "form_tag": "logbookIncompleteSections",
       "prompt": "Please list incomplete sections that prevented submission",
       "description": null,
       "answer_type": 1,
@@ -21202,7 +21178,7 @@
    "model": "dataentry.question",
    "pk": 812,
    "fields": {
-      "form_tag": "question812",
+      "form_tag": "logbookInformationComplete",
       "prompt": "Date Complete Information was Received",
       "description": null,
       "answer_type": 9,
@@ -21215,7 +21191,7 @@
    "model": "dataentry.question",
    "pk": 813,
    "fields": {
-      "form_tag": "question813",
+      "form_tag": "logbookNotes",
       "prompt": "notes",
       "description": null,
       "answer_type": 1,
@@ -21228,7 +21204,7 @@
    "model": "dataentry.question",
    "pk": 819,
    "fields": {
-      "form_tag": "question819",
+      "form_tag": "verifiedEvidenceCategorization",
       "prompt": "Verification",
       "description": null,
       "answer_type": 4,
@@ -21241,7 +21217,7 @@
    "model": "dataentry.question",
    "pk": 821,
    "fields": {
-      "form_tag": "question821",
+      "form_tag": "verifiedDateMain",
       "prompt": "Second Verification Date",
       "description": null,
       "answer_type": 9,
@@ -21345,7 +21321,7 @@
    "model": "dataentry.question",
    "pk": 861,
    "fields": {
-      "form_tag": "question861",
+      "form_tag": "logbookReceived",
       "prompt": "Date Form Received",
       "description": null,
       "answer_type": 9,
@@ -21358,7 +21334,7 @@
    "model": "dataentry.question",
    "pk": 862,
    "fields": {
-      "form_tag": "question862",
+      "form_tag": "logbookSubmitted",
       "prompt": "Date Form Submitted",
       "description": null,
       "answer_type": 9,
@@ -21553,7 +21529,7 @@
    "model": "dataentry.question",
    "pk": 900,
    "fields": {
-      "form_tag": "question900",
+      "form_tag": "option",
       "prompt": "Option",
       "description": null,
       "answer_type": 1,
@@ -21737,7 +21713,7 @@
    "model": "dataentry.question",
    "pk": 924,
    "fields": {
-      "form_tag": "question924",
+      "form_tag": "industry",
       "prompt": "Industry",
       "description": null,
       "answer_type": 6,
@@ -21752,7 +21728,7 @@
    "model": "dataentry.question",
    "pk": 925,
    "fields": {
-      "form_tag": "question925",
+      "form_tag": "vulnerabilityInsufficientResource",
       "prompt": "Insufficient resource to live/get home",
       "description": null,
       "answer_type": 6,
@@ -21765,7 +21741,7 @@
    "model": "dataentry.question",
    "pk": 926,
    "fields": {
-      "form_tag": "question926",
+      "form_tag": "vulnerabilityMinorWithoutGuardian",
       "prompt": "Minor unaccompanied by guardian",
       "description": null,
       "answer_type": 6,
@@ -21778,7 +21754,7 @@
    "model": "dataentry.question",
    "pk": 927,
    "fields": {
-      "form_tag": "question927",
+      "form_tag": "evadeSignsTreatment",
       "prompt": "Treatment - no documentation/knowledge",
       "description": null,
       "answer_type": 6,
@@ -21791,7 +21767,7 @@
    "model": "dataentry.question",
    "pk": 928,
    "fields": {
-      "form_tag": "question928",
+      "form_tag": "evadeSignsForgedFalseDocumentation",
       "prompt": "Forged or falsified documents",
       "description": null,
       "answer_type": 6,
@@ -21804,7 +21780,7 @@
    "model": "dataentry.question",
    "pk": 929,
    "fields": {
-      "form_tag": "question929",
+      "form_tag": "evadeSignsConfirmedDeception",
       "prompt": "Called place and confirmed deception",
       "description": null,
       "answer_type": 6,
@@ -21817,7 +21793,7 @@
    "model": "dataentry.question",
    "pk": 930,
    "fields": {
-      "form_tag": "question930",
+      "form_tag": "evadeSignsOther",
       "prompt": "Other",
       "description": null,
       "answer_type": 6,
@@ -21832,7 +21808,7 @@
    "model": "dataentry.question",
    "pk": 931,
    "fields": {
-      "form_tag": "question931",
+      "form_tag": "controlLedOtherCountry",
       "prompt": "Led to other country without their knowledge",
       "description": null,
       "answer_type": 6,
@@ -21845,7 +21821,7 @@
    "model": "dataentry.question",
    "pk": 932,
    "fields": {
-      "form_tag": "question932",
+      "form_tag": "controlTravelingBecauseOfThreat",
       "prompt": "Traveling because of threat",
       "description": null,
       "answer_type": 6,
@@ -21858,7 +21834,7 @@
    "model": "dataentry.question",
    "pk": 933,
    "fields": {
-      "form_tag": "question933",
+      "form_tag": "controlOwesDebt",
       "prompt": "Owes debt to person who recruited/paid travel",
       "description": null,
       "answer_type": 6,
@@ -21871,7 +21847,7 @@
    "model": "dataentry.question",
    "pk": 934,
    "fields": {
-      "form_tag": "question934",
+      "form_tag": "controlJob",
       "prompt": "Job",
       "description": null,
       "answer_type": 1,
@@ -21884,7 +21860,7 @@
    "model": "dataentry.question",
    "pk": 935,
    "fields": {
-      "form_tag": "question935",
+      "form_tag": "controlPromisedPay",
       "prompt": "Promised pay",
       "description": null,
       "answer_type": 1,
@@ -21897,7 +21873,7 @@
    "model": "dataentry.question",
    "pk": 936,
    "fields": {
-      "form_tag": "question936",
+      "form_tag": "controlNormalPay",
       "prompt": "Normal pay",
       "description": null,
       "answer_type": 1,
@@ -21910,7 +21886,7 @@
    "model": "dataentry.question",
    "pk": 937,
    "fields": {
-      "form_tag": "question937",
+      "form_tag": "controlPromisedDouble",
       "prompt": "Promised pay more than double normal pay",
       "description": null,
       "answer_type": 6,
@@ -21923,7 +21899,7 @@
    "model": "dataentry.question",
    "pk": 938,
    "fields": {
-      "form_tag": "question938",
+      "form_tag": "controlPromisedHigher",
       "prompt": "Promised pay a little higher than normal pay",
       "description": null,
       "answer_type": 6,
@@ -21936,7 +21912,7 @@
    "model": "dataentry.question",
    "pk": 939,
    "fields": {
-      "form_tag": "question939",
+      "form_tag": "controlNoAddressPhone",
       "prompt": "No address/phone number",
       "description": null,
       "answer_type": 6,
@@ -21949,7 +21925,7 @@
    "model": "dataentry.question",
    "pk": 940,
    "fields": {
-      "form_tag": "question940",
+      "form_tag": "convincedFamilyPhone",
       "prompt": "Family Phone #",
       "description": null,
       "answer_type": 1,
@@ -21962,7 +21938,7 @@
    "model": "dataentry.question",
    "pk": 942,
    "fields": {
-      "form_tag": "question942",
+      "form_tag": "vulnerabilityFamilyUnwilling",
       "prompt": "Family unwilling to let them go",
       "description": null,
       "answer_type": 6,
@@ -22027,7 +22003,7 @@
    "model": "dataentry.question",
    "pk": 948,
    "fields": {
-      "form_tag": "question948",
+      "form_tag": "open",
       "prompt": "Station Status",
       "description": null,
       "answer_type": 6,
@@ -22040,7 +22016,7 @@
    "model": "dataentry.question",
    "pk": 949,
    "fields": {
-      "form_tag": "question949",
+      "form_tag": "stationName",
       "prompt": "Station Name",
       "description": null,
       "answer_type": 1,
@@ -22053,7 +22029,7 @@
    "model": "dataentry.question",
    "pk": 950,
    "fields": {
-      "form_tag": "question950",
+      "form_tag": "stationCode",
       "prompt": "Station Code",
       "description": null,
       "answer_type": 1,
@@ -22066,7 +22042,7 @@
    "model": "dataentry.question",
    "pk": 951,
    "fields": {
-      "form_tag": "question951",
+      "form_tag": "dateEstablished",
       "prompt": "Date Established",
       "description": null,
       "answer_type": 9,
@@ -22079,7 +22055,7 @@
    "model": "dataentry.question",
    "pk": 952,
    "fields": {
-      "form_tag": "question952",
+      "form_tag": "hasShelter",
       "prompt": "Has Shelter",
       "description": null,
       "answer_type": 6,
@@ -22092,7 +22068,7 @@
    "model": "dataentry.question",
    "pk": 953,
    "fields": {
-      "form_tag": "question953",
+      "form_tag": "latitude",
       "prompt": "Latitude",
       "description": null,
       "answer_type": 3,
@@ -22105,7 +22081,7 @@
    "model": "dataentry.question",
    "pk": 954,
    "fields": {
-      "form_tag": "question954",
+      "form_tag": "longitude",
       "prompt": "Longitude",
       "description": null,
       "answer_type": 3,
@@ -22118,7 +22094,7 @@
    "model": "dataentry.question",
    "pk": 955,
    "fields": {
-      "form_tag": "question955",
+      "form_tag": "operatingCountryId",
       "prompt": "Operating Country",
       "description": null,
       "answer_type": 2,
@@ -22131,7 +22107,7 @@
    "model": "dataentry.question",
    "pk": 956,
    "fields": {
-      "form_tag": "question956",
+      "form_tag": "timeZone",
       "prompt": "Time Zone",
       "description": null,
       "answer_type": 1,
@@ -22144,7 +22120,7 @@
    "model": "dataentry.question",
    "pk": 957,
    "fields": {
-      "form_tag": "question957",
+      "form_tag": "firstName",
       "prompt": "First Name",
       "description": null,
       "answer_type": 1,
@@ -22157,7 +22133,7 @@
    "model": "dataentry.question",
    "pk": 958,
    "fields": {
-      "form_tag": "question958",
+      "form_tag": "lastName",
       "prompt": "Last Name",
       "description": null,
       "answer_type": 1,
@@ -22170,7 +22146,7 @@
    "model": "dataentry.question",
    "pk": 959,
    "fields": {
-      "form_tag": "question959",
+      "form_tag": "email",
       "prompt": "Email",
       "description": null,
       "answer_type": 1,
@@ -22183,7 +22159,7 @@
    "model": "dataentry.question",
    "pk": 960,
    "fields": {
-      "form_tag": "question960",
+      "form_tag": "phone",
       "prompt": "Phone",
       "description": null,
       "answer_type": 1,
@@ -22196,7 +22172,7 @@
    "model": "dataentry.question",
    "pk": 961,
    "fields": {
-      "form_tag": "question961",
+      "form_tag": "position",
       "prompt": "Position",
       "description": null,
       "answer_type": 1,
@@ -22209,7 +22185,7 @@
    "model": "dataentry.question",
    "pk": 962,
    "fields": {
-      "form_tag": "question962",
+      "form_tag": "receivesMoneyDistributionForm",
       "prompt": "Recieves Money Distribution Form",
       "description": null,
       "answer_type": 6,
@@ -22222,7 +22198,7 @@
    "model": "dataentry.question",
    "pk": 963,
    "fields": {
-      "form_tag": "question963",
+      "form_tag": "name",
       "prompt": "Name",
       "description": null,
       "answer_type": 1,
@@ -22235,7 +22211,7 @@
    "model": "dataentry.question",
    "pk": 964,
    "fields": {
-      "form_tag": "question964",
+      "form_tag": "formSet",
       "prompt": "Form Set",
       "description": null,
       "answer_type": 15,
@@ -22351,7 +22327,7 @@
    "model": "dataentry.question",
    "pk": 967,
    "fields": {
-      "form_tag": "question967",
+      "form_tag": "rescue",
       "prompt": "Rescue",
       "description": null,
       "answer_type": 6,
@@ -22364,7 +22340,7 @@
    "model": "dataentry.question",
    "pk": 968,
    "fields": {
-      "form_tag": "question968",
+      "form_tag": "profile",
       "prompt": "Profile",
       "description": null,
       "answer_type": 1,
@@ -22377,7 +22353,7 @@
    "model": "dataentry.question",
    "pk": 969,
    "fields": {
-      "form_tag": "question969",
+      "form_tag": "firstDate",
       "prompt": "First Date",
       "description": null,
       "answer_type": 9,
@@ -22390,7 +22366,7 @@
    "model": "dataentry.question",
    "pk": 970,
    "fields": {
-      "form_tag": "question970",
+      "form_tag": "lastDate",
       "prompt": "Last Date",
       "description": null,
       "answer_type": 9,
@@ -22403,7 +22379,7 @@
    "model": "dataentry.question",
    "pk": 971,
    "fields": {
-      "form_tag": "question971",
+      "form_tag": "locationType",
       "prompt": "Location Type",
       "description": null,
       "answer_type": 1,
@@ -22416,7 +22392,7 @@
    "model": "dataentry.question",
    "pk": 973,
    "fields": {
-      "form_tag": "question973",
+      "form_tag": "active",
       "prompt": "Active",
       "description": "Location Active",
       "answer_type": 6,
@@ -22429,7 +22405,7 @@
    "model": "dataentry.question",
    "pk": 974,
    "fields": {
-      "form_tag": "question974",
+      "form_tag": "vulnerabilityFirstTimeTravelingAbroad",
       "prompt": "First time traveling abroad",
       "description": null,
       "answer_type": 6,
@@ -22440,9 +22416,35 @@
 },
 {
    "model": "dataentry.question",
+   "pk": 975,
+   "fields": {
+      "form_tag": "consentToUsePhoto",
+      "prompt": "Do you consent to us using your photo this way?",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "photo consent",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 976,
+   "fields": {
+      "form_tag": "consentToUseInformation",
+      "prompt": "Do you consent to us using your information this way?",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "information consent",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
    "pk": 977,
    "fields": {
-      "form_tag": "question977",
+      "form_tag": "vulnerabilityDoesntSpeakEnglish",
       "prompt": "Doesn't speak English",
       "description": null,
       "answer_type": 6,
@@ -22455,7 +22457,7 @@
    "model": "dataentry.question",
    "pk": 978,
    "fields": {
-      "form_tag": "question978",
+      "form_tag": "vulnerabilityNonRelativePaidFlight",
       "prompt": "Non-relative paid for flight",
       "description": null,
       "answer_type": 6,
@@ -22468,7 +22470,7 @@
    "model": "dataentry.question",
    "pk": 979,
    "fields": {
-      "form_tag": "question979",
+      "form_tag": "vulnerabilityConnectionHostUnclear",
       "prompt": "Connection to host/suspect limited or unclear",
       "description": null,
       "answer_type": 6,
@@ -22481,7 +22483,7 @@
    "model": "dataentry.question",
    "pk": 980,
    "fields": {
-      "form_tag": "question980",
+      "form_tag": "vulnerabilityDoesntHaveRequiredVisa",
       "prompt": "Doesn't have required visa/docs",
       "description": null,
       "answer_type": 6,
@@ -22494,7 +22496,7 @@
    "model": "dataentry.question",
    "pk": 988,
    "fields": {
-      "form_tag": "question988",
+      "form_tag": "vulnerabilityPaidFlightInCash",
       "prompt": "Flight paid for in cash",
       "description": null,
       "answer_type": 6,
@@ -22572,7 +22574,7 @@
    "model": "dataentry.question",
    "pk": 996,
    "fields": {
-      "form_tag": "question996",
+      "form_tag": "evadeSignsFakeDocumentation",
       "prompt": "Fake documentation",
       "description": null,
       "answer_type": 6,
@@ -22583,338 +22585,9 @@
 },
 {
    "model": "dataentry.question",
-   "pk": 997,
-   "fields": {
-      "form_tag": "question997",
-      "prompt": "Status",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Status",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 998,
-   "fields": {
-      "form_tag": "question998",
-      "prompt": "Legal Case #",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Legal Case #",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 999,
-   "fields": {
-      "form_tag": "question999",
-      "prompt": "Police Case #",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Police Case #",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1000,
-   "fields": {
-      "form_tag": "question1000",
-      "prompt": "Court Case #",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Court Case #",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1001,
-   "fields": {
-      "form_tag": "question1001",
-      "prompt": "Charge Sheet Date",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Charge Sheet Date",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1002,
-   "fields": {
-      "form_tag": "question1002",
-      "prompt": "Date of Last Contact",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Date of Last Contact",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1003,
-   "fields": {
-      "form_tag": "question1003",
-      "prompt": "Appealed",
-      "description": null,
-      "answer_type": 6,
-      "params": null,
-      "export_name": "Appealed",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1004,
-   "fields": {
-      "form_tag": "question1004",
-      "prompt": "Lawyer Name",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Lawyer Name",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1005,
-   "fields": {
-      "form_tag": "question1005",
-      "prompt": "Lawyer Phone",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Lawyer Phone",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1008,
-   "fields": {
-      "form_tag": "question1008",
-      "prompt": "Case Type",
-      "description": null,
-      "answer_type": 4,
-      "params": {
-         "textbox": "True"
-      },
-      "export_name": "Case Type",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1009,
-   "fields": {
-      "form_tag": "question1009",
-      "prompt": "Named on Charge Sheet",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Named on Charge Sheet",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1010,
-   "fields": {
-      "form_tag": "question1010",
-      "prompt": "Arrest Status",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Arrest Status",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1011,
-   "fields": {
-      "form_tag": "question1011",
-      "prompt": "Arrest Date",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Arrest Date",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1012,
-   "fields": {
-      "form_tag": "question1012",
-      "prompt": "Verdict",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Verdict",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1013,
-   "fields": {
-      "form_tag": "question1013",
-      "prompt": "Date of Verdict",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Date of Verdict",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1014,
-   "fields": {
-      "form_tag": "question1014",
-      "prompt": "Imprisonment Total Days",
-      "description": null,
-      "answer_type": 2,
-      "params": null,
-      "export_name": "Imprisonment Total Days",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1015,
-   "fields": {
-      "form_tag": "question1015",
-      "prompt": "Fine Amount",
-      "description": null,
-      "answer_type": 2,
-      "params": null,
-      "export_name": "Fine Amount",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1016,
-   "fields": {
-      "form_tag": "question1016",
-      "prompt": "Alternative Phone #",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Alternative Phone #",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1017,
-   "fields": {
-      "form_tag": "question1017",
-      "prompt": "Date of Last Attempt",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Date of Last Attempt",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1018,
-   "fields": {
-      "form_tag": "question1018",
-      "prompt": "Date of Last Contact",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Date of Last Contact",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1019,
-   "fields": {
-      "form_tag": "question1019",
-      "prompt": "Update/Status of Victim",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Update/Status of Victim",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1020,
-   "fields": {
-      "form_tag": "question1020",
-      "prompt": "attachment",
-      "description": null,
-      "answer_type": 12,
-      "params": {
-         "subdirectory": "legal_case_attachments/"
-      },
-      "export_name": "File",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1021,
-   "fields": {
-      "form_tag": "question1021",
-      "prompt": "Imprisonment Years",
-      "description": null,
-      "answer_type": 2,
-      "params": null,
-      "export_name": "Imprisonment Years",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1022,
-   "fields": {
-      "form_tag": "question1022",
-      "prompt": "Imprisonment Months",
-      "description": null,
-      "answer_type": 2,
-      "params": null,
-      "export_name": "Imprisonment Months",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1023,
-   "fields": {
-      "form_tag": "question1023",
-      "prompt": "Imprisonment Days",
-      "description": null,
-      "answer_type": 2,
-      "params": null,
-      "export_name": "Imprisonment Days",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
    "pk": 1024,
    "fields": {
-      "form_tag": "question1024",
+      "form_tag": "autoNumber",
       "prompt": "Auto Number",
       "description": null,
       "answer_type": 1,
@@ -22925,50 +22598,9 @@
 },
 {
    "model": "dataentry.question",
-   "pk": 1027,
-   "fields": {
-      "form_tag": "question1027",
-      "prompt": "Fine Currency",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Fine Currency",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1028,
-   "fields": {
-      "form_tag": "question1028",
-      "prompt": "Case Source",
-      "description": null,
-      "answer_type": 4,
-      "params": {
-         "textbox": "True"
-      },
-      "export_name": "Case Source",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1029,
-   "fields": {
-      "form_tag": "question1029",
-      "prompt": "Named in Verdict",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Named in Verdict",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
    "pk": 1033,
    "fields": {
-      "form_tag": "question1033",
+      "form_tag": "dateOfFollowup",
       "prompt": "Date followup completed",
       "description": null,
       "answer_type": 9,
@@ -22981,7 +22613,7 @@
    "model": "dataentry.question",
    "pk": 1034,
    "fields": {
-      "form_tag": "question1034",
+      "form_tag": "followupPerson",
       "prompt": "Followup by?",
       "description": null,
       "answer_type": 1,
@@ -22992,131 +22624,14 @@
 },
 {
    "model": "dataentry.question",
-   "pk": 1035,
-   "fields": {
-      "form_tag": "question1035",
-      "prompt": "Comment Date",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Comment Date",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1036,
-   "fields": {
-      "form_tag": "question1036",
-      "prompt": "Comment",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Comment",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1037,
-   "fields": {
-      "form_tag": "question1037",
-      "prompt": "Added by",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Added by",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1038,
-   "fields": {
-      "form_tag": "question1038",
-      "prompt": "Date added",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Date added",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1039,
-   "fields": {
-      "form_tag": "question1039",
-      "prompt": "Date removed",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Date removed",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1040,
-   "fields": {
-      "form_tag": "question1040",
-      "prompt": "Specific country code/law",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Specific country code/law",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1041,
-   "fields": {
-      "form_tag": "question1041",
-      "prompt": "Human Trafficking narrative",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "Human Trafficking narrative",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
    "pk": 1042,
    "fields": {
-      "form_tag": "question1042",
+      "form_tag": "vulnerabilityFamilyFriendArrangedTravel",
       "prompt": "Friend/Family arranged travel/job/studies",
       "description": null,
       "answer_type": 6,
       "params": null,
       "export_name": "Friend/Family arranged travel/job/studies",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1043,
-   "fields": {
-      "form_tag": "question1043",
-      "prompt": "Submission Date of Verdict",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Submission Date of Verdict",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1044,
-   "fields": {
-      "form_tag": "question1044",
-      "prompt": "Arrest Submission Date",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Arrest Submission Date",
       "export_params": null
    }
 },
@@ -23259,11 +22774,11 @@
    "pk": 1056,
    "fields": {
       "form_tag": "question1056",
-      "prompt": "Did the PV spend time at LJ\u2019s short-term shelter?",
+      "prompt": "Did the PV spend time at LJ’s short-term shelter?",
       "description": null,
       "answer_type": 4,
       "params": null,
-      "export_name": "Did the PV spend time at LJ\u2019s short-term shelter?",
+      "export_name": "Did the PV spend time at LJ’s short-term shelter?",
       "export_params": null
    }
 },
@@ -23312,7 +22827,7 @@
    "model": "dataentry.question",
    "pk": 1060,
    "fields": {
-      "form_tag": "question1060",
+      "form_tag": "formChanges",
       "prompt": "Are any changes to the original form required?",
       "description": null,
       "answer_type": 1,
@@ -23325,7 +22840,7 @@
    "model": "dataentry.question",
    "pk": 1061,
    "fields": {
-      "form_tag": "question1061",
+      "form_tag": "reasonForChange",
       "prompt": "This is a change from what was marked on the original VDF. Please explain why there is a change",
       "description": null,
       "answer_type": 1,
@@ -23338,7 +22853,7 @@
    "model": "dataentry.question",
    "pk": 1062,
    "fields": {
-      "form_tag": "question1062",
+      "form_tag": "staffWhoShared",
       "prompt": "LJ Station Staff that shared the gospel",
       "description": null,
       "answer_type": 1,
@@ -23351,7 +22866,7 @@
    "model": "dataentry.question",
    "pk": 1063,
    "fields": {
-      "form_tag": "question1063",
+      "form_tag": "howPvProfessed",
       "prompt": "Describe how the potential victim professed to accept the gospel\r\n",
       "description": null,
       "answer_type": 1,
@@ -23364,7 +22879,7 @@
    "model": "dataentry.question",
    "pk": 1064,
    "fields": {
-      "form_tag": "question1064",
+      "form_tag": "sharedResources",
       "prompt": "What resources were shared with them and how was it helpful?",
       "description": null,
       "answer_type": 1,
@@ -23377,7 +22892,7 @@
    "model": "dataentry.question",
    "pk": 1065,
    "fields": {
-      "form_tag": "question1065",
+      "form_tag": "connectWithChurch",
       "prompt": "Please note any efforst to connect with local church body",
       "description": null,
       "answer_type": 1,
@@ -23390,7 +22905,7 @@
    "model": "dataentry.question",
    "pk": 1066,
    "fields": {
-      "form_tag": "question1066",
+      "form_tag": "dateOfInterception",
       "prompt": "Date",
       "description": null,
       "answer_type": 9,
@@ -23405,7 +22920,7 @@
    "model": "dataentry.question",
    "pk": 1067,
    "fields": {
-      "form_tag": "question1067",
+      "form_tag": "timeOfInterception",
       "prompt": "Time",
       "description": null,
       "answer_type": 1,
@@ -23418,7 +22933,7 @@
    "model": "dataentry.question",
    "pk": 1068,
    "fields": {
-      "form_tag": "question1068",
+      "form_tag": "controlConnectedKnownTrafficker",
       "prompt": "Connected to known trafficker",
       "description": null,
       "answer_type": 6,
@@ -23431,7 +22946,7 @@
    "model": "dataentry.question",
    "pk": 1069,
    "fields": {
-      "form_tag": "question1069",
+      "form_tag": "flightNumber",
       "prompt": "Flight number",
       "description": null,
       "answer_type": 1,
@@ -23444,7 +22959,7 @@
    "model": "dataentry.question",
    "pk": 1070,
    "fields": {
-      "form_tag": "question1070",
+      "form_tag": "vulnerabilityNoId",
       "prompt": "Does not have any form of ID",
       "description": null,
       "answer_type": 6,
@@ -23457,7 +22972,7 @@
    "model": "dataentry.question",
    "pk": 1071,
    "fields": {
-      "form_tag": "question1071",
+      "form_tag": "vulnerabilityBusDriverPaymentAtDestination",
       "prompt": "Bus driver expecting payment for travel at destination",
       "description": null,
       "answer_type": 6,
@@ -23470,7 +22985,7 @@
    "model": "dataentry.question",
    "pk": 1072,
    "fields": {
-      "form_tag": "question1072",
+      "form_tag": "vulnerabilityFirstTimeTravelingToCity",
       "prompt": "Travelling to city from rural area for first time",
       "description": null,
       "answer_type": 6,
@@ -23483,7 +22998,7 @@
    "model": "dataentry.question",
    "pk": 1073,
    "fields": {
-      "form_tag": "question1073",
+      "form_tag": "vulnerabilityNoMobilePhone",
       "prompt": "Does not own mobile phone",
       "description": null,
       "answer_type": 6,
@@ -23522,7 +23037,7 @@
    "model": "dataentry.question",
    "pk": 1076,
    "fields": {
-      "form_tag": "question1076",
+      "form_tag": "controlAbducted",
       "prompt": "Abducted",
       "description": null,
       "answer_type": 6,
@@ -23535,7 +23050,7 @@
    "model": "dataentry.question",
    "pk": 1077,
    "fields": {
-      "form_tag": "question1077",
+      "form_tag": "pvStoppedOnOwn",
       "prompt": "PV decided to stop on their own prior to interception and needed resources to return home",
       "description": null,
       "answer_type": 6,
@@ -23548,7 +23063,7 @@
    "model": "dataentry.question",
    "pk": 1078,
    "fields": {
-      "form_tag": "question1078",
+      "form_tag": "vulnerabilityMeetingSomeoneMetOnline",
       "prompt": "Going to meet someone they met online",
       "description": null,
       "answer_type": 6,
@@ -23561,7 +23076,7 @@
    "model": "dataentry.question",
    "pk": 1079,
    "fields": {
-      "form_tag": "question1079",
+      "form_tag": "vulnerabilityTravelArrangedByOther",
       "prompt": "Transportation arranged by someone else",
       "description": null,
       "answer_type": 6,
@@ -23574,7 +23089,7 @@
    "model": "dataentry.question",
    "pk": 1080,
    "fields": {
-      "form_tag": "question1080",
+      "form_tag": "projectCategoryId",
       "prompt": "Project Category",
       "description": null,
       "answer_type": 2,
@@ -23587,7 +23102,7 @@
    "model": "dataentry.question",
    "pk": 1081,
    "fields": {
-      "form_tag": "question1081",
+      "form_tag": "features",
       "prompt": "Features",
       "description": null,
       "answer_type": 1,
@@ -23600,7 +23115,7 @@
    "model": "dataentry.question",
    "pk": 1082,
    "fields": {
-      "form_tag": "irfSfeControlUnder18Enticed",
+      "form_tag": "controlUnder18RecruitedForWork",
       "prompt": "Under 18 (enticed to work)",
       "description": null,
       "answer_type": 6,
@@ -23613,7 +23128,7 @@
    "model": "dataentry.question",
    "pk": 1083,
    "fields": {
-      "form_tag": "question1083",
+      "form_tag": "vulnerabilityTravelMetRecently",
       "prompt": "Is or was traveling with someone they met recently",
       "description": null,
       "answer_type": 6,
@@ -23626,7 +23141,7 @@
    "model": "dataentry.question",
    "pk": 1084,
    "fields": {
-      "form_tag": "question1084",
+      "form_tag": "vulnerabilityStrandedOrAbandoned",
       "prompt": "Stranded/abandoned",
       "description": null,
       "answer_type": 6,
@@ -23639,7 +23154,7 @@
    "model": "dataentry.question",
    "pk": 1085,
    "fields": {
-      "form_tag": "question1085",
+      "form_tag": "controlIdOrPermitWithBroker",
       "prompt": "ID or work permit with broker",
       "description": null,
       "answer_type": 6,
@@ -23652,7 +23167,7 @@
    "model": "dataentry.question",
    "pk": 1086,
    "fields": {
-      "form_tag": "question1086",
+      "form_tag": "controlUnder16RecruitedForWork",
       "prompt": "Under 16, recruited for work",
       "description": null,
       "answer_type": 6,
@@ -23665,7 +23180,7 @@
    "model": "dataentry.question",
    "pk": 1087,
    "fields": {
-      "form_tag": "question1087",
+      "form_tag": "mdfProjectId",
       "prompt": "MDF Project",
       "description": null,
       "answer_type": 2,
@@ -23678,7 +23193,7 @@
    "model": "dataentry.question",
    "pk": 1088,
    "fields": {
-      "form_tag": "question1088",
+      "form_tag": "verificationType",
       "prompt": "Verification type",
       "description": null,
       "answer_type": 2,
@@ -23691,7 +23206,7 @@
    "model": "dataentry.question",
    "pk": 1089,
    "fields": {
-      "form_tag": "question1089",
+      "form_tag": "followupCall",
       "prompt": "Follow-up call",
       "description": null,
       "answer_type": 1,
@@ -23704,7 +23219,7 @@
    "model": "dataentry.question",
    "pk": 1090,
    "fields": {
-      "form_tag": "question1090",
+      "form_tag": "followupDetails",
       "prompt": "Follow-up detail",
       "description": null,
       "answer_type": 1,
@@ -23717,7 +23232,7 @@
    "model": "dataentry.question",
    "pk": 1091,
    "fields": {
-      "form_tag": "question1091",
+      "form_tag": "evidenceCategorizationCard",
       "prompt": "Evidence category",
       "description": null,
       "answer_type": 1,
@@ -23730,7 +23245,7 @@
    "model": "dataentry.question",
    "pk": 1092,
    "fields": {
-      "form_tag": "question1092",
+      "form_tag": "reason",
       "prompt": "Reason",
       "description": null,
       "answer_type": 1,
@@ -23743,7 +23258,7 @@
    "model": "dataentry.question",
    "pk": 1093,
    "fields": {
-      "form_tag": "question1093",
+      "form_tag": "verifiedDateCard",
       "prompt": "Verified date",
       "description": null,
       "answer_type": 9,
@@ -23756,7 +23271,7 @@
    "model": "dataentry.question",
    "pk": 1094,
    "fields": {
-      "form_tag": "question1094",
+      "form_tag": "verifierId",
       "prompt": "Verifier",
       "description": null,
       "answer_type": 2,
@@ -23769,7 +23284,7 @@
    "model": "dataentry.question",
    "pk": 1331,
    "fields": {
-      "form_tag": "irfIntercepteeNotPresent",
+      "form_tag": "notPhysicallyPresent",
       "prompt": "Not physically present",
       "description": null,
       "answer_type": 4,
@@ -23782,7 +23297,7 @@
    "model": "dataentry.question",
    "pk": 1568,
    "fields": {
-      "form_tag": "irfFinalOfficialName",
+      "form_tag": "officialName",
       "prompt": "Official Name",
       "description": null,
       "answer_type": 1,
@@ -23795,7 +23310,7 @@
    "model": "dataentry.question",
    "pk": 1569,
    "fields": {
-      "form_tag": "irfFinalOfficialSignature",
+      "form_tag": "hasOfficalSignature",
       "prompt": "Official Signature",
       "description": null,
       "answer_type": 6,
@@ -23808,7 +23323,7 @@
    "model": "dataentry.question",
    "pk": 1570,
    "fields": {
-      "form_tag": "irfFinalRoute",
+      "form_tag": "route",
       "prompt": "Route",
       "description": null,
       "answer_type": 1,
@@ -23821,7 +23336,7 @@
    "model": "dataentry.question",
    "pk": 1571,
    "fields": {
-      "form_tag": "irfBangladeshLastName",
+      "form_tag": "vulnerabilityDifferentLastName",
       "prompt": "Last name different from alleged relative",
       "description": null,
       "answer_type": 6,
@@ -23834,12 +23349,12 @@
    "model": "dataentry.question",
    "pk": 1807,
    "fields": {
-      "form_tag": "irfSfeResourcesAppliedDestinationUnknown",
-      "prompt": "Applied for job, but doesn\u2019t know destination",
+      "form_tag": "vulnerabilityAppliedJobDoesntKnowDestination",
+      "prompt": "Applied for job, but doesn’t know destination",
       "description": null,
       "answer_type": 6,
       "params": null,
-      "export_name": "Applied for job, but doesn\u2019t know destination",
+      "export_name": "Applied for job, but doesn’t know destination",
       "export_params": null
    }
 },
@@ -23847,12 +23362,12 @@
    "model": "dataentry.question",
    "pk": 1808,
    "fields": {
-      "form_tag": "irfSfeResourcesDoesntSpeakLocalLanguage",
-      "prompt": "Doesn\u2019t speak Nepali",
+      "form_tag": "vulnerabilityDoesntSpeakLocalLanguage",
+      "prompt": "Doesn’t speak Nepali",
       "description": null,
       "answer_type": 6,
       "params": null,
-      "export_name": "Doesn\u2019t speak Nepali",
+      "export_name": "Doesn’t speak Nepali",
       "export_params": null
    }
 },
@@ -23860,7 +23375,7 @@
    "model": "dataentry.question",
    "pk": 1809,
    "fields": {
-      "form_tag": "irfSfeResourcesViaIndia",
+      "form_tag": "vulnerabilityGoingViaIndia",
       "prompt": "Going to a third country via India",
       "description": null,
       "answer_type": 6,
@@ -23873,7 +23388,7 @@
    "model": "dataentry.question",
    "pk": 1810,
    "fields": {
-      "form_tag": "irfSfeResourcesCostOfLiving",
+      "form_tag": "vulnerabilityCostOfLivingHigherThanWages",
       "prompt": "Cost of living in destination much higher than wages",
       "description": null,
       "answer_type": 6,
@@ -23886,12 +23401,12 @@
    "model": "dataentry.question",
    "pk": 1811,
    "fields": {
-      "form_tag": "irfSfeResourcesNoJobDetails",
-      "prompt": "Doesn\u2019t know what job they are applying for",
+      "form_tag": "vulnerabilityDoesntKnowJobDetails",
+      "prompt": "Doesn’t know what job they are applying for",
       "description": null,
       "answer_type": 6,
       "params": null,
-      "export_name": "Doesn\u2019t know what job they are applying for",
+      "export_name": "Doesn’t know what job they are applying for",
       "export_params": null
    }
 },
@@ -23899,7 +23414,7 @@
    "model": "dataentry.question",
    "pk": 1812,
    "fields": {
-      "form_tag": "irfSfeResourcesUsingAgent",
+      "form_tag": "vulnerabilityUsingAgent",
       "prompt": "Using an agent",
       "description": null,
       "answer_type": 6,
@@ -23912,7 +23427,7 @@
    "model": "dataentry.question",
    "pk": 1813,
    "fields": {
-      "form_tag": "irfSfeResourcesMpaExcessiveTime",
+      "form_tag": "vulnerabilityMpaExcessiveTime",
       "prompt": "MPA taking excessive time to process/send migrant",
       "description": null,
       "answer_type": 6,
@@ -23925,7 +23440,7 @@
    "model": "dataentry.question",
    "pk": 1814,
    "fields": {
-      "form_tag": "irfSfeResourcesContractLanguage",
+      "form_tag": "agreementContractLanguage",
       "prompt": "Contract not in a language understood by the PV",
       "description": null,
       "answer_type": 6,
@@ -23938,7 +23453,7 @@
    "model": "dataentry.question",
    "pk": 1815,
    "fields": {
-      "form_tag": "irfSfeResourcesMpaNotBearingCost",
+      "form_tag": "agreementMpaNotBearingCost",
       "prompt": "Company/MPA not bearing cost to Gulf/Malaysia",
       "description": null,
       "answer_type": 6,
@@ -23951,7 +23466,7 @@
    "model": "dataentry.question",
    "pk": 1816,
    "fields": {
-      "form_tag": "irfSfeResourcesPaidAgent",
+      "form_tag": "agreementPaidAgent",
       "prompt": "Paid money to agent",
       "description": null,
       "answer_type": 6,
@@ -23964,7 +23479,7 @@
    "model": "dataentry.question",
    "pk": 1817,
    "fields": {
-      "form_tag": "irfSfeResourcesPaidMoreThanStandard",
+      "form_tag": "agreementPaidAboveStandard",
       "prompt": "Paid more than government standard cost",
       "description": null,
       "answer_type": 6,
@@ -23977,7 +23492,7 @@
    "model": "dataentry.question",
    "pk": 1818,
    "fields": {
-      "form_tag": "irfSfeResourcesNoReceipt",
+      "form_tag": "agreementNoReceipt",
       "prompt": "No bhaar pai (receipt) for full amount of payment",
       "description": null,
       "answer_type": 6,
@@ -23990,7 +23505,7 @@
    "model": "dataentry.question",
    "pk": 1819,
    "fields": {
-      "form_tag": "irfSfeResourcesUnawareOfProcess",
+      "form_tag": "preparationUnawareOfProcess",
       "prompt": "Unaware of official employment migration process",
       "description": null,
       "answer_type": 6,
@@ -24003,7 +23518,7 @@
    "model": "dataentry.question",
    "pk": 1820,
    "fields": {
-      "form_tag": "irfSfeResourcesNotPrepared",
+      "form_tag": "preparationDidNotComplete",
       "prompt": "Did not complete at least one of the following",
       "description": null,
       "answer_type": 1,
@@ -24016,7 +23531,7 @@
    "model": "dataentry.question",
    "pk": 1821,
    "fields": {
-      "form_tag": "irfSfeResourcesPreparedOther",
+      "form_tag": "preparationOther",
       "prompt": "Other",
       "description": null,
       "answer_type": 1,
@@ -24029,7 +23544,7 @@
    "model": "dataentry.question",
    "pk": 1822,
    "fields": {
-      "form_tag": "irfSfeControlVisaMisuse",
+      "form_tag": "controlVisaMisuse",
       "prompt": "Convinced by agent/MPA to work on visa other than work visa",
       "description": null,
       "answer_type": 6,
@@ -24042,7 +23557,7 @@
    "model": "dataentry.question",
    "pk": 1823,
    "fields": {
-      "form_tag": "irfSfeControlFacilitatedThirdCountry",
+      "form_tag": "controlFacilitatedViaThirdCountry",
       "prompt": "Process being fully facilitated by someone to travel to third country via India for work",
       "description": null,
       "answer_type": 6,
@@ -24055,7 +23570,7 @@
    "model": "dataentry.question",
    "pk": 1824,
    "fields": {
-      "form_tag": "irfSfeControlWomenEnticedDangerousArea",
+      "form_tag": "controlWomenEnticedUnsaveArea",
       "prompt": "Woman being enticed by agent/MPA to go for domestic work in Gulf/Malaysia",
       "description": null,
       "answer_type": 6,
@@ -24068,7 +23583,7 @@
    "model": "dataentry.question",
    "pk": 1825,
    "fields": {
-      "form_tag": "irfSfeControlBannedArea",
+      "form_tag": "controlEnticedBannedArea",
       "prompt": "Being enticed by agent/MPA to go to banned country for migrant worker",
       "description": null,
       "answer_type": 6,
@@ -24081,7 +23596,7 @@
    "model": "dataentry.question",
    "pk": 1826,
    "fields": {
-      "form_tag": "irfSfeControlJobPrepermissionMismatch",
+      "form_tag": "controlAgreementPrepermissionMismatch",
       "prompt": "Job agreement and pre-permission details do not match",
       "description": null,
       "answer_type": 6,
@@ -24094,7 +23609,7 @@
    "model": "dataentry.question",
    "pk": 1827,
    "fields": {
-      "form_tag": "irfSfeControlInvalidMpa",
+      "form_tag": "controlInvalidMpa",
       "prompt": "Using an invalid MPA",
       "description": null,
       "answer_type": 6,
@@ -24107,7 +23622,7 @@
    "model": "dataentry.question",
    "pk": 1828,
    "fields": {
-      "form_tag": "irfSfeControlInvalidLt",
+      "form_tag": "controlInvalidLt",
       "prompt": "No/invalid Lt number and/or demand letter",
       "description": null,
       "answer_type": 6,
@@ -24120,7 +23635,7 @@
    "model": "dataentry.question",
    "pk": 1829,
    "fields": {
-      "form_tag": "irfSfeControlSeasonal",
+      "form_tag": "controlEnticedNonSeasonal",
       "prompt": "Being enticed by MPA to go to South Korea or Israel for non-seasonal work",
       "description": null,
       "answer_type": 6,
@@ -24133,7 +23648,7 @@
    "model": "dataentry.question",
    "pk": 1830,
    "fields": {
-      "form_tag": "irfSfePeopleLtBefore",
+      "form_tag": "pvLtNumberBeforeCounsel",
       "prompt": "Lt # Before Counseling",
       "description": null,
       "answer_type": 1,
@@ -24146,7 +23661,7 @@
    "model": "dataentry.question",
    "pk": 1831,
    "fields": {
-      "form_tag": "irfSfePeopleLtAfter",
+      "form_tag": "pvLtNumberAfterCounsel",
       "prompt": "Lt # After Counseling",
       "description": null,
       "answer_type": 1,
@@ -24159,7 +23674,7 @@
    "model": "dataentry.question",
    "pk": 1832,
    "fields": {
-      "form_tag": "irfSfePeopleCloseContact",
+      "form_tag": "pvClosestContact",
       "prompt": "If/when the PV goes abroad in the future, with whom will they keep the closest contact? (Name/Number)",
       "description": null,
       "answer_type": 1,
@@ -24172,7 +23687,7 @@
    "model": "dataentry.question",
    "pk": 1833,
    "fields": {
-      "form_tag": "irfSfePeopleNoMpaAgent",
+      "form_tag": "mpaAgentNotUsed",
       "prompt": "Check if PV did not use a MPA or agent",
       "description": null,
       "answer_type": 6,
@@ -24185,7 +23700,7 @@
    "model": "dataentry.question",
    "pk": 1834,
    "fields": {
-      "form_tag": "irfSfePeopleMpaName",
+      "form_tag": "mpaName",
       "prompt": "MPA Name",
       "description": null,
       "answer_type": 1,
@@ -24198,7 +23713,7 @@
    "model": "dataentry.question",
    "pk": 1835,
    "fields": {
-      "form_tag": "irfSfePeopleMpaPhone",
+      "form_tag": "mpaPhone",
       "prompt": "MPA Phone",
       "description": null,
       "answer_type": 1,
@@ -24211,7 +23726,7 @@
    "model": "dataentry.question",
    "pk": 1836,
    "fields": {
-      "form_tag": "irfSfePeopleMpaInitiatedContact",
+      "form_tag": "mpaWhoInitiatedContact",
       "prompt": "Who initiated contact?",
       "description": null,
       "answer_type": 4,
@@ -24226,7 +23741,7 @@
    "model": "dataentry.question",
    "pk": 1837,
    "fields": {
-      "form_tag": "irfSfePeopleHowContact",
+      "form_tag": "mpaHowContacted",
       "prompt": "How",
       "description": null,
       "answer_type": 4,
@@ -24241,7 +23756,7 @@
    "model": "dataentry.question",
    "pk": 1838,
    "fields": {
-      "form_tag": "irfSfeResultTechTraining",
+      "form_tag": "resultPvTechTraining",
       "prompt": "PV was referred to technical/vocational training",
       "description": null,
       "answer_type": 6,
@@ -24254,7 +23769,7 @@
    "model": "dataentry.question",
    "pk": 1839,
    "fields": {
-      "form_tag": "irfSfeResultOtherEducation",
+      "form_tag": "resultPvOtherEducation",
       "prompt": "PV was referred to other education",
       "description": null,
       "answer_type": 6,
@@ -24267,7 +23782,7 @@
    "model": "dataentry.question",
    "pk": 1840,
    "fields": {
-      "form_tag": "irfSfeResultChangePlans",
+      "form_tag": "resultPvChangedPlans",
       "prompt": "PV decided to change plans and go abroad",
       "description": null,
       "answer_type": 1,
@@ -24280,12 +23795,12 @@
    "model": "dataentry.question",
    "pk": 1841,
    "fields": {
-      "form_tag": "irfSfeResultStayLocal",
-      "prompt": "PV decided to change plans and look for a job within Nepal due to SFE staff\u2019s counseling",
+      "form_tag": "resultPvLocalJob",
+      "prompt": "PV decided to change plans and look for a job within Nepal due to SFE staff’s counseling",
       "description": null,
       "answer_type": 6,
       "params": null,
-      "export_name": "PV decided to change plans and look for a job within Nepal due to SFE staff\u2019s counseling",
+      "export_name": "PV decided to change plans and look for a job within Nepal due to SFE staff’s counseling",
       "export_params": null
    }
 },
@@ -24293,7 +23808,7 @@
    "model": "dataentry.question",
    "pk": 2078,
    "fields": {
-      "form_tag": "irfSfePeopleAgentHowContact",
+      "form_tag": "agentHowContacted",
       "prompt": "How",
       "description": null,
       "answer_type": 4,
@@ -24308,7 +23823,7 @@
    "model": "dataentry.question",
    "pk": 2079,
    "fields": {
-      "form_tag": "irfSfePeopleAgentInitiatedContact",
+      "form_tag": "agentWhoInitiatedContact",
       "prompt": "Who initiated contact?",
       "description": null,
       "answer_type": 4,
@@ -24323,7 +23838,7 @@
    "model": "dataentry.question",
    "pk": 2080,
    "fields": {
-      "form_tag": "irfSfePeopleMpaSuspect",
+      "form_tag": "mpaIsSuspect",
       "prompt": "Do you suspect the MPA is attempting to traffic the PV (or others)?",
       "description": null,
       "answer_type": 4,
@@ -24336,7 +23851,7 @@
    "model": "dataentry.question",
    "pk": 2081,
    "fields": {
-      "form_tag": "irfSfePeopleAgentSuspect",
+      "form_tag": "agentIsSuspect",
       "prompt": "Do you suspect the Agent is attempting to traffic the PV (or others)?",
       "description": null,
       "answer_type": 4,
@@ -37035,298 +36550,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 997,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 998,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 999,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1000,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1001,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1002,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1003,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1004,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1005,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1008,
-      "category": 208,
-      "weight": 0,
-      "form_config": {
-         "RadioItems": {
-            "1008": [
-               "Human Trafficking",
-               "Rape"
-            ]
-         }
-      }
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 9,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1009,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1010,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1011,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1012,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1013,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1014,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1015,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 9,
-      "category": 210,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1016,
-      "category": 210,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1017,
-      "category": 210,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1018,
-      "category": 210,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1019,
-      "category": 210,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 900,
-      "category": 211,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 700,
-      "category": 211,
-      "weight": 0,
-      "form_config": {
-         "FormDefault": {
-            "value": true
-         }
-      }
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1020,
-      "category": 211,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 611,
-      "category": 211,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 610,
-      "category": 211,
-      "weight": 0,
-      "form_config": {
-         "IndexQuestion": 610
-      }
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1021,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1022,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1023,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 942,
       "category": 153,
       "weight": 0,
@@ -37687,42 +36910,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 1027,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1028,
-      "category": 208,
-      "weight": 0,
-      "form_config": {
-         "RadioItems": {
-            "1028": [
-               "Intercept",
-               "Investigations",
-               "Police referral",
-               "NGO referral"
-            ]
-         }
-      }
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1029,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 30,
       "category": 25,
       "weight": 0,
@@ -37914,51 +37101,6 @@
    "fields": {
       "question": 1034,
       "category": 212,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1035,
-      "category": 213,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1036,
-      "category": 213,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1037,
-      "category": 213,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1038,
-      "category": 213,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1039,
-      "category": 213,
       "weight": 0,
       "form_config": null
    }
@@ -38184,24 +37326,6 @@
    "fields": {
       "question": 862,
       "category": 214,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1040,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1041,
-      "category": 208,
       "weight": 0,
       "form_config": null
    }
@@ -38760,33 +37884,6 @@
    "fields": {
       "question": 251,
       "category": 146,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 3,
-      "category": 208,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1043,
-      "category": 209,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1044,
-      "category": 209,
       "weight": 0,
       "form_config": null
    }
@@ -43146,6 +42243,213 @@
    }
 },
 {
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 975,
+      "category": 286,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 976,
+      "category": 286,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 30,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 45,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 58,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 59,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 974,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 280,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 502,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 925,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 926,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 927,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 928,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 929,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 930,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 942,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 980,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 713,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1073,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1083,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 186,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 197,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 988,
+      "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 1,
@@ -46550,204 +45854,8 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": 997,
-      "field_name": "status"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 998,
-      "field_name": "legal_case_number"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 999,
-      "field_name": "police_case"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1000,
-      "field_name": "court_case"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1001,
-      "field_name": "charge_sheet_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1002,
-      "field_name": "date_last_contacted"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1003,
-      "field_name": "appealed"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1004,
-      "field_name": "appeal_lawyer_name"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1005,
-      "field_name": "appeal_lawyer_phone"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1008,
-      "field_name": "case_type"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1009,
-      "field_name": "named_on_charge_sheet"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1010,
-      "field_name": "arrest_status"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1011,
-      "field_name": "arrest_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1012,
-      "field_name": "verdict"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1013,
-      "field_name": "verdict_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1014,
-      "field_name": "imprisonment_total_days"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1015,
-      "field_name": "fine_amount"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1016,
-      "field_name": "alternate_phone"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1017,
-      "field_name": "last_attempted_contact_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1018,
-      "field_name": "last_contact_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1019,
-      "field_name": "victim_status"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1020,
-      "field_name": "attachment"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1021,
-      "field_name": "imprisonment_years"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1022,
-      "field_name": "imprisonment_months"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1023,
-      "field_name": "imprisonment_days"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
       "question": 1024,
       "field_name": "auto_number"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1027,
-      "field_name": "fine_currency"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1028,
-      "field_name": "source"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1029,
-      "field_name": "named_in_verdict"
    }
 },
 {
@@ -46767,71 +45875,8 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": 1035,
-      "field_name": "comment_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1036,
-      "field_name": "comment"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1037,
-      "field_name": "added_by"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1038,
-      "field_name": "date_added"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1039,
-      "field_name": "date_removed"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1040,
-      "field_name": "specific_code_law"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1041,
-      "field_name": "human_trafficking"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
       "question": 1042,
       "field_name": "vulnerability_family_friend_arranged_travel"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1043,
-      "field_name": "verdict_submitted_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1044,
-      "field_name": "arrest_submitted_date"
    }
 },
 {
@@ -47483,6 +46528,20 @@
    "fields": {
       "question": 1571,
       "field_name": "vulnerability_different_last_name"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 975,
+      "field_name": "consent_to_use_photo"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 976,
+      "field_name": "consent_to_use_information"
    }
 },
 {
@@ -48502,25 +47561,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48529,7 +47580,17 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -48547,24 +47608,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48573,7 +47627,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -48591,24 +47654,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48617,7 +47673,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -48635,25 +47700,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48661,9 +47718,18 @@
          46,
          54,
          55,
-         56,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -48681,25 +47747,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48708,7 +47766,17 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -48726,24 +47794,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48752,7 +47813,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -48770,24 +47840,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48796,7 +47859,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -48816,25 +47888,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48843,7 +47907,17 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -48863,25 +47937,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48890,7 +47956,17 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -48908,24 +47984,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48934,7 +48003,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -48952,25 +48030,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -48979,7 +48049,17 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -48999,25 +48079,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49026,7 +48098,17 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -49176,7 +48258,7 @@
          "filter": {
             "value": "Original Form",
             "operation": "=",
-            "question_tag": "question900"
+            "question_tag": "option"
          },
          "min_count": 1,
          "category_name": "Attachments"
@@ -49217,7 +48299,7 @@
          "filter": {
             "value": "Original Form",
             "operation": "=",
-            "question_tag": "question900"
+            "question_tag": "option"
          },
          "min_count": 1,
          "category_name": "Attachments"
@@ -49225,25 +48307,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49252,7 +48326,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -49270,7 +48353,7 @@
          "filter": {
             "value": "Original Form",
             "operation": "=",
-            "question_tag": "question900"
+            "question_tag": "option"
          },
          "min_count": 1,
          "category_name": "Attachments"
@@ -49302,32 +48385,24 @@
       "form_tag": "irfJobShoudBeEntered",
       "level": 3,
       "trigger": 934,
-      "trigger_value": "",
+      "trigger_value": "^$",
       "validation_type": 8,
       "error_warning_message": "Job should be entered if any of 4.12 through 4.16 are selected",
       "params": null,
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49336,7 +48411,17 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -49347,32 +48432,24 @@
       "form_tag": "irfPromisedPayShouldBeEntered",
       "level": 3,
       "trigger": 935,
-      "trigger_value": "",
+      "trigger_value": "^$",
       "validation_type": 8,
       "error_warning_message": "Promised pay should be entered if any of 4.12 through 4.16 are selected",
       "params": null,
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49381,7 +48458,17 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -49392,32 +48479,24 @@
       "form_tag": "irfNormalPayShouldBeEntered",
       "level": 3,
       "trigger": 936,
-      "trigger_value": "",
+      "trigger_value": "^$",
       "validation_type": 8,
       "error_warning_message": "Normal pay should be entered if any of 4.12 through 4.16 are selected",
       "params": null,
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49426,7 +48505,17 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         146,
+         147
       ]
    }
 },
@@ -49444,24 +48533,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49470,7 +48552,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -49488,24 +48579,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49514,7 +48598,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -49532,24 +48625,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49558,7 +48644,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -49578,24 +48673,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49604,7 +48692,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -49623,32 +48720,25 @@
             "part": "role",
             "value": "PVOT",
             "operation": "=",
-            "question_tag": "question9"
+            "question_tag": "person"
          },
          "category_tag": "184",
-         "count_question_tag": "question2"
+         "count_question_tag": "numberOfVictims"
       },
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49657,7 +48747,16 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -49676,32 +48775,25 @@
             "part": "role",
             "value": "Suspect",
             "operation": "=",
-            "question_tag": "question9"
+            "question_tag": "person"
          },
          "category_tag": "People",
-         "count_question_tag": "question5"
+         "count_question_tag": "numberOfTraffickers"
       },
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -49710,359 +48802,16 @@
          54,
          55,
          59,
-         60
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 353,
-   "fields": {
-      "form_tag": "legalChargeSheetDataShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Charge Sheet Date should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 354,
-   "fields": {
-      "form_tag": "legalCaseTypeShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Case Type(s) should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 355,
-   "fields": {
-      "form_tag": "legalDateLastContactedShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Date Last Contacted should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 356,
-   "fields": {
-      "form_tag": "legalAtLeastOneTimelineEntryShouldBePresent",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 3,
-      "error_warning_message": "At least one timeline entry should be entered",
-      "params": {
-         "category_name": "Timeline"
-      },
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 357,
-   "fields": {
-      "form_tag": "legalChargeSheetAttachment",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 7,
-      "error_warning_message": "Should have attachment with option \"Charge Sheet\"",
-      "params": {
-         "filter": {
-            "value": "Charge Sheet",
-            "operation": "=",
-            "question_tag": "question900"
-         },
-         "min_count": 1,
-         "category_name": "Attachments"
-      },
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 358,
-   "fields": {
-      "form_tag": "legalAtLeastOneSuspect",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 3,
-      "error_warning_message": "At least one suspect should be entered",
-      "params": {
-         "category_name": "Suspects"
-      },
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 359,
-   "fields": {
-      "form_tag": "legalAtLeastOneVictim",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 3,
-      "error_warning_message": "At least one victim should be entered",
-      "params": {
-         "category_name": "Victims"
-      },
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 360,
-   "fields": {
-      "form_tag": "legalNameShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Name should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 361,
-   "fields": {
-      "form_tag": "legalNameInChargeSheetShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Named in Charge Sheet should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 362,
-   "fields": {
-      "form_tag": "legalArrestStatusShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Arrest Status should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 363,
-   "fields": {
-      "form_tag": "legalArrestDateShouldBeEntered",
-      "level": 3,
-      "trigger": 1010,
-      "trigger_value": "Yes - But Has Been Released",
-      "validation_type": 1,
-      "error_warning_message": "Arrest  Date should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 367,
-   "fields": {
-      "form_tag": "legalVerdictDateShouldBeEntered",
-      "level": 3,
-      "trigger": 1012,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Verdict  Date should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 368,
-   "fields": {
-      "form_tag": "legalImprisonmentPeriodShouldBeEntered",
-      "level": 3,
-      "trigger": 1012,
-      "trigger_value": "Conviction",
-      "validation_type": 1,
-      "error_warning_message": "Imprisonment Period should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 369,
-   "fields": {
-      "form_tag": "legalVerdictAttachment",
-      "level": 3,
-      "trigger": 997,
-      "trigger_value": "closed",
-      "validation_type": 7,
-      "error_warning_message": "Should have attachment with option \"Verdict\"",
-      "params": {
-         "filter": {
-            "value": "Verdict",
-            "operation": "=",
-            "question_tag": "question900"
-         },
-         "min_count": 1,
-         "category_name": "Attachments"
-      },
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 370,
-   "fields": {
-      "form_tag": "legalVerdictShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 10,
-      "error_warning_message": "Verdict should be entered",
-      "params": {
-         "filter": {
-            "value": "closed",
-            "operation": "=",
-            "question_tag": "question997"
-         }
-      },
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 374,
-   "fields": {
-      "form_tag": "legalPoliceCaseShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Police Case should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 375,
-   "fields": {
-      "form_tag": "legalHmanTraffickingNarrativeShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Human Trafficking Narrative should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 376,
-   "fields": {
-      "form_tag": "legalLocationShouldBeEntered",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Location should be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -51612,42 +50361,6 @@
 },
 {
    "model": "dataentry.formvalidation",
-   "pk": 422,
-   "fields": {
-      "form_tag": "legalArrestDateMustBeEnteredWithArrestStatus",
-      "level": 2,
-      "trigger": 1010,
-      "trigger_value": "Yes - But Has Been Released",
-      "validation_type": 1,
-      "error_warning_message": "Arrest date must be entered when arrest status has been entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 423,
-   "fields": {
-      "form_tag": "legaVerdictDateMustBeEnteredWhenthereIsAVerdict",
-      "level": 2,
-      "trigger": 1012,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Verdict date must be enetered when verdict is entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         56
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
    "pk": 424,
    "fields": {
       "form_tag": "irfPeopleNoMpaAgent",
@@ -51735,33 +50448,35 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         129,
          4,
-         65,
-         66,
-         69,
          8,
          9,
-         70,
-         71,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
+         35,
          37,
          44,
          46,
+         54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -51817,24 +50532,17 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         64,
          1,
          2,
-         65,
          4,
-         66,
-         69,
-         70,
          8,
          9,
          17,
          18,
          19,
-         147,
          26,
          27,
          28,
-         92,
          32,
          35,
          37,
@@ -51843,7 +50551,64 @@
          54,
          55,
          59,
-         60
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 458,
+   "fields": {
+      "form_tag": "irfNarrative",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Narrative must be entered",
+      "params": {
+         "starting_submission_date": "20240422"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         1,
+         2,
+         4,
+         8,
+         9,
+         17,
+         18,
+         19,
+         26,
+         27,
+         28,
+         32,
+         35,
+         37,
+         44,
+         46,
+         54,
+         55,
+         59,
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         146,
+         147
       ]
    }
 },
@@ -52237,97 +51002,6 @@
    "fields": {
       "validation": 346,
       "question": 930
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 353,
-      "question": 1001
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 354,
-      "question": 1008
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 355,
-      "question": 1002
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 360,
-      "question": 9
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 361,
-      "question": 1009
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 362,
-      "question": 1010
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 363,
-      "question": 1011
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 367,
-      "question": 1013
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 368,
-      "question": 1014
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 370,
-      "question": 1012
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 374,
-      "question": 999
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 375,
-      "question": 1041
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 376,
-      "question": 3
    }
 },
 {
@@ -52732,20 +51406,6 @@
 {
    "model": "dataentry.formvalidationquestion",
    "fields": {
-      "validation": 422,
-      "question": 1011
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 423,
-      "question": 1013
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
       "validation": 341,
       "question": 1826
    }
@@ -52881,6 +51541,13 @@
    "fields": {
       "validation": 433,
       "question": 861
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 458,
+      "question": 146
    }
 },
 {
@@ -53596,6 +52263,17 @@
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
       "form": 129
+   }
+},
+{
+   "model": "dataentry.exportimport",
+   "pk": 67,
+   "fields": {
+      "form_tag": "irfPhilippines",
+      "description": "Export Philippines IRF",
+      "implement_module": "export_import.irf_google_sheet",
+      "implement_class_name": "IrfGoogleSheet",
+      "form": 146
    }
 },
 {
@@ -54939,6 +53617,26 @@
    }
 },
 {
+   "model": "dataentry.exportimportcard",
+   "fields": {
+      "export_import": 67,
+      "category": 286,
+      "prefix": "Victim ",
+      "max_instances": 1,
+      "index_field_name": null
+   }
+},
+{
+   "model": "dataentry.exportimportcard",
+   "fields": {
+      "export_import": 67,
+      "category": 286,
+      "prefix": "Trafficker %d ",
+      "max_instances": 5,
+      "index_field_name": null
+   }
+},
+{
    "model": "dataentry.exportimportfield",
    "fields": {
       "export_import": 1,
@@ -56749,6 +55447,41 @@
    "model": "dataentry.exportimportfield",
    "fields": {
       "export_import": 66,
+      "card": null,
+      "field_name": "status",
+      "answer_type": 1,
+      "export_name": "Status",
+      "arguments_json": null
+   }
+},
+{
+   "model": "dataentry.exportimportfield",
+   "fields": {
+      "export_import": 67,
+      "card": null,
+      "field_name": "station",
+      "answer_type": 1,
+      "export_name": "Station",
+      "arguments_json": {
+         "part": "station_name"
+      }
+   }
+},
+{
+   "model": "dataentry.exportimportfield",
+   "fields": {
+      "export_import": 67,
+      "card": null,
+      "field_name": "date_time_entered_into_system",
+      "answer_type": 10,
+      "export_name": "Date/Time Entered into System",
+      "arguments_json": null
+   }
+},
+{
+   "model": "dataentry.exportimportfield",
+   "fields": {
+      "export_import": 67,
       "card": null,
       "field_name": "status",
       "answer_type": 1,

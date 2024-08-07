@@ -7,7 +7,7 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from dataentry.models import Audit, AuditSample, BorderStation, Country, Form, FormCategory
+from dataentry.models import Audit, AuditSample, BorderStation, Country, Form, FormCategory, Incident
 from dataentry.models import Gospel, GospelVerification, IndicatorHistory, IntercepteeCommon, IrfCommon, LocationInformation
 from dataentry.models import SiteSettings, SuspectInformation
 
@@ -434,11 +434,11 @@ class IndicatorsViewSet(viewsets.ViewSet):
                                                                                            person__role='Suspect')
                     result.suspect_count += len(suspects)
                     
-                IndicatorsViewSet.cif_indicators_for_irf(result, irf)
-                IndicatorsViewSet.vdf_indicators_for_irf(result, irf)
-                IndicatorsViewSet.pvf_indicators_for_irf(result, irf)
-                IndicatorsViewSet.sf_indicators_for_irf(result, irf)
-                IndicatorsViewSet.lf_indicators_for_irf(result, irf)
+                    IndicatorsViewSet.cif_indicators_for_irf(result, irf)
+                    IndicatorsViewSet.vdf_indicators_for_irf(result, irf)
+                    IndicatorsViewSet.pvf_indicators_for_irf(result, irf)
+                    IndicatorsViewSet.sf_indicators_for_irf(result, irf)
+                    IndicatorsViewSet.lf_indicators_for_irf(result, irf)
             
             gsps = Gospel.objects.filter(station=station, date_time_entered_into_system__date__gte=start_date,  date_time_entered_into_system__date__lte=end_date)
             result.gsp_count += len(gsps)
@@ -551,6 +551,10 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 continue
             
             results.append(sf)
+        incident = Incident.objects.get(incident_number=irf.irf_number)
+        sfs = form.storage.get_form_storage_class().objects.filter(associated_incidents=incident)
+        for sf in sfs:  
+            results.append(sf)
         
         return results
     
@@ -644,6 +648,13 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.sf_lag_count += 1
                 result.sf_lag_total += work_days
                 result.sf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
+        
+        incident = Incident.objects.get(incident_number=irf.irf_number)
+        sfs = form.storage.get_form_storage_class().objects.filter(associated_incidents=incident)
+        for sf in sfs:  
+            result.sf_count += 1
+            if sf.logbook_incomplete_questions.lower() == 'no':
+                result.sf_compliance_count += 1
     
     @staticmethod        
     def lf_indicators_for_irf(result, irf):
@@ -822,6 +833,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
         total_pvfs = 0
         total_sfs = 0
         for irf in irfs:
+            if irf.verified_evidence_categorization.lower().startswith('should'):
+                continue
             row = []
             pvot = 0
             suspect = 0
@@ -831,7 +844,6 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     pvot += 1
                 elif interceptee.person.role == 'Suspect':
                     suspect += 1
-            
             
             pvfs = IndicatorsViewSet.pvfs_for_irf(irf)
             sfs = IndicatorsViewSet.sfs_for_irf(irf)

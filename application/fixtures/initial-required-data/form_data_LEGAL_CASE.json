@@ -1,0 +1,2403 @@
+[
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "Lc",
+      "module_name": "legal.models.legal",
+      "form_model_name": "LegalCharge",
+      "response_model_name": null,
+      "parent_storage": null,
+      "foreign_key_field_parent": null,
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LcCourtCase",
+      "module_name": "legal.models.legal",
+      "form_model_name": "CourtCase",
+      "response_model_name": null,
+      "parent_storage": "Lc",
+      "foreign_key_field_parent": "legal_charge",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LcSuspect",
+      "module_name": "legal.models.legal",
+      "form_model_name": "LegalChargeSuspect",
+      "response_model_name": null,
+      "parent_storage": "Lc",
+      "foreign_key_field_parent": "legal_charge",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LcSuspectCharge",
+      "module_name": "legal.models.legal",
+      "form_model_name": "LegalChargeSuspectCharge",
+      "response_model_name": null,
+      "parent_storage": "Lc",
+      "foreign_key_field_parent": "legal_charge",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LcVictim",
+      "module_name": "legal.models.legal",
+      "form_model_name": "LegalChargeVictim",
+      "response_model_name": null,
+      "parent_storage": "Lc",
+      "foreign_key_field_parent": "legal_charge",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LcTimeline",
+      "module_name": "legal.models.legal",
+      "form_model_name": "LegalChargeTimeline",
+      "response_model_name": null,
+      "parent_storage": "Lc",
+      "foreign_key_field_parent": "legal_charge",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LcAttachment",
+      "module_name": "legal.models.legal",
+      "form_model_name": "LegalChargeAttachment",
+      "response_model_name": null,
+      "parent_storage": "Lc",
+      "foreign_key_field_parent": "legal_charge",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 6,
+      "storage": "Lc",
+      "start_date": "2020-10-09T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "legalCaseCommon",
+      "version": null,
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "legalCharge",
+      "category_type": 1,
+      "description": "Legal Case"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "legalSuspect",
+      "category_type": 2,
+      "description": "Legal Case Suspect"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "legalVictim",
+      "category_type": 2,
+      "description": "Legal Case Victim"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "legalAttachment",
+      "category_type": 2,
+      "description": "Legal Case Attachment"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "legalTimeline",
+      "category_type": 2,
+      "description": "Legal Case Timeline"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfCourtCase",
+      "category_type": 2,
+      "description": "Court Case"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfSuspectCharge",
+      "category_type": 2,
+      "description": "Suspect Charge"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "legalCaseCommon",
+      "category": "legalCharge",
+      "name": "Basic Case Details",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "legalCaseCommon",
+      "category": "legalSuspect",
+      "name": "Suspects",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LcSuspect"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "legalCaseCommon",
+      "category": "legalVictim",
+      "name": "Victims",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "LcVictim"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "legalCaseCommon",
+      "category": "legalAttachment",
+      "name": "Attachments",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": "LcAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "legalCaseCommon",
+      "category": "legalTimeline",
+      "name": "Timeline",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LcTimeline"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "legalCaseCommon",
+      "category": "lfSuspectCharge",
+      "name": "Suspect Charge",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LcSuspectCharge"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "legalCaseCommon",
+      "category": "lfCourtCase",
+      "name": "Court Case",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LcCourtCase"
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcIncident",
+      "prompt": "Incident",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Incident",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSource",
+      "prompt": "Source",
+      "description": null,
+      "answer_type": 1,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "Source",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcLocation",
+      "prompt": "Location",
+      "description": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "Location",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcChargeSheetDate",
+      "prompt": "Charge Sheet Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Charge Sheet Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcPoliceCase",
+      "prompt": "Police Case",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Police Case",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcHumanTrafficking",
+      "prompt": "Human Trafficking",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Human Trafficking",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcCaseSummary",
+      "prompt": "Case Summary",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Case Summary",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcDateLastContacted",
+      "prompt": "Date Last Contacted",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Last Contacted",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcMissingDataCount",
+      "prompt": "Missing Data Count",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Missing Data Count",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcCourtCaseSequence",
+      "prompt": "Sequence Number",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Sequence Number",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcCourtCaseCourtCase",
+      "prompt": "Court Case",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Court Case",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcCourtCaseStatus",
+      "prompt": "Status",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Status",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcCourtCaseCharges",
+      "prompt": "Charges",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Charges",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcCourtCaseSpecific",
+      "prompt": "Specific Code Law",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Specific Code Law",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectSuspect",
+      "prompt": "Suspect",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Suspect",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectArrestStatus",
+      "prompt": "Arrest Status",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Arrest Status",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectNamedOnChargeSheet",
+      "prompt": "Named on Charge Sheet",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Named on Charge Sheet",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectArrestDate",
+      "prompt": "Arrest Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Arrest Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectArrestSubmittedDate",
+      "prompt": "Arrest Submitted Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Arrest Submitted Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectCourtCases",
+      "prompt": "Court Cases",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Court Cases",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeSuspect",
+      "prompt": "Suspect",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Suspect",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeSequence",
+      "prompt": "Court Case Sequence",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Court Case Sequence",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeCharge",
+      "prompt": "Charge",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Charge",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeVerdict",
+      "prompt": "Verdict",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Verdict",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeSentenceAttached",
+      "prompt": "Sentence Attached",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Sentence Attached",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeVerdictDate",
+      "prompt": "Verdict Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Verdict Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeVerdictSubmittedDate",
+      "prompt": "Verdict Submitted Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Verdict Submitted Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeImprisonmentYears",
+      "prompt": "Imprisonment Years",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Imprisonment Years",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeImprisonmentDays",
+      "prompt": "Imprisonment Days",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Imprisonment Days",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeImprisonmentTotal",
+      "prompt": "Imprisonment Total",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Imprisonment Total",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeFineAmount",
+      "prompt": "Fine Amount",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Fine Amount",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeFineCurrency",
+      "prompt": "Fine Currency",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Fine Currency",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcVictimPvf",
+      "prompt": "PVF",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "PVF",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcVictimAlternatePhone",
+      "prompt": "Alternate Phone",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Alternate Phone",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcVictimLastContactDate",
+      "prompt": "Last Contact Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Last Contact Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcVictimLastAttemptedContactDate",
+      "prompt": "Last Attempted Contact Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Last Attempted Contact Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcVictimStatus",
+      "prompt": "Victim Status",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Victim Status",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcVictimCourtCases",
+      "prompt": "Court Cases",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Court Cases",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcTimelineCommentDate",
+      "prompt": "Comment Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Comment Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcTimelineComment",
+      "prompt": "Comment",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Comment",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcTimelineAddedBy",
+      "prompt": "Added By",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Added By",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcTimelineDateAdded",
+      "prompt": "Date Added",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Added",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcTimelineDateRemoved",
+      "prompt": "Date_removed",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Removed",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcAttachmentNumber",
+      "prompt": "Attachment Number",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Attachment Number",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcAttachmentDescription",
+      "prompt": "Description",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Description",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcAttachmentAttachment",
+      "prompt": "Attachment",
+      "description": null,
+      "answer_type": 12,
+      "params": {
+         "subdirectory": "legal_case_attachments/"
+      },
+      "export_name": "Attachment",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcAttachmentPrivate",
+      "prompt": "Private Card",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Private Card",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcAttachmentOption",
+      "prompt": "Option",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Option",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectVerifiedAttachment",
+      "prompt": "Verified Attachment",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Verified Attachment",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectTakenIntoCustody",
+      "prompt": "Taken into Custody",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Taken into Custody",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargedWithCrime",
+      "prompt": "Charged with Crime",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Charged with Crime",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcStatus",
+      "prompt": "Status",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Status",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcNumber",
+      "prompt": "Legal Charge Number",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Legal Charge Number",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectArrested",
+      "prompt": "Arrested",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Arrested",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeLegalStatus",
+      "prompt": "Legal Status",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Legal Status",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcTimelineCourtCaseSequence",
+      "prompt": "Court Case Sequence",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Court Case Sequence",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcCourtCaseDistrictCourt",
+      "prompt": "DistrictCourt",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "DistrictCourt",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectHowKnow",
+      "prompt": "How do you know that the suspect was taken into custody and chared with a crime?",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "How Know",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectVerifiedDate",
+      "prompt": "Date Verified",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Verified",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectVerifiedBy",
+      "prompt": "Verified By",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Verified By",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcIncident",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSource",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": {
+         "RadioItems": {
+            "lcSource": [
+               "Intercept",
+               "Investigations",
+               "Police Referral",
+               "NGO referral"
+            ]
+         }
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcLocation",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcChargeSheetDate",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcPoliceCase",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcHumanTrafficking",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcCaseSummary",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcDateLastContacted",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcMissingDataCount",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcCourtCaseSequence",
+      "category": "lfCourtCase",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcCourtCaseCourtCase",
+      "category": "lfCourtCase",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcCourtCaseStatus",
+      "category": "lfCourtCase",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcCourtCaseCharges",
+      "category": "lfCourtCase",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcCourtCaseSpecific",
+      "category": "lfCourtCase",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectSuspect",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectArrestStatus",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectNamedOnChargeSheet",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectArrestDate",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectArrestSubmittedDate",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectCourtCases",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeSuspect",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeSequence",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeCharge",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeVerdict",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeSentenceAttached",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeVerdictDate",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeVerdictSubmittedDate",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeImprisonmentYears",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeImprisonmentDays",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeImprisonmentTotal",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeFineAmount",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeFineCurrency",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcVictimPvf",
+      "category": "legalVictim",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcVictimAlternatePhone",
+      "category": "legalVictim",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcVictimLastContactDate",
+      "category": "legalVictim",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcVictimLastAttemptedContactDate",
+      "category": "legalVictim",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcVictimStatus",
+      "category": "legalVictim",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcVictimCourtCases",
+      "category": "legalVictim",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcTimelineCommentDate",
+      "category": "legalTimeline",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcTimelineComment",
+      "category": "legalTimeline",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcTimelineAddedBy",
+      "category": "legalTimeline",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcTimelineDateAdded",
+      "category": "legalTimeline",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcTimelineDateRemoved",
+      "category": "legalTimeline",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcAttachmentNumber",
+      "category": "legalAttachment",
+      "weight": 0,
+      "form_config": {
+         "IndexQuestion": "lcAttachmentNumber"
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcAttachmentDescription",
+      "category": "legalAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcAttachmentAttachment",
+      "category": "legalAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcAttachmentPrivate",
+      "category": "legalAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcAttachmentOption",
+      "category": "legalAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectVerifiedAttachment",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectTakenIntoCustody",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargedWithCrime",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcStatus",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcNumber",
+      "category": "legalCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectArrested",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeLegalStatus",
+      "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcTimelineCourtCaseSequence",
+      "category": "legalTimeline",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcCourtCaseDistrictCourt",
+      "category": "lfCourtCase",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectHowKnow",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectVerifiedDate",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectVerifiedBy",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcIncident",
+      "field_name": "incident_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSource",
+      "field_name": "source"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcLocation",
+      "field_name": "location"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcChargeSheetDate",
+      "field_name": "charge_sheet_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcPoliceCase",
+      "field_name": "police_case"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcHumanTrafficking",
+      "field_name": "human_trafficking"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcCaseSummary",
+      "field_name": "case_summary"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcDateLastContacted",
+      "field_name": "date_last_contacted"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcMissingDataCount",
+      "field_name": "missing_data_count"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcCourtCaseSequence",
+      "field_name": "sequence_number"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcCourtCaseCourtCase",
+      "field_name": "court_case"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcCourtCaseStatus",
+      "field_name": "status"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcCourtCaseCharges",
+      "field_name": "charges"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcCourtCaseSpecific",
+      "field_name": "specific_code_law"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectSuspect",
+      "field_name": "sf_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectArrestStatus",
+      "field_name": "arrest_status"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectNamedOnChargeSheet",
+      "field_name": "named_on_charge_sheet"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectArrestDate",
+      "field_name": "arrest_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectArrestSubmittedDate",
+      "field_name": "arrest_submitted_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectCourtCases",
+      "field_name": "court_cases"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeSuspect",
+      "field_name": "sf_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeSequence",
+      "field_name": "court_case_sequence"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeCharge",
+      "field_name": "charge"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeVerdict",
+      "field_name": "verdict"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeSentenceAttached",
+      "field_name": "sentence_attached"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeVerdictDate",
+      "field_name": "verdict_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeVerdictSubmittedDate",
+      "field_name": "verdict_submitted_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeImprisonmentYears",
+      "field_name": "imprisonment_years"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeImprisonmentDays",
+      "field_name": "imprisonment_days"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeImprisonmentTotal",
+      "field_name": "imprisonment_total_days"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeFineAmount",
+      "field_name": "fine_amount"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeFineCurrency",
+      "field_name": "fine_currency"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcVictimPvf",
+      "field_name": "pvf_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcVictimAlternatePhone",
+      "field_name": "alternate_phone"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcVictimLastContactDate",
+      "field_name": "last_contact_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcVictimLastAttemptedContactDate",
+      "field_name": "last_attempted_contact_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcVictimStatus",
+      "field_name": "victim_status"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcVictimCourtCases",
+      "field_name": "court_cases"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcTimelineCommentDate",
+      "field_name": "comment_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcTimelineComment",
+      "field_name": "comment"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcTimelineAddedBy",
+      "field_name": "added_by"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcTimelineDateAdded",
+      "field_name": "date_added"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcTimelineDateRemoved",
+      "field_name": "date_removed"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcAttachmentNumber",
+      "field_name": "attachment_number"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcAttachmentDescription",
+      "field_name": "description"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcAttachmentAttachment",
+      "field_name": "attachment"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcAttachmentPrivate",
+      "field_name": "private_card"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcAttachmentOption",
+      "field_name": "option"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectVerifiedAttachment",
+      "field_name": "verified_attachment"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectTakenIntoCustody",
+      "field_name": "taken_into_custody"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargedWithCrime",
+      "field_name": "charged_with_crime"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcStatus",
+      "field_name": "status"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcNumber",
+      "field_name": "legal_charge_number"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectArrested",
+      "field_name": "arrested"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeLegalStatus",
+      "field_name": "legal_status"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcTimelineCourtCaseSequence",
+      "field_name": "court_case_sequence"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcCourtCaseDistrictCourt",
+      "field_name": "district_court"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectHowKnow",
+      "field_name": "how_do_you_know"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectVerifiedDate",
+      "field_name": "verified_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectVerifiedBy",
+      "field_name": "verified_by"
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcLocation",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Location should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcChargeSheetDate",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Charge sheet date should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcPoliceCase",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Police case # should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcHumanTraffickingNarrative",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Human trafficking narrative should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcDateLastContacted",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Date last contacted should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcAtLeastOneCourtCase",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 3,
+      "error_warning_message": "There should be at least one court case",
+      "params": {
+         "category_name": "Court Case"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcAtLeastOneSuspect",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 3,
+      "error_warning_message": "There should be at least one suspect",
+      "params": {
+         "category_name": "Suspects"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcAtLeastOneVictim",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 3,
+      "error_warning_message": "There should be at least one victim",
+      "params": {
+         "category_name": "Victims"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcAtLeastOneTimeline",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 3,
+      "error_warning_message": "There should be at least one timeline entry",
+      "params": {
+         "category_name": "Timeline"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcCourtCaseCharge",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Court Case should have at least one charge",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectArrestStatus",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Suspect arrest status should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectNamedInChargeSheet",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Suspect named in charge sheet should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectArrestDate",
+      "level": 3,
+      "trigger": "lcSuspectArrestStatus",
+      "trigger_value": "Yes*",
+      "validation_type": 1,
+      "error_warning_message": "Suspect arrest date should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectChargeVerdictDate",
+      "level": 3,
+      "trigger": "lcSuspectChargeVerdict",
+      "trigger_value": "(Conviction|Acquittal)",
+      "validation_type": 1,
+      "error_warning_message": "Suspect charge verdict date should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectChargeImprisonment",
+      "level": 3,
+      "trigger": "lcSuspectChargeVerdict",
+      "trigger_value": "Conviction",
+      "validation_type": 1,
+      "error_warning_message": "Suspect charge imprisonment period should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcVerdictWhenClosed",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 10,
+      "error_warning_message": "Verdict should be entered",
+      "params": {
+         "filter": {
+            "value": "closed",
+            "operation": "=",
+            "question_tag": "lcStatus"
+         }
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcChargeSheetAttacment",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 7,
+      "error_warning_message": "Should have attachment with option \"Charge Sheet\"",
+      "params": {
+         "filter": {
+            "value": "Charge Sheet",
+            "operation": "=",
+            "question_tag": "lcAttachmentOption"
+         },
+         "min_count": 1,
+         "category_name": "Attachments"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcVerdictAttacment",
+      "level": 3,
+      "trigger": "lcSuspectChargeVerdict",
+      "trigger_value": "(Conviction|Acquittal)",
+      "validation_type": 7,
+      "error_warning_message": "Should have attachment with option \"Verdict\" when there has been a verdict of \"Conviction\" or \"Acquittal\"",
+      "params": {
+         "filter": {
+            "value": "Verdict",
+            "operation": "=",
+            "question_tag": "lcAttachmentOption"
+         },
+         "min_count": 1,
+         "category_name": "Attachments"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "legalCaseSuspectChargeLegalStatus",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Legal status must be entered for each suspect charge",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcCaseSummary",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Case Summary must be populated",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcLocation",
+      "question": "lcLocation"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcChargeSheetDate",
+      "question": "lcChargeSheetDate"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcPoliceCase",
+      "question": "lcPoliceCase"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcHumanTraffickingNarrative",
+      "question": "lcHumanTrafficking"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcDateLastContacted",
+      "question": "lcDateLastContacted"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcCourtCaseCharge",
+      "question": "lcCourtCaseCharges"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectArrestStatus",
+      "question": "lcSuspectArrestStatus"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectNamedInChargeSheet",
+      "question": "lcSuspectNamedOnChargeSheet"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectArrestDate",
+      "question": "lcSuspectArrestDate"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectChargeVerdictDate",
+      "question": "lcSuspectChargeVerdictDate"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectChargeImprisonment",
+      "question": "lcSuspectChargeImprisonmentYears"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectChargeImprisonment",
+      "question": "lcSuspectChargeImprisonmentDays"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcVerdictWhenClosed",
+      "question": "lcSuspectChargeVerdict"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "legalCaseSuspectChargeLegalStatus",
+      "question": "lcSuspectChargeLegalStatus"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcCaseSummary",
+      "question": "lcCaseSummary"
+   }
+}
+]

@@ -28,5 +28,4 @@ class CountryExchange(models.Model):
     year_month = models.PositiveIntegerField()
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     exchange_rate = models.FloatField(default=1)
-    
-    
+    date_time_last_updated = models.DateTimeField(auto_now=True)

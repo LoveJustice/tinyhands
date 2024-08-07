@@ -93,6 +93,15 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
         
         return queryset
     
+    def get_last_mdf_date(self, request, station_id):
+        mdfs = MonthlyDistributionForm.objects.filter(border_station__id=station_id).order_by('-month_year')
+        if len(mdfs) > 0:
+            year_month = mdfs[0].month_year.year * 100 + mdfs[0].month_year.month
+            rv = {'month':year_month, 'status':mdfs[0].status}
+        else:
+            rv = {'month':None, 'status':None}
+        
+        return Response(rv)
     def get_new_mdf(self, request, station_id, year, month):
         station =  BorderStation.objects.get(id=station_id)
         if not UserLocationPermission.has_session_permission(request, 'MDF', 'ADD', station.operating_country.id, station.id):
@@ -118,7 +127,7 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
         
         mdf = MonthlyDistributionForm()
         mdf.border_station = station
-        mdf.status = 'Submitted'
+        mdf.status = 'Pending'
         mdf.month_year = mdf_date
         mdf.last_month_number_of_intercepted_pvs = len(interceptees)
         mdf.save()
@@ -145,45 +154,51 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
     
     def approve_mdf(self, request, pk):
         mdf = MonthlyDistributionForm.objects.get(id=pk)
-        if not ((mdf.status == 'Submitted' and UserLocationPermission.has_session_permission(request, 'MDF', 'INITIAL_REVIEW', mdf.border_station.operating_country.id, mdf.border_station.id)) or
+            
+        if not ((mdf.status == 'Pending' and UserLocationPermission.has_session_permission(request, 'MDF', 'INITIAL_REVIEW', mdf.border_station.operating_country.id, mdf.border_station.id)) or
+             (mdf.status == 'Submitted' and UserLocationPermission.has_session_permission(request, 'MDF', 'INITIAL_REVIEW', mdf.border_station.operating_country.id, mdf.border_station.id)) or
              (mdf.status == 'Initial Review' and UserLocationPermission.has_session_permission(request, 'MDF', 'FINAL_REVIEW', mdf.border_station.operating_country.id, mdf.border_station.id))):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
-        # Close open discussions
-        project_requests = mdf.requests.filter(discussion_status='Open')
-        for project_request in project_requests:
-            discussion = ProjectRequestDiscussion()
-            discussion.request = project_request
-            discussion.author = request.user
-            discussion.text = 'Closed on MDF approval'
-            discussion.save()
-            project_request.discussion_status = 'Closed'
-            project_request.save()
-        
-        if mdf.status == 'Submitted':
-            mdf.status = 'Initial Review'
+        if mdf.status == 'Pending':
+            mdf.status = 'Submitted'
             mdf.save()
         else:
-            completed_date_time = mdf.month_year + relativedelta(days=1)
-            mdf.status = 'Approved'
-            project_requests = mdf.requests.all()
+            # Close open discussions
+            project_requests = mdf.requests.filter(discussion_status='Open')
             for project_request in project_requests:
-                if project_request.status == 'Declined':
-                    project_request.status = 'Declined-Completed'
-                    project_request.completed_date_time = completed_date_time
-                    project_request.save()
-                elif project_request.status == 'Approved' and project_request.monthly == False:
-                    project_request.status = 'Approved-Completed'
-                    project_request.completed_date_time = completed_date_time
-                    project_request.save()
-            comments = ProjectRequestComment.objects.filter(mdf__isnull=True, request__in = mdf.requests.all())
-            for comment in comments:
-                comment.mdf = mdf 
-                comment.save()
-            mdf.save()
-            staff_class = apps.get_model('static_border_stations', 'Staff')
-            staff_class.set_mdf_totals(mdf)
-            self.check_update_stats(mdf)
+                discussion = ProjectRequestDiscussion()
+                discussion.request = project_request
+                discussion.author = request.user
+                discussion.text = 'Closed on MDF approval'
+                discussion.save()
+                project_request.discussion_status = 'Closed'
+                project_request.save()
+            
+            if mdf.status == 'Submitted':
+                mdf.status = 'Initial Review'
+                mdf.save()
+            else:
+                completed_date_time = mdf.month_year + relativedelta(days=1)
+                mdf.status = 'Approved'
+                project_requests = mdf.requests.all()
+                for project_request in project_requests:
+                    if project_request.status == 'Declined':
+                        project_request.status = 'Declined-Completed'
+                        project_request.completed_date_time = completed_date_time
+                        project_request.save()
+                    elif project_request.status == 'Approved' and project_request.monthly == False:
+                        project_request.status = 'Approved-Completed'
+                        project_request.completed_date_time = completed_date_time
+                        project_request.save()
+                comments = ProjectRequestComment.objects.filter(mdf__isnull=True, request__in = mdf.requests.all())
+                for comment in comments:
+                    comment.mdf = mdf 
+                    comment.save()
+                mdf.save()
+                staff_class = apps.get_model('static_border_stations', 'Staff')
+                staff_class.set_mdf_totals(mdf)
+                self.check_update_stats(mdf)
        
         serializer = self.serializer_class(mdf)
         return Response(serializer.data)

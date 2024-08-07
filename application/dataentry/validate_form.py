@@ -14,9 +14,9 @@ class ValidateForm:
     # Format and add a message to the error or warning lists
     def add_error_or_warning(self, category_name, category_index, validation, data_string=''):
         if category_index is not None:
-            msg = category_name + ' ' + str(category_index) + ':' + validation.error_warning_message + ' ' + data_string
+            msg = category_name + ' ' + str(category_index) + ': ' + validation.error_warning_message + ' ' + data_string
         else:
-            msg = category_name + ':' + validation.error_warning_message + ' ' + data_string
+            msg = category_name + ': ' + validation.error_warning_message + ' ' + data_string
             
         if validation.level.name == 'warning':
             if msg not in self.warnings:
@@ -65,10 +65,11 @@ class ValidateForm:
                     questions = QuestionStorage.objects.filter(field_name='logbook_submitted').values_list('question', flat=True)
                     categories = FormCategory.objects.filter(form=form_data.form).values_list('category', flat=True)
                     layouts = QuestionLayout.objects.filter(question__in=questions, category__in=categories)
-                    
+                    entered_date = form_data.form_object.date_time_entered_into_system
                     if len(layouts) > 0:
                         submission_date = form_data.get_answer(layouts[0].question)
-                        if submission_date is None or submission_date < start_date:
+                        # Don't want to check if it's an old form that was entered before submission dates were around
+                        if (submission_date is None and not entered_date is None) or submission_date < start_date:
                             print('do not check')
                             should_do = False
         except:
@@ -162,6 +163,8 @@ class ValidateForm:
             category_name = ''
             category_id = None
         card_count = 0
+        if getattr(form_data, 'form_data', None) is not None:
+            form_data = form_data.form_data
         if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 
                 category_name == '' or category_id is None or
                 ('min_count' not in validation.params and 'max_count' not in validation.params)):
@@ -169,6 +172,7 @@ class ValidateForm:
             tmp_validation.level = validation.level
             tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
             self.add_error_or_warning(category_name, None, tmp_validation)
+            return
         else:
             if category_id in form_data.card_dict:
                 for card in form_data.card_dict[category_id]:
@@ -619,8 +623,8 @@ class ValidateForm:
         if validation.level.name in self.validations_to_perform:
             if validation.trigger is not None:
                 trigger_value = form_data.get_answer(validation.trigger)
-                if validation.trigger_value is not None:
-                    if trigger_value == validation.trigger_value:
+                if validation.trigger_value is not None and trigger_value is not None:
+                    if re.match(validation.trigger_value, trigger_value) is not None:
                         should_validate = True
                     else:
                         should_validate = False

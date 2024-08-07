@@ -408,6 +408,18 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2024-03-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfPhilippines",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "fields": {
       "form_tag": "sfCompliance",
@@ -2620,6 +2632,83 @@
    }
 },
 {
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfPhilippines",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfPhilippines",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfPhilippines",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfPhilippines",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfPhilippines",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfPhilippines",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfPhilippines",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
    "model": "dataentry.question",
    "fields": {
       "form_tag": "sfComplianceDateComplete",
@@ -4107,7 +4196,8 @@
          "sfBangladesh",
          "sfCambodia",
          "sfUSA",
-         "sfOpenSource"
+         "sfOpenSource",
+         "sfPhilippines"
       ]
    }
 },

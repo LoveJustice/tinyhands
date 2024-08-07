@@ -4,6 +4,7 @@ import os
 import sys
 import logging.config
 import datetime
+from azure.identity import DefaultAzureCredential
 
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
@@ -15,13 +16,15 @@ BASE_DIR = Path(__file__).ancestor(3)
 
 SERVER_EMAIL = 'support@searchlightdata.org'
 
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_USE_TLS = os.environ['EMAIL_USE_TLS']
+EMAIL_HOST = os.environ['EMAIL_HOST']
+
 BORDER_STATION_EMAIL_SENDER = "sheital@tinyhands.org"
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
-
-EMAIL_HOST = 'smtpcorp.com'
-EMAIL_PORT = 2525
-EMAIL_USE_TLS = True
 
 ALERT_INTERVAL_IN_DAYS = 30
 
@@ -53,6 +56,7 @@ INSTALLED_APPS = [
     'dataentry',
     'firebase',
     'accounts',
+    'legal',
     'events',
     'portal',
     'budget',
@@ -113,6 +117,30 @@ MEDIA_URL = '/media/'
 
 PUBLIC_ROOT = os.path.join(BASE_DIR, 'public')
 PUBLIC_URL = '/public/'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "mediabackups": {
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            # Try a bunch of different Azure login methods until one works
+            "token_credential": DefaultAzureCredential(),
+            # Ideally we would use Managed Identities instead
+            # https://mijailovic.net/2019/11/01/django-managed-identitites/
+            # Or we would use a Key Vault
+            # But it looks like it is quite a process to set up and I don't really understand it
+            "account_name": os.environ.get("AZURE_ACCOUNT_NAME"),
+            "account_key": os.environ.get("AZURE_ACCOUNT_KEY"),
+            # Create this in the Storage Browser of your Azure Storage Account before use
+            "azure_container": "media",
+        },
+    },
+}
 
 TEST_ENVIRONMENT = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
