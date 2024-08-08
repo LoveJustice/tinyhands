@@ -2,6 +2,15 @@ from libraries.neo4j_lib import execute_neo4j_query
 import pandas as pd
 import datetime
 import uuid
+from llama_index.postprocessor.flag_embedding_reranker import (
+    FlagEmbeddingReranker,
+)
+
+reranker = FlagEmbeddingReranker(
+    top_n=5,
+    model="BAAI/bge-reranker-large",
+)
+
 
 datetime.datetime.now()
 
