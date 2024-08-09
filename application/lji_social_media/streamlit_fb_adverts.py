@@ -27,6 +27,11 @@ from collections import namedtuple
 
 # Constants for regex patterns
 GROUP_USER_ID_PATTERN = re.compile(r"/groups/([\w]+)/user/([\w]+)/?")
+GROUP_ID_PATTERN = re.compile(r"groups/([\w]+)")
+GROUP_POST_ID_PATTERN = re.compile(r"/groups/([\w]+)/posts/([\w]+)/?")
+GROUP_COMMENT_ID_PATTERN = re.compile(
+    r"groups/([\w]+)/posts/([\w]+)/.*[?&]comment_id=([\w]+)/?"
+)
 
 # Named tuple for structured return
 PosterInfo = namedtuple("PosterInfo", ["poster", "commenters"])
@@ -47,15 +52,7 @@ if not all([neo4j_url, neo4j_usr, neo4j_pwd]):
 
 # Initialize Graph
 graph = Graph(neo4j_url, user=neo4j_usr, password=neo4j_pwd)
-GROUP_ID_PATTERN = re.compile(r"groups/([\w]+)")
 
-# GROUP_POST_ID_PATTERN = re.compile(r"groups/([\w]+)/posts/([\w]+)/?")
-# GROUP_USER_ID_PATTERN = re.compile(r"groups/([\w]+)/user/([\w]+)/?")
-GROUP_COMMENT_ID_PATTERN = re.compile(
-    r"groups/([\w]+)/posts/([\w]+)/.*[?&]comment_id=([\w]+)/?"
-)
-GROUP_USER_ID_PATTERN = re.compile(r"/groups/([\w]+)/user/([\w]+)/?")
-GROUP_POST_ID_PATTERN = re.compile(r"/groups/([\w]+)/posts/([\w]+)/?")
 from social_media.social_media import (
     facebook_connect,
     find_search_urls,
@@ -1626,8 +1623,6 @@ def extract_info():
     soup = BeautifulSoup(html_content, "html.parser")
 
     # Compile the regex patterns
-    GROUP_USER_ID_PATTERN = re.compile(r"groups/([\w]+)/user/([\w]+)/?")
-    GROUP_ID_PATTERN = re.compile(r"groups/([\w]+)/")
 
     results = []
 
