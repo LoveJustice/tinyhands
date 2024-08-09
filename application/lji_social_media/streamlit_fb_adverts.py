@@ -5,9 +5,8 @@ from googleapiclient.discovery import build
 import pandas as pd
 import gspread
 from st_pages import Page, Section, add_page_title, show_pages, show_pages_from_config
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from urllib.parse import urlparse
+from typing import Set
 from selenium.webdriver.common.action_chains import ActionChains
 import json
 from urllib.parse import urlparse, parse_qs
@@ -18,7 +17,6 @@ from random import randint
 import re
 from bs4 import BeautifulSoup
 from py2neo import Graph
-import time
 import random
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from libraries.neo4j_lib import execute_neo4j_query
@@ -119,27 +117,34 @@ def wait_for_element_by_id(driver, element_id, timeout=10):
     )
 
 
-def is_facebook_groups_url(url):
-    # Parse the given URL
-    parsed_url = urlparse(url)
+def is_facebook_groups_url(url: str) -> bool:
+    """
+    Check if the given URL is a valid Facebook groups URL.
 
-    # Check if the scheme is 'https' and netloc matches 'www.facebook.com' or 'web.facebook.com'
-    if parsed_url.scheme == "https" and parsed_url.netloc in [
-        "www.facebook.com",
-        "web.facebook.com",
-    ]:
-        # Split the path to analyze its components
-        path_segments = parsed_url.path.split("/")
-        # Check if the path starts with '/groups/' and does not contain forbidden segments
-        if (
-            len(path_segments) > 2
-            and path_segments[1] == "groups"
-            and not any(
-                segment in path_segments for segment in ["user", "comment", "post"]
-            )
-        ):
-            return True
-    return False
+    Args:
+        url (str): The URL to check.
+
+    Returns:
+        bool: True if the URL is a valid Facebook groups URL, False otherwise.
+    """
+    VALID_DOMAINS: Set[str] = {"www.facebook.com", "web.facebook.com"}
+    FORBIDDEN_SEGMENTS: Set[str] = {"user", "comment", "post"}
+
+    try:
+        parsed_url = urlparse(url)
+        path_segments = parsed_url.path.strip("/").split("/")
+
+        return all(
+            [
+                parsed_url.scheme == "https",
+                parsed_url.netloc in VALID_DOMAINS,
+                len(path_segments) >= 2,
+                path_segments[0] == "groups",
+                not set(path_segments) & FORBIDDEN_SEGMENTS,
+            ]
+        )
+    except Exception:
+        return False
 
 
 def is_valid_name(name):
@@ -1128,41 +1133,27 @@ def find_advert_content():
         return ""
 
 
-def extract_poster_info():
-    driver = st.session_state["driver"]
+def extract_poster_info(driver):
     html_content = driver.page_source
     soup = BeautifulSoup(html_content, "html.parser")
     poster_info = []
 
-    for link in soup.find_all("a"):
-        classes = link.get("class", [])
-        if "x1i10hfl" in classes and "xjbqb8w" in classes:
-            group_id = None
-            user_id = None
-            name = None
-
+    try:
+        for link in soup.find_all("a", class_=["x1i10hfl", "xjbqb8w"]):
             href = link.get("href", "")
-            if "groups" in href and "user" in href:
-                parts = href.split("/")
-                if len(parts) > 4:
-                    group_id = parts[2]
-                    user_id = parts[4]
-
-            # Extract the name
-            name = link.get_text(strip=True)
-
-            # If the name is not found in the anchor text, check the surrounding text
-            if not name:
+            match = GROUP_USER_ID_PATTERN.search(href)
+            if match:
+                group_id, user_id = match.groups()
                 name = (
-                    link.find_next_sibling(text=True).strip()
-                    if link.find_next_sibling(text=True)
-                    else "N/A"
+                    link.get_text(strip=True)
+                    or link.find_next_sibling(text=True, strip=True)
+                    or "N/A"
                 )
-
-            if group_id and user_id and name:
                 poster_info.append(
                     {"name": name, "group_id": group_id, "user_id": user_id}
                 )
+    except Exception as e:
+        logging.error(f"Error in extract_poster_info: {e}")
 
     return poster_info
 
