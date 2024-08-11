@@ -30,6 +30,7 @@ def get_mdf_export_rows(keys):
             for section in mdf_helper.sections:
                 rows.append([keys[0], country.name, parts[0], mdf.border_station.station_code, mdf_helper.project.station_code, section.title, section.total,'','',''])
             mdf_items = MdfItem.objects.filter(mdf=mdf)
+            rows.append([keys[0], country.name, parts[0], mdf.border_station.station_code, mdf_helper.project.station_code, 'Deductions', mdf_helper.budget.staff_salary_and_benefits_deductions(mdf_helper.project),'', '', ''])
             for mdf_item in mdf_items:
                 if mdf_helper.project.id == mdf_item.work_project.id:
                     if mdf_item.associated_section is None:
