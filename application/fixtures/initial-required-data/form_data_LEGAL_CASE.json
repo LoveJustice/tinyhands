@@ -2108,8 +2108,8 @@
    "fields": {
       "form_tag": "lcSuspectArrestStatus",
       "level": 3,
-      "trigger": null,
-      "trigger_value": null,
+      "trigger": "lcSuspectArrestStatus",
+      "trigger_value": "Yes*",
       "validation_type": 1,
       "error_warning_message": "Suspect arrest status should be provided",
       "params": null,
@@ -2125,8 +2125,8 @@
    "fields": {
       "form_tag": "lcSuspectNamedInChargeSheet",
       "level": 3,
-      "trigger": null,
-      "trigger_value": null,
+      "trigger": "lcSuspectArrestStatus",
+      "trigger_value": "Yes*",
       "validation_type": 1,
       "error_warning_message": "Suspect named in charge sheet should be provided",
       "params": null,
