@@ -209,7 +209,11 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                         form_done.send_robust(sender=self.__class__, form_data=form_data)
                         ret = serializer2.data
                         rtn_status = status.HTTP_200_OK
-                        self.form_log(request, form_data.form, form_data.form_object, 'create')
+                        # Trying here because this log is failing for project "forms" where form_number is not included
+                        try:
+                            self.form_log(request, form_data.form, form_data.form_object, 'create')
+                        except:
+                            print('No form number')
                         transaction.commit()
                         transaction.set_autocommit(True)
                         self.post_process(request, form_data)
@@ -346,10 +350,15 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     form_done.send_robust(sender=self.__class__, form_data=form_data)
                     rtn_status = status.HTTP_200_OK
                     ret = serializer2.data
-                    self.form_log(request, form_data.form, form_data.form_object, 'update')
+                    # Trying here because this log is failing for project "forms" where form_number is not included
+                    try:
+                        self.form_log(request, form_data.form, form_data.form_object, 'update')
+                    except:
+                        print('No form number')
                     transaction.commit()
                     transaction.set_autocommit(True)
                     self.post_process(request, form_data)
+
                 else:
                     transaction.rollback()
                     transaction.set_autocommit(True)
@@ -400,7 +409,11 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 the_form.station.operating_country.id, the_form.station.id):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         form_data = FormData(the_form, form)
-        self.form_log(request, form, the_form, 'destroy')
+        # Trying here because this log is failing for project "forms" where form_number is not included
+        try:
+            self.form_log(request, form, the_form, 'destroy')
+        except:
+            print('No form number')
         form_data.delete()
         
         form_done.send_robust(sender=self.__class__, form_data=form_data, remove=True)
