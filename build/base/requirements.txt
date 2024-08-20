@@ -1,3 +1,5 @@
+# Remember on Pycharm to change your Pycharm Project's python interpreter to match the run configuration
+# Otherwise you will update packages of the wrong venv and get 'module not found' errors.
 
 azure-identity==1.17.1
 cryptography~=41.0.4
@@ -38,7 +40,7 @@ Pygments==2.16.1
 PyMuPDF==1.23.5
 pyjwt~=1.7.1
 python-dateutil==2.7.3
-python-Levenshtein==0.12.0
+Levenshtein==0.25.1
 pytz==2024.1
 recordlinkage==0.16
 requests~=2.31.0
