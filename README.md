@@ -35,9 +35,13 @@ I will enhance this guide with a more complete set-up process from a clean machi
    2. working directory: application
    3. Modify Options -> Before Launch -> Run another configuration -> configuration from last step
 9. Make sure Docker Desktop is running
-10. Launch the configuration from step 8
-11. Visit localhost:9001/api/me/ and verify you get some page with "Authentication credentials were not provided"
-12. Use postman to hit the endpoint that you want
+10. Add the following to your local.env
+    1. DREAMSUITE_LOG=./log/dreamsuite.log 
+    2. DB_HOST=localhost 
+    3. DB_PORT=7654
+11. Launch the configuration from step 8
+12. Visit localhost:9001/api/me/ and verify you get some page with "Authentication credentials were not provided"
+13. Use postman to hit the endpoint that you want
 
 ## Installing Sanitized Test Data
 
