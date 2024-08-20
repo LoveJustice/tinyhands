@@ -1,3 +1,4 @@
+import os
 import time
 
 import streamlit as st
@@ -330,21 +331,34 @@ def process_adverts_from_dataframe(df: pd.DataFrame) -> None:
 
 # Assuming you have a dataframe 'df' with an 'advert' column
 
-advert_100_comparison_with_regressor_predictions = pd.read_csv(
-    "../results/advert_100_comparison_with_regressor_predictions.csv"
+adverts = pd.read_csv(
+    "results/adverts_za_adverts_sample_2024-08-07T17:01:22_54511f.csv"
 )
+import os
 
-process_adverts_from_dataframe(
-    advert_100_comparison_with_regressor_predictions[97:100].copy()
-)
+subdirectory_path = "results"
+
+# List all files in the subdirectory
+files_in_subdirectory = [
+    file
+    for file in os.listdir(subdirectory_path)
+    if os.path.isfile(os.path.join(subdirectory_path, file))
+]
+
+# Print the list of files
+print("Files in 'results' subdirectory:")
+for file in files_in_subdirectory:
+    print(file)
+
+process_adverts_from_dataframe(adverts[0:20].copy())
 #
-df = advert_100_comparison_with_regressor_predictions.loc[
-    advert_100_comparison_with_regressor_predictions.IDn.isin(
-        [573528, 573388, 573334, 573204],
-    ),
-    :,
-].copy()
-process_adverts_from_dataframe(df)
+# df = advert_100_comparison_with_regressor_predictions.loc[
+#     advert_100_comparison_with_regressor_predictions.IDn.isin(
+#         [573528, 573388, 573334, 573204],
+#     ),
+#     :,
+# ].copy()
+# process_adverts_from_dataframe(df)
 # ============================================================================================
 flag_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
 RETURN ID(posting) AS id, r.type as flag, analysis.result as result """

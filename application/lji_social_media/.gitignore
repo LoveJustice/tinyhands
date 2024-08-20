@@ -14,6 +14,7 @@ results/
 data_sources/
 attachments/
 docs/
+qdrant_adverts/
 
 poc-knowledge-graph-venv/bin/
 poc-knowledge-graph-venv/etc/

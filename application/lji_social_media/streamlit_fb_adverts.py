@@ -1,27 +1,46 @@
 import streamlit as st
+from typing import List, Dict, Optional
 from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 import pandas as pd
 import gspread
 from st_pages import Page, Section, add_page_title, show_pages, show_pages_from_config
-from urllib.parse import urlparse
 from typing import Set
 from selenium.webdriver.common.action_chains import ActionChains
 import json
 from urllib.parse import urlparse, parse_qs
 import os
-import logging
 import subprocess
 from random import randint
 import re
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from py2neo import Graph
 import random
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from libraries.neo4j_lib import execute_neo4j_query
 from dotenv import load_dotenv
 from collections import namedtuple
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+import logging
+from selenium.webdriver import ActionChains
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+
+# extract_post_id
+# find_comments_expanded
+# extract_comment_info
+# extract_comment_id
+# find_advert_content
+# find_group_name
+# find_advert_poster
+# snapshot
 
 # Constants for regex patterns
 GROUP_USER_ID_PATTERN = re.compile(r"/groups/([\w]+)/user/([\w]+)/?")
@@ -111,6 +130,165 @@ logging.basicConfig(
 )
 
 
+def return_ajax_requests():
+    # Get the driver from session state
+    driver = st.session_state["driver"]
+
+    # Get the current URL
+    page_url = driver.current_url
+
+    # Enable network interception
+    driver.execute_cdp_cmd("Network.enable", {})
+
+    # Navigate to the page (if not already there)
+    driver.get(page_url)
+
+    # Wait for a short time to allow requests to complete
+    time.sleep(2)
+
+    # Capture requests
+    requests = driver.execute_cdp_cmd("Network.getAllCookies", {})
+
+    # Disable network interception
+    driver.execute_cdp_cmd("Network.disable", {})
+
+    # Filter and process AJAX requests
+    ajax_requests = []
+    for request in requests["cookies"]:
+        if request.get("httpOnly"):  # This is often a characteristic of AJAX requests
+            ajax_requests.append(
+                {
+                    "name": request["name"],
+                    "value": request["value"],
+                    "domain": request["domain"],
+                    "path": request["path"],
+                }
+            )
+
+    return ajax_requests
+
+
+def return_iframes(driver):
+    iframes = driver.find_elements(By.TAG_NAME, "iframe")
+    print(f"Number of iframes found: {len(iframes)}")
+
+    if iframes:
+        for i, iframe in enumerate(iframes):
+            st.write(f"Switching to iframe {i}")
+            driver.switch_to.frame(iframe)
+            print_all_text(driver)
+            driver.switch_to.default_content()
+
+
+def print_all_text(driver):
+    elements = driver.find_elements(By.XPATH, "//*[string-length(text()) > 0]")
+    for element in elements:
+        print(element.text)
+
+
+def get_shadow_dom_content(driver):
+    script = """
+    function getAllShadowContent(element) {
+        var result = '';
+        if (element.shadowRoot) {
+            result += element.shadowRoot.textContent;
+            for (var child of element.shadowRoot.children) {
+                result += getAllShadowContent(child);
+            }
+        }
+        for (var child of element.children) {
+            result += getAllShadowContent(child);
+        }
+        return result;
+    }
+    return getAllShadowContent(document.body);
+    """
+    return driver.execute_script(script)
+
+
+def find_aria_labels(driver):
+    elements = driver.find_elements(By.XPATH, "//*[@aria-label]")
+    for element in elements:
+        print(f"Aria-label: {element.get_attribute('aria-label')}")
+
+
+def find_hidden_elements(driver):
+    script = """
+    return Array.from(document.querySelectorAll('*'))
+        .filter(el => window.getComputedStyle(el).display === 'none' && el.textContent.trim() !== '')
+        .map(el => el.textContent);
+    """
+    hidden_texts = driver.execute_script(script)
+    for text in hidden_texts:
+        print(f"Hidden text: {text}")
+
+
+def find_time_related_attributes(driver):
+    script = """
+    return Array.from(document.querySelectorAll('*'))
+        .filter(el => el.attributes.length > 0)
+        .flatMap(el => Array.from(el.attributes)
+            .filter(attr => attr.name.toLowerCase().includes('time') || attr.value.toLowerCase().includes('time'))
+            .map(attr => ({element: el.tagName, attribute: attr.name, value: attr.value})));
+    """
+    time_attributes = driver.execute_script(script)
+    for attr in time_attributes:
+        print(
+            f"Element: {attr['element']}, Attribute: {attr['attribute']}, Value: {attr['value']}"
+        )
+
+
+def find_timestamp(driver):
+    try:
+        # Wait for the page to load
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
+
+        # Look for elements that might contain the timestamp
+        timestamp_elements = driver.find_elements(
+            By.XPATH,
+            "//span[contains(@class, 'x1i10hfl') and string-length(text()) > 0]",
+        )
+
+        for element in timestamp_elements:
+            try:
+                # Hover over the element
+                ActionChains(driver).move_to_element(element).perform()
+
+                # Wait for a short time to allow the tooltip to appear
+                time.sleep(1)
+
+                # Look for the tooltip
+                tooltip = WebDriverWait(driver, 5).until(
+                    EC.presence_of_element_located((By.XPATH, "//div[@role='tooltip']"))
+                )
+
+                # Extract the text from the tooltip
+                tooltip_text = tooltip.get_attribute("textContent")
+                st.write(tooltip_text)
+
+                if tooltip_text and any(
+                    day in tooltip_text
+                    for day in [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday",
+                    ]
+                ):
+                    return tooltip_text.strip()
+            except:
+                continue
+
+        return "Detailed timestamp not found"
+    except Exception as e:
+        return f"Error finding timestamp: {str(e)}"
+
+
 def wait_for_element_by_id(driver, element_id, timeout=10):
     WebDriverWait(driver, timeout).until(
         EC.presence_of_element_located((By.ID, element_id))
@@ -159,22 +337,6 @@ def extract_group_id(url):
         # Extracted post ID is the second captured group
         group_id = result.group(1)
         return group_id
-    else:
-        # Return None or raise an error if the URL doesn't .match the expected format
-        return None
-
-
-def extract_post_id(url):
-    # Define a regex pattern to match the URL format and capture the post ID
-    # pattern = re.compile(r"https://www\.facebook\.com/groups/([\w]+)/posts/([\w]+)")
-    # re.compile(r"https://www\.facebook\.com/groups/([\w]+)/posts/([\w]+)"(\d+))
-
-    result = GROUP_POST_ID_PATTERN.search(url)
-
-    if result:
-        # Extracted post ID is the second captured group
-        post_id = result.group(2)
-        return post_id
     else:
         # Return None or raise an error if the URL doesn't .match the expected format
         return None
@@ -1070,69 +1232,6 @@ def list_all_users():
     # Here you can add additional logic for comment-specific processing
 
 
-#
-# def find_group_name():
-#     driver = st.session_state["driver"]
-#     html_content = driver.page_source
-#     soup = BeautifulSoup(html_content, "html.parser")
-#
-#     # Example of a simpler selector targeting a smaller, more stable subset of classes
-#     class_selector = "a.x1i10hfl.xjbqb8w.x1ejq31n"
-#
-#     group_link = soup.select_one(class_selector)
-#     group_name = group_link.get_text(strip=True) if group_link else "Text not found"
-#
-#     return group_name
-
-
-def find_group_name():
-    driver = st.session_state["driver"]
-    html_content = driver.page_source
-    soup = BeautifulSoup(html_content, "html.parser")
-
-    # Find the <h1> tag and then the <a> tag within it
-    group_name_tag = soup.find("h1").find("a")
-
-    # Extract the text if the tag is found
-    group_name = (
-        group_name_tag.get_text(strip=True) if group_name_tag else "Text not found"
-    )
-    soup = BeautifulSoup(html_content, "html.parser")
-
-    # Find the element containing the job title
-    # group_name = soup.find("title").text.strip()
-    title_element = soup.title.string
-
-    # Extract and clean the title
-    group_name = title_element.split("|")[0].strip()
-    return group_name
-
-
-def find_advert_content():
-    try:
-        driver = st.session_state["driver"]
-        html_content = driver.page_source
-        soup = BeautifulSoup(html_content, "html.parser")
-
-        # Find the parent div that contains the message
-        message_div = soup.find("div", {"data-ad-comet-preview": "message"})
-        if message_div is None:
-            raise ValueError("The message div could not be found in the HTML content.")
-
-        # Extract text from each child div within it
-        advert_text = " ".join(
-            div.get_text(strip=True)
-            for div in message_div.find_all("div", recursive=False)
-        )
-        return advert_text
-
-    except Exception as e:
-        st.error(f"An error occurred in find_advert_content: {e}")
-        # Depending on the context, you may want to return an empty string,
-        # None, or re-raise the exception after logging it.
-        return ""
-
-
 def extract_poster_info(driver):
     html_content = driver.page_source
     soup = BeautifulSoup(html_content, "html.parser")
@@ -1213,119 +1312,77 @@ def find_advert_poster_depr():
         return []
 
 
-def find_advert_poster(html_content):
+def find_advert_poster_inside(
+    driver, wait_time: int = 20, sleep_time: int = 5
+) -> List[Dict[str, str]]:
+    """
+    Find the advertisement poster information from the current page.
+
+    Args:
+        driver: Selenium WebDriver instance
+        wait_time (int): Maximum time to wait for elements to load (default: 20 seconds)
+        sleep_time (int): Additional time to wait for JavaScript to run (default: 5 seconds)
+
+    Returns:
+        List[Dict[str, str]]: List containing a dictionary with poster information, or an empty list if not found
+    """
     try:
-        soup = BeautifulSoup(html_content, "html.parser")
-
-        posters = {"poster": None, "commenters": []}
-
-        # Debug: Print the structure of the HTML
-        print(soup.prettify())
-
-        # Find the main post container (Modify this selector as per your HTML structure)
-        post_container = soup.find("div", class_="x1lliihq x1l90r2v")
-        print(f"Post container found: {post_container is not None}")
-
-        if post_container:
-            # Find the poster link
-            poster_link = post_container.find("a", href=GROUP_USER_ID_PATTERN)
-            print(f"Poster link found: {poster_link is not None}")
-            print(f"Poster link content: {poster_link}")
-
-            if poster_link:
-                poster_name_span = poster_link.find("span", class_="xt0psk2")
-                print(f"Poster name span found: {poster_name_span is not None}")
-                print(f"Poster name span content: {poster_name_span}")
-
-                if poster_name_span:
-                    poster_name = poster_name_span.get_text(strip=True)
-                    poster_href = poster_link.get("href")
-                    match = GROUP_USER_ID_PATTERN.search(poster_href)
-                    if match:
-                        group_id, user_id = match.groups()
-                        posters["poster"] = {
-                            "name": poster_name,
-                            "group_id": group_id,
-                            "user_id": user_id,
-                        }
-                        print(f"Poster details: {posters['poster']}")
-                    else:
-                        print("Poster href did not match the pattern.")
-                else:
-                    print("Poster name span not found.")
-            else:
-                print("Poster link not found.")
-
-        return posters
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return {"poster": None, "commenters": []}
-
-
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
-
-
-def find_advert_poster_inside():
-    try:
-        driver = st.session_state["driver"]
-
-        # Wait for the post content to load
-        WebDriverWait(driver, 20).until(
+        WebDriverWait(driver, wait_time).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='article']"))
         )
+        time.sleep(sleep_time)
 
-        # Give additional time for JavaScript to run
-        time.sleep(5)
-
-        # Find the post container
         post_container = driver.find_element(By.CSS_SELECTOR, "div[role='article']")
-
-        # Find the author link within the post container
         author_link = post_container.find_element(By.CSS_SELECTOR, "h2 a")
 
         name = author_link.text
         href = author_link.get_attribute("href")
 
-        st.write(f"Author found: {name}")
-        st.write(f"Author link: {href}")
+        logging.info(f"Author found: {name}")
+        logging.info(f"Author link: {href}")
 
-        group_user_match = GROUP_USER_ID_PATTERN.search(href)
-        post_match = GROUP_POST_ID_PATTERN.search(href)
+        poster_info = extract_poster_info(name, href)
 
-        if group_user_match and post_match:
-            group_id, user_id = group_user_match.groups()
-            _, post_id = post_match.groups()
+        if poster_info:
+            logging.info(f"Extracted: {poster_info}")
+            logging.info(f"Final posters list: {[poster_info]}")
+            return [poster_info]
 
-            st.write(
-                f"Extracted: group_id={group_id}, user_id={user_id}, post_id={post_id}"
-            )
-
-            posters = [
-                {
-                    "name": name,
-                    "group_id": group_id,
-                    "user_id": user_id,
-                    "post_id": post_id,
-                }
-            ]
-
-            st.write("Final posters list:", posters)
-            return posters
-
-        st.write("No matching poster found")
+        logging.warning("No matching poster found")
         return []
 
+    except (TimeoutException, NoSuchElementException) as e:
+        logging.error(f"Element not found: {e}")
+        return []
     except Exception as e:
-        st.write(f"An error occurred: {e}")
+        logging.error(f"An unexpected error occurred: {e}")
         return []
+
+
+def extract_poster_info(name: str, href: str) -> Optional[Dict[str, str]]:
+    """
+    Extract poster information from the name and href.
+
+    Args:
+        name (str): The name of the poster
+        href (str): The href attribute of the poster's link
+
+    Returns:
+        Optional[Dict[str, str]]: A dictionary with poster information if matches are found, None otherwise
+    """
+    group_user_match = GROUP_USER_ID_PATTERN.search(href)
+    post_match = GROUP_POST_ID_PATTERN.search(href)
+
+    if group_user_match and post_match:
+        group_id, user_id = group_user_match.groups()
+        _, post_id = post_match.groups()
+        return {
+            "name": name,
+            "group_id": group_id,
+            "user_id": user_id,
+            "post_id": post_id,
+        }
+    return None
 
 
 def extract_names(html_content):
@@ -1345,66 +1402,6 @@ def extract_names(html_content):
             names.append(name.get_text(strip=True))
 
     return names
-
-
-def find_comments_expanded():
-    driver = st.session_state["driver"]
-    html_content = driver.page_source
-    soup = BeautifulSoup(html_content, "html.parser")
-
-    # Regex patterns remain unchanged
-    # user_href_pattern = re.compile(r"/groups/(\d+)/user/(\d+)/")
-    # comment_href_pattern = re.compile(
-    #     r"/groups/(\d+)/posts/(\d+)/.*[?&]comment_id=(\d+)"
-    # )
-
-    extracted_info = []
-
-    # Assuming 'x1r8uery x1iyjqo2 x6ikm8r x10wlt62 x1pi30zi' uniquely identifies the comment blocks
-    parent_elements = soup.find_all(
-        "div", class_="x1r8uery x1iyjqo2 x6ikm8r x10wlt62 x1pi30zi"
-    )
-
-    for parent_element in parent_elements:
-        # Adjusted to find the user link within the nested structure
-        user_link = parent_element.find("a", href=GROUP_USER_ID_PATTERN)
-        if user_link:
-            href = user_link["href"]
-            match_user = GROUP_USER_ID_PATTERN.search(href)
-            if match_user:
-                group_id, user_id = match_user.groups()
-                name = user_link.text  # Direct extraction of the user name
-
-                # For text, assume it's directly within a certain class in 'parent_element'
-                text_container = parent_element.find(
-                    "div", class_="x1lliihq xjkvuk6 x1iorvi4"
-                )
-                text = text_container.text if text_container else "Text not found"
-
-                # Assuming comment links are also within 'parent_element'
-                comment_link = parent_element.find("a", href=GROUP_COMMENT_ID_PATTERN)
-                comment_id = "Comment ID not found"
-                if comment_link:
-                    match_comment = GROUP_COMMENT_ID_PATTERN.search(
-                        comment_link["href"]
-                    )
-                    if match_comment:
-                        _, _, comment_id = match_comment.groups()
-
-                extracted_info.append(
-                    {
-                        "user_id": user_id,
-                        "name": name,
-                        "text": text,
-                        "group_id": group_id,
-                        "comment_id": comment_id,
-                    }
-                )
-    unique_serialized = {json.dumps(d, sort_keys=True) for d in extracted_info}
-
-    # Deserialize back to a list of dictionaries
-    extracted_info = [json.loads(s) for s in unique_serialized]
-    return extracted_info
 
 
 def find_comments():
@@ -1654,6 +1651,215 @@ def wait_for_link_by_href(driver, href, timeout=10):
         print(f"An error occurred: {e}")
 
 
+def extract_post_id(url: str) -> Optional[str]:
+    """Extract post ID from the given URL."""
+    match = GROUP_POST_ID_PATTERN.search(url)
+    return match.group(2) if match else None
+
+
+def find_comments_expanded() -> List[Dict[str, str]]:
+    """Extract and return expanded comment information from the current page."""
+    soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
+    comment_blocks = soup.find_all(
+        "div", class_="x1r8uery x1iyjqo2 x6ikm8r x10wlt62 x1pi30zi"
+    )
+
+    return list(
+        {
+            json.dumps(comment, sort_keys=True): comment
+            for block in comment_blocks
+            if (comment := extract_comment_info(block)) is not None
+        }.values()
+    )
+
+
+def extract_comment_info(parent_element: Tag) -> Optional[Dict[str, str]]:
+    """Extract comment information from a single comment block."""
+    user_link = parent_element.find("a", href=GROUP_USER_ID_PATTERN)
+    if not user_link or not (
+        match_user := GROUP_USER_ID_PATTERN.search(user_link["href"])
+    ):
+        return None
+
+    group_id, user_id = match_user.groups()
+    text_container = parent_element.find("div", class_="x1lliihq xjkvuk6 x1iorvi4")
+    comment_link = parent_element.find("a", href=GROUP_COMMENT_ID_PATTERN)
+
+    return {
+        "user_id": user_id,
+        "name": user_link.text,
+        "text": text_container.text if text_container else "Text not found",
+        "group_id": group_id,
+        "comment_id": extract_comment_id(comment_link),
+    }
+
+
+def extract_comment_id(comment_link: Optional[Tag]) -> str:
+    """Extract the comment ID from a comment link."""
+    if comment_link and (
+        match_comment := GROUP_COMMENT_ID_PATTERN.search(comment_link["href"])
+    ):
+        return match_comment.group(3)
+    return "Comment ID not found"
+
+
+def find_advert_content() -> Optional[str]:
+    """Extract the advertisement content from the current page."""
+    try:
+        soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
+        message_div = soup.find("div", {"data-ad-comet-preview": "message"})
+
+        if not message_div:
+            st.warning("The message div could not be found in the HTML content.")
+            return None
+
+        return " ".join(
+            div.get_text(strip=True)
+            for div in message_div.find_all("div", recursive=False)
+        )
+    except Exception as e:
+        st.error(f"An error occurred while extracting advert content: {str(e)}")
+        return None
+
+
+def find_group_name() -> Optional[str]:
+    """Extract the group name from the current page."""
+    try:
+        soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
+
+        if h1_tag := soup.find("h1"):
+            if a_tag := h1_tag.find("a"):
+                return a_tag.get_text(strip=True)
+
+        if title_tag := soup.title:
+            return title_tag.string.split("|")[0].strip()
+
+        st.warning("Group name could not be found in the HTML content.")
+        return None
+    except Exception as e:
+        st.error(f"An error occurred while extracting group name: {str(e)}")
+        return None
+
+
+def find_advert_poster() -> List[Dict[str, str]]:
+    """Extract information about the poster of the advertisement."""
+    try:
+        soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
+        poster_link = soup.find(
+            "a",
+            {
+                "class": "x1i10hfl xjbqb8w x6umtig x1b1mbwd xaqea5y xav7gou x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz xt0b8zv xzsf02u x1s688f"
+            },
+        )
+
+        if not poster_link:
+            st.warning("Poster information could not be found.")
+            return []
+
+        name = poster_link.text
+        href = poster_link.get("href", "")
+        user_id_match = re.search(r"user/(\d+)", href)
+        group_id_match = GROUP_ID_PATTERN.search(st.session_state["driver"].current_url)
+
+        if not user_id_match or not group_id_match:
+            st.warning("User ID or Group ID could not be extracted.")
+            return []
+
+        return [
+            {
+                "name": name,
+                "user_id": user_id_match.group(1),
+                "group_id": group_id_match.group(1),
+            }
+        ]
+    except Exception as e:
+        st.error(f"An error occurred while extracting poster information: {str(e)}")
+        return []
+
+
+def snapshot():
+    """Take a snapshot of the current Facebook post and upload to Neo4j."""
+    driver = st.session_state["driver"]
+    post_id = extract_post_id(driver.current_url)
+    if not post_id:
+        st.error("Could not extract post ID from the current URL.")
+        return
+
+    st.write(f"Post ID: {post_id}")
+    posters = find_advert_poster()
+    st.write(f"Posters: {posters}")
+    advert_text = find_advert_content()
+    all_users_and_comments = find_comments_expanded()
+    st.write(all_users_and_comments)
+    group_name = find_group_name()
+    st.write(f"Group name: {group_name}")
+
+    # Upload comments
+    for comment in all_users_and_comments:
+        parameters = {
+            "full_name": comment["name"],
+            "name": comment["name"].lower().strip(),
+            "post_id": post_id,
+            "group_id": comment["group_id"],
+            "group_name": group_name,
+            "user_id": comment["user_id"],
+            "group_url": f"https://www.facebook.com/groups/{comment['group_id']}",
+            "user_url": f"https://www.facebook.com/{comment['user_id']}",
+            "post_url": f"https://www.facebook.com/groups/{comment['group_id']}/posts/{post_id}",
+            "comment_url": f"https://www.facebook.com/groups/{comment['group_id']}/posts/{post_id}/?comment_id={comment['comment_id']}",
+            "comment_text": comment["text"],
+            "comment_id": comment["comment_id"],
+            "advert_text": advert_text,
+        }
+        st.write(parameters)
+        query = """
+        MERGE (group:Group {group_id: $group_id, url: $group_url})
+        MERGE (profile:Profile {name: $full_name, url: $user_url})
+        MERGE (name:Name {full_name: $full_name, name: $name})
+        MERGE (posting:Posting {post_id: $post_id, post_url: $post_url})
+        MERGE (comment:Comment {comment_id: $comment_id, comment: $comment_text, url: $comment_url})
+        MERGE (profile)-[:HAS_PROFILE_NAME]->(name)
+        MERGE (group)-[:HAS_POSTING]->(posting)
+        MERGE (posting)-[:HAS_COMMENT]->(comment)
+        MERGE (profile)-[:MADE_COMMENT]->(comment)
+        SET group.name = $group_name
+        SET posting.text = $advert_text
+        """
+        result = execute_neo4j_query(query, parameters)
+        st.write(result)
+
+    # Upload poster information
+    for poster in posters:
+        parameters = {
+            "full_name": poster["name"],
+            "name": poster["name"].lower().strip(),
+            "group_id": poster["group_id"],
+            "group_name": group_name,
+            "user_id": poster["user_id"],
+            "post_id": post_id,
+            "group_url": f"https://www.facebook.com/groups/{poster['group_id']}",
+            "user_url": f"https://www.facebook.com/{poster['user_id']}",
+            "post_url": f"https://www.facebook.com/groups/{poster['group_id']}/posts/{post_id}",
+            "advert_text": advert_text,
+        }
+        st.write(parameters)
+        query = """
+        MERGE (group:Group {name: $group_name, group_id: $group_id, url: $group_url})
+        MERGE (profile:Profile {name: $full_name, url: $user_url})
+        MERGE (name:Name {full_name: $full_name, name: $name})
+        MERGE (posting:Posting {post_id: $post_id, post_url: $post_url})
+        MERGE (profile)-[:HAS_PROFILE_NAME]->(name)
+        MERGE (profile)-[:POSTED]->(posting)
+        MERGE (group)-[:HAS_POSTING]->(posting)
+        SET posting.text = $advert_text
+        """
+        result = execute_neo4j_query(query, parameters)
+        st.write(result)
+
+    st.write("Upload completed.")
+    st.write(posters)
+
+
 def main():
     show_pages(
         [
@@ -1859,89 +2065,7 @@ def main():
             write_sheet("Comments", comments)
 
         if st.button("Snapshot"):
-            post_id = extract_post_id(st.session_state["driver"].current_url)
-            st.write(f"Post ID: {post_id}")
-            posters = find_advert_poster()  # [(name, group_id, user_id)]
-            posters = extract_poster_info()
-            st.write(f"Posters: {posters}")
-            advert_text = find_advert_content()
-            all_users_and_comments = find_comments_expanded()
-            st.write(all_users_and_comments)
-            #                    {
-            #     "user_id": user_id,
-            #     "name": name,
-            #     "text": text,
-            #     "group_id": group_id,
-            #     "comment_id": comment_id,
-            # }
-            group_name = find_group_name()
-            st.write(f"Group name {group_name}")
-
-            for users_and_comments in all_users_and_comments:
-                parameters = {
-                    "full_name": users_and_comments["name"],
-                    "name": users_and_comments["name"].lower().strip(),
-                    "post_id": post_id,
-                    "group_id": users_and_comments["group_id"],
-                    "group_name": group_name,
-                    "user_id": users_and_comments["user_id"],
-                    "group_url": f"https://www.facebook.com/groups/{users_and_comments['group_id']}",
-                    "user_url": f"https://www.facebook.com/{users_and_comments['user_id']}",
-                    "post_url": f"https://www.facebook.com/groups/{users_and_comments['group_id']}/posts/{post_id}",
-                    "comment_url": f"https://www.facebook.com/groups/{users_and_comments['group_id']}/posts/{post_id}/?comment_id={users_and_comments['comment_id']}",
-                    "comment_text": users_and_comments["text"],
-                    "comment_id": users_and_comments["comment_id"],
-                    "advert_text": advert_text,
-                }
-                st.write(parameters)
-                query = f"""MERGE (group:Group {{group_id: $group_id, url: $group_url}})
-                    WITH group
-                    MERGE (profile:Profile {{name: $full_name, url: $user_url}})
-                    MERGE (name:Name {{full_name: $full_name, name: $name}})
-                    MERGE (posting:Posting {{post_id: $post_id, post_url: $post_url}})
-                    MERGE (comment:Comment {{comment_id: $comment_id, comment:$comment_text, url: $comment_url}})
-                    MERGE (profile)-[:HAS_PROFILE_NAME]->(name)
-                    MERGE (group)-[:HAS_POSTING]->(posting)
-                    MERGE (posting)-[:HAS_COMMENT]->(comment)
-                    MERGE (profile)-[:MADE_COMMENT]->(comment)
-                    SET group.name = $group_name
-                    SET posting.text = $advert_text
-                    """
-                # st.write(parameters)
-                result = execute_neo4j_query(query, parameters)
-                # st.write(result)
-                # if is_valid_name(users_and_comments["name"]):
-                #     st.write(f"Valid name: {users_and_comments['name']}")
-
-            for poster in posters:
-                parameters = {
-                    "full_name": poster["name"],
-                    "name": poster["name"].lower().strip(),
-                    "group_id": poster["group_id"],
-                    "group_name": group_name,
-                    "user_id": poster["user_id"],
-                    "post_id": post_id,
-                    "group_url": f"https://www.facebook.com/groups/{poster['group_id']}",
-                    "user_url": f"https://www.facebook.com/{poster['user_id']}",
-                    "post_url": f"https://www.facebook.com/groups/{poster['group_id']}/posts/{post_id}",
-                    "advert_text": advert_text,
-                }
-                st.write(parameters)
-                query = f"""MERGE (group:Group {{name: $group_name, group_id: $group_id, url: $group_url}})
-                    MERGE (profile:Profile {{name: $full_name, url: $user_url}})
-                    MERGE (name:Name {{full_name: $full_name, name: $name}})
-                    MERGE (posting:Posting {{post_id: $post_id, post_url: $post_url}})
-                    MERGE (profile)-[:HAS_PROFILE_NAME]->(name)
-                    MERGE (profile)-[:POSTED]->(posting)
-                    MERGE (group)-[:HAS_POSTING]->(posting)
-                    SET posting.text = $advert_text
-                        """
-
-            execute_neo4j_query(query, parameters)
-            st.write("Done upload...")
-            st.write(posters)
-            # if is_valid_name(poster["name"]):
-            #     st.write(f"Valid name: {poster['name']}")
+            snapshot()
 
         if st.button("Extract advert"):
             posters = find_advert_poster()  # [(name, group_id, user_id)]
@@ -1962,6 +2086,32 @@ def main():
             posters = find_advert_poster_inside()
             st.write(f"Inside Posters: {posters}")
 
+        if st.button("find time stamp"):
+            all_text = print_all_text(st.session_state["driver"])
+            st.write("all_text:", all_text)
+            aria_labels = find_aria_labels(st.session_state["driver"])
+            st.write("aria_labels:", aria_labels)
+            hidden_elements = find_hidden_elements(st.session_state["driver"])
+            st.write("hidden_elements:", hidden_elements)
+            time_related_attributes = find_time_related_attributes(
+                st.session_state["driver"]
+            )
+            st.write("time_related_attributes:", time_related_attributes)
+            shadow_content = get_shadow_dom_content(st.session_state["driver"])
+            st.write("shadow_content: ", shadow_content)
+            iframes = return_iframes(st.session_state["driver"])
+            st.write("iframes: ", iframes)
+            # timestamp = find_timestamp(st.session_state["driver"])
+            # st.write(timestamp)
+        # Usage in Streamlit
+        if st.button("Get AJAX Requests"):
+            ajax_requests = return_ajax_requests()
+            st.write("AJAX Requests:")
+            for request in ajax_requests:
+                st.write(f"Name: {request['name']}")
+                st.write(f"Domain: {request['domain']}")
+                st.write(f"Path: {request['path']}")
+                st.write("---")
         if st.button("Update_new_adverts"):
             try:
                 new_adverts_urls = all_new_adverts_urls()

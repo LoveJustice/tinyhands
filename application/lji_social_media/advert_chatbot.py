@@ -100,7 +100,6 @@ for meta, document in zip(metadata, stories):
     documents.append(Document(text=document, metadata=meta))
 
 node_parser = HierarchicalNodeParser.from_defaults()
-
 nodes = node_parser.get_nodes_from_documents(documents)
 len(nodes)
 
