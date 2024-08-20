@@ -1,16 +1,18 @@
 # https://auth0.com/docs/quickstart/backend/django/01-authorization
-
+import datetime
 import json
 import logging
 import os
+import time
+from base64 import b64encode
 from json import JSONDecodeError
 from typing import List
 
 import jwt
 import requests
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth import authenticate
 from django.core.cache import cache
-from django.http import Http404
 
 from accounts.models import Account
 
@@ -19,7 +21,6 @@ logger = logging.getLogger(__name__)
 
 # Hooked into settings.py
 def jwt_get_username_from_payload_handler(payload):
-
     auth0_id = payload.get('sub').replace('|', '.')
     try:
         # TODO This db hit could be make all calls a bit slower
@@ -135,6 +136,18 @@ def get_auth0_users() -> List[dict]:
         page_index += 1
     return list_of_users
 
+# This takes about 5 mins
+# See the page number going down at https://manage.auth0.com/dashboard/us/dev-oiz87mbf/users
+def delete_auth0_users_with_no_logins():
+    auth0_users = get_auth0_users()
+    print(json.dumps(auth0_users, indent=4))
+    for auth0_user in auth0_users:
+        logins_count = auth0_user.get('logins_count')
+        if logins_count is not None and logins_count > 0:
+            logger.debug(f'skipping {auth0_user["email"]}, has {logins_count} logins')
+        else:
+            logger.info(f'Deleting {auth0_user["email"]}')
+            delete_auth0_user(auth0_user)
 
 def delete_auth0_user(auth0_user: dict):
     api_token_result = get_auth0_api_token()
@@ -263,3 +276,110 @@ def update_django_user_if_exists(auth0_user: dict):
     logger.info('Updating django account with email: ' + email)
     account.save()
     return account
+
+
+def create_all_auth0_users():
+    accounts: List[Account] = Account.objects.all()
+    auth0_user_dicts = []
+    for account in accounts:
+        three_years_ago_today = datetime.datetime.now().date() - relativedelta(years=3)
+        if account.is_active \
+                and account.email \
+                and account.password \
+                and not account.password.startswith('!')\
+                and account.last_login \
+                and account.last_login.date() > three_years_ago_today:
+            auth0_user_dict = get_auth0_dict_for_django_user(account)
+            logger.info(f'Trying to create auth0 account for {account.email}, adding information to import')
+            auth0_user_dicts.append(auth0_user_dict)
+        else:
+            logger.info(
+                f'skipping account {account.email}, is_active={account.is_active}, last_login={account.last_login}')
+    print(json.dumps(auth0_user_dicts, indent=4))
+
+    job_id = update_auth0_users_with_dicts(auth0_user_dicts)
+
+    # For debugging, this assumes it is failing and querys for why it failed
+    time.sleep(50)
+    get_auth0_job_errors(job_id)
+
+
+def create_auth0_user(account):
+    auth0_user_dict = get_auth0_dict_for_django_user(account)
+    if auth0_user_dict is not None:
+        job_id = update_auth0_users_with_dicts([auth0_user_dict])
+
+        # For debugging, this assumes it is failing and querys for why it failed
+        time.sleep(5)
+        get_auth0_job_errors(job_id)
+
+
+# Mostly for failures of update_auth0_users_with_dicts
+# These records get deleted after 24 hours so check immediately!
+def get_auth0_job_errors(job_id: str):
+    api_token_result = get_auth0_api_token()
+    access_token = api_token_result['access_token']
+    # From https://auth0.com/docs/manage-users/user-migration/bulk-user-imports
+    headers = {
+        'Authorization': 'Bearer ' + access_token
+    }
+    domain = os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN')
+    url = f'https://{domain}/api/v2/jobs/{job_id}/errors'
+    error_response = requests.get(url=url, headers=headers)
+    print(error_response.status_code, error_response.json())
+
+
+def update_auth0_users_with_dicts(auth0_user_dicts: List[any]):
+    api_token_result = get_auth0_api_token()
+    access_token = api_token_result['access_token']
+    # From https://auth0.com/docs/manage-users/user-migration/bulk-user-imports
+    headers = {
+        'Authorization': 'Bearer ' + access_token
+    }
+    domain = os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN')
+    url = 'https://' + domain + '/api/v2/jobs/users-imports'
+    form_values = {
+        # Get this at manage.auth0.com -> Authentication -> Database
+        'connection_id': os.environ.get('AUTH0_DATABASE_CONNECTION_ID'),
+        'upsert': 'true'
+    }
+    form_files = {
+        'users': ('users.json', json.dumps(auth0_user_dicts), 'text/json')
+    }
+    response = requests.post(url=url, files=form_files, data=form_values, headers=headers)
+    response.raise_for_status()
+    job_id = response.json()['id']
+    # print('Job id for failure checking: ' + response.json()['id'])
+    return job_id
+
+
+def get_auth0_dict_for_django_user(account: Account):
+    if not account.email:
+        logger.info(f'User {account.id} has no email.')
+        return None
+
+    if not account.password:
+        logger.info(f'User {account.id} has no password.')
+        return None
+
+    password_parts = account.password.split('$')
+    password_parts[0] = password_parts[0].replace('_', '-')
+    password_parts[2] = b64encode(password_parts[2].encode()).decode().replace('=', '')
+    password_parts[3] = password_parts[3].replace('=', '')
+    password_hash = f'${password_parts[0]}$i={password_parts[1]},l=32${password_parts[2]}${password_parts[3]}'
+    name = str(account.first_name + ' ' + account.last_name).strip()
+    user_dict = {
+        'email': account.email,
+        'email_verified': True,
+        'custom_password_hash': {
+            'algorithm': 'pbkdf2',
+            'hash': {
+                'value': password_hash,
+                'encoding': 'utf8'
+            }
+        },
+        'given_name': account.first_name,
+        'family_name': account.last_name,
+        'name': name,
+    }
+    return user_dict
