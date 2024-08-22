@@ -164,7 +164,6 @@ class IrfCsv (ExportFormCsv):
             "immigration_case_number",
             "immigration_entry",
             "immigration_transit",
-            "location",
             "reason_for_intercept",
             "rescue",
             "staff_name",
@@ -213,8 +212,8 @@ class IrfCsv (ExportFormCsv):
     def perform_export(self):
         interceptees = IntercepteeCommon.objects.filter(
             interception_record__station__operating_country__in = self.country_list,
-            interception_record__date_of_interception__gte=self.start_date,
-            interception_record__date_of_interception__lte=self.end_date)
+            interception_record__verified_date__gte=self.start_date,
+            interception_record__verified_date__lte=self.end_date)
         if self.status is not None:
             if self.status == 'evidence':
                 interceptees = interceptees.filter(interception_record__verified_evidence_categorization='Evidence of Trafficking')
@@ -356,7 +355,6 @@ class PvfCsv (ExportFormCsv):
         self.private = [
             "case_notes",
             "evidence_that_guardians_sold",
-            "location",
             "staff_name",
             "who_victim_released_name",
             "who_victim_released_phone",
@@ -426,6 +424,9 @@ class PvfCsv (ExportFormCsv):
             writer.writerow(row)
             exported += 1
     
+    def check_contact(self, value):
+        return value is not None and len(value) > 0 and value != '-' and value.lower() != 'n/a' and value.lower() != 'na'
+    
     def perform_export(self):
         pvfs = VdfCommon.objects.filter(
             station__operating_country__in = self.country_list,
@@ -448,6 +449,16 @@ class PvfCsv (ExportFormCsv):
             follow_up_pvfs = pvfs.filter(what_victim_believes_now='Came to believe that Jesus is the one true God')
             other_pvfs = pvfs.exclude(what_victim_believes_now='Came to believe that Jesus is the one true God')
             desired_sample = math.ceil(len(pvfs) * self.sample / 100.0)
+            # Include PVFs with phone number or guardian phone number before those without
+            follow_ups_with_contact = []
+            follow_ups_without_contact = []
+            for pvf in follow_up_pvfs:
+                if self.check_contact(pvf.victim.phone_contact) or self.check_contact(pvf.victim.guardian_phone):
+                    follow_ups_with_contact.append(pvf)
+                else:
+                    follow_ups_without_contact.append(pvf)
+            
+            follow_up_pvfs = follow_ups_with_contact + follow_ups_without_contact
             if len(follow_up_pvfs) > desired_sample:
                 rate = 0
             else:

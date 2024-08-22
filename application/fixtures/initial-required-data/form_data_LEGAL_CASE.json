@@ -849,18 +849,6 @@
 {
    "model": "dataentry.question",
    "fields": {
-      "form_tag": "lcSuspectPoliceOrCourtCase",
-      "prompt": "Police or Court Case",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Police or Court Case",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "fields": {
       "form_tag": "lcStatus",
       "prompt": "Status",
       "description": null,
@@ -927,6 +915,42 @@
       "answer_type": 1,
       "params": null,
       "export_name": "DistrictCourt",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectHowKnow",
+      "prompt": "How do you know that the suspect was taken into custody and chared with a crime?",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "How Know",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectVerifiedDate",
+      "prompt": "Date Verified",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Verified",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectVerifiedBy",
+      "prompt": "Verified By",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Verified By",
       "export_params": null
    }
 },
@@ -1403,15 +1427,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "lcSuspectPoliceOrCourtCase",
-      "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": "lcStatus",
       "category": "legalCharge",
       "weight": 0,
@@ -1459,6 +1474,33 @@
    "fields": {
       "question": "lcCourtCaseDistrictCourt",
       "category": "lfCourtCase",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectHowKnow",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectVerifiedDate",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectVerifiedBy",
+      "category": "legalSuspect",
       "weight": 0,
       "form_config": null
    }
@@ -1823,13 +1865,6 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": "lcSuspectPoliceOrCourtCase",
-      "field_name": "police_case_or_court_case"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
       "question": "lcStatus",
       "field_name": "status"
    }
@@ -1867,6 +1902,27 @@
    "fields": {
       "question": "lcCourtCaseDistrictCourt",
       "field_name": "district_court"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectHowKnow",
+      "field_name": "how_do_you_know"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectVerifiedDate",
+      "field_name": "verified_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectVerifiedBy",
+      "field_name": "verified_by"
    }
 },
 {
@@ -2052,8 +2108,8 @@
    "fields": {
       "form_tag": "lcSuspectArrestStatus",
       "level": 3,
-      "trigger": null,
-      "trigger_value": null,
+      "trigger": "lcSuspectArrestStatus",
+      "trigger_value": "Yes*",
       "validation_type": 1,
       "error_warning_message": "Suspect arrest status should be provided",
       "params": null,
@@ -2069,8 +2125,8 @@
    "fields": {
       "form_tag": "lcSuspectNamedInChargeSheet",
       "level": 3,
-      "trigger": null,
-      "trigger_value": null,
+      "trigger": "lcSuspectArrestStatus",
+      "trigger_value": "Yes*",
       "validation_type": 1,
       "error_warning_message": "Suspect named in charge sheet should be provided",
       "params": null,

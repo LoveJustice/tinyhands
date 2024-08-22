@@ -321,7 +321,7 @@ class MoneyDistributionFormHelper:
             items.append(BudgetLineItem('Awareness Party', self.budget.awareness_party,''))
         intercepts_total = self.budget.administration_intercepts_total()
         if intercepts_total > 0:
-            items.append(BudgetLineItem('Stationary', intercepts_total,''))
+            items.append(BudgetLineItem('Stationery', intercepts_total,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.AWARENESS, self.project)
     
     @property

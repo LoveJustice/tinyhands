@@ -19,7 +19,7 @@ from dataentry.serializers import CountrySerializer
 from dataentry.dataentry_signals import form_done
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import AutoNumber, BorderStation, Country, FormType, UserLocationPermission
+from dataentry.models import AutoNumber, BorderStation, Country, FormLog, FormType, UserLocationPermission
 
 class BorderStationOverviewSerializer(serializers.ModelSerializer):
     operating_country = CountrySerializer()
@@ -175,6 +175,15 @@ class BaseFormViewSet(viewsets.ModelViewSet):
     def get_common_master_person(self, form):
         return None
     
+    def form_log(self, request, form, form_object, action):
+        form_log = FormLog()
+        form_log.performed_by = request.user
+        form_log.form_name = form.form_name
+        form_log.form_number = form_object.get_key()
+        form_log.form_id = form_object.id
+        form_log.action = action
+        form_log.save()
+    
     def create(self, request):
         form_type = FormType.objects.get(name=self.get_form_type_name())
         request_json = self.extract_data(request, self.get_element_paths())
@@ -200,6 +209,11 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                         form_done.send_robust(sender=self.__class__, form_data=form_data)
                         ret = serializer2.data
                         rtn_status = status.HTTP_200_OK
+                        # Trying here because this log is failing for project "forms" where form_number is not included
+                        try:
+                            self.form_log(request, form_data.form, form_data.form_object, 'create')
+                        except:
+                            print('No form number')
                         transaction.commit()
                         transaction.set_autocommit(True)
                         self.post_process(request, form_data)
@@ -336,9 +350,15 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     form_done.send_robust(sender=self.__class__, form_data=form_data)
                     rtn_status = status.HTTP_200_OK
                     ret = serializer2.data
+                    # Trying here because this log is failing for project "forms" where form_number is not included
+                    try:
+                        self.form_log(request, form_data.form, form_data.form_object, 'update')
+                    except:
+                        print('No form number')
                     transaction.commit()
                     transaction.set_autocommit(True)
                     self.post_process(request, form_data)
+
                 else:
                     transaction.rollback()
                     transaction.set_autocommit(True)
@@ -389,7 +409,13 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 the_form.station.operating_country.id, the_form.station.id):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         form_data = FormData(the_form, form)
+        # Trying here because this log is failing for project "forms" where form_number is not included
+        try:
+            self.form_log(request, form, the_form, 'destroy')
+        except:
+            print('No form number')
         form_data.delete()
+        
         form_done.send_robust(sender=self.__class__, form_data=form_data, remove=True)
         return Response(status=status.HTTP_200_OK)
     
