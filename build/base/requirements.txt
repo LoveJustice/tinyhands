@@ -1,4 +1,5 @@
 
+azure-identity==1.17.1
 cryptography~=41.0.4
 django-templated-email==3.0.1
 Django==4.2.10
@@ -9,6 +10,7 @@ django-extensions==3.2.3
 django-extra-views==0.14.0
 django-imagekit==5
 django-picklefield==3.1
+django-storages[azure]==1.14.3
 django-webtest==1.9.11
 django-widget-tweaks==1.5.0
 django-filter==23.3

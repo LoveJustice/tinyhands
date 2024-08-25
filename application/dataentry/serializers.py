@@ -1037,20 +1037,27 @@ class EmpowermentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empowerment
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['levels', 'station_name', 'country_name']
+        fields = fields + ['levels', 'station_name', 'country_name', 'country_id']
     
     station_name = serializers.SerializerMethodField(read_only=True)
     country_name = serializers.SerializerMethodField(read_only=True)
+    country_id = serializers.SerializerMethodField(read_only=True)
     
     def get_station_name (self, obj):
         if obj.station is not None:
-            return obj.station.station_name;
+            return obj.station.station_name
         else:
             return None
     
     def get_country_name (self, obj):
         if obj.station is not None and obj.station.operating_country is not None:
-            return obj.station.operating_country.name;
+            return obj.station.operating_country.name
+        else:
+            return None
+    
+    def get_country_id (self, obj):
+        if obj.station is not None and obj.station.operating_country is not None:
+            return obj.station.operating_country.id
         else:
             return None
 
