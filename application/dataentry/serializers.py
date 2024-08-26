@@ -564,7 +564,6 @@ class PersonFormSerializer(serializers.ModelSerializer):
     form_date = serializers.CharField(source='get_form_date', read_only=True)
     station_id = serializers.CharField(source='get_station_id', read_only=True)
     country_id = serializers.CharField(source='get_country_id', read_only=True)
-    country_name = serializers.CharField(source='get_country', read_only=True)
     
     class Meta:
         model = PersonForm
@@ -575,8 +574,7 @@ class PersonFormSerializer(serializers.ModelSerializer):
             'form_number',
             'form_date',
             'station_id',
-            'country_id',
-            'country_name'
+            'country_id'
         ]
 
 class IDManagementSerializer(serializers.ModelSerializer):
@@ -613,7 +611,6 @@ class PersonFormsSerializer(serializers.Serializer):
     station_id = serializers.CharField()
     country_id= serializers.CharField()
     form_id= serializers.CharField()
-    country_name = serializers.CharField()
 
 class VictimInterviewSerializer(serializers.ModelSerializer):
     victim_guardian_address1 = Address1Serializer(read_only=True)
