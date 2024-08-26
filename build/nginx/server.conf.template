@@ -76,7 +76,7 @@ server {
     }
     
     location /re {
-    	alias /data/react_dist
+    	alias /data/react_dist/;
     }
 
     location / {
