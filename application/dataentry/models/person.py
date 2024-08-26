@@ -243,6 +243,11 @@ class PersonForm(models.Model):
             return ''
         return self.content_object.station.operating_country.id
     
+    def get_country_name(self):
+        if self.content_object is None:
+            return ''
+        return self.content_object.station.operating_country.name
+    
     def get_detail_as_object(self):
         if self.get_form_id() == '':
             return None
@@ -254,7 +259,8 @@ class PersonForm(models.Model):
             'number': self.get_form_number(),
             'date': self.get_form_date(),
             'station_id': self.get_station_id(),
-            'country_id': self.get_country_id()
+            'country_id': self.get_country_id(),
+            'country_name': self.get_country_name()
             }
         return namedtuple("FormDetail", form_dict.keys())(*form_dict.values())
 
