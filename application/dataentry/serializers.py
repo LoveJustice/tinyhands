@@ -564,7 +564,8 @@ class PersonFormSerializer(serializers.ModelSerializer):
     form_date = serializers.CharField(source='get_form_date', read_only=True)
     station_id = serializers.CharField(source='get_station_id', read_only=True)
     country_id = serializers.CharField(source='get_country_id', read_only=True)
-    country_name = serializers.CharField(source='get_country', read_only=True)
+    country_name = serializers.CharField(source='get_country_name', read_only=True)
+    
     
     class Meta:
         model = PersonForm

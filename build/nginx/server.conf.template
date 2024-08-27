@@ -65,6 +65,10 @@ server {
 	    proxy_set_header        Content-Length "";
 	    proxy_set_header Authorization "Bearer ${cookie_file_access_token}";
     }
+    
+    location /re {
+    	alias /data/react_dist/;
+    }
 
     location / {
         alias /data/dist/;
