@@ -66,9 +66,16 @@ server {
 	    proxy_set_header Authorization "Bearer ${cookie_file_access_token}";
     }
 
+    # react static js, css, image assets
+    location /re/assets/ {
+    	# Yes cache this
+    	alias /data/react_dist/assets/;
+    }
+
     location /re/ {
     	alias /data/react_dist/;
 
+        # Don't cache index.html
         # https://stackoverflow.com/a/56436590/13815107
         add_header Cache-Control "private, no-store, no-cache";
 
