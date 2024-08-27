@@ -44,7 +44,17 @@ server {
     # If you are running it on localhost please use the vite port (http://localhost:5173/)
     # instead of the nginx port (http://localhost:80 or http://localhost)
     location /re/ {
-        alias /data/react_dist/;
+    	alias /data/react_dist/;
+
+        # https://stackoverflow.com/a/56436590/13815107
+        add_header Cache-Control "private, no-store, no-cache";
+
+        # Without this, react router routes will 404.
+        #  Try to find the files in the above alias (which will work for .css, .js. html
+        #  But if you can't, like for /my-page, rout to /index.html and let react router handle it
+        # https://stackoverflow.com/q/43951720
+        #  TODO use a more robust solution like the ones in the StackOverflow comments
+        try_files $uri /re/index.html;
     }
 
     location ~ ^/(data-entry|api|login|logout|interceptee_fuzzy_matching|admin)/ {
