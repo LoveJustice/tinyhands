@@ -22,15 +22,6 @@ server {
     location / {
         rewrite     ^ https://$server_name$request_uri permanent;
     }
-
-    location /re/ {
-        proxy_pass ${REACT_CLIENT_DOMAIN};  # React app
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
 }
 
 server {
@@ -77,6 +68,10 @@ server {
 
     location / {
         alias /data/dist/;
+    }
+
+    location /re/ {
+        alias /data/react_dist/;
     }
 
     location /robots.txt {

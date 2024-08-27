@@ -40,6 +40,13 @@ server {
         alias /data/dist/;
     }
 
+    # This assumes you are building the react client and not running it on localhost
+    # If you are running it on localhost please use the vite port (http://localhost:5173/)
+    # instead of the nginx port (http://localhost:80 or http://localhost)
+    location /re/ {
+        alias /data/react_dist/;
+    }
+
     location ~ ^/(data-entry|api|login|logout|interceptee_fuzzy_matching|admin)/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
