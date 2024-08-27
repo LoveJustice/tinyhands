@@ -74,10 +74,6 @@ server {
         alias /data/dist/;
     }
 
-    location /re/ {
-        alias /data/react_dist/;
-    }
-
     location /robots.txt {
         alias /robots.txt;
     }
