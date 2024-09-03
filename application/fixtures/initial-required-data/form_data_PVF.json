@@ -5251,15 +5251,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "pvfRecruitmentPvCurrency",
-      "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": "pvfRecruitmentPvAmount",
       "category": "pvfRecruitment",
       "weight": 0,
