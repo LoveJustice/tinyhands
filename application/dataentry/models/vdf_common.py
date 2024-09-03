@@ -219,3 +219,6 @@ class GospelVerification(BaseForm):
                 return 'No'
         
         return ''
+    
+    def get_key(self):
+        return self.vdf.vdf_number
