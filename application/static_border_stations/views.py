@@ -21,13 +21,14 @@ from dateutil import parser
 
 from dataentry.models import BorderStation, Country, CountryExchange, UserLocationPermission
 from dataentry.serializers import BorderStationSerializer
-from rest_api.authentication_expansion import HasPermission, HasPostPermission, HasPutPermission
+from rest_api.authentication_expansion import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission, RequestPermission
 from static_border_stations.models import Staff, CommitteeMember, Location, StaffProject, WorksOnProject, StaffReview, StaffMiscellaneous, StaffMiscellaneousTypes, StaffAttachment
 from static_border_stations.serializers import BlankStaffSerializer, StaffSerializer, StaffKnowledgeSerializer, StaffReviewSerializer, StaffAttachmentSerializer, CommitteeMemberSerializer, LocationSerializer
 from static_border_stations.serializers import StaffMiscellaneousSerializer, StaffMiscellaneousTypesSerializer
 from budget.models import ProjectRequest, StaffBudgetItem
 import budget.mdf_constants as constants
 import xxlimited
+
 
 class BorderStationViewSet(viewsets.ModelViewSet):
     queryset = BorderStation.objects.all()
@@ -224,13 +225,83 @@ class CommitteeMemberViewSet(viewsets.ModelViewSet):
                 committee_member.misconduct_agreement.name = misconduct_agreement_file
             committee_member.save()
         serializer_new =  self.get_serializer(committee_member)
-        return Response(serializer_new.data)   
+        return Response(serializer_new.data) 
+
+# Custom permission handling for Staff because it does not have a single Project/BorderStation
+class StaffRequestPermission(RequestPermission):
+    def custom_has_object_permission(self, request, view, method, permissions_required, obj):
+        found = True
+        if request.method == method or method == "ANY":
+            # Need to have a way to access the country id and border station id from the object
+            # Assume each model will implement property get methods for country_id and border_station_id
+            get_country_id = getattr(obj, 'get_country_id', None)
+            if get_country_id is not None and callable(get_country_id):
+                country_id = obj.get_country_id()
+            else:
+                country_id = None
+            
+            staff_projects = obj.get_staff_projects()
+            
+            found = False
+            # Staff has permission if one station has all of the required permissions
+            for staff_project in staff_projects:
+                station_id = staff_project.border_station.id
+                found = True
+                for permission in permissions_required:
+                    if not UserLocationPermission.has_session_permission(request, permission['permission_group'], permission['action'], country_id, station_id):
+                        self.message = self.message.format(permission)
+                        # station is missing at least one required permission
+                        found = False
+                        break
+                if found:
+                    break
+        
+        return found
+    
+class StaffHasPermission(StaffRequestPermission):
+    def has_permission(self, request, view):
+        return self.custom_has_permission(request, view, "ANY", view.permissions_required)
+    
+    def has_object_permission(self, request, view, obj):
+        return self.custom_has_object_permission(request, view, "ANY", view.permissions_required, obj)
+
+
+class StaffHasDeletePermission(StaffRequestPermission):
+    def has_permission(self, request, view):
+        return self.custom_has_permission(request, view, "DELETE", view.delete_permissions_required)
+    
+    def has_object_permission(self, request, view, obj):
+        return self.custom_has_object_permission(request, view, "DELETE", view.delete_permissions_required, obj)
+    
+class StaffHasGetPermission(StaffRequestPermission):
+    def has_permission(self, request, view):
+        return self.custom_has_permission(request, view, "GET", view.get_permissions_required)
+    
+    def has_object_permission(self, request, view, obj):
+        return self.custom_has_object_permission(request, view, "GET", view.get_permissions_required, obj)
+
+
+class StaffHasPostPermission(StaffRequestPermission):
+    def has_permission(self, request, view):
+        return self.custom_has_permission(request, view, "POST", view.post_permissions_required)
+
+    def has_object_permission(self, request, view, obj):
+        return self.custom_has_object_permission(request, view, "POST", view.post_permissions_required, obj)
+
+class StaffHasPutPermission(StaffRequestPermission):
+    def has_permission(self, request, view):
+        return self.custom_has_permission(request, view, "PUT", view.put_permissions_required)
+    
+    def has_object_permission(self, request, view, obj):
+        return self.custom_has_object_permission(request, view, "PUT", view.put_permissions_required, obj)
+
 
 class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
-    permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
+    permission_classes = (IsAuthenticated, StaffHasPermission, StaffHasDeletePermission, StaffHasPostPermission, StaffHasPutPermission)
     permissions_required = [{'permission_group':'STAFF', 'action':'VIEW_BASIC'},]
+    delete_permissions_required = [{'permission_group':'STAFF', 'action':'DELETE'},]
     post_permissions_required = [{'permission_group':'STAFF', 'action':'ADD'},]  
     put_permissions_required = [{'permission_group':'STAFF', 'action':'EDIT_BASIC'},]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,) 

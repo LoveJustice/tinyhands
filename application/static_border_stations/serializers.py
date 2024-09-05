@@ -177,6 +177,8 @@ class BaseStaffSerializer(serializers.ModelSerializer):
        
     
     def to_internal_value(self, data):
+        if data['country'] is not None:
+            data['country_id'] = data['country']
         if 'staffproject_set' in data:
             staff_project = data['staffproject_set']
             data['staffproject_set'] = []
