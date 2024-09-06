@@ -687,9 +687,10 @@ class ResponsePersonSerializer(serializers.Serializer):
         # Date
         for field in ['birthdate']:
             tmp = data.get(field)
-            value = tmp.get('value')
-            if value is not None and value.strip() != '':
-                ret[field] = parser.parse(value).date()
+            if tmp is not None:
+                value = tmp.get('value')
+                if value is not None and value.strip() != '':
+                    ret[field] = parser.parse(value).date()
         
         tmp = data.get('link_id')
         if tmp is not None:
