@@ -176,10 +176,13 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         return None
     
     def form_log(self, request, form, form_object, action):
+        form_number = form_object.get_key()
+        if form_number is None:
+            form_number = 'No Form Number'
         form_log = FormLog()
         form_log.performed_by = request.user
         form_log.form_name = form.form_name
-        form_log.form_number = form_object.get_key()
+        form_log.form_number = form_number
         form_log.form_id = form_object.id
         form_log.action = action
         form_log.save()
