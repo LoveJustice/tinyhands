@@ -155,7 +155,7 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
     def approve_mdf(self, request, pk):
         mdf = MonthlyDistributionForm.objects.get(id=pk)
             
-        if not ((mdf.status == 'Pending' and UserLocationPermission.has_session_permission(request, 'MDF', 'INITIAL_REVIEW', mdf.border_station.operating_country.id, mdf.border_station.id)) or
+        if not ((mdf.status == 'Pending' and UserLocationPermission.has_session_permission(request, 'MDF', 'ADD', mdf.border_station.operating_country.id, mdf.border_station.id)) or
              (mdf.status == 'Submitted' and UserLocationPermission.has_session_permission(request, 'MDF', 'INITIAL_REVIEW', mdf.border_station.operating_country.id, mdf.border_station.id)) or
              (mdf.status == 'Initial Review' and UserLocationPermission.has_session_permission(request, 'MDF', 'FINAL_REVIEW', mdf.border_station.operating_country.id, mdf.border_station.id))):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
