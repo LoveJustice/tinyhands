@@ -95,6 +95,42 @@ server {
         alias /robots.txt;
     }
 
+
+
+    # This is the same as the below block but with an additional Authorization header
+    # This is because the Authentication header does not get passed when opening a url directly
+    # so we need to do special authentication using a cookie
+    # ORDER MATTERS, this must be before the other regex with 'api' in it
+    location ~ ^/api/(staff|forms)/csv/ {
+	    # Only difference from the block below this
+	    proxy_set_header Authorization "Bearer ${cookie_file_access_token}";
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 300s;
+        proxy_read_timeout 300s;
+        proxy_pass http://web:9001;
+
+        # Add CORS headers
+        add_header 'Access-Control-Allow-Origin' "$http_origin" always;
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT' always;
+        add_header 'Access-Control-Allow-Headers' 'Authorization, Origin, X-Requested-With, Content-Type, Accept' always;
+        add_header 'Access-Control-Allow-Credentials' 'true' always;
+
+        # Handle preflight requests
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' "$http_origin";
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, Origin, X-Requested-With, Content-Type, Accept';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain; charset=utf-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+    }
+
 	location ~ ^/(data-entry|api|login|logout|interceptee_fuzzy_matching|admin)/ {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;

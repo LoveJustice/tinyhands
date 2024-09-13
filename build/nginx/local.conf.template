@@ -30,6 +30,7 @@ server {
         proxy_set_header Host $http_host;
         proxy_pass_request_body off;
         proxy_set_header        Content-Length "";
+	    proxy_set_header Authorization "Bearer ${cookie_file_access_token}";
     }
 
 	location /robots.txt {
@@ -55,6 +56,21 @@ server {
         # https://stackoverflow.com/q/43951720
         #  TODO use a more robust solution like the ones in the StackOverflow comments
         try_files $uri /re/index.html;
+    }
+
+    # This is the same as the below block but with an additional Authorization header
+    # This is because the Authentication header does not get passed when opening a url directly
+    # so we need to do special authentication using a cookie
+    # ORDER MATTERS, this must be before the other regex with 'api' in it
+    location ~ ^/api/(staff|forms)/csv/ {
+	    proxy_set_header Authorization "Bearer ${cookie_file_access_token}";
+
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_pass http://web:9001;
+        proxy_connect_timeout 300s;
+        proxy_read_timeout 300s;
     }
 
     location ~ ^/(data-entry|api|login|logout|interceptee_fuzzy_matching|admin)/ {
