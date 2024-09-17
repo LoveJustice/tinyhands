@@ -1,6 +1,7 @@
 from neo4j import GraphDatabase
 import pandas as pd
 import os
+from datetime import datetime
 
 neo4j_config = {
     "username": os.environ.get("NEO4J_USER"),
@@ -110,3 +111,57 @@ def execute_neo4j_query(query, parameters):
 def construct_query_based_on_parameters(parameters):
     # Depending on the parameters, construct and return the appropriate Cypher query
     ...
+
+
+def post_to_neo4j(post):
+    parameters = {
+        "post_id": post["post_id"],
+        "group_id": post["group_id"],
+        "group_url": f"https://www.facebook.com/groups/{post['group_id']}",
+        "post_url": f"https://www.facebook.com/groups/{post['group_id']}/posts/{post['post_id']}",
+        "collected_date": datetime.now().isoformat(),  # Current date and time in ISO format
+    }
+
+    query = """
+    MERGE (group:Group {group_id: $group_id, url: $group_url})
+    MERGE (posting:Posting {post_id: $post_id})
+    ON CREATE SET posting.post_url = $post_url,
+                  posting.collected_date = datetime($collected_date)
+    MERGE (group)-[:HAS_POSTING]->(posting)
+    """
+    execute_neo4j_query(query, parameters)
+
+
+def all_new_adverts_urls(group_url=None):
+    parameters = {}
+    if group_url:
+        parameters["group_url"] = group_url
+        query = f"""MATCH (group:Group {{url: $group_url}})-[:HAS_POSTING]->(posting:Posting)
+        WHERE posting.text IS NULL
+        RETURN posting.post_id AS post_id, posting.post_url AS post_url;
+        """
+    else:
+        query = f"""MATCH (posting:Posting)
+            WHERE posting.text IS NULL
+            RETURN posting.post_id AS post_id, posting.post_url AS post_url LIMIT 22;
+            """
+    # st.write(parameters)
+    result = execute_neo4j_query(query, parameters)
+    return result
+
+
+def all_group_adverts(group_url=None):
+    parameters = {}
+    if group_url:
+        parameters["group_url"] = group_url
+        query = f"""MATCH (group:Group {{url: $group_url}})-[:HAS_POSTING]->(posting:Posting)
+        RETURN ID(posting) AS IDn, posting.text AS advert, posting.post_id AS post_id, posting.post_url AS post_url
+        ORDER BY IDn DESC;
+        """
+    else:
+        query = f"""MATCH (posting:Posting)
+            RETURN ID(posting) AS IDn, posting.post_id AS post_id, posting.post_url AS post_url;
+            """
+    # st.write(parameters)
+    result = execute_neo4j_query(query, parameters)
+    return result

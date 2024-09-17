@@ -9,6 +9,8 @@ from random import randint
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException
 import logging
+from typing import Set
+from urllib.parse import urlparse
 
 # Example usage:
 
@@ -227,6 +229,36 @@ def scroll_and_collect_data(driver, group_id, n):
         all_post_data.extend(post_data)
         all_comment_data.extend(comment_data)
     return all_post_data, all_comment_data
+
+
+def is_facebook_groups_url(url: str) -> bool:
+    """
+    Check if the given URL is a valid Facebook groups URL.
+
+    Args:
+        url (str): The URL to check.
+
+    Returns:
+        bool: True if the URL is a valid Facebook groups URL, False otherwise.
+    """
+    VALID_DOMAINS: Set[str] = {"www.facebook.com", "web.facebook.com"}
+    FORBIDDEN_SEGMENTS: Set[str] = {"user", "comment", "post"}
+
+    try:
+        parsed_url = urlparse(url)
+        path_segments = parsed_url.path.strip("/").split("/")
+
+        return all(
+            [
+                parsed_url.scheme == "https",
+                parsed_url.netloc in VALID_DOMAINS,
+                len(path_segments) >= 2,
+                path_segments[0] == "groups",
+                not set(path_segments) & FORBIDDEN_SEGMENTS,
+            ]
+        )
+    except Exception:
+        return False
 
 
 def facebook_connect():

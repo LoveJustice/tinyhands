@@ -1,13 +1,6 @@
 from .google_lib import DB_Conn
 
 
-def insert_country_string(sql_query, parameters, country):
-    if country:
-        sql_query += " AND country.name = %(country)s"
-        parameters["country"] = country
-    return sql_query, parameters
-
-
 def get_countries():
     parameters = {}
     sql_query = """SELECT id, name FROM public.dataentry_country"""
@@ -16,20 +9,11 @@ def get_countries():
     return countries
 
 
-def get_persons():
-    parameters = {}
-    sql_query = """SELECT    person.full_name AS full_name \
-                            ,person.id AS person_id \
-                            ,person.role AS role \
-                            ,person.master_person_id AS master_person_id \
-                            ,person.gender as gender \
-                            ,person.phone_contact as phone_contact \
-                            ,person.address_notes as address_notes \
-                            ,person.photo as photo \
-                            FROM public.dataentry_person person """
-    with DB_Conn() as dbc:
-        persons = dbc.ex_query(sql_query, parameters)
-    return persons
+def insert_country_string(sql_query, parameters, country):
+    if country:
+        sql_query += " AND country.name = %(country)s"
+        parameters["country"] = country
+    return sql_query, parameters
 
 
 def get_suspect_evaluations(country=None):
@@ -75,12 +59,16 @@ def get_suspects(country=None):
                             ,person.id AS person_id \
                             ,person.role AS role \
                             ,person.master_person_id AS master_person_id \
+                            ,person.gender AS gender \
+                            ,person.age AS age \
                             ,country.name AS country \
                             ,country.id AS operating_country_id \
                             ,borderstation.station_name AS station_name \
                             ,borderstation.id AS borderstation_id \
                             ,suspect.sf_number AS sf_number \
                             ,suspectlegal.pv_attempt AS pv_attempt \
+                            ,suspectlegal.arrest_date AS arrest_date \
+                            ,suspectlegal.arrested AS suspect_arrested \
                             FROM public.dataentry_person person \
                             INNER JOIN public.dataentry_suspect suspect ON suspect.merged_person_id = person.id \
                             INNER JOIN public.dataentry_suspectlegal suspectlegal ON suspectlegal.suspect_id = suspect.id \
@@ -97,8 +85,7 @@ def get_suspects(country=None):
 
 def get_irf(country=None):
     parameters = {}
-    sql_query = """SELECT irfcommon.id AS irf_id\
-        ,irfcommon.number_of_victims AS number_of_victims \
+    sql_query = """SELECT irfcommon.number_of_victims AS number_of_victims \
         ,irfcommon.number_of_traffickers AS number_of_traffickers \
         ,irfcommon.where_going_destination AS where_going_destination \
         ,irfcommon.irf_number AS irf_number \
@@ -106,13 +93,9 @@ def get_irf(country=None):
         ,irfcommon.date_of_interception AS date_of_interception \
         ,irfcommon.case_notes AS case_notes \
         ,person.arrested AS arrested \
-        ,person.full_name AS full_name \
-        ,person.role AS role \
         ,person.master_person_id AS master_person_id \
         ,country.name AS country \
         ,country.id AS operating_country_id \
-        ,borderstation.station_name AS station_name \
-        ,borderstation.id AS borderstation_id \
         FROM public.dataentry_irfcommon irfcommon \
         INNER JOIN public.dataentry_intercepteecommon intercepteecommon ON intercepteecommon.interception_record_id = irfcommon.id \
         INNER JOIN public.dataentry_borderstation borderstation ON borderstation.id = irfcommon.station_id \
@@ -129,8 +112,7 @@ def get_irf(country=None):
 
 def get_vdf(country=None):
     parameters = {}
-    sql_query = """SELECT vdfcommon.id AS victim_id \
-        ,person.arrested AS arrested \
+    sql_query = """SELECT person.arrested AS arrested \
         ,vdfcommon.station_id AS station_id \
         ,person.id AS person_id \
         ,vdfcommon.pv_recruited_how AS pv_recruited_how \
@@ -151,7 +133,6 @@ def get_vdf(country=None):
         ,person.role AS role \
         ,person.social_media AS social_media \
         ,borderstation.station_name AS station_name \
-        ,borderstation.id AS borderstation_id \
         ,country.name AS country \
         ,country.id AS operating_country_id \
         ,person.master_person_id AS master_person_id \

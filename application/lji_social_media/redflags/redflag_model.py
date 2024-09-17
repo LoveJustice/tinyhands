@@ -39,22 +39,12 @@ data_columns = [
 ]
 
 
-def load_and_preprocess_data(file_path1, file_path2):
-    advert_flags = pd.read_csv(file_path1)
-    advert_100_comparison = pd.read_csv(file_path2)
-
-    model_data = advert_flags.merge(
-        advert_100_comparison[["IDn", "monitor_score"]], left_on="id", right_on="IDn"
-    ).drop(columns=["IDn"])
-    # Reorder model_data to match the order of advert_100_comparison
-    model_data = (
-        model_data.set_index("id").reindex(advert_100_comparison["IDn"]).reset_index()
-    )
-
+def load_and_preprocess_data(file_path):
+    model_data = pd.read_csv(file_path)
+    model_data = model_data[~(model_data["monitor_score"] == "unknown")]
     mapping = {"yes": 1, "no": 0}
     df = model_data.replace(mapping)
-    df.loc[df.IDn == 572651, "monitor_score"] = 1
-
+    # df.loc[df.IDn == 572651, "monitor_score"] = 1
     return df[data_columns], df["monitor_score"]
 
 
@@ -83,6 +73,12 @@ def train_and_evaluate_model(X, y, pipeline):
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
+    # X_train, X_test, y_train, y_test = (
+    #     X[test_train == "train"],
+    #     X[test_train == "test"],
+    #     y[test_train == "train"],
+    #     y[test_train == "test"],
+    # )
 
     pipeline.fit(X_train, y_train)
 
@@ -193,70 +189,64 @@ def generate_unique_filename(prefix="adverts_sample", extension="csv"):
 
 
 def main():
-    file_path1 = "results/advert_flags.csv"
-    file_path2 = "results/advert_100_comparison_with_regressor_predictions.csv"
-    advert_flags = pd.read_csv(file_path1)
-    advert_100_comparison = pd.read_csv(file_path2)
+    # file_path1 = "results/advert_flags.csv"
+    file_path = "results/advert_flags.csv"
+    advert_flags = pd.read_csv(file_path)
+    advert_flags = advert_flags[~(advert_flags["monitor_score"] == "unknown")]
     # Create the results DataFrame
     results = pd.DataFrame(
         columns=[
-            "IDn",
             "advert",
+            "group_id",
+            "post_id",
             "monitor_score",
-            "old_model_predictions",
-            "new_model_predictions",
             "test_train",
-        ]
+        ],
+        index=advert_flags.index,
     )
 
-    X, y = load_and_preprocess_data(file_path1, file_path2)
+    X, y = load_and_preprocess_data(file_path)
     # pipeline = create_model_pipeline()
     # best_pipeline = tune_hyperparameters(pipeline, X, y)
     # trained_pipeline, X_test, y_test = train_and_evaluate_model(X, y, best_pipeline)
     # Populate the results DataFrame
-    results["IDn"] = advert_100_comparison["IDn"]
-    results["advert"] = advert_100_comparison["advert"]
-    results["monitor_score"] = advert_100_comparison["monitor_score"]
+    results["advert"] = advert_flags["advert"]
+    results["group_id"] = advert_flags["group_id"]
+    results["post_id"] = advert_flags["post_id"]
+    results["monitor_score"] = advert_flags["monitor_score"]
     results["test_train"] = "train"
-    results["old_model_predictions"] = advert_100_comparison["Model Values"]
 
     # trained_pipeline, X_test, y_test = train_and_evaluate_model(X, y, pipeline)
     advanced_pipeline = create_advanced_pipeline()
+
     best_advanced_pipeline = tune_hyperparameters(advanced_pipeline, X, y)
     trained_pipeline, X_test, y_test = train_and_evaluate_model(
         X, y, best_advanced_pipeline
     )
     # Additional analysis can be added here
     results.loc[results.index.isin(X_test.index), "test_train"] = "test"
-    new_model_predictions = trained_pipeline.predict(X_test)
+    new_model_predictions_test = trained_pipeline.predict(X_test)
     new_model_predictions_all = trained_pipeline.predict(X)
-    old_model_predictions_all = advert_100_comparison["Model Values"]
-    results["new_model_predictions"] = new_model_predictions_all
+
+    results["model_predictions"] = new_model_predictions_all
 
     # Update old_model_predictions for both train and test
-    results["old_model_predictions"] = advert_100_comparison["Model Values"]
-    old_model_predictions = advert_100_comparison[
-        advert_100_comparison.index.isin(y_test.index)
-    ]["Model Values"]
+
     # Assuming you have predictions from both models on the same test set
-    mean_squared_error(y, advert_100_comparison["Model Values"])
-    mse_new = mean_squared_error(y_test, new_model_predictions)
-    mse_old = mean_squared_error(y_test, old_model_predictions)
+    mean_squared_error(y, advert_flags["monitor_score"])
+    mse_new = mean_squared_error(y_test, new_model_predictions_test)
+
     mean_squared_error(y, new_model_predictions_all)
-    mean_squared_error(y, advert_100_comparison["Model Values"])
+    mean_squared_error(y, advert_flags["monitor_score"])
     print(f"New model MSE: {mse_new}")
-    print(f"Old model MSE: {mse_old}")
 
     # You can also compute R-squared for both models
-    r2_new = r2_score(y_test, new_model_predictions)
-    r2_old = r2_score(y_test, old_model_predictions)
-    new_model_correlation = np.corrcoef(y_test, new_model_predictions)[0, 1]
-    old_model_correlation = np.corrcoef(y_test, old_model_predictions)[0, 1]
-    old_model_spearman_correlation, old_model_p_value = spearmanr(
-        y_test, old_model_predictions
-    )
+    r2_new = r2_score(y_test, new_model_predictions_test)
+
+    new_model_correlation = np.corrcoef(y_test, new_model_predictions_test)[0, 1]
+
     new_model_spearman_correlation, new_model_p_value = spearmanr(
-        y_test, new_model_predictions
+        y_test, new_model_predictions_test
     )
     print(
         f"New model spearman : {new_model_spearman_correlation} with p-value {new_model_p_value}"
@@ -264,13 +254,13 @@ def main():
     print(
         f"Old model spearman : {old_model_spearman_correlation} with p-value {old_model_p_value}"
     )
-    print(f"Old model R-squared: {r2_old}")
+
     print(f"New model R-squared: {r2_new}")
-    print(f"Old model R-squared: {r2_old}")
+
     unique_filename = generate_unique_filename(
         prefix="redflag_model_result", extension="csv"
     )
-    results = results.set_index("IDn").loc[advert_flags["id"]].reset_index()
+    results = results.set_index("post_id").loc[advert_flags["post_id"]].reset_index()
     results.to_csv(f"results/{unique_filename}")
 
 

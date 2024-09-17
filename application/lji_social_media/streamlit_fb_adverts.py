@@ -6,8 +6,7 @@ from googleapiclient.discovery import build
 import pandas as pd
 import gspread
 from st_pages import Page, Section, add_page_title, show_pages, show_pages_from_config
-from typing import Set
-from selenium.webdriver.common.action_chains import ActionChains
+
 import json
 from urllib.parse import urlparse, parse_qs
 import os
@@ -25,6 +24,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import libraries.search_patterns as sp
 import logging
 from selenium.webdriver import ActionChains
 from selenium import webdriver
@@ -42,13 +42,6 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 # find_advert_poster
 # snapshot
 
-# Constants for regex patterns
-GROUP_USER_ID_PATTERN = re.compile(r"/groups/([\w]+)/user/([\w]+)/?")
-GROUP_ID_PATTERN = re.compile(r"groups/([\w]+)")
-GROUP_POST_ID_PATTERN = re.compile(r"/groups/([\w]+)/posts/([\w]+)/?")
-GROUP_COMMENT_ID_PATTERN = re.compile(
-    r"groups/([\w]+)/posts/([\w]+)/.*[?&]comment_id=([\w]+)/?"
-)
 
 # Named tuple for structured return
 PosterInfo = namedtuple("PosterInfo", ["poster", "commenters"])
@@ -70,11 +63,7 @@ if not all([neo4j_url, neo4j_usr, neo4j_pwd]):
 # Initialize Graph
 graph = Graph(neo4j_url, user=neo4j_usr, password=neo4j_pwd)
 
-from social_media.social_media import (
-    facebook_connect,
-    find_search_urls,
-    find_friend_urls,
-)
+import social_media.social_media as sm
 
 from datetime import datetime
 from pathlib import Path
@@ -295,90 +284,9 @@ def wait_for_element_by_id(driver, element_id, timeout=10):
     )
 
 
-def is_facebook_groups_url(url: str) -> bool:
-    """
-    Check if the given URL is a valid Facebook groups URL.
-
-    Args:
-        url (str): The URL to check.
-
-    Returns:
-        bool: True if the URL is a valid Facebook groups URL, False otherwise.
-    """
-    VALID_DOMAINS: Set[str] = {"www.facebook.com", "web.facebook.com"}
-    FORBIDDEN_SEGMENTS: Set[str] = {"user", "comment", "post"}
-
-    try:
-        parsed_url = urlparse(url)
-        path_segments = parsed_url.path.strip("/").split("/")
-
-        return all(
-            [
-                parsed_url.scheme == "https",
-                parsed_url.netloc in VALID_DOMAINS,
-                len(path_segments) >= 2,
-                path_segments[0] == "groups",
-                not set(path_segments) & FORBIDDEN_SEGMENTS,
-            ]
-        )
-    except Exception:
-        return False
-
-
 def is_valid_name(name):
     words = name.lower().split()
     return len(words) > 1 and len(set(words)) > 1
-
-
-def extract_group_id(url):
-    result = GROUP_ID_PATTERN.search(url)
-
-    if result:
-        # Extracted post ID is the second captured group
-        group_id = result.group(1)
-        return group_id
-    else:
-        # Return None or raise an error if the URL doesn't .match the expected format
-        return None
-
-
-def find_posts_comments_and_user_ids(soup):
-    # Find all 'div', 'p', and 'span' tags
-    div_p_tags = soup.find_all(["div", "p"])
-    span_tags = soup.find_all("span")
-
-    # Prepare regex for user_id extraction
-    # user_id_pattern = re.compile(r"/groups/\d+/user/(\d+)/")
-
-    # Initialize lists to store results
-    div_p_texts = []
-    span_texts = []
-
-    for tag in div_p_tags:
-        text = tag.get_text(strip=True)
-        # Find 'a' tags within the current tag
-        a_tags = tag.find_all("a", href=True)
-        # Extract user_id from the href of each 'a' tag
-        for a_tag in a_tags:
-            href = a_tag["href"]
-            user_id_match = GROUP_USER_ID_PATTERN.search(href)
-            if user_id_match:
-                user_id = user_id_match.group(1)
-                div_p_texts.append((text, user_id))
-
-    for tag in span_tags:
-        text = tag.get_text(strip=True)
-        # Find 'a' tags within the current tag
-        a_tags = tag.find_all("a", href=True)
-        # Extract user_id from the href of each 'a' tag
-        for a_tag in a_tags:
-            href = a_tag["href"]
-            user_id_match = GROUP_USER_ID_PATTERN.search(href)
-            if user_id_match:
-                user_id = user_id_match.group(1)
-                span_texts.append((text, user_id))
-
-    return div_p_texts, span_texts
 
 
 def save_results(filename, results):
@@ -564,39 +472,6 @@ RETURN pNode, fNode
         "results/follower_profile_dicts.csv", index=False
     )
     logging.info("Successfully created results/follower_profile_dicts.csv")
-
-
-def postings_to_neo4j():
-    if is_facebook_groups_url(st.session_state["driver"].current_url):
-        st.write(
-            "Upload all posts on group page to Neo4J:  The URL is a valid Facebook groups URL."
-        )
-        user_ids, comment_matches, post_matches = list_all_users()
-        st.write(f"User IDs: {user_ids}")
-        st.write(f"Comment matches: {comment_matches}")
-        st.write(f"Post matches: {post_matches}")
-        # st.session_state["options"] = [
-        #     st.session_state["default_option"]
-        # ] + st.session_state["post_ids"]
-        for post_match in post_matches:
-            st.write(
-                f"Post match; group_id: {post_match['group_id']}, post_id: {post_match['post_id']}"
-            )
-            parameters = {
-                "post_id": post_match["post_id"],
-                "group_id": post_match["group_id"],
-                "group_url": f"https://www.facebook.com/groups/{post_match['group_id']}",
-                "post_url": f"https://www.facebook.com/groups/{post_match['group_id']}/posts/{post_match['post_id']}",
-            }
-
-            query = f"""MERGE (group:Group {{group_id: $group_id, url: $group_url}})
-                        MERGE (posting:Posting {{post_id: $post_id, post_url: $post_url}})
-                        MERGE (group)-[:HAS_POSTING]->(posting)
-                    """
-            # st.write(parameters)
-            execute_neo4j_query(query, parameters)
-    else:
-        st.write("The URL does not match the required Facebook groups format.")
 
 
 def save_page_usernames(driver, file_path):
@@ -1001,7 +876,7 @@ def connect_facebook():
     """
     try:
         st.write("Check your browser!")
-        driver = facebook_connect()
+        driver = sm.facebook_connect()
         st.session_state["driver"] = driver
         st.session_state["connected"] = True
         st.write("You are now connected!")
@@ -1053,55 +928,6 @@ def scroll_to_end(
             # If heights are the same, it's the end of the page
             break
 
-        # Update the last height for next loop
-        last_height = new_height
-
-    # Return the final scroll height
-    return last_height
-
-
-def scroll_to_upload_postings(
-    driver,
-    wait_time=10,
-    min_sleep=1,
-    max_sleep=6,
-    target_mean_sleep=1.8,
-    chance_of_reverse_scroll=0.1,
-    reverse_scroll_factor=0.5,
-):
-    last_height = driver.execute_script("return document.body.scrollHeight")
-
-    while True:
-        # Random scroll length: scroll less than the full height of the page
-        scroll_length = random.uniform(0.5, 0.9) * last_height
-
-        # Scroll down part of the way
-        driver.execute_script(f"window.scrollTo(0, {scroll_length});")
-
-        # Randomize sleep interval with a mean around target_mean_sleep
-        sleep_time = random.triangular(min_sleep, max_sleep, target_mean_sleep)
-        time.sleep(sleep_time)
-
-        # Occasionally scroll back up
-        if random.random() < chance_of_reverse_scroll:
-            reverse_scroll_length = scroll_length - (
-                reverse_scroll_factor * last_height
-            )
-            driver.execute_script(f"window.scrollTo(0, {reverse_scroll_length});")
-            time.sleep(random.uniform(min_sleep, max_sleep))
-
-        # Wait to load page
-        WebDriverWait(driver, wait_time).until(
-            lambda d: d.execute_script("return document.body.scrollHeight")
-            > last_height
-        )
-
-        # Calculate new scroll height and compare with last scroll height
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
-            # If heights are the same, it's the end of the page
-            break
-        postings_to_neo4j()
         # Update the last height for next loop
         last_height = new_height
 
@@ -1168,148 +994,7 @@ def logout(driver):
 def record_time_str():
     now = datetime.now()
     return now.strftime("%Y-%m-%d %H:%M:%S")
-
-
-def make_list_unique(list_of_dicts):
-    unique_serialized = {json.dumps(d, sort_keys=True) for d in list_of_dicts}
-    unique_list_of_dicts = [json.loads(s) for s in unique_serialized]
-    return unique_list_of_dicts
-
-
-def list_all_users():
-    driver = st.session_state["driver"]
-    html_content = driver.page_source
-    soup = BeautifulSoup(html_content, "html.parser")
-
-    # Define regex patterns for extracting group_id, user_id, and comment_id
-
-    # Assuming the rest of your code structure remains the same
-
-    # Find all 'a' tags with 'href' attribute
-    links = soup.find_all("a", href=True)
-    post_matches = []
-    comment_matches = []
-    user_ids = []
-    for link in links:
-        href = link["href"]
-        if "groups" in href:
-            user_match = GROUP_USER_ID_PATTERN.search(href)
-            post_match = GROUP_POST_ID_PATTERN.search(href)
-            comment_match = GROUP_COMMENT_ID_PATTERN.search(href)
-
-            if user_match:
-                group_id, user_id = user_match.groups()
-                poster_name = link.get_text(strip=True)
-                user_ids.append(
-                    {
-                        "group_id": group_id,
-                        "user_id": user_id,
-                        "poster_name": poster_name,
-                    }
-                )
-
-            if comment_match:
-                # st.write("href (comment_match): ", href)
-                group_id, post_id, comment_id = comment_match.groups()
-                comment_matches.append(
-                    {"group_id": group_id, "post_id": post_id, "comment_id": comment_id}
-                )
-
-            if post_match:
-                # st.write("href (post_match): ", href)
-                group_id, post_id = post_match.groups()
-                # st.write("Post match; group_id: ", group_id, "post_id: ", post_id)
-                post_matches.append({"group_id": group_id, "post_id": post_id})
-
-    # user_ids.append((group_id, user_id, poster_name))
-    # comment_matches.append((group_id, post_id, comment_id))
-    # post_matches.append((group_id, post_id))
-    unique_user_ids = make_list_unique(user_ids)
-    unique_comment_matches = make_list_unique(comment_matches)
-    unique_post_matches = make_list_unique(post_matches)
-    return unique_user_ids, unique_comment_matches, unique_post_matches
-
     # Here you can add additional logic for comment-specific processing
-
-
-def extract_poster_info(driver):
-    html_content = driver.page_source
-    soup = BeautifulSoup(html_content, "html.parser")
-    poster_info = []
-
-    try:
-        for link in soup.find_all("a", class_=["x1i10hfl", "xjbqb8w"]):
-            href = link.get("href", "")
-            match = GROUP_USER_ID_PATTERN.search(href)
-            if match:
-                group_id, user_id = match.groups()
-                name = (
-                    link.get_text(strip=True)
-                    or link.find_next_sibling(text=True, strip=True)
-                    or "N/A"
-                )
-                poster_info.append(
-                    {"name": name, "group_id": group_id, "user_id": user_id}
-                )
-    except Exception as e:
-        logging.error(f"Error in extract_poster_info: {e}")
-
-    return poster_info
-
-
-def find_advert_poster_depr():
-    try:
-        driver = st.session_state["driver"]
-        html_content = driver.page_source
-        soup = BeautifulSoup(html_content, "html.parser")
-
-        # Find all 'a' elements
-        user_links = soup.find_all("a")
-
-        if not user_links:
-            st.write("No user links found.")
-            return []
-
-        posters = []
-        for link in user_links:
-            href = link.get("href")
-            name = link.get_text(strip=True) if link.get_text(strip=True) else "N/A"
-            classes = link.get("class")
-            st.write(f"Checking link: {href} with name: {name} and classes: {classes}")
-
-            if not href:
-                continue  # Skip if href is None
-
-            # Match group/user pattern
-            match_user = GROUP_USER_ID_PATTERN.search(href)
-            if match_user:
-                group_id, user_id = match_user.groups()
-                st.write(
-                    f"Match found: Name: {name}, Group ID: {group_id}, User ID: {user_id}"
-                )
-                posters.append({"name": name, "group_id": group_id, "user_id": user_id})
-                continue  # Skip further checks if user ID is found
-
-            # Match group/post pattern
-            match_post = GROUP_POST_ID_PATTERN.search(href)
-            if match_post:
-                group_id, post_id = match_post.groups()
-                st.write(
-                    f"Match found: Name: {name}, Group ID: {group_id}, Post ID: {post_id}"
-                )
-                posters.append({"name": name, "group_id": group_id, "post_id": post_id})
-
-        # Remove duplicates by serializing the list of dictionaries to a set of unique JSON strings
-        unique_serialized = {json.dumps(d, sort_keys=True) for d in posters}
-        posters = [json.loads(s) for s in unique_serialized]
-
-        if not posters:
-            st.write("No matches found for the specified patterns.")
-        return posters
-
-    except Exception as e:
-        st.error(f"An error occurred in find_advert_poster: {e}")
-        return []
 
 
 def find_advert_poster_inside(
@@ -1341,7 +1026,7 @@ def find_advert_poster_inside(
         logging.info(f"Author found: {name}")
         logging.info(f"Author link: {href}")
 
-        poster_info = extract_poster_info(name, href)
+        poster_info = sp.extract_poster_info(name, href)
 
         if poster_info:
             logging.info(f"Extracted: {poster_info}")
@@ -1357,32 +1042,6 @@ def find_advert_poster_inside(
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}")
         return []
-
-
-def extract_poster_info(name: str, href: str) -> Optional[Dict[str, str]]:
-    """
-    Extract poster information from the name and href.
-
-    Args:
-        name (str): The name of the poster
-        href (str): The href attribute of the poster's link
-
-    Returns:
-        Optional[Dict[str, str]]: A dictionary with poster information if matches are found, None otherwise
-    """
-    group_user_match = GROUP_USER_ID_PATTERN.search(href)
-    post_match = GROUP_POST_ID_PATTERN.search(href)
-
-    if group_user_match and post_match:
-        group_id, user_id = group_user_match.groups()
-        _, post_id = post_match.groups()
-        return {
-            "name": name,
-            "group_id": group_id,
-            "user_id": user_id,
-            "post_id": post_id,
-        }
-    return None
 
 
 def extract_names(html_content):
@@ -1402,123 +1061,6 @@ def extract_names(html_content):
             names.append(name.get_text(strip=True))
 
     return names
-
-
-def find_comments():
-    # Your HTML content
-    driver = st.session_state["driver"]
-    html_content = driver.page_source
-    soup = BeautifulSoup(html_content, "html.parser")
-
-    # Regex pattern to extract group_id, user_id, and comment_id from href
-    # href_pattern = re.compile(r"/groups/(\d+)/user/(\d+)/")
-    # comment_pattern = re.compile(r"/groups/(\d+)/posts/(\d+)/.*[?&]comment_id=(\d+)")
-
-    # List to store extracted information
-    extracted_info = []
-
-    # Find all div elements for the new pattern
-    new_elements = soup.find_all("div", class_="x1y1aw1k xn6708d xwib8y2 x1ye3gou")
-
-    for element in new_elements:
-        # Find the 'a' tag with the user link
-        user_link = element.find("a", href=True)
-        if user_link:
-            href = user_link["href"]
-            match = GROUP_USER_ID_PATTERN.search(href)
-            if match:
-                group_id, user_id = match.groups()
-                # Attempt to find the comment_id in a different 'a' tag within the same larger container
-                comment_link = element.find("a", href=GROUP_COMMENT_ID_PATTERN)
-                comment_id_match = (
-                    GROUP_COMMENT_ID_PATTERN.search(comment_link["href"])
-                    if comment_link
-                    else None
-                )
-                if comment_id_match:
-                    group_id, post_id, comment_id = comment_id_match.groups()
-                    # Name extraction
-                    name_container = element.find("span", class_="x3nfvp2")
-                    name = (
-                        name_container.get_text(strip=True)
-                        if name_container
-                        else "Unknown"
-                    )
-                    # Extract the text within the div for the comment text
-                    text_container = element.find(
-                        "div", class_="xdj266r x11i5rnm xat24cr x1mh8g0r x1vvkbs"
-                    )
-                    text = (
-                        text_container.get_text(strip=True)
-                        if text_container
-                        else "No text"
-                    )
-                    extracted_info.append(
-                        {
-                            "user_id": user_id,
-                            "comment": text,
-                            "group_id": group_id,
-                            "post_id": post_id,
-                            "comment_id": comment_id,
-                            "name": name,
-                        }
-                    )
-
-    # Optionally, remove duplicates
-    extracted_info = list(set(extracted_info))
-
-    for info in extracted_info:
-        st.write(
-            f"User ID: {info[0]}, Text: {info[1]}, Group ID: {info[2]}, Post ID: {info[3]}, Comment ID: {info[4]}, Name: {info[5]}"
-        )
-
-    return extracted_info
-
-
-def list_all_users_and_comments():
-    driver = st.session_state["driver"]
-    html_content = driver.page_source
-    soup = BeautifulSoup(html_content, "html.parser")
-
-    # Adjusted patterns if necessary
-    # group_user_pattern = re.compile(r"/groups/(\d+)/user/(\d+)/?")
-    # group_comment_pattern = re.compile(
-    #     r"/groups/(\d+)/posts/(\d+)/.*[?&]comment_id=(\d+)"
-    # )
-
-    user_comments = []
-
-    # Assume a more targeted search approach, focusing on the known structure
-    # For example, if users and comments are always within a certain div class:
-    posts = soup.find_all(
-        "div", class_="x1y1aw1k xn6708d xwib8y2 x1ye3gou"
-    )  # Adjust class as needed
-
-    for post in posts:
-        user_link = post.find("a", href=GROUP_USER_ID_PATTERN)
-        if user_link:
-            group_id, user_id = GROUP_USER_ID_PATTERN.search(user_link["href"]).groups()
-            poster_name = user_link.text.strip()
-
-            # Find the comment link within the same or related structure
-            comment_link = post.find("a", href=GROUP_COMMENT_ID_PATTERN)
-            if comment_link:
-                _, _, comment_id = GROUP_COMMENT_ID_PATTERN.search(
-                    comment_link["href"]
-                ).groups()
-
-                user_comments.append(
-                    {
-                        "group_id": group_id,
-                        "user_id": user_id,
-                        "poster_name": poster_name,
-                        "comment_ids": [
-                            comment_id
-                        ],  # This assumes one comment per post; adjust as needed
-                    }
-                )
-
-    return user_comments
 
 
 def wait_for_element(driver, element_locator):
@@ -1606,40 +1148,6 @@ def write_sheet(tab, data):
     request.execute()
 
 
-def extract_info():
-    html_content = st.session_state["driver"].page_source
-    soup = BeautifulSoup(html_content, "html.parser")
-
-    # Compile the regex patterns
-
-    results = []
-
-    # Find all relevant 'a' tags with the specific class for the names
-    links = soup.find_all(
-        "a",
-        class_="x1i10hfl xjbqb8w x1ejq31n xd10rxx x1sy0etr x17r0tee x972fbf xcfux6l x1qhh985 xm0m39n x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x16tdsg8 xggy1nq x1a2a7pz xt0b8zv x1hl2dhg xzsf02u x1s688f",
-    )
-
-    for link in links:
-        href = link.get("href")
-        person_name = link.text.strip()
-        user_match = GROUP_USER_ID_PATTERN.search(href)
-        group_match = GROUP_ID_PATTERN.search(href)
-
-        if user_match:
-            group_id, user_id = user_match.groups()
-            results.append(
-                {"person_name": person_name, "group_id": group_id, "user_id": user_id}
-            )
-        elif group_match:
-            group_id = group_match.group(1)
-            results.append(
-                {"person_name": person_name, "group_id": group_id, "user_id": None}
-            )
-
-    return results
-
-
 def wait_for_link_by_href(driver, href, timeout=10):
     try:
         print(f"Searching {href} ...")
@@ -1649,77 +1157,6 @@ def wait_for_link_by_href(driver, href, timeout=10):
         print(f"Element {href} found!")
     except Exception as e:
         print(f"An error occurred: {e}")
-
-
-def extract_post_id(url: str) -> Optional[str]:
-    """Extract post ID from the given URL."""
-    match = GROUP_POST_ID_PATTERN.search(url)
-    return match.group(2) if match else None
-
-
-def find_comments_expanded() -> List[Dict[str, str]]:
-    """Extract and return expanded comment information from the current page."""
-    soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
-    comment_blocks = soup.find_all(
-        "div", class_="x1r8uery x1iyjqo2 x6ikm8r x10wlt62 x1pi30zi"
-    )
-
-    return list(
-        {
-            json.dumps(comment, sort_keys=True): comment
-            for block in comment_blocks
-            if (comment := extract_comment_info(block)) is not None
-        }.values()
-    )
-
-
-def extract_comment_info(parent_element: Tag) -> Optional[Dict[str, str]]:
-    """Extract comment information from a single comment block."""
-    user_link = parent_element.find("a", href=GROUP_USER_ID_PATTERN)
-    if not user_link or not (
-        match_user := GROUP_USER_ID_PATTERN.search(user_link["href"])
-    ):
-        return None
-
-    group_id, user_id = match_user.groups()
-    text_container = parent_element.find("div", class_="x1lliihq xjkvuk6 x1iorvi4")
-    comment_link = parent_element.find("a", href=GROUP_COMMENT_ID_PATTERN)
-
-    return {
-        "user_id": user_id,
-        "name": user_link.text,
-        "text": text_container.text if text_container else "Text not found",
-        "group_id": group_id,
-        "comment_id": extract_comment_id(comment_link),
-    }
-
-
-def extract_comment_id(comment_link: Optional[Tag]) -> str:
-    """Extract the comment ID from a comment link."""
-    if comment_link and (
-        match_comment := GROUP_COMMENT_ID_PATTERN.search(comment_link["href"])
-    ):
-        return match_comment.group(3)
-    return "Comment ID not found"
-
-
-def find_advert_content() -> Optional[str]:
-    """Extract the advertisement content from the current page."""
-    try:
-        soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
-        message_div = soup.find("div", {"data-ad-comet-preview": "message"})
-
-        if not message_div:
-            st.warning("The message div could not be found in the HTML content.")
-            return None
-
-        return " ".join(
-            div.get_text(strip=True)
-            for div in message_div.find_all("div", recursive=False)
-        )
-    except Exception as e:
-        st.error(f"An error occurred while extracting advert content: {str(e)}")
-        return None
 
 
 def find_group_name() -> Optional[str]:
@@ -1741,55 +1178,19 @@ def find_group_name() -> Optional[str]:
         return None
 
 
-def find_advert_poster() -> List[Dict[str, str]]:
-    """Extract information about the poster of the advertisement."""
-    try:
-        soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
-        poster_link = soup.find(
-            "a",
-            {
-                "class": "x1i10hfl xjbqb8w x6umtig x1b1mbwd xaqea5y xav7gou x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz xt0b8zv xzsf02u x1s688f"
-            },
-        )
-
-        if not poster_link:
-            st.warning("Poster information could not be found.")
-            return []
-
-        name = poster_link.text
-        href = poster_link.get("href", "")
-        user_id_match = re.search(r"user/(\d+)", href)
-        group_id_match = GROUP_ID_PATTERN.search(st.session_state["driver"].current_url)
-
-        if not user_id_match or not group_id_match:
-            st.warning("User ID or Group ID could not be extracted.")
-            return []
-
-        return [
-            {
-                "name": name,
-                "user_id": user_id_match.group(1),
-                "group_id": group_id_match.group(1),
-            }
-        ]
-    except Exception as e:
-        st.error(f"An error occurred while extracting poster information: {str(e)}")
-        return []
-
-
 def snapshot():
     """Take a snapshot of the current Facebook post and upload to Neo4j."""
     driver = st.session_state["driver"]
-    post_id = extract_post_id(driver.current_url)
+    post_id = sp.extract_post_id(driver.current_url)
     if not post_id:
         st.error("Could not extract post ID from the current URL.")
         return
 
     st.write(f"Post ID: {post_id}")
-    posters = find_advert_poster()
+    posters = sp.find_advert_poster()
     st.write(f"Posters: {posters}")
-    advert_text = find_advert_content()
-    all_users_and_comments = find_comments_expanded()
+    advert_text = sp.find_advert_content()
+    all_users_and_comments = sp.find_comments_expanded()
     st.write(all_users_and_comments)
     group_name = find_group_name()
     st.write(f"Group name: {group_name}")
@@ -1865,6 +1266,8 @@ def main():
         [
             Page("streamlit_fb_adverts.py", "Home", "🏠"),
             Page("fb_advert_pages/google_store.py", "Google sheet", "📖"),
+            Page("fb_advert_pages/fetch_advert_content.py", "Get adverts", "🔗"),
+            Page("fb_advert_pages/groups.py", "Stored groups", "🔗"),
         ]
     )
 
@@ -1891,7 +1294,7 @@ def main():
         st.session_state["datetime_key"] = now.strftime("%Y%m%d %H:%M:%S")
         logging.info("Check your browser!")
         kill_all_chromedriver_instances()
-        driver = facebook_connect()
+        driver = sm.facebook_connect()
         st.session_state["driver"] = driver
         st.session_state["connected"] = True
         logging.info("You are now connected!")
@@ -1935,9 +1338,9 @@ def main():
         # Assuming list_all_users returns lists of user_ids, comment_matches, and post_matches
         if st.button("list all posts on group page"):
             st.write(st.session_state["driver"].current_url)
-            if is_facebook_groups_url(st.session_state["driver"].current_url):
+            if sm.is_facebook_groups_url(st.session_state["driver"].current_url):
                 st.write("list_all_users")
-                user_ids, comment_matches, post_matches = list_all_users()
+                user_ids, comment_matches, post_matches = sp.list_all_users()
                 st.write(user_ids)
                 st.write("done list_all_users")
                 st.session_state["post_matches"] = post_matches
@@ -1959,22 +1362,6 @@ def main():
             else:
                 st.write("The URL does not match the required Facebook groups format.")
 
-        # st.write(st.session_state["options"])
-        if st.button("Upload all posts on group page to Neo4J"):
-            st.write(st.session_state["driver"].current_url)
-            if is_facebook_groups_url(st.session_state["driver"].current_url):
-                scroll_to_upload_postings(
-                    st.session_state["driver"],
-                    wait_time=20,
-                    min_sleep=2.01,
-                    max_sleep=9.9,
-                    target_mean_sleep=2.609,
-                    chance_of_reverse_scroll=0.1,
-                    reverse_scroll_factor=0.5,
-                )
-            else:
-                st.write("The URL does not match the required Facebook groups format.")
-
         if st.session_state["options"]:
             st.selectbox(
                 "Select post to scrape:",
@@ -1982,58 +1369,12 @@ def main():
                 index=0,
                 key="selected_option",  # This links the selectbox directly to the session state variable
             )
-            # Initialize variable to None to handle the case where no match is found
 
-            # At this point, group_id_for_selected_option contains the desired group ID or remains None if no match was found
-
-        # Execute the following block if a post has been selected (not the default option)
-        if st.button("Scrape selected post..."):
-            if st.session_state["selected_option"] != "Please select a post_id":
-                try:
-                    group_id_for_selected_option = None
-                    # Iterate through post_matches and find the first match
-
-                    for post_match in st.session_state["post_matches"]:
-                        if post_match["post_id"] == st.session_state["selected_option"]:
-                            st.session_state["group_id"] = post_match["group_id"]
-                            break  # Exit loop after finding the first match
-
-                    st.write(f"Selected post: {st.session_state['selected_option']}")
-                    # Construct the URL for the selected post
-                    url = f"https://www.facebook.com/groups/{st.session_state['group_id']}/posts/{st.session_state['selected_option']}"
-                    st.write(f"Selected post URL: {url}")
-
-                    # Navigate to the URL
-                    st.session_state["driver"].get(url)
-                    # Initialize WebDriverWait with the driver and timeout
-                    wait = WebDriverWait(st.session_state["driver"], 30)
-                    # Wait for the element with ID 'MANIFEST_LINK' to be present
-                    element = wait.until(
-                        EC.presence_of_element_located((By.ID, "MANIFEST_LINK"))
-                    )
-
-                    # Proceed with the rest of your logic only if the above line doesn't raise an exception
-                    posters = find_advert_poster()  # [(name, group_id, user_id)]
-                    advert_text = find_advert_content()
-                    comments = find_comments_expanded()
-                    all_users_and_comments = list_all_users_and_comments()
-                    st.write(f"Comments: {comments}")
-                    st.write(f"All users and comments: {all_users_and_comments}")
-                    st.write(f"Advert: {advert_text}")
-
-                except TimeoutException:
-                    # Handle the case where the element is not found within the specified time
-                    st.error(
-                        "Failed to find the required element within the time limit."
-                    )
-
-                # Your code to handle the selected option here
-                # This part will only execute if a non-default value has been selected
         if st.button("Update group name"):
             current_url = st.session_state["driver"].current_url
-            if is_facebook_groups_url(current_url):
+            if sm.is_facebook_groups_url(current_url):
                 group_name = find_group_name()
-                group_id = extract_group_id(current_url)
+                group_id = sp.extract_group_id(current_url)
                 st.write(f"Group name: {group_name}, Group ID: {group_id}")
                 update_group_name(
                     group_id, st.session_state["driver"].current_url, group_name
@@ -2067,25 +1408,6 @@ def main():
         if st.button("Snapshot"):
             snapshot()
 
-        if st.button("Extract advert"):
-            posters = find_advert_poster()  # [(name, group_id, user_id)]
-            poster_inside = find_advert_poster_inside()
-            advert_text = find_advert_content()
-            st.write(f"Advert text: {advert_text}; Posters: {posters}")
-            st.write(f"Posters inside: {poster_inside}")
-
-        if st.button("Extract comments"):
-            all_users_and_comments = find_comments_expanded()
-            st.write(f"All users and comments: {all_users_and_comments}")
-
-        if st.button("find poster"):
-            posters = find_advert_poster()
-            st.write(f"Posters: {posters}")
-
-        if st.button("find inside poster"):
-            posters = find_advert_poster_inside()
-            st.write(f"Inside Posters: {posters}")
-
         if st.button("find time stamp"):
             all_text = print_all_text(st.session_state["driver"])
             st.write("all_text:", all_text)
@@ -2112,65 +1434,6 @@ def main():
                 st.write(f"Domain: {request['domain']}")
                 st.write(f"Path: {request['path']}")
                 st.write("---")
-        if st.button("Update_new_adverts"):
-            try:
-                new_adverts_urls = all_new_adverts_urls()
-                original_url = st.session_state["driver"].current_url
-                st.write(f"Original URL: {original_url}")
-                st.write(new_adverts_urls)
-                wait = WebDriverWait(st.session_state["driver"], 30)
-                entries = []
-                for new_advert_url in new_adverts_urls:
-                    st.session_state["driver"].get(new_advert_url["post_url"])
-                    post_id = extract_post_id(new_advert_url["post_url"])
-                    # Wait for the element with ID 'MANIFEST_LINK' to be present
-                    element = wait.until(
-                        EC.presence_of_element_located((By.ID, "MANIFEST_LINK"))
-                    )
-                    st.write(f"New advert URL: {new_advert_url['post_url']}")
-                    advert_poster = find_advert_poster()
-                    st.write(f"Advert poster: {advert_poster}")
-                    if advert_poster:
-                        poster = advert_poster[0]
-                        advert_text = find_advert_content()
-
-                        st.write(
-                            f"https://www.facebook.com/groups/{poster['group_id']}/posts/{post_id}"
-                        )
-                        parameters = {
-                            "full_name": poster["name"],
-                            "name": poster["name"].lower().strip(),
-                            "user_id": poster["user_id"],
-                            "post_id": post_id,
-                            "user_url": f"https://www.facebook.com/{poster['user_id']}",
-                            "post_url": f"https://www.facebook.com/groups/{poster['group_id']}/posts/{post_id}",
-                            "advert_text": advert_text,
-                        }
-                        st.write(parameters)
-                        query = f"""
-                        MERGE (profile:Profile {{url: $user_url}})
-                        SET profile.name = $full_name
-                        WITH profile
-                        MERGE (posting:Posting {{post_id: $post_id}}) SET posting.text = $advert_text
-                        WITH profile, posting
-                        MERGE (profile)-[:POSTED]->(posting)
-                                """
-                        entry = {"parameters": parameters, "query": query}
-                        entries.append(entry)
-                        pd.DataFrame(entries).to_csv(
-                            "results/new_entries.csv", index=False
-                        )
-                        execute_neo4j_query(query, parameters)
-                        waiting_time = randint(1, 7)
-                        st.write(f"waiting {waiting_time}s... ")
-                        time.sleep(waiting_time)
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-            finally:
-                # Ensure the driver navigates back to the original URL regardless of success or failure
-                st.write("Finally!")
-                st.session_state["driver"].get(original_url)
-                wait.until(EC.presence_of_element_located((By.ID, "MANIFEST_LINK")))
 
         if st.button("Scroll to bottom of page"):
             st.session_state.scrolling = True

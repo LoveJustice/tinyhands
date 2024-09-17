@@ -38,7 +38,13 @@ OPEN_AI_PROMPTS = {
         '{"bypass_mentioned": "yes" or "no", "bypass": ["example one", "example two", ...] or null, "confidence": 0.0 to 1.0, "error": null or "error message"}'
     ),
 }
+
 ANALYSIS_STR = """' {"result": "yes" or "no", "evidence": ["evidence 1", "evidence 2", ...] or "no evidence", "confidence": 0.0 to 1.0, "explanation": "Brief explanation of your reasoning"}' """
+
+EXTRACTION_PROMPTS = {
+    "phone_number_prompt": "Extract phone numbers from the following text and return your findings as a list:"
+}
+
 CLAUDE_PROMPTS = {
     "bypass_prompt": (
         "Analyze the following job advertisement for any mentions of offers to bypass normal job requirements. "
@@ -68,6 +74,7 @@ CLAUDE_PROMPTS = {
     ),
     "target_specific_group_prompt": (
         "Analyze the following job advertisement. Does it target a specific group of people (e.g., women from a particular country or region)? "
+        "Consider vulnerable groups to include these, but not exclusively,[Shona,Ndebele,Basotho, Tswana', Zulu, Mozambicans, Chewa, Yao]"
         "Return your analysis in the following JSON format:"
     ),
     "gender_specific_prompt": (
@@ -96,6 +103,7 @@ CLAUDE_PROMPTS = {
     ),
     "false_organization_prompt": (
         "Examine the following job advertisement. Does it recruit for an organization that has publicly stated they don't advertise job posts on social media? "
+        " Some of these companies include, but are not limited to, [Shoprite, Woolworths, Capitec Bank, Pick n Pay, Spar, Coca-Cola, Transnet, Sasol]"
         "Return your analysis in the following JSON format:"
     ),
     "multiple_provinces_prompt": (
@@ -247,6 +255,24 @@ def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str,
         }
 
 
+def delete_analysis(IDn: int, prompt_name: str) -> None:
+    parameters = {
+        "IDn": IDn,
+        "prompt_name": prompt_name,
+    }
+
+    delete_query = """MATCH (posting:Posting)-[:HAS_ANALYSIS {type: $prompt_name}]-(analysis:Analysis)
+    WHERE ID(posting) = $IDn
+    DETACH DELETE analysis"""
+
+    logger.info(f"Delete existing analysis to Neo4j: {parameters}")
+
+    try:
+        execute_neo4j_query(delete_query, parameters)
+    except Exception as e:
+        logger.error(f"Error deleting analysis to Neo4j: {str(e)}")
+
+
 def write_analysis_to_neo4j(
     IDn: int, prompt_name: str, analysis: Dict[str, Any]
 ) -> None:
@@ -258,6 +284,15 @@ def write_analysis_to_neo4j(
         prompt_name: The name of the prompt used for analysis.
         analysis: The analysis results dictionary.
     """
+    parameters = {
+        "IDn": IDn,
+        "prompt_name": prompt_name,
+        "result": analysis["result"],
+        "evidence": analysis["evidence"],
+        "explanation": analysis["explanation"],
+        "confidence": analysis["confidence"],
+    }
+
     query = """
     MATCH (posting:Posting)
     WHERE ID(posting) = $IDn
@@ -272,14 +307,6 @@ def write_analysis_to_neo4j(
     """
 
     # Ensure all required keys are present with default values if missing
-    parameters = {
-        "IDn": IDn,
-        "prompt_name": prompt_name,
-        "result": analysis.get("result", "unknown"),
-        "evidence": analysis.get("evidence", []),
-        "explanation": analysis.get("explanation", ""),
-        "confidence": analysis.get("confidence", 0.0),
-    }
 
     logger.info(f"Writing analysis to Neo4j: {parameters}")
 
@@ -302,39 +329,45 @@ def verify_analyis_existence(IDn: int, prompt_name: str) -> bool:
     return len(execute_neo4j_query(query, parameters)) > 0
 
 
-def process_adverts_from_dataframe(df: pd.DataFrame) -> None:
-    for index, row in df.iterrows():
+def process_adverts_from_dataframe(IDn_list: list) -> None:
+    for IDn in IDn_list:
         time.sleep(5)
-        advert = row["advert"]  # Assuming 'advert' is the column name
-        chat_engine = create_chat_engine(advert)
         for prompt_name, prompt in CLAUDE_PROMPTS.items():
-            if verify_analyis_existence(IDn=row["IDn"], prompt_name=prompt_name):
+            if verify_analyis_existence(IDn=IDn, prompt_name=prompt_name):
                 print(
-                    f"Analysis for {row['IDn']} and  prompt_name = {prompt_name} exists!"
+                    f"Analysis for IDn: {IDn} and  prompt_name = {prompt_name} exists!"
                 )
                 continue
             else:
-                print(
-                    f"Processing advert {index}, length: {len(advert)}, advert: {advert}"
-                )
-                if chat_engine:
-                    advert_analysis = analyse_advert(chat_engine, advert, prompt_name)
-                    print(f"Response to {prompt_name}: {advert_analysis}")
-                    write_analysis_to_neo4j(row["IDn"], prompt_name, advert_analysis)
-                else:
-                    print(f"Failed to create chat engine for advert {index}")
+                print(f"Processing IDn {IDn}")
+                process_advert(IDn, prompt_name)
     return None
 
 
-# Assuming you have a dataframe 'df' with an 'advert' column
+def get_neo4j_advert(IDn: int) -> Optional[str]:
+    query = """MATCH (n:Posting) WHERE ID(n) = $IDn RETURN n.text AS advert"""
+    parameters = {"IDn": IDn}
+    result = execute_neo4j_query(query, parameters)
+    return result[0]["advert"] if result else None
 
 
-# Assuming you have a dataframe 'df' with an 'advert' column
+def process_advert(IDn: int, prompt_name: str) -> None:
+    advert = get_neo4j_advert(IDn)
+    chat_engine = create_chat_engine(advert)
+    print(f"Processing : {advert}")
+    if chat_engine:
+        advert_analysis = analyse_advert(chat_engine, advert, prompt_name)
+        print(f"Response to {prompt_name}: {advert_analysis}")
+        write_analysis_to_neo4j(IDn, prompt_name, advert_analysis)
+    else:
+        print(f"Failed to create chat engine for advert {advert}")
+    return None
+
 
 adverts = pd.read_csv(
-    "results/adverts_za_adverts_sample_2024-08-07T17:01:22_54511f.csv"
+    "results/adverts_za_sample - adverts_za_adverts_sample_2024-08-07T17_01_22_54511f.csv"
 )
-import os
+adverts
 
 subdirectory_path = "results"
 
@@ -345,30 +378,42 @@ files_in_subdirectory = [
     if os.path.isfile(os.path.join(subdirectory_path, file))
 ]
 
-# Print the list of files
-print("Files in 'results' subdirectory:")
-for file in files_in_subdirectory:
-    print(file)
 
-process_adverts_from_dataframe(adverts[0:20].copy())
-#
-# df = advert_100_comparison_with_regressor_predictions.loc[
-#     advert_100_comparison_with_regressor_predictions.IDn.isin(
-#         [573528, 573388, 573334, 573204],
-#     ),
-#     :,
-# ].copy()
-# process_adverts_from_dataframe(df)
+process_adverts_from_dataframe(adverts["IDn"][40:60])
+
+for IDn in adverts["IDn"]:
+    delete_analysis(IDn=IDn, prompt_name="target_specific_group_prompt")
+    process_advert(IDn=IDn, prompt_name="target_specific_group_prompt")
+
+
+for IDn in [573204]:
+    delete_analysis(IDn=IDn, prompt_name="target_specific_group_prompt")
+    process_advert(IDn=IDn, prompt_name="target_specific_group_prompt")
+
 # ============================================================================================
-flag_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
-RETURN ID(posting) AS id, r.type as flag, analysis.result as result """
+flag_query = """MATCH p=(group:Group)-[]-(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
+RETURN posting.text AS advert, ID(group) AS group_id, ID(posting) AS post_id, posting.monitor_score AS monitor_score, r.type as flag, analysis.result as result """
 
 # flags = execute_neo4j_query(flag_query, parameters={})
-flags = (
-    pd.DataFrame(execute_neo4j_query(flag_query, parameters={}))
-    .pivot(index="id", columns="flag", values="result")
-    .reset_index()
-)
+
+df = pd.DataFrame(execute_neo4j_query(flag_query, parameters={}))
+
+
+# Perform the pivot operation with multiple index columns
+flags = df.pivot(
+    index=["advert", "group_id", "post_id", "monitor_score"],
+    columns="flag",
+    values="result",
+).reset_index()
+
+# If you want to ensure 'group_id' and 'post_id' are the first two columns
+column_order = ["advert", "group_id", "post_id", "monitor_score"] + [
+    col
+    for col in flags.columns
+    if col not in ["advert", "group_id", "post_id", "monitor_score"]
+]
+flags = flags[column_order]
+
 flags.to_csv("results/advert_flags.csv", index=False)
 
 
@@ -404,3 +449,5 @@ explanation = (
 )
 explanation.to_csv("results/advert_explanation.csv", index=False)
 # flags = execute_neo4j_query(flag_query, parameters={})
+
+verify_analyis_existence(572527, "target_specific_group_prompt")

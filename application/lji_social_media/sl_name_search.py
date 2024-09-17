@@ -1,55 +1,18 @@
-from py2neo import Graph, Node, Relationship
-from libraries.google_lib import DB_Conn
-import os
-import pandas as pd
+from libraries.neo4j_lib import execute_neo4j_query
+
 from fuzzywuzzy import process
-import swifter
+
+
 import pandas as pd
+import numpy as np
 from rapidfuzz import process, fuzz
 from tqdm.auto import tqdm
+from functools import partial
+from typing import List, Tuple, Optional
 
 
-# Environment variable fetching and error handling
-neo4j_url = os.environ.get("NEO4J_URL")
-neo4j_usr = os.environ.get("NEO4J_USR", "neo4j")  # Default to 'neo4j' if not set
-neo4j_pwd = os.environ.get("NEO4J_PWD")
-
-if not all([neo4j_url, neo4j_usr, neo4j_pwd]):
-    raise EnvironmentError("Required NEO4J environment variables are not set.")
-
-
-def create_person_node(neo4j_graph, person_data):
-    # Create Person node
-    person_node = Node(
-        "Person",
-        full_name=person_data["full_name"],
-        person_id=person_data["person_id"],
-        gender=person_data["gender"],
-        phone_contact=person_data["phone_contact"],
-        address_notes=person_data["address_notes"],
-    )
-    neo4j_graph.create(person_node)
-
-    # Create related nodes and relationships
-    if person_data["master_person_id"]:
-        master_person_node = Node("MasterPerson", id=person_data["master_person_id"])
-        neo4j_graph.merge(master_person_node, "MasterPerson", "id")
-        neo4j_graph.create(
-            Relationship(person_node, "HAS_MASTER_PERSON_ID", master_person_node)
-        )
-
-    if person_data["role"]:
-        role_node = Node("Role", name=person_data["role"])
-        neo4j_graph.merge(role_node, "Role", "name")
-        neo4j_graph.create(Relationship(person_node, "HAS_ROLE", role_node))
-
-    # Add more relationships as needed
-
-
-def import_data_to_neo4j():
-    persons = get_persons()
-    for person in persons:
-        create_person_node(person)
+def get_POI(start_date, end_date, country):
+    pass
 
 
 # Call the function to start the import process
@@ -73,29 +36,20 @@ def remove_repetitive_names(names_list):
     return cleaned_list
 
 
-def get_persons():
-    parameters = {}
-    sql_query = """SELECT    person.full_name AS full_name \
-                            ,person.id AS person_id \
-                            ,person.role AS role \
-                            ,person.master_person_id AS master_person_id \
-                            ,person.gender as gender \
-                            ,person.phone_contact as phone_contact \
-                            ,person.address_notes as address_notes \
-                            FROM public.dataentry_person person """
-    with DB_Conn() as dbc:
-        persons = dbc.ex_query(sql_query, parameters)
-    return persons
-
-
 # Initialize Graph
-graph = Graph(neo4j_url, user=neo4j_usr, password=neo4j_pwd)
-profiles = graph.run(
-    "MATCH (p:Profile) RETURN p.name AS name, p.url AS url, ID(p) AS id"
-).to_data_frame()
-valid_names = graph.run(
-    "MATCH (valid_name:ValidName) RETURN ID(valid_name) as id, valid_name.full_name AS full_name, valid_name.name AS name"
-).to_data_frame()
+
+
+profiles = pd.DataFrame(
+    execute_neo4j_query(
+        "MATCH (p:Profile) RETURN p.name AS name, p.url AS url, ID(p) AS id", {}
+    )
+)
+valid_names = pd.DataFrame(
+    execute_neo4j_query(
+        "MATCH (valid_name:ValidName) RETURN ID(valid_name) as id, valid_name.full_name AS full_name, valid_name.name AS name",
+        {},
+    )
+)
 profiles = profiles[profiles["name"].apply(is_valid_name)]
 people_names = valid_names["name"].tolist()
 
