@@ -638,7 +638,9 @@ class ResponsePersonSerializer(serializers.Serializer):
         tmp = data.get('gender')
         if tmp is not None:
             gender = tmp.get('value')
-            if gender.upper() == 'FEMALE':
+            if gender is None:
+                ret['gender'] = 'U'
+            elif gender.upper() == 'FEMALE':
                 ret['gender'] = 'F'
             elif gender.upper() == 'MALE':
                 ret['gender'] = 'M'
