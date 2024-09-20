@@ -1268,6 +1268,7 @@ def main():
             Page("fb_advert_pages/google_store.py", "Google sheet", "📖"),
             Page("fb_advert_pages/fetch_advert_content.py", "Get adverts", "🔗"),
             Page("fb_advert_pages/groups.py", "Stored groups", "🔗"),
+            Page("fb_advert_pages/investigate_adverts.py", "Investigate advert", "📖"),
         ]
     )
 

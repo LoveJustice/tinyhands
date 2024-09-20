@@ -12,6 +12,8 @@ import random
 import social_media.social_media as sm
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from typing import List, Dict, Optional
+from typing import Dict
+from bs4 import BeautifulSoup
 
 
 def fetch_advert_data():
