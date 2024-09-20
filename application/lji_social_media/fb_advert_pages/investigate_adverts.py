@@ -81,30 +81,37 @@ class ImageAnalysisResult(BaseModel):
     emails: list[str] = Field(default_factory=list)
     urls: list[str] = Field(default_factory=list)
     phone_numbers: list[str] = Field(default_factory=list)
+    names: list[str] = Field(default_factory=list)
+    locations: list[str] = Field(default_factory=list)
+    dates: list[str] = Field(default_factory=list)
 
 
 def analyze_image(
     image: Union[str, Path],
     api_key: str,
-    model: str = "gpt-4-vision-preview",
+    model: str = "gpt-4o-mini",
     max_tokens: int = 900,
-    api_url: str = "https://api.openai.com/v1/chat/completions"
+    api_url: str = "https://api.openai.com/v1/chat/completions",
 ) -> ImageAnalysisResult:
+    def clean_json_string(content):
+        # Remove the ```json at the beginning and ``` at the end
+        cleaned_content = content.strip("```json\n").strip("```")
+        return cleaned_content
+
     logger.info(f"Starting image analysis for file: {image}")
-    logger.debug(f"Analysis parameters - model: {model}, max_tokens: {max_tokens}, api_url: {api_url}")
+    logger.debug(
+        f"Analysis parameters - model: {model}, max_tokens: {max_tokens}, api_url: {api_url}"
+    )
 
     def encode_image(image_path):
         logger.debug(f"Encoding image: {image_path}")
         with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode('utf-8')
+            return base64.b64encode(image_file.read()).decode("utf-8")
 
     base64_image = encode_image(image)
     logger.debug("Image successfully encoded")
 
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
-    }
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
     logger.debug("Headers prepared for API request")
 
     payload = {
@@ -115,22 +122,22 @@ def analyze_image(
                 "content": [
                     {
                         "type": "text",
-                        "text": ("Analyze this image. Give a brief description. If there is text then please return it as is. "
-                                 "Please also extract email, urls and phonenumbers and return the following json object:"
-                                 "{'description': 'brief description','text': 'text extracted from image', "
-                                 "'emails': ['email1', 'email2'], 'urls': ['url1', 'url2'], "
-                                 "'phonenumbers': ['phonenumber1', 'phonenumber2']}")
+                        "text": (
+                            "Analyze this image. Give a brief description. If there is text then please return it as is. "
+                            "Please also extract email, urls and phonenumbers and return your answer in following JSON format::"
+                            '{"description": "brief description","text": "text extracted from image", '
+                            '"emails": ["email1", "email2"], "urls": ["url1", "url2"], "phonenumbers": ["phonenumber1", "phonenumber2"]'
+                            'names": ["name1", "name2"], "locations": ["location1", "location2"], "dates": ["date1", "date2"]}'
+                        ),
                     },
                     {
                         "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/jpeg;base64,{base64_image}"
-                        }
-                    }
-                ]
+                        "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"},
+                    },
+                ],
             }
         ],
-        "max_tokens": max_tokens
+        "max_tokens": max_tokens,
     }
     logger.debug("Payload prepared for API request")
 
@@ -145,15 +152,18 @@ def analyze_image(
         content = result["choices"][0]["message"]["content"]
         logger.debug(f"Extracted content from API response: {content}")
 
-        parsed_content = json.loads(content)
+        parsed_content = json.loads(clean_json_string(content))
         logger.debug(f"Parsed content: {json.dumps(parsed_content, indent=2)}")
 
         analysis_result = ImageAnalysisResult(
-            description=parsed_content.get('description', ''),
-            text=parsed_content.get('text', ''),
-            emails=parsed_content.get('emails', []),
-            urls=parsed_content.get('urls', []),
-            phone_numbers=parsed_content.get('phonenumbers', [])
+            description=parsed_content.get("description", ""),
+            text=parsed_content.get("text", ""),
+            emails=parsed_content.get("emails", []),
+            urls=parsed_content.get("urls", []),
+            phone_numbers=parsed_content.get("phonenumbers", []),
+            names=parsed_content.get("names", []),
+            locations=parsed_content.get("locations", []),
+            dates=parsed_content.get("dates", []),
         )
         logger.info("Image analysis completed successfully")
         logger.debug(f"Analysis result: {analysis_result}")
@@ -172,6 +182,7 @@ def analyze_image(
     except Exception as e:
         logger.error(f"Unexpected error during image analysis: {str(e)}")
         raise ValueError(f"Unexpected error during image analysis: {str(e)}") from e
+
 
 def analyze_images():
     logger.info("Starting image analysis process")
@@ -320,6 +331,9 @@ def write_analysis_results(result: ImageAnalysisResult, url: str):
         "emails": result.emails,
         "urls": result.urls,
         "phone_numbers": result.phone_numbers,
+        "names": result.names,
+        "locations": result.locations,
+        "dates": result.dates,
     }
 
     # Append the results to the file
@@ -347,6 +361,12 @@ def display_analysis_results(result: ImageAnalysisResult):
         st.write("URLs found:", ", ".join(result.urls))
     if result.phone_numbers:
         st.write("Phone numbers found:", ", ".join(result.phone_numbers))
+    if result.names:
+        st.write("Names found:", ", ".join(result.names))
+    if result.locations:
+        st.write("Locations found:", ", ".join(result.locations))
+    if result.dates:
+        st.write("Dates found:", ", ".join(result.dates))
 
 
 @dataclass
@@ -649,6 +669,7 @@ def main():
                         st.error(f"Failed to fetch image from {url}: {e}")
                     except Exception as e:
                         st.error(f"Error displaying image from {url}: {e}")
+
         if "img_urls" in st.session_state:
             st.selectbox(
                 "Select img to analyze:",
@@ -656,18 +677,24 @@ def main():
                 index=0,
                 key="selected_img",  # This links the selectbox directly to the session state variable
             )
-        if st.button(f"Analyze {st.session_state['selected_img']}"):
-            st.write(f"Analyze {st.session_state['selected_img']}")
-            response = requests.get(st.session_state["selected_img"])
-            response.raise_for_status()
-            image = Image.open(BytesIO(response.content))
-            st.image(
-                image, caption=st.session_state["selected_img"], use_column_width=True
-            )
-            analysis_result = analyze_single_image(
-                image, st.session_state["selected_img"]
-            )
-            st.write(analysis_result)
+
+        if ("selected_img" in st.session_state) and (
+            st.session_state["selected_img"] is not None
+        ):
+            if st.button(f"Analyze {st.session_state['selected_img']}"):
+                st.write(f"Analyze {st.session_state['selected_img']}")
+                response = requests.get(st.session_state["selected_img"])
+                response.raise_for_status()
+                image = Image.open(BytesIO(response.content))
+                st.image(
+                    image,
+                    caption=st.session_state["selected_img"],
+                    use_column_width=True,
+                )
+                analysis_result = analyze_single_image(
+                    image, st.session_state["selected_img"]
+                )
+                st.write(analysis_result)
         else:
             st.write("No img selected.")
     else:
