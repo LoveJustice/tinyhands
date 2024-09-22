@@ -27,7 +27,6 @@ from static_border_stations.serializers import BlankStaffSerializer, StaffSerial
 from static_border_stations.serializers import StaffMiscellaneousSerializer, StaffMiscellaneousTypesSerializer
 from budget.models import ProjectRequest, StaffBudgetItem
 import budget.mdf_constants as constants
-import xxlimited
 
 class BorderStationViewSet(viewsets.ModelViewSet):
     queryset = BorderStation.objects.all()

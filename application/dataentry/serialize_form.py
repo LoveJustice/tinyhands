@@ -1134,6 +1134,7 @@ class FormDataSerializer(serializers.Serializer):
             ret['station_code'] = serializers.CharField().to_representation(instance.form_object.station.station_code)
             ret['station_name'] = serializers.CharField().to_representation(instance.form_object.station.station_name)
             ret['country_id'] = serializers.IntegerField().to_representation(instance.form_object.station.operating_country.id)
+            ret['country_name'] = serializers.CharField().to_representation(instance.form_object.station.operating_country.name)
         if hasattr(instance.form_object, 'status'):
             ret['status'] = serializers.CharField().to_representation(instance.form_object.status)
         if hasattr(instance.form_object, 'status') and hasattr(instance.form_object, 'form_entered_by') and instance.form_object.form_entered_by is not None:

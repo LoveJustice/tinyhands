@@ -41,6 +41,8 @@ foo[1-9].*
 # for now in dev we check in /media
 application/media/
 application/public/
+application/dist/
+application/react_dist/
 application/src/*
 application/log/*
 application/.idea
@@ -74,3 +76,4 @@ codeship.aes
 codeship_deploy_key
 codeship_deploy_key.pub
 codeship.env
+production.env
