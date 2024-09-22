@@ -1,4 +1,6 @@
 import subprocess
+from pathlib import Path
+
 import unicodedata
 
 from django.conf import settings
@@ -11,8 +13,13 @@ from dataentry.models.form_migration import FormMigration
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        form_data_file = settings.BASE_DIR + '/fixtures/initial-required-data/form_data*.json'
-        cmd = 'sum ' + form_data_file
+        # Hacky replacement to work on my local windows bash
+        path_string = settings.BASE_DIR.replace('C:', '/mnt/c')
+        form_data_file = Path(path_string).as_posix() + '/fixtures/initial-required-data/form_data*.json'
+        # 'bash -c' needed for windows with Git Bash, 'sum' won't be found under CMD
+        # It should still work the same on linux, it is just looks wierd that a shell is opening a shell again
+        # TODO we should replace this checksum with a pure python one if possible to run on windows
+        cmd = 'bash -c \'sum ' + form_data_file + '\''
         rslt = subprocess.check_output(cmd, shell=True)
         #print('result', rslt)
         parts = " ".join("".join(map(chr, rslt)).strip().split()).split()

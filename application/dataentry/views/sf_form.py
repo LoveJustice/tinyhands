@@ -137,7 +137,7 @@ class SfFormViewSet(BaseFormViewSet):
         form_data.form_object.incidents.add(incident)
     
     def custom_create_blank(self, form_object):
-        form_object.victim = Person()
+        form_object.merged_person = Person()
         
     def has_common_master_person(self):
         return True

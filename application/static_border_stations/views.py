@@ -27,7 +27,6 @@ from static_border_stations.serializers import BlankStaffSerializer, StaffSerial
 from static_border_stations.serializers import StaffMiscellaneousSerializer, StaffMiscellaneousTypesSerializer
 from budget.models import ProjectRequest, StaffBudgetItem
 import budget.mdf_constants as constants
-import xxlimited
 
 class BorderStationViewSet(viewsets.ModelViewSet):
     queryset = BorderStation.objects.all()
@@ -237,7 +236,7 @@ class StaffViewSet(viewsets.ModelViewSet):
     search_fields = ('first_name', 'last_name',)
     ordering_fields = (
         'first_name', 'last_name', )
-    ordering = ('first_name',)
+    ordering = ('first_name','last_name')
     
     def save_file(self, file_obj, subdirectory):
         with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
