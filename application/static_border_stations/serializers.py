@@ -13,14 +13,18 @@ class StaffProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffProject
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['project_code', 'country_id', 'project_category']
+        fields = fields + ['project_code', 'project_name', 'country_id', 'project_category']
         
     project_code = serializers.SerializerMethodField(read_only=True)
+    project_name = serializers.SerializerMethodField(read_only=True)
     country_id = serializers.SerializerMethodField(read_only=True)
     project_category = serializers.SerializerMethodField(read_only=True)
     
     def get_project_code (self, obj):
         return obj.border_station.station_code
+
+    def get_project_name (self, obj):
+        return obj.border_station.station_name
     
     def get_country_id (self, obj):
         return obj.border_station.operating_country.id
@@ -53,7 +57,7 @@ class BaseStaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
         fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'position',
-                  'receives_money_distribution_form', 'border_station', 'country',
+                  'receives_money_distribution_form', 'border_station', 'country', 'country_name',
                   'first_date', 'last_date', 'birth_date', 'photo', 'total_years',
                   'education', 'id_card_expiration', 'staffproject_set', 'miscellaneous',
                   'contract_data', 'knowledge_data', 'review_data', 'has_pbs']
@@ -65,6 +69,7 @@ class BaseStaffSerializer(serializers.ModelSerializer):
     review_data = serializers.SerializerMethodField(read_only=True)
     miscellaneous = serializers.SerializerMethodField(read_only=True)
     has_pbs = serializers.SerializerMethodField(read_only=True)
+    country_name = serializers.SerializerMethodField(read_only=True)
     
     def view_section(self, obj, data_type):
         result = False
@@ -174,7 +179,9 @@ class BaseStaffSerializer(serializers.ModelSerializer):
     
     def get_has_pbs(self, obj):
         return MonthlyDistributionForm.objects.filter(border_station__operating_country = obj.country).exists()
-       
+
+    def get_country_name(self, obj):
+        return obj.country.name
     
     def to_internal_value(self, data):
         if 'staffproject_set' in data:
@@ -281,13 +288,14 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommitteeMember
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['member_projects', 'project_text']
+        fields = fields + ['member_projects', 'project_text', 'country_name']
        
     
     sc_agreement = serializers.SerializerMethodField(read_only=True)
     misconduct_agreement = serializers.SerializerMethodField(read_only=True)
     member_projects = serializers.SerializerMethodField()
     project_text = serializers.SerializerMethodField(read_only=True)
+    country_name = serializers.SerializerMethodField(read_only=True)
     
     def can_view_contract(self, obj):
         result = False
@@ -336,6 +344,9 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
                 result += sep + member.station_name
                 sep = '/'
         return result
+
+    def get_country_name(self, obj):
+        return obj.country.name
     
     def to_internal_value(self, data):
         if 'member_projects' in data:
