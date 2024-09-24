@@ -65,17 +65,16 @@ class ValidateForm:
                     questions = QuestionStorage.objects.filter(field_name='logbook_submitted').values_list('question', flat=True)
                     categories = FormCategory.objects.filter(form=form_data.form).values_list('category', flat=True)
                     layouts = QuestionLayout.objects.filter(question__in=questions, category__in=categories)
-                    entered_date = form_data.form_object.date_time_entered_into_system
-                    if len(layouts) > 0:
+                    if len(layouts) > 0 and form_data.form_object.status != 'in-progress':
                         submission_date = form_data.get_answer(layouts[0].question)
+                        if submission_date is None and form_data.form_object.date_time_entered_into_system:
+                            submission_date = form_data.form_object.date_time_entered_into_system.date()
                         # Don't want to check if it's an old form that was entered before submission dates were around
-                        if (submission_date is None and not entered_date is None) or submission_date < start_date:
+                        if not (submission_date is None) and submission_date < start_date:
                             print('do not check')
                             should_do = False
         except:
             pass
-        
-        
         
         return should_do
         
