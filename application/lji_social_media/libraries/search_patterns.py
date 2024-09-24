@@ -41,6 +41,106 @@ GROUP_COMMENT_ID_PATTERN = re.compile(
     r"groups/([\w]+)/posts/([\w]+)/.*[?&]comment_id=([\w]+)/?"
 )
 
+import re
+from typing import Dict
+from bs4 import BeautifulSoup
+import streamlit as st
+
+
+def find_advert_poster_alt() -> Dict[str, str]:
+    """Extract information about the original poster of the advertisement and the advert content from the specific HTML structure."""
+    try:
+        # Parse the HTML content
+        soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
+
+        # Step 1: Find the poster's name and link
+        name_anchor = soup.find(
+            "a", attrs={"aria-label": True}, href=re.compile(r"/groups/\d+/user/\d+/")
+        )
+        if not name_anchor:
+            st.warning("Poster link could not be found.")
+            return {}
+
+        # Extract the poster's name
+        name = name_anchor.get("aria-label", "").strip()
+        if not name:
+            st.warning("Poster name could not be extracted.")
+            return {}
+
+        # Extract user_id and group_id from the href
+        href = name_anchor.get("href", "")
+        match = re.search(r"/groups/(\d+)/user/(\d+)/", href)
+        if match:
+            group_id, user_id = match.groups()
+        else:
+            st.warning("User ID or Group ID could not be extracted.")
+            return {}
+
+        # Step 2: Find the group name
+        group_link = soup.find(
+            "a", href=re.compile(r"https?://www\.mybooks\.com/groups/\d+/")
+        )
+        if group_link:
+            group_name = group_link.text.strip()
+        else:
+            group_name = "Unknown Group"
+
+        # Step 3: Extract the advert content
+        # Find all divs with inline style containing 'font-size: 30px'
+        advert_divs = soup.find_all(
+            "div",
+            style=lambda s: s and "font-size: 30px" in s and "font-weight: bold" in s,
+        )
+
+        advert_contents = []
+        for div in advert_divs:
+            # The advert text is within a child div
+            content_div = div.find("div")
+            if content_div:
+                text = content_div.get_text(separator=" ", strip=True)
+                if text:
+                    advert_contents.append(text)
+            else:
+                # If there is no child div, get text from the current div
+                text = div.get_text(separator=" ", strip=True)
+                if text:
+                    advert_contents.append(text)
+
+        # Combine the advert contents
+        advert_content = " ".join(advert_contents)
+        if not advert_content:
+            st.warning("Advert content could not be extracted.")
+            advert_content = "Advert content not found."
+
+        # Step 4: Extract the timestamp (if available)
+        timestamp_elem = soup.find(
+            lambda tag: tag.name in ["abbr", "span"] and tag.has_attr("data-utime")
+        )
+        if timestamp_elem:
+            timestamp = timestamp_elem.get("data-utime")
+        else:
+            timestamp = "Unknown"
+
+        # Step 5: Extract the post_id (if available)
+        post_id = None  # Not available in the provided HTML
+
+        # Return the extracted details
+        return {
+            "poster_info": {
+                "name": name,
+                "user_id": user_id,
+                "group_id": group_id,
+                "group_name": group_name,
+                "post_id": post_id,
+                "timestamp": timestamp,
+            },
+            "advert_content": advert_content,
+        }
+
+    except Exception as e:
+        st.error(f"An error occurred while extracting information: {str(e)}")
+        return {}
+
 
 def find_advert_poster() -> Dict[str, str]:
     """Extract information about the original poster of the advertisement and the advert content."""
@@ -48,25 +148,36 @@ def find_advert_poster() -> Dict[str, str]:
         # Assuming st.session_state["driver"].page_source contains the HTML content
         soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
 
-        # Find the div containing the post content
+        # Try to locate the primary ad content, handling both complex and simple structures.
         post_content = soup.find("div", {"data-ad-preview": "message"})
-        if not post_content:
-            st.warning("Post content could not be found.")
-            return {}
 
-        # Find the nearest preceding h2 that likely contains the poster's name
+        # If the above fails, search for more generic div/span elements that may contain the advert content.
+        if not post_content:
+            post_content = soup.find(
+                "div", {"class": re.compile(r"x18d9i69")}
+            )  # General content container
+            if not post_content:
+                st.warning("Post content could not be found.")
+                return {}
+
+        # Check if the content is in a simple span or direct text in the found div
+        advert_content = (
+            post_content.text.strip() if post_content else "Advert content not found."
+        )
+
+        # Try to find the nearest preceding h2 that contains the poster's name
         poster_h2 = post_content.find_previous("h2")
         if not poster_h2:
             st.warning("Poster information could not be found.")
             return {}
 
-        # Find the anchor tag within the h2
+        # Find the anchor tag within the h2 for the user information
         name_anchor = poster_h2.find("a", href=re.compile(r"/groups/\d+/user/\d+/"))
         if not name_anchor:
             st.warning("Poster link could not be found.")
             return {}
 
-        # Extract name
+        # Extract the poster's name
         name = name_anchor.text.strip()
 
         # Extract user_id and group_id
@@ -78,17 +189,13 @@ def find_advert_poster() -> Dict[str, str]:
 
         group_id, user_id = match.groups()
 
-        # Find post_id
+        # Extract post_id from the current URL
         post_id_match = re.search(
             r"/posts/(\d+)", st.session_state["driver"].current_url
         )
         post_id = post_id_match.group(1) if post_id_match else None
 
-        # Extract advert content
-        advert_content = (
-            post_content.text.strip() if post_content else "Advert content not found."
-        )
-
+        # Return the extracted details
         return {
             "poster_info": {
                 "name": name,

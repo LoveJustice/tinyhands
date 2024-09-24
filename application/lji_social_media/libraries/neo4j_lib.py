@@ -22,30 +22,51 @@ class Neo4jConnection:
         self.__user = user
         self.__pwd = pwd
         self.__driver = None
+        self.__connect()
+
+    def __connect(self):
+        """Establishes the connection to the Neo4j database."""
         try:
             self.__driver = GraphDatabase.driver(
-                self.__uri, auth=(self.__user, self.__pwd)
+                self.__uri,
+                auth=(self.__user, self.__pwd),
+                max_connection_lifetime=30 * 60,
+                max_connection_pool_size=10,
             )
+            print("Neo4j connection established.")
         except Exception as e:
-            print("Failed to create the driver:", e)
+            print(f"Failed to create the driver: {e}")
+            raise e
 
     def __enter__(self):
-        self.__driver = GraphDatabase.driver(self.__uri, auth=(self.__user, self.__pwd))
+        """For use with context manager (with statement)."""
+        if self.__driver is None:
+            self.__connect()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.__driver is not None:
-            self.__driver.close()
+        """Closes the connection when exiting the context manager."""
+        self.close()
 
     def close(self):
+        """Closes the Neo4j driver connection."""
         if self.__driver is not None:
             self.__driver.close()
+            print("Neo4j connection closed.")
 
     def execute_query(self, query, parameters=None, return_df=False):
+        """Executes a Neo4j query.
+
+        Args:
+            query (str): The Cypher query to run.
+            parameters (dict): Parameters to pass into the query.
+            return_df (bool): Whether to return the result as a pandas DataFrame.
+
+        Returns:
+            DataFrame or List of dict: The query result, either as a pandas DataFrame or a list of dictionaries.
+        """
         if self.__driver is not None:
-            with self.__driver.session(
-                database="neo4j"
-            ) as session:  # Specify database if needed
+            with self.__driver.session() as session:
                 try:
                     if return_df:
                         result = session.run(query, parameters)
@@ -59,8 +80,26 @@ class Neo4jConnection:
                         )
                         return result
                 except Exception as e:
-                    print("Query failed:", e)
+                    print(f"Query failed: {e}")
                     return None
+
+    def run_read_query(self, query, parameters=None):
+        """Executes a read-only transaction (uses `read_transaction`)."""
+        if self.__driver is not None:
+            with self.__driver.session() as session:
+                try:
+                    result = session.read_transaction(
+                        lambda tx: tx.run(query, parameters).data()
+                    )
+                    return result
+                except Exception as e:
+                    print(f"Read query failed: {e}")
+                    return None
+
+    def reconnect(self):
+        """Reconnects to Neo4j if the connection is lost."""
+        self.close()
+        self.__connect()
 
 
 def get_all_comments():
@@ -126,10 +165,14 @@ def post_to_neo4j(post):
     MERGE (group:Group {group_id: $group_id, url: $group_url})
     MERGE (posting:Posting {post_id: $post_id})
     ON CREATE SET posting.post_url = $post_url,
-                  posting.collected_date = datetime($collected_date)
+                  posting.collected_date = datetime($collected_date),
+                  posting.is_new = true
+    ON MATCH SET posting.is_new = false
     MERGE (group)-[:HAS_POSTING]->(posting)
+    RETURN posting.is_new as is_new
     """
-    execute_neo4j_query(query, parameters)
+    result = execute_neo4j_query(query, parameters)
+    return result[0]["is_new"]
 
 
 def all_new_adverts_urls(group_url=None):

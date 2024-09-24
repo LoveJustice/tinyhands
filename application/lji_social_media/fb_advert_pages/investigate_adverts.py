@@ -1,4 +1,8 @@
 from urllib.parse import urljoin, unquote
+
+import libraries.neo4j_lib as nl
+
+
 import requests
 import re
 import json
@@ -64,16 +68,6 @@ logger.addHandler(console_handler)
 # Log the start of the script
 logger.info("Script started. Log file will be overwritten.")
 
-# import base64
-# from pathlib import Path
-# import json
-# from typing import Union
-# import requests
-# from pydantic import BaseModel, Field
-# import logging
-#
-# logger = logging.getLogger(__name__)
-
 
 class ImageAnalysisResult(BaseModel):
     description: str
@@ -84,6 +78,75 @@ class ImageAnalysisResult(BaseModel):
     names: list[str] = Field(default_factory=list)
     locations: list[str] = Field(default_factory=list)
     dates: list[str] = Field(default_factory=list)
+
+
+def create_node(label, properties):
+    query = f"MERGE (n:{label} {{"
+    for key in properties.keys():
+        query += f"{key}: ${key}, "
+    query = query.rstrip(", ") + "}) RETURN ID(n) as node_id"
+
+    # Execute the query with the properties as parameters
+    return nl.execute_neo4j_query(query, properties)[0]["node_id"]
+
+
+# Function to create an edge between two nodes
+def create_edge(from_node_id, to_node_id, relationship):
+    query = f"""
+    MATCH (a), (b)
+    WHERE ID(a) = $from_node_id AND ID(b) = $to_node_id
+    MERGE (a)-[r:{relationship}]->(b)
+    RETURN type(r)
+    """
+    nl.execute_neo4j_query(
+        query, {"from_node_id": from_node_id, "to_node_id": to_node_id}
+    )
+
+
+# Main function to process ImageAnalysisResult and create nodes/edges
+def create_image_url_relationships(posting_id, analysis_result: ImageAnalysisResult):
+    # Create or find the ImageUrl node (which is also a Url node)
+    image_url_id = create_node(
+        "ImageUrl:Url", {"url": st.session_state["selected_img"]}
+    )
+    create_edge(posting_id, image_url_id, "HAS_IMAGE_URL")
+
+    if analysis_result.description:
+        description_id = create_node(
+            "Description", {"description": analysis_result.description}
+        )
+        create_edge(image_url_id, description_id, "HAS_DESCRIPTION")
+    if analysis_result.text:
+        text_id = create_node("Text", {"text": analysis_result.text})
+        create_edge(image_url_id, text_id, "HAS_TEXT")
+
+    for url in analysis_result.urls:
+        url_id = create_node("Url", {"url": st.session_state["selected_img"]})
+
+        # Create HAS_IMAGE_URL relationship to Posting node
+        create_edge(image_url_id, url_id, "HAS_URL")
+
+        # Create other nodes and relationships if values exist
+
+    for email in analysis_result.emails:
+        email_id = create_node("Email", {"email": email})
+        create_edge(image_url_id, email_id, "HAS_EMAIL")
+
+    for phone_number in analysis_result.phone_numbers:
+        phone_number_id = create_node("PhoneNumber", {"phonenumber": phone_number})
+        create_edge(image_url_id, phone_number_id, "HAS_PHONENUMBER")
+
+    for name in analysis_result.names:
+        name_id = create_node("Name", {"name": name})
+        create_edge(image_url_id, name_id, "HAS_NAME")
+
+    for location in analysis_result.locations:
+        location_id = create_node("Location", {"location": location})
+        create_edge(image_url_id, location_id, "HAS_LOCATION")
+
+    for date in analysis_result.dates:
+        date_id = create_node("Date", {"date": date})
+        create_edge(image_url_id, date_id, "HAS_DATE")
 
 
 def analyze_image(
@@ -296,6 +359,7 @@ def analyze_single_image(image, url):
 
             display_analysis_results(analysis_result)
             logger.info("Analysis results displayed to user")
+            return analysis_result
         except Exception as analysis_error:
             logger.exception(f"Error during image analysis: {str(analysis_error)}")
             st.error(f"An error occurred during image analysis: {str(analysis_error)}")
@@ -568,7 +632,9 @@ def main():
         st.write("**You selected:**")
         st.write(selected_row)
         selected_post_url = selected_row["post_url"].values[0]
+        selected_post_IDn = selected_row["IDn"].values[0]
         st.write(selected_post_url)
+        st.write(f"You selected the advert with IDn: {selected_post_IDn}")
 
         if st.button("Go to selected advert"):
             st.session_state["driver"].get(selected_post_url)
@@ -582,6 +648,10 @@ def main():
                 st.write(advert_text)
             else:
                 st.write("No advertisement content found.")
+
+        if st.button("Alternative content extraction"):
+            advert_detail = sp.find_advert_poster_alt()
+            st.write(advert_detail)
 
         if st.button("Extract advert content without div"):
             nodiv_content = extract_advert_content_nodiv()
@@ -691,10 +761,18 @@ def main():
                     caption=st.session_state["selected_img"],
                     use_column_width=True,
                 )
-                analysis_result = analyze_single_image(
+                st.session_state["analysis_result"] = analyze_single_image(
                     image, st.session_state["selected_img"]
                 )
-                st.write(analysis_result)
+                st.write(st.session_state["analysis_result"])
+
+            if "analysis_result" in st.session_state:
+                st.write(st.session_state["analysis_result"])
+                if st.button(f"Upload analysis results to Neo4J"):
+                    create_image_url_relationships(
+                        selected_post_IDn, st.session_state["analysis_result"]
+                    )
+
         else:
             st.write("No img selected.")
     else:

@@ -27,6 +27,7 @@ def fetch_advert_data():
 
 
 def postings_to_neo4j(post_matches):
+    updating = False
     if is_facebook_groups_url(st.session_state["driver"].current_url):
         st.write(
             "Upload all posts on group page to Neo4J:  The URL is a valid Facebook groups URL."
@@ -38,9 +39,12 @@ def postings_to_neo4j(post_matches):
             st.write(
                 f"Post match; group_id: {post_match['group_id']}, post_id: {post_match['post_id']}"
             )
-            nl.post_to_neo4j(post_match)
+            result = nl.post_to_neo4j(post_match)
+            if result:
+                updating = True
     else:
         st.write("The URL does not match the required Facebook groups format.")
+    return updating
 
 
 def sample_group_page(driver):
@@ -74,8 +78,9 @@ def scroll_to_upload_postings(
     reverse_scroll_factor=0.5,
 ):
     last_height = driver.execute_script("return document.body.scrollHeight")
+    updating = True
 
-    while True:
+    while updating:
         # Random scroll length: scroll less than the full height of the page
         scroll_length = random.uniform(0.5, 0.9) * last_height
 
@@ -106,13 +111,46 @@ def scroll_to_upload_postings(
             # If heights are the same, it's the end of the page
             break
         _, _, post_matches = sp.list_all_users()
-        postings_to_neo4j(post_matches)
+        updating = postings_to_neo4j(post_matches)
         # Update the last height for next loop
         last_height = new_height
+        if updating:
+            st.write("found new posts")
+        else:
+            st.write("no new posts")
 
     # Return the final scroll height
     return last_height
 
+
+def update_advert_detail(poster):
+    parameters = {
+        "full_name": poster["name"],
+        "name": poster["name"].lower().strip(),
+        "user_id": poster["user_id"],
+        "post_id": poster["post_id"],
+        "user_url": poster["user_url"],
+        "post_url": poster["post_url"],
+        "advert_text": poster["advert_text"],
+    }
+    st.write(parameters)
+    query = f"""
+    MERGE (profile:Profile {{url: $user_url}})
+    SET profile.name = $full_name
+    WITH profile
+    MERGE (posting:Posting {{post_id: $post_id}}) SET posting.text = $advert_text
+    WITH profile, posting
+    MERGE (profile)-[:POSTED]->(posting)
+            """
+    nl.execute_neo4j_query(query, parameters)
+
+def build_poster(advert_detail: Dict[str, str], post_id: str) -> Dict[str, str]:
+    poster = advert_detail["poster_info"]
+    poster["post_id"] = post_id
+    poster["advert_text"] = advert_detail["advert_content"]
+    poster["post_url"] = f"https://www.facebook.com/groups/{poster['group_id']}/posts/{poster['post_id']}"
+    poster["user_url"] = f"https://www.facebook.com/{poster['user_id']}"
+    return poster
 
 def main():
     # Fetch the advert content
@@ -173,7 +211,6 @@ def main():
             st.write(f"Original URL: {original_url}")
             st.write(new_adverts_urls)
             wait = WebDriverWait(st.session_state["driver"], 30)
-            entries = []
             for new_advert_url in new_adverts_urls:
                 st.session_state["driver"].get(new_advert_url["post_url"])
                 post_id = sp.extract_post_id(new_advert_url["post_url"])
@@ -184,40 +221,20 @@ def main():
                 st.write(f"New advert URL: {new_advert_url['post_url']}")
                 # advert_poster = sp.find_advert_poster()
                 advert_detail = sp.find_advert_poster()
-                st.write(f"Advert poster: {advert_detail}")
+                advert_detail_alt = sp.find_advert_poster_alt()
+                st.write(f"Advert poster (find_advert_poster): {advert_detail}")
+                st.write(f"Advert poster (find_advert_poster_alt): {advert_detail_alt}")
                 if advert_detail:
-                    poster = advert_detail["poster_info"]
+                    poster = build_poster(advert_detail, post_id)
+                    update_advert_detail(poster)
 
-                    advert_text = advert_detail["advert_content"]
-
-                    st.write(
-                        f"https://www.facebook.com/groups/{poster['group_id']}/posts/{post_id}"
-                    )
-                    parameters = {
-                        "full_name": poster["name"],
-                        "name": poster["name"].lower().strip(),
-                        "user_id": poster["user_id"],
-                        "post_id": post_id,
-                        "user_url": f"https://www.facebook.com/{poster['user_id']}",
-                        "post_url": f"https://www.facebook.com/groups/{poster['group_id']}/posts/{post_id}",
-                        "advert_text": advert_text,
-                    }
-                    st.write(parameters)
-                    query = f"""
-                    MERGE (profile:Profile {{url: $user_url}})
-                    SET profile.name = $full_name
-                    WITH profile
-                    MERGE (posting:Posting {{post_id: $post_id}}) SET posting.text = $advert_text
-                    WITH profile, posting
-                    MERGE (profile)-[:POSTED]->(posting)
-                            """
-                    entry = {"parameters": parameters, "query": query}
-                    entries.append(entry)
-                    # pd.DataFrame(entries).to_csv("results/new_entries.csv", index=False)
-                    nl.execute_neo4j_query(query, parameters)
-                    waiting_time = randint(1, 7)
-                    st.write(f"waiting {waiting_time}s... ")
-                    time.sleep(waiting_time)
+                if not advert_detail and advert_detail_alt:
+                    poster = build_poster(advert_detail_alt, post_id)
+                    update_advert_detail(poster)
+                    
+                waiting_time = randint(1, 7)
+                st.write(f"waiting {waiting_time}s... ")
+                time.sleep(waiting_time)
         except Exception as e:
             st.error(f"An error occurred: {e}")
         finally:
