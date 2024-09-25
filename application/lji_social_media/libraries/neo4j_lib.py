@@ -7,8 +7,9 @@ from typing import Dict, Any, Optional, List
 neo4j_config = {
     "username": os.environ.get("NEO4J_USER"),
     "password": os.environ.get("NEO4J_PWD"),
-    "uri": "bolt://localhost:7687",
+    "uri": "bolt://localhost:7689",
 }
+
 
 def write_analysis_to_neo4j(
     IDn: int, prompt_name: str, analysis: Dict[str, Any]
@@ -53,12 +54,12 @@ def write_analysis_to_neo4j(
         print(f"Error writing to Neo4j: {str(e)}")
 
 
-
 def get_neo4j_advert(IDn: int) -> Optional[str]:
     query = """MATCH (n:Posting) WHERE ID(n) = $IDn RETURN n.text AS advert"""
     parameters = {"IDn": IDn}
     result = execute_neo4j_query(query, parameters)
     return result[0]["advert"] if result else None
+
 
 def get_adverts():
     query = """MATCH (n:Posting) WHERE (n.text IS NOT NULL) AND NOT (n.text = "") RETURN ID(n) AS IDn, n.post_id, n.post_url AS post_url, n.text AS advert"""

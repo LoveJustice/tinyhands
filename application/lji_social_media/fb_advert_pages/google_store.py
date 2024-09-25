@@ -8,11 +8,6 @@ from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
 load_dotenv()
-neo4j_config = {
-    "username": os.environ.get("NEO4J_USER"),
-    "password": os.environ.get("NEO4J_PWD"),
-    "uri": "bolt://localhost:7687",
-}
 
 
 SERVICE_ACCOUNT_FILE = os.getenv("SERVICE_ACCOUNT_FILE")
@@ -431,8 +426,8 @@ def main():
             ~neo4j_comments["comment_url"].isin(google_comments["comment_url"])
         ]
         st.dataframe(data)
-        response = write_sheet("Comments", data)
-        st.write(response)
+        # response = write_sheet("Comments", data)
+        # st.write(response)
 
 
 if __name__ == "__main__":
