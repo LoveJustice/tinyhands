@@ -2,6 +2,7 @@ from neo4j import GraphDatabase
 import pandas as pd
 import os
 from datetime import datetime
+from typing import Dict, Any, Optional, List
 
 neo4j_config = {
     "username": os.environ.get("NEO4J_USER"),
@@ -9,6 +10,55 @@ neo4j_config = {
     "uri": "bolt://localhost:7687",
 }
 
+def write_analysis_to_neo4j(
+    IDn: int, prompt_name: str, analysis: Dict[str, Any]
+) -> None:
+    """
+    Write analysis results to Neo4j.
+
+    Args:
+        IDn: The ID of the posting.
+        prompt_name: The name of the prompt used for analysis.
+        analysis: The analysis results dictionary.
+    """
+    parameters = {
+        "IDn": IDn,
+        "prompt_name": prompt_name,
+        "result": analysis["result"],
+        "evidence": analysis["evidence"],
+        "explanation": analysis["explanation"],
+        "confidence": analysis["confidence"],
+    }
+
+    query = """
+    MATCH (posting:Posting)
+    WHERE ID(posting) = $IDn
+    WITH posting AS posting
+    MERGE (an:Analysis {
+        result: $result,
+        evidence: $evidence,
+        explanation: $explanation,
+        confidence: $confidence
+    })
+    CREATE (posting)-[:HAS_ANALYSIS {type: $prompt_name}]->(an)
+    """
+
+    # Ensure all required keys are present with default values if missing
+
+    # logger.info(f"Writing analysis to Neo4j: {parameters}")
+
+    try:
+        execute_neo4j_query(query, parameters)
+    except Exception as e:
+        print(f"Error writing to Neo4j: {str(e)}")
+
+
+
+def get_neo4j_advert(IDn: int) -> Optional[str]:
+    query = """MATCH (n:Posting) WHERE ID(n) = $IDn RETURN n.text AS advert"""
+    parameters = {"IDn": IDn}
+    result = execute_neo4j_query(query, parameters)
+    return result[0]["advert"] if result else None
 
 def get_adverts():
     query = """MATCH (n:Posting) WHERE (n.text IS NOT NULL) AND NOT (n.text = "") RETURN ID(n) AS IDn, n.post_id, n.post_url AS post_url, n.text AS advert"""
@@ -191,6 +241,66 @@ def all_new_adverts_urls(group_url=None):
     # st.write(parameters)
     result = execute_neo4j_query(query, parameters)
     return result
+
+
+def upload_comment_to_neo4j(comment: dict):
+    parameters = {
+        "full_name": comment["name"],
+        "name": comment["name"].lower().strip(),
+        "post_id": comment["post_id"],
+        "group_id": comment["group_id"],
+        "group_name": comment["group_name"],
+        "user_id": comment["user_id"],
+        "group_url": f"https://www.facebook.com/groups/{comment['group_id']}",
+        "user_url": f"https://www.facebook.com/{comment['user_id']}",
+        "post_url": f"https://www.facebook.com/groups/{comment['group_id']}/posts/{comment['post_id']}",
+        "comment_url": f"https://www.facebook.com/groups/{comment['group_id']}/posts/{comment['post_id']}/?comment_id={comment['comment_id']}",
+        "comment_text": comment["text"],
+        "comment_id": comment["comment_id"],
+    }
+
+    query = """
+    MERGE (group:Group {group_id: $group_id, url: $group_url})
+    MERGE (profile:Profile {name: $full_name, url: $user_url})
+    MERGE (name:Name {full_name: $full_name, name: $name})
+    MERGE (posting:Posting {post_id: $post_id, post_url: $post_url})
+    MERGE (comment:Comment {comment_id: $comment_id, comment: $comment_text, url: $comment_url})
+    MERGE (profile)-[:HAS_PROFILE_NAME]->(name)
+    MERGE (group)-[:HAS_POSTING]->(posting)
+    MERGE (posting)-[:HAS_COMMENT]->(comment)
+    MERGE (profile)-[:MADE_COMMENT]->(comment)
+    SET group.name = $group_name
+    """
+    result = execute_neo4j_query(query, parameters)
+    return result
+
+
+def upload_post_to_neo4j(poster: dict):
+    parameters = {
+        "full_name": poster["name"],
+        "name": poster["name"].lower().strip(),
+        "group_id": poster["group_id"],
+        "group_name": poster["group_name"],
+        "user_id": poster["user_id"],
+        "post_id": poster["post_id"],
+        "group_url": f"https://www.facebook.com/groups/{poster['group_id']}",
+        "user_url": f"https://www.facebook.com/{poster['user_id']}",
+        "post_url": f"https://www.facebook.com/groups/{poster['group_id']}/posts/{poster['post_id']}",
+        # "advert_text": advert_text,
+    }
+
+    query = """
+    MERGE (group:Group {name: $group_name, group_id: $group_id, url: $group_url})
+    MERGE (profile:Profile {name: $full_name, url: $user_url})
+    MERGE (name:Name {full_name: $full_name, name: $name})
+    MERGE (posting:Posting {post_id: $post_id, post_url: $post_url})
+    MERGE (profile)-[:HAS_PROFILE_NAME]->(name)
+    MERGE (profile)-[:POSTED]->(posting)
+    MERGE (group)-[:HAS_POSTING]->(posting)
+    """
+    result = execute_neo4j_query(query, parameters)
+    return result
+    # st.write(result)
 
 
 def all_group_adverts(group_url=None):

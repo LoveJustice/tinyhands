@@ -17,11 +17,11 @@ from bs4 import BeautifulSoup
 
 
 def fetch_advert_data():
-    neo4j_query = """MATCH (posting:Posting) 
+    neo4j_query = """MATCH (posting:Posting)
     RETURN ID(posting) AS IDn,
-    posting.post_id AS post_id, 
-    posting.text AS post_text, 
-    posting.post_url AS post_url 
+    posting.post_id AS post_id,
+    posting.text AS post_text,
+    posting.post_url AS post_url
     ORDER BY post_id;"""
     return pd.DataFrame(nl.execute_neo4j_query(neo4j_query, {}))
 
@@ -144,13 +144,17 @@ def update_advert_detail(poster):
             """
     nl.execute_neo4j_query(query, parameters)
 
+
 def build_poster(advert_detail: Dict[str, str], post_id: str) -> Dict[str, str]:
     poster = advert_detail["poster_info"]
     poster["post_id"] = post_id
     poster["advert_text"] = advert_detail["advert_content"]
-    poster["post_url"] = f"https://www.facebook.com/groups/{poster['group_id']}/posts/{poster['post_id']}"
+    poster[
+        "post_url"
+    ] = f"https://www.facebook.com/groups/{poster['group_id']}/posts/{poster['post_id']}"
     poster["user_url"] = f"https://www.facebook.com/{poster['user_id']}"
     return poster
+
 
 def main():
     # Fetch the advert content
@@ -231,7 +235,7 @@ def main():
                 if not advert_detail and advert_detail_alt:
                     poster = build_poster(advert_detail_alt, post_id)
                     update_advert_detail(poster)
-                    
+
                 waiting_time = randint(1, 7)
                 st.write(f"waiting {waiting_time}s... ")
                 time.sleep(waiting_time)

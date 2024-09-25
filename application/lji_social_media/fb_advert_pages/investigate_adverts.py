@@ -596,6 +596,41 @@ def find_img_urls() -> List[str]:
     return list(img_urls)
 
 
+def snapshot():
+    st.write(f"Post ID: {st.session_state['post_id']}")
+    posters = sp.find_advert_poster()
+    # st.write(f"Posters: {posters}")
+    st.write(f"Posters: {posters}")
+    # advert_text = sp.find_advert_content()
+    all_users_and_comments = sp.find_comments_expanded()
+    st.write(all_users_and_comments)
+
+    st.write(f"Group name: {st.session_state['group_name']}")
+
+    # Upload comments
+    for comment in all_users_and_comments:
+        comment["post_id"] = st.session_state["post_id"]
+        comment["group_name"] = st.session_state["group_name"]
+        result = nl.upload_comment_to_neo4j(comment)
+        st.write(result)
+        st.write(f"Uploaded comment {comment}")
+    st.write("Comments upload completed.")
+
+    # Upload poster information
+    for poster in [posters]:
+        st.write(f"Uploading poster {poster['poster_info']}")
+        payload = poster["poster_info"]
+        payload["post_id"] = st.session_state["post_id"]
+        payload["group_name"] = st.session_state["group_name"]
+        result = nl.upload_post_to_neo4j(payload)
+        st.write(result)
+        st.write(f"Uploaded post {payload}")
+    st.write("Post upload completed.")
+
+    st.write("Upload completed.")
+    st.write(posters)
+
+
 def main():
     st.title("Facebook Advert Pages")
     st.write("This tool helps you investigate Facebook advert pages.")
@@ -639,6 +674,15 @@ def main():
         if st.button("Go to selected advert"):
             st.session_state["driver"].get(selected_post_url)
             time.sleep(5)
+            st.session_state["post_id"] = sp.extract_post_id(
+                st.session_state["driver"].current_url
+            )
+            if not st.session_state["post_id"]:
+                st.error("Could not extract post ID from the current URL.")
+                return
+
+        if st.button("Take snapshot and upload to Neo4J"):
+            snapshot()
 
         if st.button("Extract advert content"):
             advert_text = extract_advert_content()

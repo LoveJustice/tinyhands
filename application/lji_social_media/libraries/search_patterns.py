@@ -41,10 +41,24 @@ GROUP_COMMENT_ID_PATTERN = re.compile(
     r"groups/([\w]+)/posts/([\w]+)/.*[?&]comment_id=([\w]+)/?"
 )
 
-import re
-from typing import Dict
-from bs4 import BeautifulSoup
-import streamlit as st
+
+def find_group_name() -> Optional[str]:
+    """Extract the group name from the current page."""
+    try:
+        soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
+
+        if h1_tag := soup.find("h1"):
+            if a_tag := h1_tag.find("a"):
+                return a_tag.get_text(strip=True)
+
+        if title_tag := soup.title:
+            return title_tag.string.split("|")[0].strip()
+
+        st.warning("Group name could not be found in the HTML content.")
+        return None
+    except Exception as e:
+        st.error(f"An error occurred while extracting group name: {str(e)}")
+        return None
 
 
 def find_advert_poster_alt() -> Dict[str, str]:

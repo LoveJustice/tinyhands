@@ -1159,25 +1159,6 @@ def wait_for_link_by_href(driver, href, timeout=10):
         print(f"An error occurred: {e}")
 
 
-def find_group_name() -> Optional[str]:
-    """Extract the group name from the current page."""
-    try:
-        soup = BeautifulSoup(st.session_state["driver"].page_source, "html.parser")
-
-        if h1_tag := soup.find("h1"):
-            if a_tag := h1_tag.find("a"):
-                return a_tag.get_text(strip=True)
-
-        if title_tag := soup.title:
-            return title_tag.string.split("|")[0].strip()
-
-        st.warning("Group name could not be found in the HTML content.")
-        return None
-    except Exception as e:
-        st.error(f"An error occurred while extracting group name: {str(e)}")
-        return None
-
-
 def snapshot():
     """Take a snapshot of the current Facebook post and upload to Neo4j."""
     driver = st.session_state["driver"]
@@ -1189,20 +1170,22 @@ def snapshot():
     st.write(f"Post ID: {post_id}")
     posters = sp.find_advert_poster()
     st.write(f"Posters: {posters}")
-    advert_text = sp.find_advert_content()
+    # advert_text = sp.find_advert_content()
     all_users_and_comments = sp.find_comments_expanded()
     st.write(all_users_and_comments)
-    group_name = find_group_name()
+    group_name = sp.find_group_name()
     st.write(f"Group name: {group_name}")
 
     # Upload comments
     for comment in all_users_and_comments:
+        comment["post_id"] = post_id
+        comment["group_name"] = group_name
         parameters = {
             "full_name": comment["name"],
             "name": comment["name"].lower().strip(),
             "post_id": post_id,
             "group_id": comment["group_id"],
-            "group_name": group_name,
+            "group_name": comment["group_name"],
             "user_id": comment["user_id"],
             "group_url": f"https://www.facebook.com/groups/{comment['group_id']}",
             "user_url": f"https://www.facebook.com/{comment['user_id']}",
@@ -1210,7 +1193,7 @@ def snapshot():
             "comment_url": f"https://www.facebook.com/groups/{comment['group_id']}/posts/{post_id}/?comment_id={comment['comment_id']}",
             "comment_text": comment["text"],
             "comment_id": comment["comment_id"],
-            "advert_text": advert_text,
+            # "advert_text": advert_text,
         }
         st.write(parameters)
         query = """
@@ -1231,6 +1214,8 @@ def snapshot():
 
     # Upload poster information
     for poster in posters:
+        poster["post_id"] = post_id
+        poster["group_name"] = group_name
         parameters = {
             "full_name": poster["name"],
             "name": poster["name"].lower().strip(),
@@ -1241,7 +1226,7 @@ def snapshot():
             "group_url": f"https://www.facebook.com/groups/{poster['group_id']}",
             "user_url": f"https://www.facebook.com/{poster['user_id']}",
             "post_url": f"https://www.facebook.com/groups/{poster['group_id']}/posts/{post_id}",
-            "advert_text": advert_text,
+            # "advert_text": advert_text,
         }
         st.write(parameters)
         query = """

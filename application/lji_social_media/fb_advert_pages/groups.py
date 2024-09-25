@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import libraries.neo4j_lib as neo4j_lib
+import libraries.search_patterns as sp
 
 
 # Cache the data to avoid fetching it every time there's a rerun
@@ -8,11 +9,11 @@ import libraries.neo4j_lib as neo4j_lib
     ttl=600
 )  # Cache the result for 600 seconds (10 minutes) or adjust as needed
 def fetch_group_data():
-    neo4j_query = """MATCH (group:Group) 
-    RETURN group.country_id AS country_id, 
-    group.group_id AS group_id, 
-    group.name AS group_name, 
-    group.url AS group_url 
+    neo4j_query = """MATCH (group:Group)
+    RETURN group.country_id AS country_id,
+    group.group_id AS group_id,
+    group.name AS group_name,
+    group.url AS group_url
     ORDER BY group_name;"""
     return pd.DataFrame(neo4j_lib.execute_neo4j_query(neo4j_query, {}))
 
@@ -50,3 +51,5 @@ if st.button("Proceed with selected group"):
         # Display or execute the action
         st.write(f"Opening URL: {selected_url}")
         st.session_state["driver"].get(selected_url)  # Example action
+        st.session_state["group_name"] = sp.find_group_name()
+        st.write(f"Group name: {st.session_state['group_name']}")

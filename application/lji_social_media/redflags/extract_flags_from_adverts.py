@@ -7,7 +7,7 @@ import json
 import re
 import bs4, requests
 from datetime import datetime, timedelta
-from libraries.neo4j_lib import execute_neo4j_query
+import libraries.neo4j_lib as nl
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core import download_loader
 from llama_index.core import VectorStoreIndex, ServiceContext, Document
@@ -17,7 +17,6 @@ import pandas as pd
 import json
 from typing import Optional, Dict, Any
 import re
-
 import logging
 
 # Set up logging
@@ -268,52 +267,9 @@ def delete_analysis(IDn: int, prompt_name: str) -> None:
     logger.info(f"Delete existing analysis to Neo4j: {parameters}")
 
     try:
-        execute_neo4j_query(delete_query, parameters)
+        nl.execute_neo4j_query(delete_query, parameters)
     except Exception as e:
         logger.error(f"Error deleting analysis to Neo4j: {str(e)}")
-
-
-def write_analysis_to_neo4j(
-    IDn: int, prompt_name: str, analysis: Dict[str, Any]
-) -> None:
-    """
-    Write analysis results to Neo4j.
-
-    Args:
-        IDn: The ID of the posting.
-        prompt_name: The name of the prompt used for analysis.
-        analysis: The analysis results dictionary.
-    """
-    parameters = {
-        "IDn": IDn,
-        "prompt_name": prompt_name,
-        "result": analysis["result"],
-        "evidence": analysis["evidence"],
-        "explanation": analysis["explanation"],
-        "confidence": analysis["confidence"],
-    }
-
-    query = """
-    MATCH (posting:Posting)
-    WHERE ID(posting) = $IDn
-    WITH posting AS posting
-    MERGE (an:Analysis {
-        result: $result,
-        evidence: $evidence,
-        explanation: $explanation,
-        confidence: $confidence
-    })
-    CREATE (posting)-[:HAS_ANALYSIS {type: $prompt_name}]->(an)
-    """
-
-    # Ensure all required keys are present with default values if missing
-
-    logger.info(f"Writing analysis to Neo4j: {parameters}")
-
-    try:
-        execute_neo4j_query(query, parameters)
-    except Exception as e:
-        logger.error(f"Error writing to Neo4j: {str(e)}")
 
 
 # The parse_confidence function is no longer needed as we handle the conversion in the analyse_advert function
@@ -326,7 +282,7 @@ def verify_analyis_existence(IDn: int, prompt_name: str) -> bool:
     WHERE ID(posting) = $IDn and has_analysis.type = $prompt_name
     RETURN posting.post_id AS post_id
     """
-    return len(execute_neo4j_query(query, parameters)) > 0
+    return len(nl.execute_neo4j_query(query, parameters)) > 0
 
 
 def process_adverts_from_dataframe(IDn_list: list) -> None:
@@ -343,22 +299,14 @@ def process_adverts_from_dataframe(IDn_list: list) -> None:
                 process_advert(IDn, prompt_name)
     return None
 
-
-def get_neo4j_advert(IDn: int) -> Optional[str]:
-    query = """MATCH (n:Posting) WHERE ID(n) = $IDn RETURN n.text AS advert"""
-    parameters = {"IDn": IDn}
-    result = execute_neo4j_query(query, parameters)
-    return result[0]["advert"] if result else None
-
-
 def process_advert(IDn: int, prompt_name: str) -> None:
-    advert = get_neo4j_advert(IDn)
+    advert = nl.get_neo4j_advert(IDn)
     chat_engine = create_chat_engine(advert)
     print(f"Processing : {advert}")
     if chat_engine:
         advert_analysis = analyse_advert(chat_engine, advert, prompt_name)
         print(f"Response to {prompt_name}: {advert_analysis}")
-        write_analysis_to_neo4j(IDn, prompt_name, advert_analysis)
+        nl.write_analysis_to_neo4j(IDn, prompt_name, advert_analysis)
     else:
         print(f"Failed to create chat engine for advert {advert}")
     return None
@@ -391,12 +339,12 @@ for IDn in [573204]:
     process_advert(IDn=IDn, prompt_name="target_specific_group_prompt")
 
 # ============================================================================================
-flag_query = """MATCH p=(group:Group)-[]-(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
+flag_query = """MATCH p=(group:Group)-[]-(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 RETURN posting.text AS advert, ID(group) AS group_id, ID(posting) AS post_id, posting.monitor_score AS monitor_score, r.type as flag, analysis.result as result """
 
 # flags = execute_neo4j_query(flag_query, parameters={})
 
-df = pd.DataFrame(execute_neo4j_query(flag_query, parameters={}))
+df = pd.DataFrame(nl.execute_neo4j_query(flag_query, parameters={}))
 
 
 # Perform the pivot operation with multiple index columns
@@ -417,33 +365,33 @@ flags = flags[column_order]
 flags.to_csv("results/advert_flags.csv", index=False)
 
 
-confidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
+confidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 RETURN ID(posting) AS id, r.type as flag, analysis.confidence as confidence """
 
 confidence = (
-    pd.DataFrame(execute_neo4j_query(confidence_query, parameters={}))
+    pd.DataFrame(nl.execute_neo4j_query(confidence_query, parameters={}))
     .pivot(index="id", columns="flag", values="confidence")
     .reset_index()
 )
 confidence.to_csv("results/advert_confidence.csv", index=False)
 
 # ============================================================================================
-evidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
+evidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 RETURN ID(posting) AS id, r.type as flag, analysis.evidence as evidence """
 
 evidence = (
-    pd.DataFrame(execute_neo4j_query(evidence_query, parameters={}))
+    pd.DataFrame(nl.execute_neo4j_query(evidence_query, parameters={}))
     .pivot(index="id", columns="flag", values="evidence")
     .reset_index()
 )
 evidence.to_csv("results/advert_evidence.csv", index=False)
 # ============================================================================================
-explanation_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis) 
+explanation_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 RETURN ID(posting) AS id, r.type as flag, analysis.explanation as explanation """
 
 
 explanation = (
-    pd.DataFrame(execute_neo4j_query(explanation_query, parameters={}))
+    pd.DataFrame(nl.execute_neo4j_query(explanation_query, parameters={}))
     .pivot(index="id", columns="flag", values="explanation")
     .reset_index()
 )
