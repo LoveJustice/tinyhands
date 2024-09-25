@@ -18,6 +18,7 @@ from dataentry.models.person_identification import PersonIdentification
 from dataentry.models.master_person import MasterPerson
 from dataentry.models.match_history import MatchHistory, MatchAction
 from .form_data import FormData, CardData, PersonContainer
+from .models import Incident
 from .validate_form import ValidateForm
 import xxsubtype
 
@@ -1147,7 +1148,20 @@ class FormDataSerializer(serializers.Serializer):
             context = dict(self.context)
         else:
             context = {}
-        
+
+        form_number = instance.form_object.get_key()
+        if form_number and len(form_number) > 3:
+            # Should we add a check here for certain forms? Or the first 3 have to be letters?
+            # Otherwise the SMR ends up getting into this code which slows it down
+            incident_number = self.getIncidentNumberFromFormNumber(form_number)
+            try:
+                # Calling DB here could affect performance
+                primary_incident = Incident.objects.get(incident_number=incident_number)
+                ret['incident_id'] = primary_incident.id
+                ret['incident_number'] = incident_number
+            except Incident.DoesNotExist:
+                pass
+
         base_categories = []
         card_categories = []
         form_categories = FormCategory.objects.filter(form=instance.form)
@@ -1264,7 +1278,15 @@ class FormDataSerializer(serializers.Serializer):
             'country_id': country_id,
             'status': status,
             }
-    
+
+    @staticmethod
+    def getIncidentNumberFromFormNumber(form_number: str):
+        for idx in range(3, len(form_number)):
+            letter = form_number[idx]
+            if letter != '_' and not letter.isdigit():
+                return form_number[0:idx]
+        return form_number
+
     def get_country_id(self):
         if self.form_data is None or self.form_data.form_object is None or not hasattr(self.form_data.form_object, 'station') or self.form_data.form_object.station is None or self.form_data.form_object.station.operating_country is None:
             country_method = getattr(self.form_data.form_object, "get_country_id", None)
