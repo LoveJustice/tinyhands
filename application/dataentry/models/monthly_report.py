@@ -152,7 +152,11 @@ class MonthlyReport(BaseForm):
         unique_together = ("station", "year", "month")
     
     def get_key(self):
-        return str(self.id)
+        if self.id:
+            return str(self.id)
+        else:
+            # Return None instead of str(None) aka 'None' so we don't try to pull an Incident on serialize_form
+            return None
     
     def get_form_type_name(self):
         return 'MONTHLY_REPORT'
