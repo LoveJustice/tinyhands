@@ -181,7 +181,10 @@ class BaseStaffSerializer(serializers.ModelSerializer):
         return MonthlyDistributionForm.objects.filter(border_station__operating_country = obj.country).exists()
 
     def get_country_name(self, obj):
-        return obj.country.name
+        if obj.country:
+            return obj.country.name
+        else:
+            return None
     
     def to_internal_value(self, data):
         if 'staffproject_set' in data:
@@ -346,7 +349,10 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
         return result
 
     def get_country_name(self, obj):
-        return obj.country.name
+        if obj.country:
+            return obj.country.name
+        else:
+            return None
     
     def to_internal_value(self, data):
         if 'member_projects' in data:
