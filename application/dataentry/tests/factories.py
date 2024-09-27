@@ -50,6 +50,7 @@ class IrfIndiaFactory(DjangoModelFactory):
 
     irf_number = factory.Sequence(lambda n: 'MBZ{0}'.format(n))
     date_of_interception = FuzzyDate(datetime.datetime(2008, 1, 1, tzinfo=pytz.UTC), datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC))
+    logbook_submitted = datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC)
     status = 'approved'
 
     location = "India"
