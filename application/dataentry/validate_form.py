@@ -70,7 +70,7 @@ class ValidateForm:
                         if submission_date is None and form_data.form_object.date_time_entered_into_system:
                             submission_date = form_data.form_object.date_time_entered_into_system.date()
                         # Don't want to check if it's an old form that was entered before submission dates were around
-                        if not (submission_date is None) and submission_date < start_date:
+                        if submission_date and submission_date < start_date:
                             print('do not check')
                             should_do = False
         except:
