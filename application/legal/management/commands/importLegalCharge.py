@@ -165,6 +165,7 @@ class Command(BaseCommand):
         pvf.victim = person
         pvf.vdf_number = incident.incident_number + next_suffix
         pvf.save()
+        return pvf
     
     def get_pvf(self, incident, in_name):
         tmp = self.map_name(incident, in_name, 'PV')
