@@ -1,5 +1,9 @@
 version: "3"
 
+# NOTE: The docker compose file on the server does NOT match this one!
+# Specifically, it is ran from inside the application folder and only certain sub-folders are made into volumes
+# So if, say, you add a new dist folder for a React client, you will get 'internal redirection cycle'
+
 services:
   db:
     image: postgres:16.0
