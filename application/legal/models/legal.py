@@ -16,7 +16,10 @@ class LegalCharge(BaseForm):
     missing_data_count = models.PositiveIntegerField(null=True, blank=True)
     
     def get_key(self):
-        return self.incident.incident_number
+        if self.incident_id is None:
+            return None
+        else:
+            return self.incident.incident_number
     
     def get_form_type_name(self):
         return 'LEGAL_CASE'
