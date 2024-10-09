@@ -6,13 +6,23 @@ from libraries.neo4j_lib import execute_neo4j_query, get_all_comments
 from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+from googleapiclient.errors import HttpError
 
 load_dotenv()
+# Configure logging
 
+
+# Constants (consider loading these from environment variables or a config file)
+MASTER_SPREADSHEET_ID = os.getenv("MASTER_SPREADSHEET_ID")
+SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
 
 SERVICE_ACCOUNT_FILE = os.getenv("SERVICE_ACCOUNT_FILE")
-SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
-MASTER_SPREADSHEET_ID = os.getenv("MASTER_SPREADSHEET_ID")
+
 SCOPES = [os.getenv("SCOPES")]
 DB_PATH = os.getenv("DB_PATH")
 
@@ -79,21 +89,34 @@ def get_neo4j_groups():
     return pd.DataFrame(result)
 
 
-def get_google_content(tab) -> pd.DataFrame:
-    range_name = f"{tab}!A:J"  # Adjust the range as needed
-    result = (
-        SERVICE.spreadsheets()
-        .values()
-        .get(spreadsheetId=MASTER_SPREADSHEET_ID, range=range_name)
-        .execute()
-    )
-    values = result.get("values", [])
-    if not values:
-        print("No data found.")
+def get_google_content(tab: str) -> pd.DataFrame:
+    """
+    Retrieves content from a specified tab in a Google Sheet.
+
+    Args:
+        tab (str): The name of the sheet tab.
+
+    Returns:
+        pd.DataFrame: DataFrame containing the sheet's content.
+    """
+    try:
+        range_name = f"{tab}!A:J"  # Adjust the range as needed
+        result = (
+            SERVICE.spreadsheets()
+            .values()
+            .get(spreadsheetId=MASTER_SPREADSHEET_ID, range=range_name)
+            .execute()
+        )
+        values = result.get("values", [])
+        if not values:
+            logger.info("No data found in the Google Sheet.")
+            return pd.DataFrame()
+        else:
+            df = pd.DataFrame(values[1:], columns=values[0])
+            return df
+    except HttpError as e:
+        logger.exception("Error fetching data from Google Sheets")
         return pd.DataFrame()
-    else:
-        df = pd.DataFrame(values[1:], columns=values[0])
-        return df
 
 
 def get_google_adverts(tab):
@@ -113,63 +136,81 @@ def get_google_adverts(tab):
         return df
 
 
-def write_sheet(tab, data):
+def write_sheet(tab: str, data: pd.DataFrame) -> dict:
     """
     Appends data to a specific tab in a Google Sheet, ensuring that the header is included only once.
 
     Args:
-    tab (str): The name of the sheet tab where data should be appended.
-    data (pd.DataFrame): The DataFrame containing the data to append.
+        tab (str): The name of the sheet tab where data should be appended.
+        data (pd.DataFrame): The DataFrame containing the data to append.
 
     Returns:
-    dict: The response from the Google Sheets API after the append operation.
+        dict: The response from the Google Sheets API after the append operation.
     """
     if data.empty:
-        print("No data to write.")
+        logger.info("No data to write.")
         return {}
 
-    # Check if the sheet is empty to decide whether to include headers
-    range_name = f"{tab}!A1:Z"  # Assuming no more than 26 columns
-    sheet_data = (
-        SERVICE.spreadsheets()
-        .values()
-        .get(spreadsheetId=SPREADSHEET_ID, range=range_name)
-        .execute()
-    )
-
-    values = data.values.tolist()
-
-    if "values" not in sheet_data:  # This means the sheet is empty
-        # Include headers if the sheet is empty
-        values.insert(0, data.columns.tolist())
-
-    # Define the range where data should start being written
-    range_name = f"{tab}!A1"  # This will automatically adjust to the next available row
-
-    # Prepare the request body with the data
-    body = {
-        "values": values,
-        "majorDimension": "ROWS",  # Ensures data is treated as rows
-    }
-
-    # Append the data to the specified range in the sheet
     try:
+        # Check if the sheet is empty to decide whether to include headers
+        range_name = f"{tab}!A1:Z"  # Adjust as needed
+        sheet_data = (
+            SERVICE.spreadsheets()
+            .values()
+            .get(spreadsheetId=SPREADSHEET_ID, range=range_name)
+            .execute()
+        )
+
+        values = data.values.tolist()
+
+        if "values" not in sheet_data or not sheet_data["values"]:
+            # Include headers if the sheet is empty
+            values.insert(0, data.columns.tolist())
+
+        # Prepare the request body with the data
+        body = {
+            "values": values,
+            "majorDimension": "ROWS",
+        }
+
+        # Append the data to the specified range in the sheet
         response = (
             SERVICE.spreadsheets()
             .values()
             .append(
                 spreadsheetId=SPREADSHEET_ID,
-                range=range_name,
-                valueInputOption="USER_ENTERED",  # Allows for formula parsing and formatting
-                insertDataOption="INSERT_ROWS",  # Ensures new data rows are inserted
+                range=f"{tab}!A1",
+                valueInputOption="USER_ENTERED",
+                insertDataOption="INSERT_ROWS",
                 body=body,
             )
             .execute()
         )
         return response
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    except HttpError as e:
+        logger.exception("Error writing data to Google Sheets")
         return {}
+
+
+def get_new_comments(
+    neo4j_comments: pd.DataFrame, google_comments: pd.DataFrame
+) -> pd.DataFrame:
+    """
+    Identifies new comments that are not present in the Google Sheet.
+
+    Args:
+        neo4j_comments (pd.DataFrame): DataFrame of comments from Neo4j.
+        google_comments (pd.DataFrame): DataFrame of comments from Google Sheets.
+
+    Returns:
+        pd.DataFrame: DataFrame of new comments to append.
+    """
+    if google_comments.empty:
+        return neo4j_comments
+    else:
+        return neo4j_comments[
+            ~neo4j_comments["comment_url"].isin(google_comments["comment_url"])
+        ]
 
 
 def get_new_data(google_adverts, neo4j_adverts):
@@ -409,25 +450,38 @@ def main():
         existing_adverts = get_google_adverts("Adverts")
         format_existing_adverts(response, existing_adverts)
 
-    if st.button("Write new comments to 'Comments':"):
-        response = (
-            SERVICE.spreadsheets().get(spreadsheetId=MASTER_SPREADSHEET_ID).execute()
-        )
-        google_comments = get_google_content("Comments")
-        st.dataframe(google_comments)
-        st.write(google_comments.shape)
-        neo4j_comments = get_all_comments()
-        neo4j_comments = pd.DataFrame(neo4j_comments).sort_values(by="comment_id")
-        st.write(neo4j_comments.shape)
+    if st.button("Test new comments to 'Comments':"):
+        try:
+            # Fetch comments from Google Sheets
+            google_comments = get_google_content("Comments")
+            st.dataframe(google_comments)
+            st.write(f"Google Comments Shape: {google_comments.shape}")
 
-        # st.dataframe(neo4j_comments)
-        st.write("These comments will be appended to the 'Comments' sheet: ")
-        data = neo4j_comments[
-            ~neo4j_comments["comment_url"].isin(google_comments["comment_url"])
-        ]
-        st.dataframe(data)
-        # response = write_sheet("Comments", data)
-        # st.write(response)
+            # Fetch comments from Neo4j
+            neo4j_comments = get_all_comments()
+            st.write(neo4j_comments)
+            st.write(f"Neo4j Comments Shape: {len(neo4j_comments)}")
+            neo4j_comments_df = pd.DataFrame(neo4j_comments).sort_values(
+                by="comment_id"
+            )
+            st.write(f"Neo4j Comments Shape: {neo4j_comments_df.shape}")
+
+            # Identify new comments
+            st.write("These comments will be appended to the 'Comments' sheet:")
+            new_comments = neo4j_comments_df[
+                ~neo4j_comments_df["comment_url"].isin(google_comments["comment_url"])
+            ]
+            st.dataframe(new_comments)
+
+            # Append new comments to the sheet
+            if not new_comments.empty:
+                response = write_sheet("Comments", new_comments)
+                st.success("New comments have been appended to the 'Comments' sheet.")
+            else:
+                st.info("No new comments to append.")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+            logger.exception("An error occurred during the update process.")
 
 
 if __name__ == "__main__":

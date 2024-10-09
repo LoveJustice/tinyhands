@@ -27,6 +27,8 @@ errors
 *.toml
 *.graphml
 # Compiled Java class files
+__init__.py
+
 *.class
 
 # Compiled Python bytecode

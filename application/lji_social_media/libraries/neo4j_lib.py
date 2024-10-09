@@ -3,6 +3,10 @@ import pandas as pd
 import os
 from datetime import datetime
 from typing import Dict, Any, Optional, List
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 neo4j_config = {
     "username": os.environ.get("NEO4J_USER"),
@@ -153,14 +157,26 @@ class Neo4jConnection:
         self.__connect()
 
 
-def get_all_comments():
-    parameters = {}
-    query = f"""MATCH (profile:Profile)-[:MADE_COMMENT]-(comment:Comment)-[:HAS_COMMENT]-(posting:Posting)
-        RETURN profile.name  AS profile_name, profile.url AS profile_url, comment.comment_id AS comment_id, comment.url AS comment_url, comment.comment as comment, posting.post_id AS post_id, posting.post_url AS post_url;
-        """
-    # st.write(parameters)
-    result = execute_neo4j_query(query, parameters)
-    return result
+def get_all_comments() -> list:
+    """
+    Retrieves all comments from the Neo4j database.
+
+    Returns:
+        list: A list of dictionaries containing comment data.
+    """
+    query = """
+    MATCH (profile:Profile)-[:MADE_COMMENT]->(comment:Comment)-[:HAS_COMMENT]-(posting:Posting)
+    RETURN profile.name AS profile_name, profile.url AS profile_url,
+           comment.comment_id AS comment_id, comment.url AS comment_url,
+           comment.comment AS comment, posting.post_id AS post_id,
+           posting.post_url AS post_url;
+    """
+    try:
+        result = execute_neo4j_query(query, {})
+        return result
+    except Exception as e:
+        logger.exception("Error fetching data from Neo4j")
+        return []
 
 
 def process_users_comments(

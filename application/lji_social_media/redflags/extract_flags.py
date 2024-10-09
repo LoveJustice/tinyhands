@@ -1,5 +1,16 @@
 import os
 import time
+import sys
+import os
+
+# from langchain_ollama.llms import OllamaLLM
+# from langchain.chat_models import ChatOpenAI, AzureChatOpenAI, ChatOllama
+
+
+# Get the absolute path to the module's directory
+module_path = os.path.abspath("../libraries")
+# Add the directory to sys.path
+sys.path.append(module_path)
 
 import streamlit as st
 from typing import Dict, Any, Optional, List
@@ -25,6 +36,7 @@ from tqdm import tqdm
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 llm = OpenAI(temperature=0, model="gpt-4o", max_tokens=4096)
+# llm = ChatOllama(model="llama3.1", temperature=0.4)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
 # llm = Anthropic()
 MEMORY = ChatMemoryBuffer.from_defaults(token_limit=4096)
@@ -327,110 +339,33 @@ def process_advert(IDn: int, prompt_name: str) -> None:
     return None
 
 
-query = """MATCH (g:Group)-[:HAS_POSTING]-(n:Posting) WHERE (g.country_id) = 1 AND (n.text IS NOT NULL) AND NOT (n.text = "") RETURN ID(n) AS IDn, n.post_id AS post_id, n.text AS advert"""
-parameters = {}
-adverts = pd.DataFrame(nl.execute_neo4j_query(query, parameters))
+def main() -> None:
+    query = """MATCH (g:Group)-[:HAS_POSTING]-(n:Posting) WHERE (g.country_id) = 1 AND (n.text IS NOT NULL) AND NOT (n.text = "") RETURN ID(n) AS IDn, n.post_id AS post_id, n.text AS advert"""
+    parameters = {}
+    adverts = pd.DataFrame(nl.execute_neo4j_query(query, parameters))
 
-adverts = pd.read_csv("results/adverts_sample_2024-10-03T10_35_46_17e314.csv")
-new_prompts = [
-    "requires_references",
-    "multiple_applicants_prompt",
-    "multiple_jobs_prompt",
-]
+    new_prompts = [
+        "requires_references",
+        "multiple_applicants_prompt",
+        "multiple_jobs_prompt",
+    ]
 
-subdirectory_path = "results"
-
-# List all files in the subdirectory
-files_in_subdirectory = [
-    file
-    for file in os.listdir(subdirectory_path)
-    if os.path.isfile(os.path.join(subdirectory_path, file))
-]
-
-
-process_adverts_from_dataframe(adverts["IDn"][80:100])
-
-# Loop through the outer loop with a progress bar
-for IDn in tqdm(adverts["IDn"], desc="Processing IDs"):
-    for prompt_name in tqdm(
-        new_prompts, desc=f"Processing Prompts for ID: {IDn}", leave=False
-    ):
-        # delete_analysis(IDn=IDn, prompt_name=prompt_name)
-        if verify_analyis_existence(IDn=IDn, prompt_name=prompt_name):
-            print(f"Analysis for IDn: {IDn} and  prompt_name = {prompt_name} exists!")
-            continue
-        else:
-            print(f"Processing IDn {IDn}")
-            process_advert(IDn, prompt_name)
-        process_advert(IDn=IDn, prompt_name=prompt_name)
-
-for IDn in adverts["IDn"]:
-    delete_analysis(IDn=IDn, prompt_name="target_specific_group_prompt")
-    process_advert(IDn=IDn, prompt_name="target_specific_group_prompt")
+    # Loop through the outer loop with a progress bar
+    for IDn in tqdm(adverts["IDn"], desc="Processing IDs"):
+        for prompt_name in tqdm(
+            new_prompts, desc=f"Processing Prompts for ID: {IDn}", leave=False
+        ):
+            # delete_analysis(IDn=IDn, prompt_name=prompt_name)
+            if verify_analyis_existence(IDn=IDn, prompt_name=prompt_name):
+                print(
+                    f"Analysis for IDn: {IDn} and  prompt_name = {prompt_name} exists!"
+                )
+                continue
+            else:
+                print(f"Processing IDn {IDn}")
+                process_advert(IDn, prompt_name)
+            process_advert(IDn=IDn, prompt_name=prompt_name)
 
 
-for IDn in [573204]:
-    delete_analysis(IDn=IDn, prompt_name="target_specific_group_prompt")
-    process_advert(IDn=IDn, prompt_name="target_specific_group_prompt")
-
-# ============================================================================================
-flag_query = """MATCH p=(group:Group)-[]-(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
-RETURN posting.text AS advert, ID(group) AS group_id, ID(posting) AS IDn, posting.monitor_score AS monitor_score, r.type as flag, analysis.result as result """
-
-# flags = execute_neo4j_query(flag_query, parameters={})
-
-df = pd.DataFrame(nl.execute_neo4j_query(flag_query, parameters={}))
-
-
-# Perform the pivot operation with multiple index columns
-flags = df.pivot(
-    index=["advert", "group_id", "IDn", "monitor_score"],
-    columns="flag",
-    values="result",
-).reset_index()
-
-# If you want to ensure 'group_id' and 'post_id' are the first two columns
-column_order = ["advert", "group_id", "IDn", "monitor_score"] + [
-    col
-    for col in flags.columns
-    if col not in ["advert", "group_id", "IDn", "monitor_score"]
-]
-flags = flags[column_order]
-
-flags.to_csv("results/advert_flags.csv", index=False)
-
-
-confidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
-RETURN ID(posting) AS id, r.type as flag, analysis.confidence as confidence """
-
-confidence = (
-    pd.DataFrame(nl.execute_neo4j_query(confidence_query, parameters={}))
-    .pivot(index="id", columns="flag", values="confidence")
-    .reset_index()
-)
-confidence.to_csv("results/advert_confidence.csv", index=False)
-
-# ============================================================================================
-evidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
-RETURN ID(posting) AS id, r.type as flag, analysis.evidence as evidence """
-
-evidence = (
-    pd.DataFrame(nl.execute_neo4j_query(evidence_query, parameters={}))
-    .pivot(index="id", columns="flag", values="evidence")
-    .reset_index()
-)
-evidence.to_csv("results/advert_evidence.csv", index=False)
-# ============================================================================================
-explanation_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
-RETURN ID(posting) AS id, r.type as flag, analysis.explanation as explanation """
-
-
-explanation = (
-    pd.DataFrame(nl.execute_neo4j_query(explanation_query, parameters={}))
-    .pivot(index="id", columns="flag", values="explanation")
-    .reset_index()
-)
-explanation.to_csv("results/advert_explanation.csv", index=False)
-# flags = execute_neo4j_query(flag_query, parameters={})
-
-verify_analyis_existence(572527, "target_specific_group_prompt")
+if __name__ == "__main__":
+    main()

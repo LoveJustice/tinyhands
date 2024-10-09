@@ -1,21 +1,25 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.ensemble import (
+    GradientBoostingRegressor,
+    RandomForestRegressor,
+    StackingRegressor,
+)
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
-from sklearn.ensemble import RandomForestRegressor, StackingRegressor
-from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import RFE
 from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error, r2_score
-from scipy.stats import spearmanr
+from scipy.stats import spearmanr, uniform, randint
+import joblib
 import datetime
 import uuid
 
-data_columns = [
+# Data columns
+DATA_COLUMNS = [
     "assure_prompt",
     "bypass_prompt",
     "callback_request_prompt",
@@ -40,26 +44,34 @@ data_columns = [
 
 
 def load_and_preprocess_data(file_path):
+    """
+    Load and preprocess the dataset from the provided file path.
+    """
     model_data = pd.read_csv(file_path)
-    model_data = model_data[~(model_data["monitor_score"] == "unknown")]
+    model_data = model_data[
+        (model_data["monitor_score"] != "unknown")
+        & (~model_data["monitor_score"].isna())
+    ]
     mapping = {"yes": 1, "no": 0}
     df = model_data.replace(mapping)
-    # df.loc[df.IDn == 572651, "monitor_score"] = 1
-    return df[data_columns], df["monitor_score"]
+    return df[DATA_COLUMNS], df["monitor_score"]
 
 
 def create_model_pipeline():
+    """
+    Create a simple model pipeline with polynomial features and gradient boosting regressor.
+    """
     return Pipeline(
         [
             (
                 "features",
                 ColumnTransformer(
                     [
-                        ("num", SimpleImputer(strategy="mean"), data_columns),
+                        ("num", SimpleImputer(strategy="mean"), DATA_COLUMNS),
                         (
                             "poly",
                             PolynomialFeatures(degree=2, include_bias=False),
-                            data_columns,
+                            DATA_COLUMNS,
                         ),
                     ]
                 ),
@@ -70,15 +82,12 @@ def create_model_pipeline():
 
 
 def train_and_evaluate_model(X, y, pipeline):
+    """
+    Train the model and evaluate it on train and test data.
+    """
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
-    # X_train, X_test, y_train, y_test = (
-    #     X[test_train == "train"],
-    #     X[test_train == "test"],
-    #     y[test_train == "train"],
-    #     y[test_train == "test"],
-    # )
 
     pipeline.fit(X_train, y_train)
 
@@ -96,23 +105,16 @@ def train_and_evaluate_model(X, y, pipeline):
     return pipeline, X_test, y_test
 
 
-from sklearn.model_selection import RandomizedSearchCV
-from scipy.stats import uniform, randint
-
-
 def tune_hyperparameters(pipeline, X, y):
+    """
+    Tune the hyperparameters of the model pipeline.
+    """
     param_distributions = {
         "regressor__gb__n_estimators": randint(100, 500),
         "regressor__gb__learning_rate": uniform(0.01, 0.3),
         "regressor__gb__max_depth": randint(3, 10),
         "regressor__gb__min_samples_split": randint(2, 20),
         "regressor__gb__min_samples_leaf": randint(1, 10),
-        "regressor__rf__n_estimators": randint(100, 500),
-        "regressor__rf__max_depth": randint(3, 20),
-        "regressor__rf__min_samples_split": randint(2, 20),
-        "regressor__rf__min_samples_leaf": randint(1, 10),
-        "regressor__final_estimator__C": uniform(0.1, 10),
-        "regressor__final_estimator__epsilon": uniform(0.01, 0.1),
     }
 
     random_search = RandomizedSearchCV(
@@ -133,6 +135,9 @@ def tune_hyperparameters(pipeline, X, y):
 
 
 def create_advanced_pipeline():
+    """
+    Create an advanced model pipeline with stacking and feature selection.
+    """
     return Pipeline(
         [
             (
@@ -147,12 +152,12 @@ def create_advanced_pipeline():
                                     ("scaler", StandardScaler()),
                                 ]
                             ),
-                            data_columns,
+                            DATA_COLUMNS,
                         ),
                         (
                             "poly",
                             PolynomialFeatures(degree=2, include_bias=False),
-                            data_columns,
+                            DATA_COLUMNS,
                         ),
                     ]
                 ),
@@ -164,7 +169,7 @@ def create_advanced_pipeline():
             (
                 "regressor",
                 StackingRegressor(
-                    [
+                    estimators=[
                         ("gb", GradientBoostingRegressor(random_state=42)),
                         ("rf", RandomForestRegressor(random_state=42)),
                     ],
@@ -175,93 +180,78 @@ def create_advanced_pipeline():
     )
 
 
-def generate_unique_filename(prefix="adverts_sample", extension="csv"):
-    # Get current timestamp in ISO 8601 format
+def generate_unique_filename(prefix="model", extension="pkl"):
+    """
+    Generate a unique filename using a prefix and extension.
+    """
     timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-
-    # Generate a short random string
     random_string = uuid.uuid4().hex[:6]
-
-    # Combine components
     filename = f"{prefix}_{timestamp}_{random_string}.{extension}"
-
     return filename
 
 
+def save_model(model, filename):
+    """
+    Save the trained model to disk.
+    """
+    joblib.dump(model, filename)
+    print(f"Model saved as {filename}")
+
+
 def main():
-    # file_path1 = "results/advert_flags.csv"
     file_path = "results/advert_flags.csv"
-    advert_flags = pd.read_csv(file_path)
-    advert_flags = advert_flags[~(advert_flags["monitor_score"] == "unknown")]
+    all_advert_flags = pd.read_csv(file_path)
+    advert_flags = all_advert_flags[
+        ~(
+            (all_advert_flags["monitor_score"] == "unknown")
+            | all_advert_flags["monitor_score"].isnull()
+        )
+    ]
+
     # Create the results DataFrame
     results = pd.DataFrame(
-        columns=[
-            "advert",
-            "group_id",
-            "post_id",
-            "monitor_score",
-            "test_train",
-        ],
+        columns=["advert", "group_id", "post_id", "monitor_score", "test_train"],
         index=advert_flags.index,
     )
 
     X, y = load_and_preprocess_data(file_path)
-    # pipeline = create_model_pipeline()
-    # best_pipeline = tune_hyperparameters(pipeline, X, y)
-    # trained_pipeline, X_test, y_test = train_and_evaluate_model(X, y, best_pipeline)
+    advanced_pipeline = create_advanced_pipeline()
+
+    # Hyperparameter tuning
+    best_advanced_pipeline = tune_hyperparameters(advanced_pipeline, X, y)
+
+    # Train and evaluate model
+    trained_pipeline, X_test, y_test = train_and_evaluate_model(
+        X, y, best_advanced_pipeline
+    )
+
+    # Save the trained model
+    unique_model_filename = generate_unique_filename(prefix="redflag_model")
+    save_model(trained_pipeline, unique_model_filename)
+
+    # Make predictions on the entire dataset
+    all_advert_flags["model_predictions"] = trained_pipeline.predict(
+        all_advert_flags[DATA_COLUMNS].replace({"yes": 1, "no": 0})
+    )
+
     # Populate the results DataFrame
     results["advert"] = advert_flags["advert"]
     results["group_id"] = advert_flags["group_id"]
     results["post_id"] = advert_flags["post_id"]
     results["monitor_score"] = advert_flags["monitor_score"]
     results["test_train"] = "train"
-
-    # trained_pipeline, X_test, y_test = train_and_evaluate_model(X, y, pipeline)
-    advanced_pipeline = create_advanced_pipeline()
-
-    best_advanced_pipeline = tune_hyperparameters(advanced_pipeline, X, y)
-    trained_pipeline, X_test, y_test = train_and_evaluate_model(
-        X, y, best_advanced_pipeline
-    )
-    # Additional analysis can be added here
     results.loc[results.index.isin(X_test.index), "test_train"] = "test"
-    new_model_predictions_test = trained_pipeline.predict(X_test)
-    new_model_predictions_all = trained_pipeline.predict(X)
-
-    results["model_predictions"] = new_model_predictions_all
-
-    # Update old_model_predictions for both train and test
-
-    # Assuming you have predictions from both models on the same test set
-    mean_squared_error(y, advert_flags["monitor_score"])
-    mse_new = mean_squared_error(y_test, new_model_predictions_test)
-
-    mean_squared_error(y, new_model_predictions_all)
-    mean_squared_error(y, advert_flags["monitor_score"])
-    print(f"New model MSE: {mse_new}")
-
-    # You can also compute R-squared for both models
-    r2_new = r2_score(y_test, new_model_predictions_test)
-
-    new_model_correlation = np.corrcoef(y_test, new_model_predictions_test)[0, 1]
-
-    new_model_spearman_correlation, new_model_p_value = spearmanr(
-        y_test, new_model_predictions_test
+    results = (
+        results.set_index("post_id").loc[all_advert_flags["post_id"]].reset_index()
     )
-    print(
-        f"New model spearman : {new_model_spearman_correlation} with p-value {new_model_p_value}"
-    )
-    print(
-        f"Old model spearman : {old_model_spearman_correlation} with p-value {old_model_p_value}"
-    )
-
-    print(f"New model R-squared: {r2_new}")
-
-    unique_filename = generate_unique_filename(
+    results["model_predictions"] = all_advert_flags["model_predictions"]
+    all_advert_flags.to_csv("results/all_advert_flags.csv", index=False)
+    # Save the results
+    unique_results_filename = generate_unique_filename(
         prefix="redflag_model_result", extension="csv"
     )
-    results = results.set_index("post_id").loc[advert_flags["post_id"]].reset_index()
-    results.to_csv(f"results/{unique_filename}")
+    results.to_csv(f"results/{unique_results_filename}", index=False)
+    print(f"Results saved as {unique_results_filename}")
 
 
 if __name__ == "__main__":

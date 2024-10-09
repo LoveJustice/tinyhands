@@ -61,7 +61,7 @@ if not all([neo4j_url, neo4j_usr, neo4j_pwd]):
     raise EnvironmentError("Required NEO4J environment variables are not set.")
 
 # Initialize Graph
-graph = Graph(neo4j_url, user=neo4j_usr, password=neo4j_pwd)
+# graph = Graph(neo4j_url, user=neo4j_usr, password=neo4j_pwd)
 
 import social_media.social_media as sm
 
@@ -425,53 +425,6 @@ def find_profiles(driver):
     }
 
     return profiles
-
-
-def follower_profiles_to_graph(profiles):
-    """
-    Inserts profile data into the Neo4j graph database and returns the count of new and existing profiles.
-
-    :param profiles: Dictionary containing profile data
-    :return: Tuple containing the count of existing and new profiles
-    """
-    profile_dicts = []
-    logging.info("Creating results/follower_profile_dicts.csv")
-    for profile in profiles["data"]:
-        parameters = {
-            "source_name": profiles["source_name"],
-            "source_url": profiles["source_url"]
-            .replace("&sk=friends", "")
-            .replace("/friends", "")
-            .replace("/followers", "")
-            .replace("web.", "")
-            .replace("&sk=followers", ""),
-            "follower_url": profile[0]
-            .replace("&sk=friends", "")
-            .replace("/friends", "")
-            .replace("/followers", "")
-            .replace("web.", "www.")
-            .replace("&sk=followers", ""),
-            "follower_name": profile[1],
-            "work_text": profile[2],
-        }
-        logging.info(parameters)
-        query = """MERGE (p:Profile {url: $source_url, name: $source_name})
-MERGE (f:Profile {url: $follower_url, name: $follower_name})
-MERGE (w:WorkText {work_text: $work_text})
-MERGE (p)<-[:FOLLOWS]-(f)
-MERGE (f)-[:HAS_WORK_TEXT]->(w)
-WITH p, f
-CALL apoc.create.addLabels(p, CASE WHEN NOT 'SourceProfile' IN labels(p) THEN ['SourceProfile'] ELSE [] END) YIELD node as pNode
-CALL apoc.create.addLabels(f, CASE WHEN $follower_url = $source_url AND NOT 'FollowerProfile' IN labels(f) THEN ['FollowerProfile'] ELSE [] END) YIELD node as fNode
-RETURN pNode, fNode
-"""
-
-        graph.run(query, parameters).data()
-        profile_dicts.append(parameters)
-    pd.DataFrame(profile_dicts).to_csv(
-        "results/follower_profile_dicts.csv", index=False
-    )
-    logging.info("Successfully created results/follower_profile_dicts.csv")
 
 
 def save_page_usernames(driver, file_path):
@@ -1256,186 +1209,213 @@ def main():
             Page("fb_advert_pages/investigate_adverts.py", "Investigate advert", "📖"),
         ]
     )
+    if "app_running" not in st.session_state:
+        st.session_state.app_running = True
 
-    if "default_option" not in st.session_state:
-        st.session_state["default_option"] = "Please select a post_id"
+    if st.session_state.app_running:
+        # Display the Terminate button
+        if st.button("Terminate App"):
+            st.write("Exiting the app...")
+            st.session_state.app_running = False
+            st.stop()  # This will stop the execution of the app after updating the state
 
-    if "connected" not in st.session_state:
-        st.session_state["connected"] = False
+        # Main app content
+        # st.write("Welcome to the app! Here is where your main cont")
 
-        # Check if the driver is already initialized
-    if "driver" not in st.session_state:
-        st.session_state["driver"] = None
+        if "default_option" not in st.session_state:
+            st.session_state["default_option"] = "Please select a post_id"
 
-    if "post_matches" not in st.session_state:
-        st.session_state["post_matches"] = []
-
-    if "options" not in st.session_state:
-        st.session_state["options"] = None
-
-    if st.button("Connect") and not st.session_state["connected"]:
-        # Get the current date and time
-        now = datetime.now()
-        # Format the date and time as a string
-        st.session_state["datetime_key"] = now.strftime("%Y%m%d %H:%M:%S")
-        logging.info("Check your browser!")
-        kill_all_chromedriver_instances()
-        driver = sm.facebook_connect()
-        st.session_state["driver"] = driver
-        st.session_state["connected"] = True
-        logging.info("You are now connected!")
-
-    if st.button("Quit browser"):
-        try:
-            # Check if the WebDriver instance exists in the session state
-            if "driver" in st.session_state and st.session_state["driver"] is not None:
-                # Attempt to quit the browser
-                st.session_state["driver"].quit()
-                st.session_state[
-                    "driver"
-                ] = None  # Set the driver to None after quitting
-                st.session_state["connected"] = False
-                st.session_state["page_loaded"] = False
-                st.session_state["source_name"] = ""
-                st.session_state["source_url"] = ""
-
-                kill_all_chromedriver_instances()
-                st.write("Browser closed!")  # Debug message to confirm button press
-                logging.info("Browser closed!")
-            else:
-                st.write("WebDriver instance not found in session state.")
-        except Exception as e:
-            st.write(f"An error occurred: {e}")
-            logging.error(f"An error occurred while trying to quit the browser: {e}")
-
-        # ("Browser closed!")
-
-    if st.session_state["connected"]:
-        if st.button("Logout"):
-            logout(st.session_state["driver"])
+        if "connected" not in st.session_state:
             st.session_state["connected"] = False
-            logging.info("Logged out and disconnected.")
 
-        if "selected_option" not in st.session_state:
-            st.session_state["selected_option"] = st.session_state[
-                "default_option"
-            ]  # Default value
+            # Check if the driver is already initialized
+        if "driver" not in st.session_state:
+            st.session_state["driver"] = None
 
-        # Assuming list_all_users returns lists of user_ids, comment_matches, and post_matches
-        if st.button("list all posts on group page"):
-            st.write(st.session_state["driver"].current_url)
-            if sm.is_facebook_groups_url(st.session_state["driver"].current_url):
-                st.write("list_all_users")
-                user_ids, comment_matches, post_matches = sp.list_all_users()
-                st.write(user_ids)
-                st.write("done list_all_users")
-                st.session_state["post_matches"] = post_matches
-                st.write("post_matches: ", post_matches)
-                st.dataframe(pd.DataFrame(post_matches))
-                st.session_state["post_ids"] = [
-                    post_match["post_id"] for post_match in post_matches
-                ]
-                # user_ids.append((group_id, user_id, poster_name))
-                # comment_matches.append((group_id, post_id, comment_id))
-                # post_matches.append((group_id, post_id))
-                st.write(st.session_state["selected_option"])
-                st.write(st.session_state["post_ids"])
-                # Initialize with a default option
-                st.session_state["options"] = [
-                    st.session_state["default_option"]
-                ] + st.session_state["post_ids"]
-                st.write("The URL is a valid Facebook groups URL.")
-            else:
-                st.write("The URL does not match the required Facebook groups format.")
+        if "post_matches" not in st.session_state:
+            st.session_state["post_matches"] = []
 
-        if st.session_state["options"]:
-            st.selectbox(
-                "Select post to scrape:",
-                st.session_state["options"],
-                index=0,
-                key="selected_option",  # This links the selectbox directly to the session state variable
-            )
+        if "options" not in st.session_state:
+            st.session_state["options"] = None
 
-        if st.button("Update group name"):
-            current_url = st.session_state["driver"].current_url
-            if sm.is_facebook_groups_url(current_url):
-                group_name = find_group_name()
-                group_id = sp.extract_group_id(current_url)
-                st.write(f"Group name: {group_name}, Group ID: {group_id}")
-                update_group_name(
-                    group_id, st.session_state["driver"].current_url, group_name
-                )
+        if st.button("Connect") and not st.session_state["connected"]:
+            # Get the current date and time
+            now = datetime.now()
+            # Format the date and time as a string
+            st.session_state["datetime_key"] = now.strftime("%Y%m%d %H:%M:%S")
+            logging.info("Check your browser!")
+            kill_all_chromedriver_instances()
+            driver = sm.facebook_connect()
+            st.session_state["driver"] = driver
+            st.session_state["connected"] = True
+            logging.info("You are now connected!")
 
-        if st.button("Update group URLs"):
-            group_urls = get_group_urls()
-            # st.write(group_urls)
-            for group_url in group_urls:
-                st.session_state["driver"].get(group_url["group_url"])
-
-                # Wait for a specific element that indicates the page has loaded
-                # wait_for_element(st.session_state["driver"], "mount_0_0_bw")
-                wait_for_link_by_href(
-                    st.session_state["driver"], group_url["group_url"], timeout=10
-                )
-
-                group_name = find_group_name()
-                st.write(group_url["group_id"], group_url["group_url"], group_name)
-
-                update_group_name(
-                    group_url["group_id"], group_url["group_url"], group_name
-                )
-
-        if st.button("Write Graph Comments to GoogleSheet"):
-            comments = all_comments()
-            comments = pd.DataFrame(comments)
-            st.dataframe(comments)
-            write_sheet("Comments", comments)
-
-        if st.button("Snapshot"):
-            snapshot()
-
-        if st.button("find time stamp"):
-            all_text = print_all_text(st.session_state["driver"])
-            st.write("all_text:", all_text)
-            aria_labels = find_aria_labels(st.session_state["driver"])
-            st.write("aria_labels:", aria_labels)
-            hidden_elements = find_hidden_elements(st.session_state["driver"])
-            st.write("hidden_elements:", hidden_elements)
-            time_related_attributes = find_time_related_attributes(
-                st.session_state["driver"]
-            )
-            st.write("time_related_attributes:", time_related_attributes)
-            shadow_content = get_shadow_dom_content(st.session_state["driver"])
-            st.write("shadow_content: ", shadow_content)
-            iframes = return_iframes(st.session_state["driver"])
-            st.write("iframes: ", iframes)
-            # timestamp = find_timestamp(st.session_state["driver"])
-            # st.write(timestamp)
-        # Usage in Streamlit
-        if st.button("Get AJAX Requests"):
-            ajax_requests = return_ajax_requests()
-            st.write("AJAX Requests:")
-            for request in ajax_requests:
-                st.write(f"Name: {request['name']}")
-                st.write(f"Domain: {request['domain']}")
-                st.write(f"Path: {request['path']}")
-                st.write("---")
-
-        if st.button("Scroll to bottom of page"):
-            st.session_state.scrolling = True
+        if st.button("Quit browser"):
             try:
-                logging.info("Scrolling to end of page!")
-                scroll_to_end(
-                    st.session_state["driver"],
-                    wait_time=20,
-                    min_sleep=2.01,
-                    max_sleep=9.9,
-                    target_mean_sleep=2.609,
-                )
-            except TimeoutException:
+                # Check if the WebDriver instance exists in the session state
+                if (
+                    "driver" in st.session_state
+                    and st.session_state["driver"] is not None
+                ):
+                    # Attempt to quit the browser
+                    st.session_state["driver"].quit()
+                    st.session_state[
+                        "driver"
+                    ] = None  # Set the driver to None after quitting
+                    st.session_state["connected"] = False
+                    st.session_state["page_loaded"] = False
+                    st.session_state["source_name"] = ""
+                    st.session_state["source_url"] = ""
+
+                    kill_all_chromedriver_instances()
+                    st.write("Browser closed!")  # Debug message to confirm button press
+                    logging.info("Browser closed!")
+                else:
+                    st.write("WebDriver instance not found in session state.")
+            except Exception as e:
+                st.write(f"An error occurred: {e}")
                 logging.error(
-                    "The elements were not found within the specified timeout."
+                    f"An error occurred while trying to quit the browser: {e}"
                 )
+
+            # ("Browser closed!")
+
+        if st.session_state["connected"]:
+            if st.button("Logout"):
+                logout(st.session_state["driver"])
+                st.session_state["connected"] = False
+                logging.info("Logged out and disconnected.")
+
+            if "selected_option" not in st.session_state:
+                st.session_state["selected_option"] = st.session_state[
+                    "default_option"
+                ]  # Default value
+
+            # Assuming list_all_users returns lists of user_ids, comment_matches, and post_matches
+            if st.button("list all posts on group page"):
+                st.write(st.session_state["driver"].current_url)
+                if sm.is_facebook_groups_url(st.session_state["driver"].current_url):
+                    st.write("list_all_users")
+                    user_ids, comment_matches, post_matches = sp.list_all_users()
+                    st.write(user_ids)
+                    st.write("done list_all_users")
+                    st.session_state["post_matches"] = post_matches
+                    st.write("post_matches: ", post_matches)
+                    st.dataframe(pd.DataFrame(post_matches))
+                    st.session_state["post_ids"] = [
+                        post_match["post_id"] for post_match in post_matches
+                    ]
+                    # user_ids.append((group_id, user_id, poster_name))
+                    # comment_matches.append((group_id, post_id, comment_id))
+                    # post_matches.append((group_id, post_id))
+                    st.write(st.session_state["selected_option"])
+                    st.write(st.session_state["post_ids"])
+                    # Initialize with a default option
+                    st.session_state["options"] = [
+                        st.session_state["default_option"]
+                    ] + st.session_state["post_ids"]
+                    st.write("The URL is a valid Facebook groups URL.")
+                else:
+                    st.write(
+                        "The URL does not match the required Facebook groups format."
+                    )
+
+            if st.session_state["options"]:
+                st.selectbox(
+                    "Select post to scrape:",
+                    st.session_state["options"],
+                    index=0,
+                    key="selected_option",  # This links the selectbox directly to the session state variable
+                )
+
+            if st.button("Update group name"):
+                current_url = st.session_state["driver"].current_url
+                if sm.is_facebook_groups_url(current_url):
+                    group_name = sp.find_group_name()
+                    group_id = sp.extract_group_id(current_url)
+                    st.write(f"Group name: {group_name}, Group ID: {group_id}")
+                    update_group_name(
+                        group_id, st.session_state["driver"].current_url, group_name
+                    )
+
+            if st.button("Update group URLs"):
+                group_urls = get_group_urls()
+                # st.write(group_urls)
+                for group_url in group_urls:
+                    st.session_state["driver"].get(group_url["group_url"])
+
+                    # Wait for a specific element that indicates the page has loaded
+                    # wait_for_element(st.session_state["driver"], "mount_0_0_bw")
+                    wait_for_link_by_href(
+                        st.session_state["driver"], group_url["group_url"], timeout=10
+                    )
+
+                    group_name = sp.find_group_name()
+                    st.write(group_url["group_id"], group_url["group_url"], group_name)
+
+                    update_group_name(
+                        group_url["group_id"], group_url["group_url"], group_name
+                    )
+
+            if st.button("Write Graph Comments to GoogleSheet"):
+                comments = all_comments()
+                comments = pd.DataFrame(comments)
+                st.dataframe(comments)
+                write_sheet("Comments", comments)
+
+            if st.button("Snapshot"):
+                snapshot()
+
+            if st.button("find time stamp"):
+                all_text = print_all_text(st.session_state["driver"])
+                st.write("all_text:", all_text)
+                aria_labels = find_aria_labels(st.session_state["driver"])
+                st.write("aria_labels:", aria_labels)
+                hidden_elements = find_hidden_elements(st.session_state["driver"])
+                st.write("hidden_elements:", hidden_elements)
+                time_related_attributes = find_time_related_attributes(
+                    st.session_state["driver"]
+                )
+                st.write("time_related_attributes:", time_related_attributes)
+                shadow_content = get_shadow_dom_content(st.session_state["driver"])
+                st.write("shadow_content: ", shadow_content)
+                iframes = return_iframes(st.session_state["driver"])
+                st.write("iframes: ", iframes)
+                # timestamp = find_timestamp(st.session_state["driver"])
+                # st.write(timestamp)
+            # Usage in Streamlit
+            if st.button("Get AJAX Requests"):
+                ajax_requests = return_ajax_requests()
+                st.write("AJAX Requests:")
+                for request in ajax_requests:
+                    st.write(f"Name: {request['name']}")
+                    st.write(f"Domain: {request['domain']}")
+                    st.write(f"Path: {request['path']}")
+                    st.write("---")
+
+            if st.button("Scroll to bottom of page"):
+                st.session_state.scrolling = True
+                try:
+                    logging.info("Scrolling to end of page!")
+                    scroll_to_end(
+                        st.session_state["driver"],
+                        wait_time=20,
+                        min_sleep=2.01,
+                        max_sleep=9.9,
+                        target_mean_sleep=2.609,
+                    )
+                except TimeoutException:
+                    logging.error(
+                        "The elements were not found within the specified timeout."
+                    )
+    else:
+        # Display termination message
+        st.write("The app has been terminated by the user.")
+
+        # Optionally provide a Restart button
+    if st.button("Restart App"):
+        st.session_state.app_running = True
+        st.experimental_rerun()
 
 
 # This is the standard boilerplate that calls the 'main' function
