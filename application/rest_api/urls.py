@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import re_path, path
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView, InterceptionAlertViewSet, PermissionViewSet, UserLocationPermissionViewSet
 from dataentry.views import PersonViewSet, MasterPersonViewSet, PendingMatchViewSet
@@ -211,5 +211,5 @@ urlpatterns = [
         re_path(r'^monitor-form/$', MonitorAppViewSet.as_view({'post':'create'}), name='MonitorApp'),
 
         re_path(r'^auth0/send-me-password-reset-email$', auth0_views.send_current_user_password_reset_email),
-        re_path(r'^auth0/update-user/<str:username>$', auth0_views.update_auth0_user_view),
+        path('auth0/update-user/<str:username>', auth0_views.update_auth0_user_view),
 ]
