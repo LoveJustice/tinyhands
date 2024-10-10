@@ -211,4 +211,5 @@ urlpatterns = [
         re_path(r'^monitor-form/$', MonitorAppViewSet.as_view({'post':'create'}), name='MonitorApp'),
 
         re_path(r'^auth0/send-me-password-reset-email$', auth0_views.send_current_user_password_reset_email),
+        re_path(r'^auth0/update-user/<str:username>$', auth0_views.update_auth0_user_view),
 ]
