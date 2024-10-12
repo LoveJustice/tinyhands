@@ -6,7 +6,7 @@ import os
 import time
 from base64 import b64encode
 from json import JSONDecodeError
-from typing import List
+from typing import List, TypedDict
 
 import jwt
 import requests
@@ -17,6 +17,16 @@ from django.core.cache import cache
 from accounts.models import Account
 
 logger = logging.getLogger(__name__)
+
+
+class Auth0User(TypedDict):
+    user_id: str
+    created_at: str
+    email: str
+    name: str
+    given_name: str
+    family_name: str
+    last_login: str
 
 
 # Hooked into settings.py
@@ -136,6 +146,7 @@ def get_auth0_users() -> List[dict]:
         page_index += 1
     return list_of_users
 
+
 # This takes about 5 mins
 # See the page number going down at https://manage.auth0.com/dashboard/us/dev-oiz87mbf/users
 def delete_auth0_users_with_no_logins():
@@ -148,6 +159,7 @@ def delete_auth0_users_with_no_logins():
         else:
             logger.info(f'Deleting {auth0_user["email"]}')
             delete_auth0_user(auth0_user)
+
 
 def delete_auth0_user(auth0_user: dict):
     api_token_result = get_auth0_api_token()
@@ -222,26 +234,39 @@ def get_auth0_api_token():
     return response.json()
 
 
-# def create_django_account(auth0_user):
-#     email = auth0_user['email']
-#     logger.info('Creating django account with email: ' + email)
-#     django_account = Account()
-#     # Try getting credentials from SSO first (based on email), otherwise they must not be in there yet
-#     # Eventually we always want them in SSO first
-#     django_username = auth0_user['user_id'].replace('|', '.')
-#     django_account.auth0_id = django_username
-#     django_account.date_joined = auth0_user['created_at']
-#     if 'given_name' in auth0_user:
-#         django_account.first_name = auth0_user['given_name']
-#     if 'family_name' in auth0_user:
-#         django_account.last_name = auth0_user['family_name']
-#     django_account.email = auth0_user['email']
-#     django_account.is_active = True
-#     django_account.is_staff = False
-#     logger.debug('Auth0 account found for email: ' + email + ', inserting')
-#     # django_account.activation_key = '?????'
-#     django_account.save()
-#     return django_account
+def create_or_update_django_user(auth0_user: Auth0User):
+    django_username = auth0_user['user_id'].replace('|', '.')
+    email = auth0_user['email']
+    try:
+        account = Account.objects.get(email=email)
+        logger.info('Updating django account with email: ' + email)
+    except Account.DoesNotExist:
+        account = Account.objects.create_user(email=auth0_user['email'], password=None, auth0_id=django_username)
+        logger.info('Creating django account with email: ' + email)
+        # This is mostly so the admin page stops asking you to enter a dummy password
+        account.set_unusable_password()
+        account.is_active = True
+        account.is_staff = False
+    account.auth0_id = django_username
+    # Name seems to be the easy field to edit on the Auth0 API
+    # When I updated Auth0 through the website, name changed but given_name and family_name didn't
+    if 'name' in auth0_user:
+        # (' ', 1) splits on only the FIRST space, preserving middle names in the last name field
+        split_name = auth0_user['name'].split(' ', 1)
+        account.first_name = split_name[0]
+        if len(split_name) == 2:
+            account.last_name = split_name[1]
+    elif 'given_name' in auth0_user or 'family_name' in auth0_user:
+        if 'given_name' in auth0_user:
+            account.first_name = auth0_user['given_name']
+        if 'family_name' in auth0_user:
+            account.last_name = auth0_user['family_name']
+    if 'last_login' in auth0_user:
+        # This pulls the last login from Auth0
+        #   That means the last login to any of our apps.
+        account.last_login = auth0_user['last_login']
+    account.save()
+    return account
 
 
 def update_django_user_if_exists(auth0_user: dict):
@@ -286,7 +311,7 @@ def create_all_auth0_users():
         if account.is_active \
                 and account.email \
                 and account.password \
-                and not account.password.startswith('!')\
+                and not account.password.startswith('!') \
                 and account.last_login \
                 and account.last_login.date() > three_years_ago_today:
             auth0_user_dict = get_auth0_dict_for_django_user(account)

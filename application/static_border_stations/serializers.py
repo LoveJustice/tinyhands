@@ -113,20 +113,20 @@ class BaseStaffSerializer(serializers.ModelSerializer):
             return None
         
         contract = False
-        contract_date = None
+        contract_expiration = None
         agreement = False
         attachments = StaffAttachment.objects.filter(staff=obj).order_by('-attach_date')
         for attachment in attachments:
             if contract is False and attachment.option == 'Contract':
                 contract = True
-                contract_date = attachment.attach_date
+                contract_expiration = attachment.expiration_date
             if agreement is False and attachment.option == 'C & M':
                 agreement = True
         
         result = {
                 "agreement":agreement,
                 "contract":contract,
-                "contract_expiration":contract_date,
+                "contract_expiration":contract_expiration,
                 "last_month":{"local":obj.last_month_local, "USD": obj.last_month_usd},
                 "twelve_month":{"local":obj.twelve_month_local, "USD": obj.twelve_month_usd}
             }
