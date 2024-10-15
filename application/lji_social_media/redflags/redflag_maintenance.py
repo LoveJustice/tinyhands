@@ -1,17 +1,5 @@
 import os
 import time
-import sys
-import os
-import libraries.claude_prompts as cp
-
-# from langchain_ollama.llms import OllamaLLM
-# from langchain.chat_models import ChatOpenAI, AzureChatOpenAI, ChatOllama
-
-
-# Get the absolute path to the module's directory
-module_path = os.path.abspath("../libraries")
-# Add the directory to sys.path
-sys.path.append(module_path)
 
 import streamlit as st
 from typing import Dict, Any, Optional, List
@@ -31,13 +19,25 @@ from typing import Optional, Dict, Any
 import re
 import logging
 from tqdm import tqdm
+import libraries.claude_prompts as cp
+from llama_index.llms.ollama import Ollama
+from typing import Any, List, Optional
+
+from pydantic import BaseModel, Field, ValidationError
+
+
+class AnalysisResponse(BaseModel):
+    result: str
+    evidence: List[str] = Field(default_factory=list)
+    explanation: str
+    confidence: float
 
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 llm = OpenAI(temperature=0, model="gpt-4o", max_tokens=4096)
-# llm = ChatOllama(model="llama3.1", temperature=0.4)
+# llm = Ollama(model="llama3.1", temperature=0, max_tokens=4096)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
 # llm = Anthropic()
 MEMORY = ChatMemoryBuffer.from_defaults(token_limit=4096)
@@ -111,7 +111,7 @@ def extract_list(response, key):
     return []
 
 
-def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str, Any]:
+def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Optional[AnalysisResponse]:
     """
     Analyze an advertisement using a chat engine and a specific prompt.
 
@@ -121,50 +121,43 @@ def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str,
         prompt_name: The name of the prompt to use.
 
     Returns:
-        A dictionary containing the analysis results, or a default dictionary if analysis fails.
+        An AnalysisResponse object containing the analysis results,
+        or None if analysis fails.
     """
     if not chat_engine:
         logger.error("Chat engine is not initialized")
-        return {
-            "result": "error",
-            "evidence": [],
-            "explanation": "Chat engine not initialized",
-            "confidence": 0.0,
-        }
+        return None
 
     try:
-        prompt = cp.CLAUDE_PROMPTS.get(prompt_name) + cp.ANALYSIS_STR
+        prompt = cp.CLAUDE_PROMPTS.get(prompt_name)
         if not prompt:
             raise ValueError(f"Invalid prompt name: {prompt_name}")
 
-        response = chat_engine.chat(prompt + f"\n\nAdvertisement: {advert}")
-        logger.info(f"Response to {prompt_name}: {response.response}")
+        full_prompt = f"{prompt}{cp.ANALYSIS_STR}\n\nAdvertisement: {advert}"
+        response = chat_engine.chat(full_prompt)
+        logger.info(f"Response to '{prompt_name}': {response.response}")
 
-        # Extract and parse JSON from the response
+        # Clean and preprocess the response
         json_str = response.response.strip("`").strip()
-        if json_str.startswith("json"):
-            json_str = json_str[4:]  # Remove 'json' prefix if present
-        parsed_response = json.loads(json_str)
+        if json_str.lower().startswith("json"):
+            json_str = json_str[4:].strip()
 
-        # Standardize the output
-        return {
-            "result": parsed_response.get("result", ""),
-            "evidence": parsed_response.get("evidence")
-            or parsed_response.get("evidence")
-            or [],
-            "explanation": parsed_response.get("explanation", ""),
-            "confidence": float(parsed_response.get("confidence", 0)),
-        }
+        # Parse the JSON response
+        parsed_json = json.loads(json_str)
 
+        # Validate and parse the response using Pydantic
+        analysis_response = AnalysisResponse(**parsed_json)
+        return analysis_response
+
+    except json.JSONDecodeError as e:
+        logger.error(f"Error parsing JSON response: {e}")
+        return None
+    except ValidationError as e:
+        logger.error(f"Validation error in response: {e}")
+        return None
     except Exception as e:
-        logger.error(f"Error processing advert, prompt {prompt_name}: {str(e)}")
-        return {
-            "result": "error",
-            "evidence": [],
-            "explanation": str(e),
-            "confidence": 0.0,
-        }
-
+        logger.error(f"Error processing advert with prompt '{prompt_name}': {e}")
+        return None
 
 def delete_analysis(IDn: int, prompt_name: str) -> None:
     parameters = {
@@ -229,28 +222,10 @@ def main() -> None:
     query = """MATCH (g:Group)-[:HAS_POSTING]-(n:Posting) WHERE (g.country_id) = 1 AND (n.text IS NOT NULL) AND NOT (n.text = "") RETURN ID(n) AS IDn, n.post_id AS post_id, n.text AS advert"""
     parameters = {}
     adverts = pd.DataFrame(nl.execute_neo4j_query(query, parameters))
-
-    new_prompts = [
-        "requires_references",
-        "multiple_applicants_prompt",
-        "multiple_jobs_prompt",
-    ]
-
-    # Loop through the outer loop with a progress bar
-    for IDn in tqdm(adverts["IDn"], desc="Processing IDs"):
-        for prompt_name in tqdm(
-            new_prompts, desc=f"Processing Prompts for ID: {IDn}", leave=False
-        ):
-            # delete_analysis(IDn=IDn, prompt_name=prompt_name)
-            if verify_analyis_existence(IDn=IDn, prompt_name=prompt_name):
-                print(
-                    f"Analysis for IDn: {IDn} and  prompt_name = {prompt_name} exists!"
-                )
-                continue
-            else:
-                print(f"Processing IDn {IDn}")
-                process_advert(IDn, prompt_name)
-            process_advert(IDn=IDn, prompt_name=prompt_name)
+    for IDn in adverts["IDn"]:
+        print(IDn)
+        delete_analysis(IDn=IDn, prompt_name="unprofessional_writing_prompt")
+        process_advert(IDn=IDn, prompt_name="unprofessional_writing_prompt")
 
 
 if __name__ == "__main__":

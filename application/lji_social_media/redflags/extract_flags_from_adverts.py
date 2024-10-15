@@ -26,7 +26,7 @@ from llama_index.llms.ollama import Ollama
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-# llm = OpenAI(temperature=0, model="gpt-4o", max_tokens=4096)
+llm = OpenAI(temperature=0, model="gpt-4o", max_tokens=4096)
 llm = Ollama(model="llama3.1", temperature=0, max_tokens=4096)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
 # llm = Anthropic()
@@ -101,6 +101,9 @@ def extract_list(response, key):
     return []
 
 
+import json
+
+
 def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str, Any]:
     """
     Analyze an advertisement using a chat engine and a specific prompt.
@@ -113,6 +116,7 @@ def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str,
     Returns:
         A dictionary containing the analysis results, or a default dictionary if analysis fails.
     """
+    # Validate the chat engine
     if not chat_engine:
         logger.error("Chat engine is not initialized")
         return {
@@ -123,31 +127,48 @@ def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str,
         }
 
     try:
-        prompt = cp.CLAUDE_PROMPTS.get(prompt_name) + cp.ANALYSIS_STR
+        # Retrieve the prompt from the CLAUDE_PROMPTS dictionary
+        prompt = cp.CLAUDE_PROMPTS.get(prompt_name)
         if not prompt:
             raise ValueError(f"Invalid prompt name: {prompt_name}")
 
-        response = chat_engine.chat(prompt + f"\n\nAdvertisement: {advert}")
+        # Combine prompt with the analysis string and the advert
+        full_prompt = prompt + cp.ANALYSIS_STR + f"\n\nAdvertisement: {advert}"
+
+        # Send the prompt to the chat engine
+        response = chat_engine.chat(full_prompt)
         logger.info(f"Response to {prompt_name}: {response.response}")
 
-        # Extract and parse JSON from the response
+        # Clean up the response (strip backticks and leading/trailing whitespace)
         json_str = response.response.strip("`").strip()
-        if json_str.startswith("json"):
-            json_str = json_str[4:]  # Remove 'json' prefix if present
+
+        # Handle cases where the response starts with a "json" prefix
+        if json_str.lower().startswith("json"):
+            json_str = json_str[4:].strip()  # Remove the 'json' prefix if present
+
+        # Attempt to parse the response as JSON
         parsed_response = json.loads(json_str)
 
-        # Standardize the output
+        # Standardize and return the output
         return {
             "result": parsed_response.get("result", ""),
-            "evidence": parsed_response.get("evidence")
-            or parsed_response.get("evidence")
-            or [],
+            "evidence": parsed_response.get("evidence", []),
             "explanation": parsed_response.get("explanation", ""),
             "confidence": float(parsed_response.get("confidence", 0)),
         }
 
+    except json.JSONDecodeError as e:
+        # Log the error and return a default response in case of JSON issues
+        logger.error(f"Error parsing JSON response: {e}")
+        return {
+            "result": "error",
+            "evidence": [],
+            "explanation": f"Error parsing JSON: {e}",
+            "confidence": 0.0,
+        }
     except Exception as e:
-        logger.error(f"Error processing advert, prompt {prompt_name}: {str(e)}")
+        # Catch any other exceptions and log them
+        logger.error(f"Error processing advert, prompt {prompt_name}: {e}")
         return {
             "result": "error",
             "evidence": [],
@@ -215,6 +236,8 @@ def process_advert(IDn: int, prompt_name: str) -> None:
     return None
 
 
+IDn = 573388
+prompt_name = "bypass_prompt"
 query = """MATCH (g:Group)-[:HAS_POSTING]-(n:Posting) WHERE (g.country_id) = 1 AND (n.text IS NOT NULL) AND NOT (n.text = "") RETURN ID(n) AS IDn, n.post_id AS post_id, n.text AS advert"""
 parameters = {}
 adverts = pd.DataFrame(nl.execute_neo4j_query(query, parameters))
@@ -253,8 +276,9 @@ for IDn in tqdm(adverts["IDn"], desc="Processing IDs"):
         process_advert(IDn=IDn, prompt_name=prompt_name)
 
 for IDn in adverts["IDn"]:
-    delete_analysis(IDn=IDn, prompt_name="target_specific_group_prompt")
-    process_advert(IDn=IDn, prompt_name="target_specific_group_prompt")
+    print(IDn)
+    delete_analysis(IDn=IDn, prompt_name="unprofessional_writing_prompt")
+    process_advert(IDn=IDn, prompt_name="unprofessional_writing_prompt")
 
 
 for IDn in [573204]:

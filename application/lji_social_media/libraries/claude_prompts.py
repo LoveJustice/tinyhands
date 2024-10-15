@@ -7,7 +7,7 @@ OPEN_AI_PROMPTS = {
     ),
 }
 
-ANALYSIS_STR = """' {"result": "yes" or "no", "evidence": ["evidence 1", "evidence 2", ...] or "no evidence", "confidence": 0.0 to 1.0, "explanation": "Brief explanation of your reasoning"}' """
+ANALYSIS_STR = """' {"result": "yes" or "no", "evidence": ["evidence 1", "evidence 2", ...] or [], "confidence": 0.0 to 1.0, "explanation": "Brief explanation of your reasoning"}' """
 
 EXTRACTION_PROMPTS = {
     "phone_number_prompt": "Extract phone numbers from the following text and return your findings as a list:"
@@ -91,7 +91,8 @@ CLAUDE_PROMPTS = {
         "Return your analysis in the following JSON format:"
     ),
     "unprofessional_writing_prompt": (
-        "Analyze the following job advertisement for signs of unprofessional writing, such as poor grammar or spelling. "
+        "Analyze the following job advertisement for signs of unprofessional writing such as poor grammar or spelling. "
+        "Ignore lack of spacing in the text."
         "Return your analysis in the following JSON format:"
     ),
     "language_switch_prompt": (
