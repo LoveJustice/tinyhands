@@ -14,11 +14,12 @@ from sklearn.feature_selection import RFE
 from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error, r2_score
 from scipy.stats import spearmanr, uniform, randint
-import joblib
+import libraries.model_tools as mt
+
 import datetime
 import uuid
 
-# Data columns
+
 DATA_COLUMNS = [
     "assure_prompt",
     "bypass_prompt",
@@ -28,11 +29,14 @@ DATA_COLUMNS = [
     "illegal_activities_prompt",
     "immediate_hiring_prompt",
     "language_switch_prompt",
+    # "multiple_applicants_prompt",
+    # "multiple_jobs_prompt",
     "multiple_provinces_prompt",
     "no_education_skilled_prompt",
     "no_location_prompt",
     "quick_money_prompt",
     "recruit_students_prompt",
+    # "requires_references",
     "suspicious_email_prompt",
     "target_specific_group_prompt",
     "unprofessional_writing_prompt",
@@ -41,6 +45,11 @@ DATA_COLUMNS = [
     "vague_description_prompt",
     "wrong_link_prompt",
 ]
+
+
+def get_scored_adverts():
+    query = """MATCH (posting:Posting) WHERE posting.monitor_score IS NOT NULL RETURN ID(posting) AS IDn, posting.post_id AS post_id, posting.monitor_score AS monitor_score"""
+    pass
 
 
 def load_and_preprocess_data(file_path):
@@ -53,8 +62,16 @@ def load_and_preprocess_data(file_path):
         & (~model_data["monitor_score"].isna())
     ]
     mapping = {"yes": 1, "no": 0}
-    df = model_data.replace(mapping)
-    return df[DATA_COLUMNS], df["monitor_score"]
+    model_data = model_data.replace(mapping)
+    for col in DATA_COLUMNS:
+        model_data[col] = pd.to_numeric(model_data[col], errors="coerce")
+
+        # Now, you can identify and handle NaN values
+        non_numeric_entries = model_data[model_data[col].isna()]
+        model_data = model_data.dropna(subset=[col])
+        model_data[col] = model_data[col].astype(int)
+
+    return model_data, model_data["monitor_score"]
 
 
 def create_model_pipeline():
@@ -180,41 +197,25 @@ def create_advanced_pipeline():
     )
 
 
-def generate_unique_filename(prefix="model", extension="pkl"):
-    """
-    Generate a unique filename using a prefix and extension.
-    """
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-    random_string = uuid.uuid4().hex[:6]
-    filename = f"{prefix}_{timestamp}_{random_string}.{extension}"
-    return filename
-
-
-def save_model(model, filename):
-    """
-    Save the trained model to disk.
-    """
-    joblib.dump(model, filename)
-    print(f"Model saved as {filename}")
-
-
 def main():
     file_path = "results/advert_flags.csv"
-    all_advert_flags = pd.read_csv(file_path)
-    advert_flags = all_advert_flags[
-        ~(
-            (all_advert_flags["monitor_score"] == "unknown")
-            | all_advert_flags["monitor_score"].isnull()
-        )
-    ]
+    # all_advert_flags = pd.read_csv(file_path)
+    advert_flags, y = load_and_preprocess_data(file_path)
+    X = advert_flags[DATA_COLUMNS]
+    # advert_flags = all_advert_flags[
+    #     ~(
+    #         (all_advert_flags["monitor_score"] == "unknown")
+    #         | all_advert_flags["monitor_score"].isnull()
+    #         | (all_advert_flags["monitor_score"] == "['error']")
+    #     )
+    # ]
 
     # Create the results DataFrame
     results = pd.DataFrame(
-        columns=["advert", "group_id", "post_id", "monitor_score", "test_train"],
+        columns=["advert", "group_id", "IDn", "monitor_score", "test_train"],
         index=advert_flags.index,
     )
 
-    X, y = load_and_preprocess_data(file_path)
     advanced_pipeline = create_advanced_pipeline()
 
     # Hyperparameter tuning
@@ -224,35 +225,35 @@ def main():
     trained_pipeline, X_test, y_test = train_and_evaluate_model(
         X, y, best_advanced_pipeline
     )
-
+    # mt.generate_unique_filename(prefix="redflag_model")
     # Save the trained model
-    unique_model_filename = generate_unique_filename(prefix="redflag_model")
-    save_model(trained_pipeline, unique_model_filename)
+    unique_model_filename = mt.generate_unique_filename(prefix="redflag_model")
+    mt.save_model(trained_pipeline, unique_model_filename)
 
     # Make predictions on the entire dataset
-    all_advert_flags["model_predictions"] = trained_pipeline.predict(
-        all_advert_flags[DATA_COLUMNS].replace({"yes": 1, "no": 0})
+    advert_flags["model_predictions"] = trained_pipeline.predict(
+        advert_flags[DATA_COLUMNS].replace({"yes": 1, "no": 0})
     )
 
     # Populate the results DataFrame
     results["advert"] = advert_flags["advert"]
     results["group_id"] = advert_flags["group_id"]
-    results["post_id"] = advert_flags["post_id"]
+    results["IDn"] = advert_flags["IDn"]
     results["monitor_score"] = advert_flags["monitor_score"]
     results["test_train"] = "train"
     results.loc[results.index.isin(X_test.index), "test_train"] = "test"
-    results = (
-        results.set_index("post_id").loc[all_advert_flags["post_id"]].reset_index()
-    )
-    results["model_predictions"] = all_advert_flags["model_predictions"]
-    all_advert_flags.to_csv("results/all_advert_flags.csv", index=False)
+    results = results.set_index("IDn").loc[advert_flags["IDn"]].reset_index()
+    results["model_predictions"] = advert_flags["model_predictions"]
+    # advert_flags.to_csv("results/all_advert_flags.csv", index=False)
+
     # Save the results
-    unique_results_filename = generate_unique_filename(
+    unique_results_filename = mt.generate_unique_filename(
         prefix="redflag_model_result", extension="csv"
     )
     results.to_csv(f"results/{unique_results_filename}", index=False)
     print(f"Results saved as {unique_results_filename}")
 
 
+pd.read_csv("~/Downloads/")
 if __name__ == "__main__":
     main()

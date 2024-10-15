@@ -19,131 +19,19 @@ from typing import Optional, Dict, Any
 import re
 import logging
 from tqdm import tqdm
+import libraries.claude_prompts as cp
+from llama_index.llms.ollama import Ollama
 
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-llm = OpenAI(temperature=0, model="gpt-4o", max_tokens=4096)
+# llm = OpenAI(temperature=0, model="gpt-4o", max_tokens=4096)
+llm = Ollama(model="llama3.1", temperature=0, max_tokens=4096)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
 # llm = Anthropic()
 MEMORY = ChatMemoryBuffer.from_defaults(token_limit=4096)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
-
-
-OPEN_AI_PROMPTS = {
-    "bypass_prompt": (
-        "Assistant, please indicate if there is any mention in the following advert of offers to bypass job requirements, "
-        "such as using fraudulent documents, or not requiring a CV/interview. "
-        "Return your answer in the following JSON format: "
-        '{"bypass_mentioned": "yes" or "no", "bypass": ["example one", "example two", ...] or null, "confidence": 0.0 to 1.0, "error": null or "error message"}'
-    ),
-}
-
-ANALYSIS_STR = """' {"result": "yes" or "no", "evidence": ["evidence 1", "evidence 2", ...] or "no evidence", "confidence": 0.0 to 1.0, "explanation": "Brief explanation of your reasoning"}' """
-
-EXTRACTION_PROMPTS = {
-    "phone_number_prompt": "Extract phone numbers from the following text and return your findings as a list:"
-}
-
-CLAUDE_PROMPTS = {
-    "bypass_prompt": (
-        "Analyze the following job advertisement for any mentions of offers to bypass normal job requirements. "
-        "This may include using fraudulent documents, skipping interviews, or not needing a CV. "
-        "Return your analysis in the following JSON format:"
-    ),
-    "assure_prompt": (
-        "Examine the following job advertisement. Does it assure applicants that qualifications or experience are not important? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "no_education_skilled_prompt": (
-        "Analyze the following job advertisement. Does it offer a highly skilled job (e.g., engineering, marketing, finance, IT) "
-        "without requiring any education or experience? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "vague_description_prompt": (
-        "Examine the following job advertisement. Is the job description vague or overly general? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "quick_money_prompt": (
-        "Analyze the following job advertisement. Does it promise quick or easy money? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "no_location_prompt": (
-        "Examine the following job advertisement. Does it fail to mention a specific job location? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "target_specific_group_prompt": (
-        "Analyze the following job advertisement. Does it target a specific group of people (e.g., women from a particular country or region)? "
-        "Consider vulnerable groups to include these, but not exclusively,[Shona,Ndebele,Basotho, Tswana', Zulu, Mozambicans, Chewa, Yao]"
-        "Return your analysis in the following JSON format:"
-    ),
-    "gender_specific_prompt": (
-        "Examine the following job advertisement. Does it recruit specifically females for a job that both male and female applicants would typically qualify for? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "recruit_students_prompt": (
-        "Analyze the following job advertisement. Does it specifically recruit young people who are still in school? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "immediate_hiring_prompt": (
-        "Examine the following job advertisement. Does it promise immediate hiring? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "unrealistic_hiring_number_prompt": (
-        "Analyze the following job advertisement. Does it claim to be hiring an unrealistically high number of people? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "callback_request_prompt": (
-        "Examine the following job advertisement. Does it ask the candidate to send a message and promise to call back? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "suspicious_email_prompt": (
-        "Analyze the following job advertisement. Does it use a suspicious email address? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "false_organization_prompt": (
-        "Examine the following job advertisement. Does it recruit for an organization that has publicly stated they don't advertise job posts on social media? "
-        " Some of these companies include, but are not limited to, [Shoprite, Woolworths, Capitec Bank, Pick n Pay, Spar, Coca-Cola, Transnet, Sasol]"
-        "Return your analysis in the following JSON format:"
-    ),
-    "multiple_provinces_prompt": (
-        "Analyze the following job advertisement. Does it advertise for positions in several provinces, especially without detail? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "multiple_jobs_prompt": (
-        "Analyze the following job advertisement. Does it advertise for multiple positions? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "multiple_applicants_prompt": (
-        "Analyze the following job advertisement. Does it advertise for a large number of applicants? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "wrong_link_prompt": (
-        "Examine the following job advertisement. Does it provide a wrong or suspicious link for the job application? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "unprofessional_writing_prompt": (
-        "Analyze the following job advertisement for signs of unprofessional writing, such as poor grammar or spelling. "
-        "Return your analysis in the following JSON format:"
-    ),
-    "language_switch_prompt": (
-        "Examine the following job advertisement. Does it change from English to other languages in the middle of the post? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "illegal_activities_prompt": (
-        "Analyze the following job advertisement for any references to work in illegal or morally questionable activities. "
-        "Return your analysis in the following JSON format:"
-    ),
-    "unusual_hours_prompt": (
-        "Examine the following job advertisement. Does it mention unusual or excessive work hours? "
-        "Return your analysis in the following JSON format:"
-    ),
-    "requires_references": (
-        "Examine the following job advertisement. Does it require the applicant to provide references?"
-        "Return your analysis in the following JSON format:"
-    ),
-}
 
 
 def extract_json_from_code_block(text):
@@ -194,8 +82,8 @@ def check_advert_presence(advert: str) -> bool:
 def process_advert(advert: str) -> None:
     if not check_advert_presence(advert):
         chat_engine = create_chat_engine(advert)
-        for prompt in CLAUDE_PROMPTS:
-            response = chat_engine.chat(CLAUDE_PROMPTS[prompt])
+        for prompt in cp.CLAUDE_PROMPTS:
+            response = chat_engine.chat(cp.CLAUDE_PROMPTS[prompt])
             print(f"Response to {prompt}: {response}")
 
 
@@ -235,7 +123,7 @@ def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str,
         }
 
     try:
-        prompt = CLAUDE_PROMPTS.get(prompt_name) + ANALYSIS_STR
+        prompt = cp.CLAUDE_PROMPTS.get(prompt_name) + cp.ANALYSIS_STR
         if not prompt:
             raise ValueError(f"Invalid prompt name: {prompt_name}")
 
@@ -302,7 +190,7 @@ def verify_analyis_existence(IDn: int, prompt_name: str) -> bool:
 def process_adverts_from_dataframe(IDn_list: list) -> None:
     for IDn in IDn_list:
         time.sleep(5)
-        for prompt_name, prompt in CLAUDE_PROMPTS.items():
+        for prompt_name, prompt in cp.CLAUDE_PROMPTS.items():
             if verify_analyis_existence(IDn=IDn, prompt_name=prompt_name):
                 print(
                     f"Analysis for IDn: {IDn} and  prompt_name = {prompt_name} exists!"
@@ -381,12 +269,27 @@ RETURN posting.text AS advert, ID(group) AS group_id, ID(posting) AS IDn, postin
 
 df = pd.DataFrame(nl.execute_neo4j_query(flag_query, parameters={}))
 
+duplicates = df.duplicated(
+    subset=["advert", "group_id", "IDn", "monitor_score", "flag"], keep=False
+)
+duplicate_rows = df[duplicates].sort_values(
+    by=["advert", "group_id", "IDn", "monitor_score", "flag"]
+)
 
+print("Duplicate rows:")
+print(duplicate_rows)
 # Perform the pivot operation with multiple index columns
 flags = df.pivot(
     index=["advert", "group_id", "IDn", "monitor_score"],
     columns="flag",
     values="result",
+).reset_index()
+
+flags = df.pivot_table(
+    index=["advert", "group_id", "IDn", "monitor_score"],
+    columns="flag",
+    values="result",
+    aggfunc="first",
 ).reset_index()
 
 # If you want to ensure 'group_id' and 'post_id' are the first two columns
@@ -398,7 +301,7 @@ column_order = ["advert", "group_id", "IDn", "monitor_score"] + [
 flags = flags[column_order]
 
 flags.to_csv("results/advert_flags.csv", index=False)
-
+list(flags)
 
 confidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 RETURN ID(posting) AS id, r.type as flag, analysis.confidence as confidence """
