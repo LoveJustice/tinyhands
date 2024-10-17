@@ -4,6 +4,15 @@ import os
 from datetime import datetime
 from typing import Dict, Any, Optional, List
 import logging
+from pydantic import BaseModel, Field, ValidationError
+
+
+class AnalysisResponse(BaseModel):
+    result: str
+    evidence: List[str] = Field(default_factory=list)
+    explanation: str
+    confidence: float
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -16,7 +25,7 @@ neo4j_config = {
 
 
 def write_analysis_to_neo4j(
-    IDn: int, prompt_name: str, analysis: Dict[str, Any]
+    IDn: int, prompt_name: str, analysis: AnalysisResponse
 ) -> None:
     """
     Write analysis results to Neo4j.
@@ -24,38 +33,36 @@ def write_analysis_to_neo4j(
     Args:
         IDn: The ID of the posting.
         prompt_name: The name of the prompt used for analysis.
-        analysis: The analysis results dictionary.
+        analysis: The analysis results as an AnalysisResponse object.
     """
     parameters = {
         "IDn": IDn,
         "prompt_name": prompt_name,
-        "result": analysis["result"],
-        "evidence": analysis["evidence"],
-        "explanation": analysis["explanation"],
-        "confidence": analysis["confidence"],
+        "result": analysis.result,
+        "evidence": analysis.evidence,
+        "explanation": analysis.explanation,
+        "confidence": analysis.confidence,
     }
 
     query = """
     MATCH (posting:Posting)
     WHERE ID(posting) = $IDn
-    WITH posting AS posting
+    WITH posting
     MERGE (an:Analysis {
         result: $result,
         evidence: $evidence,
         explanation: $explanation,
         confidence: $confidence
     })
-    CREATE (posting)-[:HAS_ANALYSIS {type: $prompt_name}]->(an)
+    MERGE (posting)-[:HAS_ANALYSIS {type: $prompt_name}]->(an)
     """
 
-    # Ensure all required keys are present with default values if missing
-
-    # logger.info(f"Writing analysis to Neo4j: {parameters}")
+    logger.info(f"Writing analysis to Neo4j: {parameters}")
 
     try:
         execute_neo4j_query(query, parameters)
     except Exception as e:
-        print(f"Error writing to Neo4j: {str(e)}")
+        logger.error(f"Error writing to Neo4j: {str(e)}")
 
 
 def get_neo4j_advert(IDn: int) -> Optional[str]:

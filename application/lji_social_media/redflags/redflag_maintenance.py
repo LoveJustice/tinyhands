@@ -1,6 +1,6 @@
 import os
 import time
-
+import libraries.llm_functions as lf
 import streamlit as st
 from typing import Dict, Any, Optional, List
 import json
@@ -22,15 +22,6 @@ from tqdm import tqdm
 import libraries.claude_prompts as cp
 from llama_index.llms.ollama import Ollama
 from typing import Any, List, Optional
-
-from pydantic import BaseModel, Field, ValidationError
-
-
-class AnalysisResponse(BaseModel):
-    result: str
-    evidence: List[str] = Field(default_factory=list)
-    explanation: str
-    confidence: float
 
 
 # Set up logging
@@ -89,12 +80,13 @@ def check_advert_presence(advert: str) -> bool:
     return False
 
 
-def process_advert(advert: str) -> None:
-    if not check_advert_presence(advert):
-        chat_engine = create_chat_engine(advert)
-        for prompt in cp.CLAUDE_PROMPTS:
-            response = chat_engine.chat(cp.CLAUDE_PROMPTS[prompt])
-            print(f"Response to {prompt}: {response}")
+def check_analysis_presence(IDn, prompt) -> bool:
+    query = """MATCH (posting:Posting)-[:HAS_ANALYSIS {type: $prompt}]-(analysis:Analysis)
+    WHERE ID(posting) = $IDn
+    RETURN COUNT(analysis) AS analysis_count"""
+    parameters = {"prompt": prompt, "IDn": IDn}
+    result = nl.execute_neo4j_query(query, parameters)
+    return result[0]["analysis_count"] > 0
 
 
 def extract_value(response, key):
@@ -110,54 +102,6 @@ def extract_list(response, key):
         return [item.strip(' "') for item in match.group(1).split(",")]
     return []
 
-
-def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Optional[AnalysisResponse]:
-    """
-    Analyze an advertisement using a chat engine and a specific prompt.
-
-    Args:
-        chat_engine: The chat engine to use for analysis.
-        advert: The advertisement text to analyze.
-        prompt_name: The name of the prompt to use.
-
-    Returns:
-        An AnalysisResponse object containing the analysis results,
-        or None if analysis fails.
-    """
-    if not chat_engine:
-        logger.error("Chat engine is not initialized")
-        return None
-
-    try:
-        prompt = cp.CLAUDE_PROMPTS.get(prompt_name)
-        if not prompt:
-            raise ValueError(f"Invalid prompt name: {prompt_name}")
-
-        full_prompt = f"{prompt}{cp.ANALYSIS_STR}\n\nAdvertisement: {advert}"
-        response = chat_engine.chat(full_prompt)
-        logger.info(f"Response to '{prompt_name}': {response.response}")
-
-        # Clean and preprocess the response
-        json_str = response.response.strip("`").strip()
-        if json_str.lower().startswith("json"):
-            json_str = json_str[4:].strip()
-
-        # Parse the JSON response
-        parsed_json = json.loads(json_str)
-
-        # Validate and parse the response using Pydantic
-        analysis_response = AnalysisResponse(**parsed_json)
-        return analysis_response
-
-    except json.JSONDecodeError as e:
-        logger.error(f"Error parsing JSON response: {e}")
-        return None
-    except ValidationError as e:
-        logger.error(f"Validation error in response: {e}")
-        return None
-    except Exception as e:
-        logger.error(f"Error processing advert with prompt '{prompt_name}': {e}")
-        return None
 
 def delete_analysis(IDn: int, prompt_name: str) -> None:
     parameters = {
@@ -205,27 +149,41 @@ def process_adverts_from_dataframe(IDn_list: list) -> None:
     return None
 
 
+# In your main script or where you call write_analysis_to_neo4j
 def process_advert(IDn: int, prompt_name: str) -> None:
     advert = nl.get_neo4j_advert(IDn)
     chat_engine = create_chat_engine(advert)
     print(f"Processing : {advert}")
     if chat_engine:
-        advert_analysis = analyse_advert(chat_engine, advert, prompt_name)
-        print(f"Response to {prompt_name}: {advert_analysis}")
-        nl.write_analysis_to_neo4j(IDn, prompt_name, advert_analysis)
+        advert_analysis = lf.analyse_advert(chat_engine, advert, prompt_name)
+        print(f"Response IDn:{IDn} to {prompt_name}: {advert_analysis}")
+        if advert_analysis:
+            nl.write_analysis_to_neo4j(IDn, prompt_name, advert_analysis)
+        else:
+            logger.error(f"Analysis failed for IDn {IDn}")
     else:
         print(f"Failed to create chat engine for advert {advert}")
     return None
 
 
 def main() -> None:
-    query = """MATCH (g:Group)-[:HAS_POSTING]-(n:Posting) WHERE (g.country_id) = 1 AND (n.text IS NOT NULL) AND NOT (n.text = "") RETURN ID(n) AS IDn, n.post_id AS post_id, n.text AS advert"""
-    parameters = {}
+    prompt_name = "job_advert_prompt"
+    query = """
+    MATCH (g:Group)-[:HAS_POSTING]-(n:Posting)
+    WHERE g.country_id = 1
+      AND n.text IS NOT NULL
+      AND n.text <> ""
+      AND NOT EXISTS {
+        MATCH (n)-[:HAS_ANALYSIS {type: $prompt_name}]-(:Analysis)
+      }
+    RETURN ID(n) AS IDn, n.post_id AS post_id, n.text AS advert
+    """
+    parameters = {"prompt_name": prompt_name}
     adverts = pd.DataFrame(nl.execute_neo4j_query(query, parameters))
-    for IDn in adverts["IDn"]:
-        print(IDn)
-        delete_analysis(IDn=IDn, prompt_name="unprofessional_writing_prompt")
-        process_advert(IDn=IDn, prompt_name="unprofessional_writing_prompt")
+
+    for IDn in tqdm(adverts["IDn"], desc="Processing adverts"):
+        # delete_analysis(IDn=IDn, prompt_name="unprofessional_writing_prompt")
+        process_advert(IDn=IDn, prompt_name=prompt_name)
 
 
 if __name__ == "__main__":

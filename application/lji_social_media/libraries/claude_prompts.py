@@ -14,6 +14,11 @@ EXTRACTION_PROMPTS = {
 }
 
 CLAUDE_PROMPTS = {
+    "job_advert_prompt": (
+        "Analyze the following text carefully. "
+        "Can this be considered a job or recruitment advertisement? "
+        "Return your analysis in the following JSON format:"
+    ),
     "bypass_prompt": (
         "Analyze the following job advertisement for any mentions of offers to bypass normal job requirements. "
         "This may include using fraudulent documents, skipping interviews, or not needing a CV. "
@@ -92,7 +97,7 @@ CLAUDE_PROMPTS = {
     ),
     "unprofessional_writing_prompt": (
         "Analyze the following job advertisement for signs of unprofessional writing such as poor grammar or spelling. "
-        "Ignore lack of spacing in the text."
+        "Accept that missing spaces or words not separated by a space or spaces in the text, such as 'andcleaners', 'towork', is NOT a sign of unprofessional writing. "
         "Return your analysis in the following JSON format:"
     ),
     "language_switch_prompt": (

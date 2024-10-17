@@ -11,7 +11,7 @@ import libraries.search_patterns as sp
 import time
 from typing import List, Dict, Optional
 from st_aggrid import AgGrid, GridOptionsBuilder
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 import base64
 from dataclasses import dataclass
 import streamlit as st
@@ -541,6 +541,18 @@ def extract_advert_content_nodiv() -> str:
         return ""
 
 
+def extract_structured_content(element):
+    content = []
+    for child in element.children:
+        if isinstance(child, NavigableString):
+            content.append(child.strip())
+        elif child.name in ["br", "p", "div"]:
+            content.append("\n")
+        else:
+            content.append(extract_structured_content(child))
+    return " ".join(filter(None, content))
+
+
 def extract_advert_content() -> str:
     """Extract the advertisement content from the HTML page."""
     try:
@@ -555,8 +567,13 @@ def extract_advert_content() -> str:
             return ""
 
         # Extract advert content as plain text
-        advert_content = post_content.get_text(separator="\n").strip()
-
+        # advert_content = post_content.get_text(separator="\n").strip()
+        # advert_content = post_content.get_text(separator="\n").strip()
+        advert_content = (
+            post_content.get_text(separator="\n").replace("\n", " ").strip()
+        )
+        advert_content = post_content.get_text(separator=" ").strip()
+        advert_content = re.sub(r"\s+", " ", advert_content)
         return advert_content
 
     except Exception as e:

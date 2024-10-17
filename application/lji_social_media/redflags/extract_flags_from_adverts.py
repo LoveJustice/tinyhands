@@ -21,6 +21,7 @@ import logging
 from tqdm import tqdm
 import libraries.claude_prompts as cp
 from llama_index.llms.ollama import Ollama
+import libraries.llm_functions as lf
 
 
 # Set up logging
@@ -101,82 +102,6 @@ def extract_list(response, key):
     return []
 
 
-import json
-
-
-def analyse_advert(chat_engine: Any, advert: str, prompt_name: str) -> Dict[str, Any]:
-    """
-    Analyze an advertisement using a chat engine and a specific prompt.
-
-    Args:
-        chat_engine: The chat engine to use for analysis.
-        advert: The advertisement text to analyze.
-        prompt_name: The name of the prompt to use.
-
-    Returns:
-        A dictionary containing the analysis results, or a default dictionary if analysis fails.
-    """
-    # Validate the chat engine
-    if not chat_engine:
-        logger.error("Chat engine is not initialized")
-        return {
-            "result": "error",
-            "evidence": [],
-            "explanation": "Chat engine not initialized",
-            "confidence": 0.0,
-        }
-
-    try:
-        # Retrieve the prompt from the CLAUDE_PROMPTS dictionary
-        prompt = cp.CLAUDE_PROMPTS.get(prompt_name)
-        if not prompt:
-            raise ValueError(f"Invalid prompt name: {prompt_name}")
-
-        # Combine prompt with the analysis string and the advert
-        full_prompt = prompt + cp.ANALYSIS_STR + f"\n\nAdvertisement: {advert}"
-
-        # Send the prompt to the chat engine
-        response = chat_engine.chat(full_prompt)
-        logger.info(f"Response to {prompt_name}: {response.response}")
-
-        # Clean up the response (strip backticks and leading/trailing whitespace)
-        json_str = response.response.strip("`").strip()
-
-        # Handle cases where the response starts with a "json" prefix
-        if json_str.lower().startswith("json"):
-            json_str = json_str[4:].strip()  # Remove the 'json' prefix if present
-
-        # Attempt to parse the response as JSON
-        parsed_response = json.loads(json_str)
-
-        # Standardize and return the output
-        return {
-            "result": parsed_response.get("result", ""),
-            "evidence": parsed_response.get("evidence", []),
-            "explanation": parsed_response.get("explanation", ""),
-            "confidence": float(parsed_response.get("confidence", 0)),
-        }
-
-    except json.JSONDecodeError as e:
-        # Log the error and return a default response in case of JSON issues
-        logger.error(f"Error parsing JSON response: {e}")
-        return {
-            "result": "error",
-            "evidence": [],
-            "explanation": f"Error parsing JSON: {e}",
-            "confidence": 0.0,
-        }
-    except Exception as e:
-        # Catch any other exceptions and log them
-        logger.error(f"Error processing advert, prompt {prompt_name}: {e}")
-        return {
-            "result": "error",
-            "evidence": [],
-            "explanation": str(e),
-            "confidence": 0.0,
-        }
-
-
 def delete_analysis(IDn: int, prompt_name: str) -> None:
     parameters = {
         "IDn": IDn,
@@ -228,7 +153,7 @@ def process_advert(IDn: int, prompt_name: str) -> None:
     chat_engine = create_chat_engine(advert)
     print(f"Processing : {advert}")
     if chat_engine:
-        advert_analysis = analyse_advert(chat_engine, advert, prompt_name)
+        advert_analysis = lf.analyse_advert(chat_engine, advert, prompt_name)
         print(f"Response to {prompt_name}: {advert_analysis}")
         nl.write_analysis_to_neo4j(IDn, prompt_name, advert_analysis)
     else:
