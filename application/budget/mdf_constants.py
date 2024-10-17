@@ -15,7 +15,7 @@ GUIDES = 17
 CATEGORY_CHOICES = [
     (TRAVEL, 'Staff Travel'),
     (AWARENESS, 'Supplies & Awareness'),
-    (POTENTIAL_VICTIM_CARE, 'Potential Victim Care'),
+    (POTENTIAL_VICTIM_CARE, 'PV Care'),
     (COMMUNICATION, 'Communication'),
     (STAFF_BENEFITS, 'Salaries & Benefits'),
     (ADMINISTRATION, 'Administration'),
