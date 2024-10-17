@@ -62,7 +62,12 @@ class StaffData:
                 foot_note = self.footnote.add_footnote(staff_item.description)
             else:
                 foot_note = '';
-            staff_data[staff_item.staff][staff_item.benefit_type_name] = StaffValue(staff_item.cost, foot_note)
+            
+            if staff_item.benefit_type_name in staff_data[staff_item.staff]:
+                existing = staff_data[staff_item.staff][staff_item.benefit_type_name]
+                staff_data[staff_item.staff][staff_item.benefit_type_name] = StaffValue(staff_item.cost + existing.cost, existing.foot_note + ' ' + foot_note)
+            else:
+                staff_data[staff_item.staff][staff_item.benefit_type_name] = StaffValue(staff_item.cost, foot_note)
         
         for staff in staff_order:
             if staff.last_name.find('general_staff') >= 0:
