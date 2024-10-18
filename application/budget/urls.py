@@ -58,6 +58,8 @@ urlpatterns = [
         re_path(r'^mdf-pr/new/(?P<station_id>\d+)/(?P<year>\d+)/(?P<month>\d+)/$', MonthlyDistributionFormViewSet.as_view({'get':'get_new_mdf'}), name="MdfPRViewSet"),
         re_path(r'^mdf-pr/approve/(?P<pk>\d+)/$', MonthlyDistributionFormViewSet.as_view({'put': 'approve_mdf'}), name="MdfPRViewSetApprove"),
         re_path(r'^mdf-pr/last-date/(?P<station_id>\d+)/$', MonthlyDistributionFormViewSet.as_view({'get': 'get_last_mdf_date'}), name="MdfPRViewSetApprove"),
+        re_path(r'^mdf-pr/trend/(?P<pk>\d+)/$', MonthlyDistributionFormViewSet.as_view({'get': 'get_trend'}), name="MdfPRViewSetTrend"),
+        
         
         re_path(r'^mdf-item/$', MdfItemViewSet.as_view(list_methods), name='MdfItem'),
         re_path(r'^mdf-item/(?P<pk>\d+)/$', MdfItemViewSet.as_view(detail_methods), name='MdfItemDetail'),
