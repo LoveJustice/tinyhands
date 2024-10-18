@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'portal',
     'budget',
     'id_matching',
+    'chatbot',
     'util',
     'static_border_stations',
     'rest_api',
