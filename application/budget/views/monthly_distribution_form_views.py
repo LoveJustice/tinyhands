@@ -7,6 +7,7 @@ from rest_framework import filters as fs
 from rest_framework.response import Response
 from django.apps import apps
 from django.db.models import Value, IntegerField, Q
+from django.core.files.storage import default_storage
 from django.contrib.contenttypes.models import ContentType
 
 from dataentry.models import BorderStation, CountryExchange, IntercepteeCommon, StationStatistics, UserLocationPermission
@@ -635,6 +636,26 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
         mdf = MonthlyDistributionForm.objects.get(pk=pk)
         result = get_mdf_trend(mdf)
         return Response(result)
+    
+    def save_file(self, file_obj, subdirectory):
+        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        
+        return  subdirectory + file_obj.name
+    
+    def put_attachment(self, request, pk):
+        mdf = MonthlyDistributionForm.objects.get(pk=pk)
+        
+        if 'attachment_file' in request.data:
+            file_obj = request.data['attachment_file']
+            pbs_file = self.save_file(file_obj, 'pbs_attachments/')
+            mdf.signed_pbs = pbs_file
+            print(pbs_file)
+            mdf.save()
+            return Response(pbs_file)
+        else:
+            return Response('', status=status.HTTP_400_BAD_REQUEST)
                 
 class MdfItemViewSet(viewsets.ModelViewSet):
     queryset = MdfItem.objects.all()

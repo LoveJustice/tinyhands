@@ -392,6 +392,7 @@ class MonthlyDistributionForm(models.Model):
     money_not_spent_reviewed = models.BooleanField(default=False)
     
     requests = models.ManyToManyField(ProjectRequest)
+    signed_pbs = models.FileField(upload_to='pbs_attachments', default='', blank=True)
     mdf_combined = GenericRelation('MdfCombined')
     
     def include_request(self, request):
