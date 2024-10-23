@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'django_filters',
     'help',
     'rest_framework_jwt',  # Security tokens for auth0
+    'azure_storage',
 ]
 
 MIDDLEWARE = [
@@ -112,14 +113,15 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, "../static"))
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/cloud_media/'
 
 PUBLIC_ROOT = os.path.join(BASE_DIR, 'public')
 PUBLIC_URL = '/public/'
 
 STORAGES = {
     "default": {
+        # "BACKEND": "storages.backends.azure_storage.AzureStorage",
         "BACKEND": "storages.backends.azure_storage.AzureStorage",
         "OPTIONS": {
             # Try a bunch of different Azure login methods until one works
