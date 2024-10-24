@@ -134,6 +134,10 @@ STORAGES = {
             "account_key": os.environ.get("AZURE_ACCOUNT_KEY"),
             # Create this in the Storage Browser of your Azure Storage Account before use
             "azure_container": "test",
+            # Currently the IRF saves files twice in a row, or something
+            # Because overwriting is the default with the normal FileStorage
+            # Set this to preserve current functionality
+            "overwrite_files": True,
         },
     },
     "staticfiles": {
