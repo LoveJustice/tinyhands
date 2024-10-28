@@ -19,9 +19,8 @@ def add_request(mdf, request_class, category, subcategory, cost, description):
         mdf.requests.add(request)
 
 def populate_food_and_stationary(apps, schema_editor):
-    mod = __import__('budget.models', fromlist=['MonthlyDistributionForm','ProjectRequest'])
-    mdf_class = getattr(mod, 'MonthlyDistributionForm', None)
-    request_class = getattr(mod, 'ProjectRequest', None)
+    mdf_class = apps.get_model('budget', 'MonthlyDistributionForm')
+    request_class = apps.get_model('budget', 'ProjectRequest')
     
     mdfs = mdf_class.objects.filter(status='Approved')
     for mdf in mdfs:
