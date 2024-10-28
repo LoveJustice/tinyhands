@@ -1,12 +1,5 @@
 import os
 import sys
-import tiktoken
-
-
-def count_tokens(text, model_name):
-    encoding = tiktoken.encoding_for_model(model_name)
-    return len(encoding.encode(text))
-
 
 # Add libraries path to sys.path
 module_path = os.path.abspath("libraries")
@@ -53,20 +46,15 @@ from typing import Any, List, Optional
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-# llm = OpenAI(temperature=0, model="gpt-4o mini", max_tokens=8192, request_timeout=120.0)
+llm = OpenAI(temperature=0, model="gpt-4o", max_tokens=8192)
 llm = Ollama(
     model="llama3.1:latest", temperature=0, max_tokens=32768, request_timeout=120.0
 )
 # llm = Ollama(model="llama3.1", temperature=0, max_tokens=4096)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
 # llm = Anthropic()
-MEMORY = ChatMemoryBuffer.from_defaults(token_limit=32768, memory_limit=1)
+MEMORY = ChatMemoryBuffer.from_defaults(token_limit=4096, memory_limit=1)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
-
-
-def count_tokens(text, model_name):
-    encoding = tiktoken.encoding_for_model(model_name)
-    return len(encoding.encode(text))
 
 
 def extract_json_from_code_block(text):
@@ -186,7 +174,6 @@ def process_adverts_from_dataframe(IDn_list: list) -> None:
 # In your main script or where you call write_analysis_to_neo4j
 def process_advert(IDn: int, prompt_name: str) -> None:
     advert = nl.get_neo4j_advert(IDn)
-    print(f" Count tokens: {count_tokens(advert, 'gpt-4o mini')}")
     chat_engine = create_chat_engine(advert)
     print(f"Processing : {advert}")
     if chat_engine:
@@ -208,9 +195,9 @@ def main() -> None:
     WHERE g.country_id = 1
       AND n.text IS NOT NULL
       AND n.text <> ""
-      AND (NOT EXISTS {
+      AND NOT EXISTS {
         MATCH (n)-[:HAS_ANALYSIS {type: $prompt_name}]-(:Analysis)
-      })
+      }
     RETURN ID(n) AS IDn, n.post_id AS post_id, n.text AS advert
     """
     parameters = {"prompt_name": prompt_name}
