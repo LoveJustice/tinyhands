@@ -35,6 +35,7 @@ def write_analysis_to_neo4j(
         prompt_name: The name of the prompt used for analysis.
         analysis: The analysis results as an AnalysisResponse object.
     """
+    logger.info(f"Writing analysis to Neo4j: {IDn}, {prompt_name}, {analysis}")
     parameters = {
         "IDn": IDn,
         "prompt_name": prompt_name,
@@ -43,7 +44,9 @@ def write_analysis_to_neo4j(
         "explanation": analysis.explanation,
         "confidence": analysis.confidence,
     }
-
+    logger.info(
+        f"Writing analysis PARAMETERS to Neo4j: {IDn}, {prompt_name}, {parameters}"
+    )
     query = """
     MATCH (posting:Posting)
     WHERE ID(posting) = $IDn
@@ -57,7 +60,7 @@ def write_analysis_to_neo4j(
     MERGE (posting)-[:HAS_ANALYSIS {type: $prompt_name}]->(an)
     """
 
-    logger.info(f"Writing analysis to Neo4j: {parameters}")
+    logger.info(f"Writing TO Neo4j: {query}, {parameters}")
 
     try:
         execute_neo4j_query(query, parameters)

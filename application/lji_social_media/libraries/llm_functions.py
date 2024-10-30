@@ -48,28 +48,54 @@ def analyse_advert(
             confidence=0.0,
         )
 
-    try:
-        # Construct the prompt
-        prompt = cp.CLAUDE_PROMPTS.get(prompt_name) + cp.ANALYSIS_STR
-        if not prompt:
-            raise ValueError(f"Invalid prompt name: {prompt_name}")
+    # Retrieve prompt and validate its existence
+    prompt = cp.CLAUDE_PROMPTS.get(prompt_name)
+    if not prompt:
+        logger.error(f"Invalid or missing prompt name: {prompt_name}")
+        return nl.AnalysisResponse(
+            result="error",
+            evidence=[],
+            explanation=f"Invalid prompt name: {prompt_name}",
+            confidence=0.0,
+        )
 
-        # Get response from chat engine
+    # Combine prompt with analysis string
+    prompt += cp.ANALYSIS_STR
+
+    try:
+        # Send prompt to chat engine
         response = chat_engine.chat(prompt)
         logger.info(f"Response to {prompt_name}: {response.response}")
 
-        # Directly parse the JSON string
+        # Parse JSON response
         json_str = response.response.strip()
         parsed_response = json.loads(json_str)
 
-        # Create an AnalysisResponse instance from the parsed JSON
+        # Instantiate AnalysisResponse from parsed JSON
         analysis_response = nl.AnalysisResponse(**parsed_response)
-
-        # Return the AnalysisResponse object
+        logger.info(f"Response ****analysis_response**** {analysis_response}")
         return analysis_response
 
-    except (json.JSONDecodeError, ValueError, ValidationError) as e:
-        logger.error(f"Error processing advert, prompt {prompt_name}: {str(e)}")
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON decoding error for prompt {prompt_name}: {e}")
+        return nl.AnalysisResponse(
+            result="error",
+            evidence=[],
+            explanation="Invalid JSON format in response",
+            confidence=0.0,
+        )
+
+    except ValidationError as e:
+        logger.error(f"Validation error for prompt {prompt_name}: {e}")
+        return nl.AnalysisResponse(
+            result="error",
+            evidence=[],
+            explanation="Validation error in response schema",
+            confidence=0.0,
+        )
+
+    except Exception as e:
+        logger.error(f"Unexpected error for prompt {prompt_name}: {e}")
         return nl.AnalysisResponse(
             result="error",
             evidence=[],
