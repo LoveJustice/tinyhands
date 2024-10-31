@@ -175,7 +175,11 @@ class BaseFormViewSet(viewsets.ModelViewSet):
     def get_common_master_person(self, form):
         return None
     
-    def form_log(self, request, form, form_object, action):
+    # Override in subclass to provide details
+    def get_form_log_detail(self, form_object):
+        return None
+    
+    def form_log(self, request, form, form_object, action, request_json):
         form_number = form_object.get_key()
         if form_number is None:
             form_number = 'No Form Number'
@@ -185,6 +189,8 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         form_log.form_number = form_number
         form_log.form_id = form_object.id
         form_log.action = action
+        form_log.details = self.get_form_log_detail(form_object)
+        form_log.request = request_json
         form_log.save()
     
     def create(self, request):
@@ -214,7 +220,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                         rtn_status = status.HTTP_200_OK
                         # Trying here because this log is failing for project "forms" where form_number is not included
                         try:
-                            self.form_log(request, form_data.form, form_data.form_object, 'create')
+                            self.form_log(request, form_data.form, form_data.form_object, 'create', request_json)
                         except:
                             print('No form number')
                         transaction.commit()
@@ -355,7 +361,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     ret = serializer2.data
                     # Trying here because this log is failing for project "forms" where form_number is not included
                     try:
-                        self.form_log(request, form_data.form, form_data.form_object, 'update')
+                        self.form_log(request, form_data.form, form_data.form_object, 'update', request_json)
                     except:
                         print('No form number')
                     transaction.commit()
@@ -414,7 +420,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         form_data = FormData(the_form, form)
         # Trying here because this log is failing for project "forms" where form_number is not included
         try:
-            self.form_log(request, form, the_form, 'destroy')
+            self.form_log(request, form, the_form, 'destroy', None)
         except:
             print('No form number')
         form_data.delete()
