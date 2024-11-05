@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 import logging
 import os
@@ -16,13 +17,31 @@ logger = logging.getLogger(__name__)
 # TODO - this does NOT work for AWS S3 -> Azure, only local -> Azure
 class Command(BaseCommand):
 
+    def add_arguments(self, parser):
+        parser.add_argument("-d", "--date", type=str)
+        parser.add_argument("-p", "--path", type=str)
+
     def handle(self, *args, **options):
-        media_existing_storage_backend: Storage = storages['default']
+        date_string = options["date"]
+        date = None
+        if date_string:
+            date = datetime.datetime.strptime(date_string, "%Y-%m-%d")
+        media_existing_storage_backend: Storage = storages['filesystem']
         media_backups_storage_backend: Storage = storages['mediabackups']
 
         for relative_path in self.explore_storage(media_existing_storage_backend):
             logger.debug('Checking backup of ' + relative_path)
+            if options["path"]:
+                if options["path"] not in relative_path:
+                    logger.debug(f'Skipping {relative_path} because it does not contain {options["path"]}')
+                    continue
             file_on_file_system: File = media_existing_storage_backend.open(relative_path)
+            if date:
+                mtime = os.path.getmtime(file_on_file_system.name)
+                mtime_date = datetime.datetime.fromtimestamp(mtime)
+                if mtime_date < date:
+                    logger.debug(f'Skipping {relative_path} because ${mtime_date} is older than {date}')
+                    continue
             is_on_azure = media_backups_storage_backend.exists(relative_path)
             bytes_on_file_system = file_on_file_system.read()
             if is_on_azure:
