@@ -114,7 +114,7 @@ STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, "../static"))
 STATIC_URL = '/static/'
 
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/cloud_media/'
+MEDIA_URL = '/cloud-media/'
 
 PUBLIC_ROOT = os.path.join(BASE_DIR, 'public')
 PUBLIC_URL = '/public/'
@@ -133,7 +133,7 @@ STORAGES = {
             "account_name": os.environ.get("AZURE_STORAGE_ACCOUNT_NAME"),
             "account_key": os.environ.get("AZURE_ACCOUNT_KEY"),
             # Create this in the Storage Browser of your Azure Storage Account before use
-            "azure_container": "cloud_media",
+            "azure_container": "cloud-media",
             # Currently the IRF saves files twice in a row, or something
             # Because overwriting is the default with the normal FileStorage
             # Set this to preserve current functionality
@@ -155,7 +155,8 @@ STORAGES = {
             "account_name": os.environ.get("AZURE_STORAGE_ACCOUNT_NAME"),
             "account_key": os.environ.get("AZURE_ACCOUNT_KEY"),
             # Create this in the Storage Browser of your Azure Storage Account before use
-            "azure_container": "cloud_backup",
+            # This matches the default for now so that the backup script updates the default instead of duplicates it
+            "azure_container": "cloud-media",
         },
     },
 }
