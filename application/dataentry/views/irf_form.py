@@ -478,6 +478,17 @@ class IrfFormViewSet(BaseFormViewSet):
         except:
             print (traceback.format_exc())
     
+    def get_form_log_detail(self, form_object):
+        details = {
+            'status': form_object.status,
+            'evidence_categorization': form_object.evidence_categorization,
+            'verified_evidence_categorization': form_object.verified_evidence_categorization,
+            'computed_total_red_flags': form_object.computed_total_red_flags,
+            'self_status': self.status
+            }
+        return details
+        
+    
     def get_attachments(self, request, start_date, end_date):
         start = datetime.fromtimestamp(mktime(strptime(start_date, '%m-%d-%Y')))
         end = datetime.fromtimestamp(mktime(strptime(end_date, '%m-%d-%Y')))

@@ -7,14 +7,19 @@ from rest_framework import filters as fs
 from rest_framework.response import Response
 from django.apps import apps
 from django.db.models import Value, IntegerField, Q
+from django.core.files.storage import default_storage
 from django.contrib.contenttypes.models import ContentType
 
-from dataentry.models import BorderStation, IntercepteeCommon, StationStatistics, UserLocationPermission
+from dataentry.models import BorderStation, CountryExchange, IntercepteeCommon, StationStatistics, UserLocationPermission
 from dataentry.serializers import CountrySerializer
 from budget.models import BorderStationBudgetCalculation, MonthlyDistributionForm, MdfCombined, MdfItem, ProjectRequest, ProjectRequestComment, ProjectRequestDiscussion
 from budget.serializers import MonthlyDistributionFormSerializer, MdfItemSerializer
 from export_import.mdf_io import export_mdf_sheet
 from mailbox import MMDF
+import budget.mdf_constants as constants
+from django.db.models import Sum
+import decimal
+from decimal import Decimal
 
 class BorderStationOverviewSerializer(serializers.ModelSerializer):
     operating_country = CountrySerializer()
@@ -43,6 +48,367 @@ class MdfCombinedSerializer(serializers.ModelSerializer):
     
     def get_id(self, obj):
             return obj.content_object.id
+
+def get_national_values(country, year, month):
+    ctx = decimal.getcontext()
+    ctx.rounding = decimal.ROUND_HALF_UP
+    
+    result = {}
+    request_categories = [
+        constants.STAFF_BENEFITS,
+        constants.RENT_UTILITIES,
+        constants.ADMINISTRATION,
+        constants.AWARENESS,
+        constants.TRAVEL,
+        constants.POTENTIAL_VICTIM_CARE,
+        constants.IMPACT_MULTIPLYING
+        ]
+    
+    if month > 1:
+        prior_month = month - 1
+        prior_year = year
+    else:
+        prior_month = 12
+        prior_year = year - 1
+    
+    interceptions = IntercepteeCommon.objects.filter(
+        interception_record__station__operating_country=country,
+        interception_record__verified_date__year=prior_year,
+        interception_record__verified_date__month=prior_month,
+        person__role = 'PVOT'
+        ).exclude(interception_record__verified_evidence_categorization__startswith='Should not')
+    result['intercepts'] = len(interceptions)
+    
+    exchange_entries = CountryExchange.objects.filter(country=country, year_month__lte=year*100+month).order_by('-year_month')
+    if len(exchange_entries) > 0:
+        exchange = Decimal(exchange_entries[0].exchange_rate)
+    else:
+        exchange = Decimal(1.0)
+
+    total = 0
+    for category in request_categories:
+        subtotal = ProjectRequest.objects.filter(
+            category=category,
+            project__operating_country=country,
+            monthlydistributionform__month_year__year=year,
+            monthlydistributionform__month_year__month=month).exclude(benefit_type_name='Deductions').aggregate(Sum('cost'))['cost__sum']
+        if subtotal is None:
+            subtotal = Decimal(0)
+        if category == constants.STAFF_BENEFITS:
+            deductions = ProjectRequest.objects.filter(
+                category=category,
+                project__operating_country=country,
+                benefit_type_name='Deductions',
+                monthlydistributionform__month_year__year=year,
+                monthlydistributionform__month_year__month=month).aggregate(Sum('cost'))['cost__sum']
+            if deductions is None:
+                deductions = Decimal(0)
+            subtotal -= deductions
+            
+        total += subtotal
+        result[category] = {'local':subtotal, 'USD':round(subtotal/exchange,2)}
+    
+    
+    past_sent = MdfItem.objects.filter(
+        category=constants.PAST_MONTH_SENT,
+        mdf__border_station__operating_country=country,
+        mdf__month_year__year=year,
+        mdf__month_year__month=month).aggregate(Sum('cost'))['cost__sum']
+    if past_sent is None:
+        past_sent = Decimal(0)
+    total += past_sent
+    result[constants.PAST_MONTH_SENT] = {'local':subtotal, 'USD':round(subtotal/exchange,2)}
+    
+    subtotal = MdfItem.objects.filter(
+        category=constants.MONEY_NOT_SPENT,
+        deduct='Yes',
+        mdf__border_station__operating_country=country,
+        mdf__month_year__year=year,
+        mdf__month_year__month=month).aggregate(Sum('cost'))['cost__sum']
+    if subtotal is None:
+        subtotal = Decimal(0)
+    total -= subtotal
+    result[constants.MONEY_NOT_SPENT] = {'local':subtotal, 'USD':round(subtotal/exchange,2)}
+    
+    result['Total'] = {'local':total, 'USD':round(total/exchange,2)}
+    distribution = total - past_sent
+    result['Distribution'] = {'local':distribution, 'USD':round(distribution/exchange,2)}
+    
+    return result
+
+def compute_trend(current, prior, threshold):
+    result = 0
+    change = current - prior
+    change_abs = abs(change)
+    if (threshold is not None and change_abs > threshold) or threshold is None:
+        if prior == 0:
+            if current == 0:
+                result = 0
+            else:
+                result = 2
+        else:
+            percent = change_abs * 100 / abs(prior)
+            if percent > 5:
+                if percent > 20:
+                    result = 2
+                else:
+                    result = 1
+        if change < 0:
+            result = result * -1
+    
+    return result
+
+MONTH_NAME = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'December']
+
+def category_name(category_id):
+    result = 'Unknown'
+    if category_id == 'Total' or category_id == 'Distribution':
+        result = category_id
+    elif category_id == constants.MONEY_NOT_SPENT:
+        result = 'Money Not Spent (To Deduct)'
+    else:
+        for cat in constants.CATEGORY_CHOICES:
+            if category_id == cat[0]:
+                result = cat[1]
+                break
+    
+    return result
+
+def get_national_trend(mdf):
+    categories = [
+        constants.STAFF_BENEFITS,
+        constants.RENT_UTILITIES,
+        constants.ADMINISTRATION,
+        constants.AWARENESS,
+        constants.TRAVEL,
+        constants.POTENTIAL_VICTIM_CARE,
+        constants.IMPACT_MULTIPLYING,
+        constants.PAST_MONTH_SENT,
+        constants.MONEY_NOT_SPENT,
+        'Total',
+        'Distribution'
+        ]
+    
+    year = mdf.month_year.year
+    month = mdf.month_year.month
+    if month > 1:
+        prior_month = month - 1
+        prior_year = year
+    else:
+        prior_month = 12
+        prior_year = year - 1
+    
+    current = get_national_values(mdf.border_station.operating_country, year, month)
+    prior = get_national_values(mdf.border_station.operating_country, prior_year, prior_month)
+    
+    result = {
+        'label': mdf.border_station.operating_country.name + ' - National',
+        'month':{
+            'current':{'year':year,'month':MONTH_NAME[month]},
+            'prior':{'year':prior_year,'month':MONTH_NAME[prior_month]},
+        },
+        'intercepts':{
+            'current':current['intercepts'],
+            'prior':prior['intercepts'],
+            'trend': compute_trend(current['intercepts'], prior['intercepts'], None)
+        }
+    }
+    
+    for category in categories:
+        the_name = category_name(category)
+        result[the_name] = {
+            'current':{'local':current[category]['local'], 'USD':current[category]['USD']},
+            'prior':{'local':prior[category]['local'], 'USD':prior[category]['USD']},
+            'trend': compute_trend(current[category]['USD'], prior[category]['USD'], 20)
+        }
+    
+    return result
+
+def find_prior_mdf_for_project(mdf, project):
+    result = None
+    items = MdfItem.objects.filter(
+            work_project=project,
+            mdf__border_station=mdf.border_station,
+            mdf__month_year__lt=mdf.month_year
+        ).order_by('-mdf__month_year')
+    if len(items):
+        result = items[0].mdf
+        
+    requests = ProjectRequest.objects.filter(
+                project=project,
+                monthlydistributionform__border_station=mdf.border_station,
+                monthlydistributionform__month_year__lt=mdf.month_year
+            ).order_by('-monthlydistributionform__month_year')
+    
+    if len(requests):
+        # We have the request, but need to determine the mdf
+        mdfs = requests[0].monthlydistributionform_set.filter(
+            border_station=mdf.border_station,
+            month_year__lt=mdf.month_year
+            ).order_by('-month_year')
+        if len(mdfs) > 0:
+            if result is None or mdfs[0].month_year > result.month_year:
+                result = mdfs[0]
+    
+    return result
+
+def get_mdf_project_values(mdf, project):
+    full_request_categories = [
+        constants.STAFF_BENEFITS,
+        constants.RENT_UTILITIES,
+        constants.ADMINISTRATION,
+        constants.AWARENESS,
+        constants.TRAVEL,
+        constants.POTENTIAL_VICTIM_CARE
+    ]
+    impact_request_categories = [
+        constants.STAFF_BENEFITS,
+        constants.IMPACT_MULTIPLYING
+    ]
+
+    if (mdf.border_station == project):
+        request_categories = full_request_categories
+    else:
+        request_categories = impact_request_categories
+    
+    year = mdf.month_year.year
+    month = mdf.month_year.month
+    
+    if month > 1:
+        prior_month = month - 1
+        prior_year = year
+    else:
+        prior_month = 12
+        prior_year = year - 1
+    
+    exchange_entries = CountryExchange.objects.filter(country=mdf.border_station.operating_country, year_month__lte=year*100+month).order_by('-year_month')
+    if len(exchange_entries) > 0:
+        exchange = Decimal(exchange_entries[0].exchange_rate)
+    else:
+        exchange = Decimal(1.0)
+   
+    results = {}
+    interceptions = IntercepteeCommon.objects.filter(
+        interception_record__station=project,
+        interception_record__verified_date__year=prior_year,
+        interception_record__verified_date__month=prior_month,
+        person__role = 'PVOT'
+        ).exclude(interception_record__verified_evidence_categorization__startswith='Should not')
+    results['intercepts'] = len(interceptions)
+    
+    total = Decimal(0)
+    for category in request_categories:
+        subtotal = mdf.requests.filter(category=category, project=project).exclude(benefit_type_name='Deductions').aggregate(Sum('cost'))['cost__sum']
+        if subtotal is None:
+            subtotal = Decimal(0)
+        if category == constants.STAFF_BENEFITS:
+            deductions = mdf.requests.filter(category=category, project=project, benefit_type_name='Deductions').aggregate(Sum('cost'))['cost__sum']
+            if deductions is not None:
+                subtotal -= deductions
+        if subtotal is None:
+            subtotal = Decimal(0)
+        results[category] = {'local': subtotal, 'USD': round(subtotal/exchange,2)}
+        total += subtotal
+    
+    past_sent = mdf.mdfitem_set.filter(category=constants.PAST_MONTH_SENT, work_project=project).aggregate(Sum('cost'))['cost__sum']
+    if past_sent is None:
+        past_sent = Decimal(0)
+    results[constants.PAST_MONTH_SENT] = {'local': past_sent, 'USD': round(past_sent/exchange,2)}
+    total += past_sent
+    
+    subtotal = mdf.mdfitem_set.filter(category=constants.MONEY_NOT_SPENT, work_project=project, deduct='Yes').aggregate(Sum('cost'))['cost__sum']
+    if subtotal is None:
+        subtotal = Decimal(0)
+    results[constants.MONEY_NOT_SPENT] = {'local': subtotal, 'USD': round(subtotal/exchange,2)}
+    total -= subtotal
+    
+    results['Total'] = {'local':total, 'USD':round(total/exchange,2)}
+    distribution = total - past_sent
+    results['Distribution'] = {'local':distribution, 'USD':round(distribution/exchange,2)}
+    
+    
+    return results
+    
+def get_mdf_trend(mdf):
+    full_request_categories = [
+        constants.STAFF_BENEFITS,
+        constants.RENT_UTILITIES,
+        constants.ADMINISTRATION,
+        constants.AWARENESS,
+        constants.TRAVEL,
+        constants.POTENTIAL_VICTIM_CARE,
+        constants.PAST_MONTH_SENT,
+        constants.MONEY_NOT_SPENT,
+        'Total',
+        'Distribution'
+    ]
+    impact_request_categories = [
+        constants.STAFF_BENEFITS,
+        constants.IMPACT_MULTIPLYING,
+        constants.PAST_MONTH_SENT,
+        constants.MONEY_NOT_SPENT,
+        'Total',
+        'Distribution'
+    ]
+    results = {'projects':{},
+               'national': get_national_trend(mdf)}
+    
+    # find all projects in MDF
+    projects = []
+    for request in mdf.requests.all():
+        if request.project not in projects:
+            projects.append(request.project)
+        
+    for item in mdf.mdfitem_set.all():
+        if item.work_project not in projects:
+            project.append(request.project)
+    
+    
+    for project in projects:
+        prior_mdf = find_prior_mdf_for_project(mdf, project)
+        
+        current = get_mdf_project_values(mdf, project)
+        if prior_mdf is not None:
+            prior = get_mdf_project_values(prior_mdf, project)
+        else:
+            prior = None
+        
+        result = {
+            'month':{'current':{'year':mdf.month_year.year,'month':MONTH_NAME[mdf.month_year.month]}},
+            'intercepts':{'current':current['intercepts']}
+        }
+        if prior_mdf is not None:
+            result['month']['prior'] = {'year':prior_mdf.month_year.year,'month':MONTH_NAME[prior_mdf.month_year.month]}
+            result['intercepts']['prior'] = prior['intercepts']
+            result['intercepts']['trend'] = compute_trend (current['intercepts'], prior['intercepts'], None)
+        else:
+            result['month']['prior'] = {'year':'','month':''}
+            result['intercepts']['prior'] = ''
+            result['intercepts']['trend'] = 0
+            
+        if mdf.border_station == project:
+            request_categories = full_request_categories
+        else:
+            request_categories = impact_request_categories
+        
+        for category in request_categories:
+            if category ==  constants.MONEY_NOT_SPENT:
+                the_name = 'Money Not Spent (To Deduct)'
+            else:
+                the_name = category_name(category)
+            if category in current:
+                result[the_name] = {'current':{'local':current[category]}}
+                if prior_mdf is not None:
+                    result[the_name]['prior'] = prior[category]
+                    result[the_name]['trend'] = compute_trend(current[category]['USD'], prior[category]['USD'], 20)
+                else:
+                    result[the_name]['prior'] = {'local':'', 'USD':''}
+                    result[the_name]['trend'] = 0
+        
+        results['projects'][project.id] = result
+    
+    return results    
+    
 
 class MdfCombinedViewSet(viewsets.ModelViewSet):
     queryset = MdfCombined.objects.all()
@@ -265,8 +631,31 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
         pdf_url = settings.SITE_DOMAIN + reverse('MdfPdf', kwargs={"uuid": budget.mdf_uuid})
 
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data, "national_staff_members": national_staff_serializer.data, "pdf_url": pdf_url})
-            
-                
+    
+    def get_trend(self, request, pk):
+        mdf = MonthlyDistributionForm.objects.get(pk=pk)
+        result = get_mdf_trend(mdf)
+        return Response(result)
+    
+    def save_file(self, file_obj, subdirectory):
+        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        
+        return  subdirectory + file_obj.name
+    
+    def put_attachment(self, request, pk):
+        mdf = MonthlyDistributionForm.objects.get(pk=pk)
+        
+        if 'attachment_file' in request.data:
+            file_obj = request.data['attachment_file']
+            pbs_file = self.save_file(file_obj, 'pbs_attachments/')
+            mdf.signed_pbs = pbs_file
+            print(pbs_file)
+            mdf.save()
+            return Response(pbs_file)
+        else:
+            return Response('', status=status.HTTP_400_BAD_REQUEST)
                 
 class MdfItemViewSet(viewsets.ModelViewSet):
     queryset = MdfItem.objects.all()
@@ -276,6 +665,7 @@ class MdfItemViewSet(viewsets.ModelViewSet):
     search_fields = ['description']
     ordering_fields = ['category', 'description', 'work_project']
     ordering = ['work_project']
+
         
         
         
