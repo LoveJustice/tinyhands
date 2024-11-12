@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import (
     GradientBoostingRegressor,
     RandomForestRegressor,
@@ -13,20 +13,13 @@ from sklearn.impute import SimpleImputer
 from sklearn.feature_selection import RFE
 from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error, r2_score
-from scipy.stats import spearmanr, uniform, randint
+from scipy.stats import uniform, randint
 import libraries.model_tools as mt
 import libraries.claude_prompts as cp
-
 import datetime
 import uuid
 
-
 DATA_COLUMNS = cp.RED_FLAGS
-
-
-def get_scored_adverts():
-    query = """MATCH (posting:Posting) WHERE posting.monitor_score IS NOT NULL RETURN ID(posting) AS IDn, posting.post_id AS post_id, posting.monitor_score AS monitor_score"""
-    pass
 
 
 def load_and_preprocess_data(file_path):
@@ -42,90 +35,11 @@ def load_and_preprocess_data(file_path):
     model_data = model_data.replace(mapping)
     for col in DATA_COLUMNS:
         model_data[col] = pd.to_numeric(model_data[col], errors="coerce")
-
-        # Now, you can identify and handle NaN values
         non_numeric_entries = model_data[model_data[col].isna()]
         model_data = model_data.dropna(subset=[col])
         model_data[col] = model_data[col].astype(int)
 
     return model_data, model_data["monitor_score"]
-
-
-def create_model_pipeline():
-    """
-    Create a simple model pipeline with polynomial features and gradient boosting regressor.
-    """
-    return Pipeline(
-        [
-            (
-                "features",
-                ColumnTransformer(
-                    [
-                        ("num", SimpleImputer(strategy="mean"), DATA_COLUMNS),
-                        (
-                            "poly",
-                            PolynomialFeatures(degree=2, include_bias=False),
-                            DATA_COLUMNS,
-                        ),
-                    ]
-                ),
-            ),
-            ("regressor", GradientBoostingRegressor(random_state=42)),
-        ]
-    )
-
-
-def train_and_evaluate_model(X, y, pipeline):
-    """
-    Train the model and evaluate it on train and test data.
-    """
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-
-    pipeline.fit(X_train, y_train)
-
-    y_pred_train = pipeline.predict(X_train)
-    y_pred_test = pipeline.predict(X_test)
-
-    train_mse = mean_squared_error(y_train, y_pred_train)
-    test_mse = mean_squared_error(y_test, y_pred_test)
-    train_r2 = r2_score(y_train, y_pred_train)
-    test_r2 = r2_score(y_test, y_pred_test)
-
-    print(f"Train MSE: {train_mse:.4f}, Test MSE: {test_mse:.4f}")
-    print(f"Train R2: {train_r2:.4f}, Test R2: {test_r2:.4f}")
-
-    return pipeline, X_test, y_test
-
-
-def tune_hyperparameters(pipeline, X, y):
-    """
-    Tune the hyperparameters of the model pipeline.
-    """
-    param_distributions = {
-        "regressor__gb__n_estimators": randint(100, 500),
-        "regressor__gb__learning_rate": uniform(0.01, 0.3),
-        "regressor__gb__max_depth": randint(3, 10),
-        "regressor__gb__min_samples_split": randint(2, 20),
-        "regressor__gb__min_samples_leaf": randint(1, 10),
-    }
-
-    random_search = RandomizedSearchCV(
-        pipeline,
-        param_distributions=param_distributions,
-        n_iter=100,
-        cv=5,
-        scoring="neg_mean_squared_error",
-        n_jobs=-1,
-        random_state=42,
-    )
-    random_search.fit(X, y)
-
-    print("Best parameters:", random_search.best_params_)
-    print("Best cross-validation score:", -random_search.best_score_)
-
-    return random_search.best_estimator_
 
 
 def create_advanced_pipeline():
@@ -138,16 +52,6 @@ def create_advanced_pipeline():
                 "features",
                 ColumnTransformer(
                     [
-                        # (
-                        #     "num",
-                        #     Pipeline(
-                        #         [
-                        #             ("imputer", SimpleImputer(strategy="mean")),
-                        #             ("scaler", StandardScaler()),
-                        #         ]
-                        #     ),
-                        #     DATA_COLUMNS,
-                        # ),
                         (
                             "poly",
                             PolynomialFeatures(degree=2, include_bias=False),
@@ -174,56 +78,118 @@ def create_advanced_pipeline():
     )
 
 
+def find_best_hyperparameters(X, y):
+    """
+    Find the best hyperparameters using cross-validation on the entire dataset.
+    """
+    pipeline = create_advanced_pipeline()
+
+    param_distributions = {
+        "regressor__gb__n_estimators": randint(100, 500),
+        "regressor__gb__learning_rate": uniform(0.01, 0.3),
+        "regressor__gb__max_depth": randint(3, 10),
+        "regressor__gb__min_samples_split": randint(2, 20),
+        "regressor__gb__min_samples_leaf": randint(1, 10),
+        "regressor__rf__n_estimators": randint(100, 500),
+        "regressor__rf__max_depth": randint(3, 10),
+        "regressor__final_estimator__C": uniform(0.1, 10),
+        "regressor__final_estimator__epsilon": uniform(0.01, 0.1),
+    }
+
+    print("Starting hyperparameter optimization...")
+    random_search = RandomizedSearchCV(
+        pipeline,
+        param_distributions=param_distributions,
+        n_iter=100,
+        cv=5,
+        scoring="neg_mean_squared_error",
+        n_jobs=-1,
+        random_state=42,
+        verbose=1,
+    )
+
+    random_search.fit(X, y)
+
+    print("\nBest parameters found:")
+    for param, value in random_search.best_params_.items():
+        print(f"{param}: {value}")
+    print(f"\nBest cross-validation MSE: {-random_search.best_score_:.4f}")
+
+    return random_search.best_params_
+
+
+def train_final_model(X, y, best_params):
+    """
+    Train the final model on the entire dataset using the best hyperparameters.
+    """
+    print("\nTraining final model on entire dataset...")
+
+    final_pipeline = create_advanced_pipeline()
+
+    # Set the best parameters
+    for param, value in best_params.items():
+        param_path = param.split("__")
+        current = final_pipeline.named_steps["regressor"]
+        for path_part in param_path[1:-1]:
+            if path_part in ["gb", "rf"]:
+                current = dict(current.estimators)[path_part]
+            elif path_part == "final_estimator":
+                current = current.final_estimator
+        setattr(current, param_path[-1], value)
+
+    # Fit the model on the entire dataset
+    final_pipeline.fit(X, y)
+
+    # Calculate in-sample performance metrics
+    y_pred = final_pipeline.predict(X)
+    mse = mean_squared_error(y, y_pred)
+    r2 = r2_score(y, y_pred)
+
+    print(f"\nFinal model performance on full dataset:")
+    print(f"MSE: {mse:.4f}")
+    print(f"R²: {r2:.4f}")
+
+    return final_pipeline
+
+
 def main():
+    """
+    Main function to run the optimized advanced pipeline.
+    """
     file_path = "results/advert_flags.csv"
-    # all_advert_flags = pd.read_csv(file_path)
+    print("Loading and preprocessing data...")
     advert_flags, y = load_and_preprocess_data(file_path)
     X = advert_flags[DATA_COLUMNS]
-    # advert_flags = all_advert_flags[
-    #     ~(
-    #         (all_advert_flags["monitor_score"] == "unknown")
-    #         | all_advert_flags["monitor_score"].isnull()
-    #         | (all_advert_flags["monitor_score"] == "['error']")
-    #     )
-    # ]
 
-    # Create the results DataFrame
-    results = pd.DataFrame(
-        columns=["advert", "group_id", "IDn", "monitor_score", "test_train"],
-        index=advert_flags.index,
-    )
+    # Find best hyperparameters using cross-validation
+    best_params = find_best_hyperparameters(X, y)
 
-    advanced_pipeline = create_advanced_pipeline()
+    # Train final model on entire dataset using best parameters
+    final_model = train_final_model(X, y, best_params)
 
-    # Hyperparameter tuning
-    best_advanced_pipeline = tune_hyperparameters(advanced_pipeline, X, y)
-
-    # Train and evaluate model
-    trained_pipeline, X_test, y_test = train_and_evaluate_model(
-        X, y, best_advanced_pipeline
-    )
-    # mt.generate_unique_filename(prefix="redflag_model")
-    # Save the trained model
-    unique_model_filename = mt.generate_unique_filename(prefix="redflag_model")
-    mt.save_model(trained_pipeline, unique_model_filename)
-
-    # Make predictions on the entire dataset
-    advert_flags["model_predictions"] = trained_pipeline.predict(
+    # Generate predictions for all data
+    print("\nGenerating predictions...")
+    advert_flags["model_predictions"] = final_model.predict(
         advert_flags[DATA_COLUMNS].replace({"yes": 1, "no": 0})
     )
 
-    # Populate the results DataFrame
-    results["advert"] = advert_flags["advert"]
-    results["group_id"] = advert_flags["group_id"]
-    results["IDn"] = advert_flags["IDn"]
-    results["monitor_score"] = advert_flags["monitor_score"]
-    results["test_train"] = "train"
-    results.loc[results.index.isin(X_test.index), "test_train"] = "test"
-    results = results.set_index("IDn").loc[advert_flags["IDn"]].reset_index()
-    results["model_predictions"] = advert_flags["model_predictions"]
-    # advert_flags.to_csv("results/all_advert_flags.csv", index=False)
+    # Create results DataFrame
+    results = pd.DataFrame(
+        {
+            "advert": advert_flags["advert"],
+            "group_id": advert_flags["group_id"],
+            "IDn": advert_flags["IDn"],
+            "monitor_score": advert_flags["monitor_score"],
+            "model_predictions": advert_flags["model_predictions"],
+        }
+    )
 
-    # Save the results
+    # Save model using model_tools
+    unique_model_filename = mt.generate_unique_filename(prefix="redflag_model")
+    print(f"\nSaving model as {unique_model_filename}")
+    mt.save_model(final_model, unique_model_filename)
+
+    # Save results
     unique_results_filename = mt.generate_unique_filename(
         prefix="redflag_model_result", extension="csv"
     )

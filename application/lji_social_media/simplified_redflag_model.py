@@ -190,14 +190,14 @@ def main():
     unique_id = uuid.uuid4().hex[:8]
 
     # Save model
-    model_filename = f"models/final_redflag_model_{timestamp}_{unique_id}.pkl"
+    model_filename = f"models/simplified_redflag_model_{timestamp}_{unique_id}.pkl"
     print(f"\nSaving model as {model_filename}")
     with open(model_filename, "wb") as f:
         pickle.dump(final_model, f)
 
     # Save results
     results_filename = (
-        f"results/final_redflag_model_results_{timestamp}_{unique_id}.csv"
+        f"results/simplified_redflag_model_results_{timestamp}_{unique_id}.csv"
     )
     print(f"Saving results as {results_filename}")
     results.to_csv(results_filename, index=False)
