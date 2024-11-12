@@ -35,6 +35,74 @@ MEMORY = ChatMemoryBuffer.from_defaults(token_limit=4096)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
 
 
+red_flags = [
+    "assure_prompt",
+    "bypass_prompt",
+    "callback_request_prompt",
+    "drop_off_at_secure_location_prompt",
+    "false_organization_prompt",
+    "gender_specific_prompt",
+    "illegal_activities_prompt",
+    "immediate_hiring_prompt",
+    "language_switch_prompt",
+    "multiple_provinces_prompt",
+    "no_education_skilled_prompt",
+    "no_location_prompt",
+    "overseas_prompt",
+    "quick_money_prompt",
+    "recruit_students_prompt",
+    "requires_references",
+    "suspicious_email_prompt",
+    "target_specific_group_prompt",
+    "unprofessional_writing_prompt",
+    "unrealistic_hiring_number_prompt",
+    "unusual_hours_prompt",
+    "vague_description_prompt",
+]
+
+
+def analyze_dataframe(df):
+    """
+    Analyze a dataframe to:
+    1. Count NaN values by column
+    2. Count 'yes' and 'no' occurrences
+    3. Filter for columns containing only 'yes' or 'no' and remove rows with NaN values
+
+    Parameters:
+    df (pandas.DataFrame): Input DataFrame
+
+    Returns:
+    tuple: (nan_counts, yes_no_counts, binary_df)
+    """
+    # 1. Count NaN values by column
+    nan_counts = df.isna().sum()
+
+    # 2. Count 'yes' and 'no' occurrences for each column
+    yes_no_counts = {}
+    for column in df.columns:
+        value_counts = df[column].str.lower().value_counts()
+        if "yes" in value_counts or "no" in value_counts:
+            yes_no_counts[column] = {
+                "yes": value_counts.get("yes", 0),
+                "no": value_counts.get("no", 0),
+            }
+
+    # 3. Filter for columns containing only 'yes' or 'no'
+    def is_binary_column(series):
+        # Convert to lowercase and remove NaN values
+        clean_series = series.str.lower().dropna()
+        unique_values = set(clean_series.unique())
+        return unique_values.issubset({"yes", "no"})
+
+    binary_columns = [col for col in df.columns if is_binary_column(df[col])]
+    binary_df = df[binary_columns].copy()
+
+    # Remove rows where any column contains NaN values
+    binary_df = binary_df.dropna(how="any")
+
+    return nan_counts, yes_no_counts, binary_df
+
+
 def extract_json_from_code_block(text):
     # Find the JSON content between the code block markers
     start = text.find("```json\n") + 8  # 8 is the length of '```json\n'
@@ -217,14 +285,14 @@ RETURN posting.text AS advert, ID(group) AS group_id, ID(posting) AS IDn, postin
 # flags = execute_neo4j_query(flag_query, parameters={})
 
 df = pd.DataFrame(nl.execute_neo4j_query(flag_query, parameters={}))
-
+# df = df[["advert", "group_id", "IDn", "monitor_score", "flag"]+red_flags]
 duplicates = df.duplicated(
     subset=["advert", "group_id", "IDn", "monitor_score", "flag"], keep=False
 )
 duplicate_rows = df[duplicates].sort_values(
     by=["advert", "group_id", "IDn", "monitor_score", "flag"]
 )
-
+list(duplicate_rows["flag"].unique())
 print("Duplicate rows:")
 print(duplicate_rows)
 # Perform the pivot operation with multiple index columns
@@ -249,9 +317,29 @@ column_order = ["advert", "group_id", "IDn", "monitor_score"] + [
 ]
 flags = flags[column_order]
 
-flags.to_csv("results/advert_flags.csv", index=False)
-list(flags)
+flags[["advert", "group_id", "IDn", "monitor_score"] + red_flags].to_csv(
+    "results/advert_flags.csv", index=False
+)
 
+
+# Run analysis
+nan_counts, yes_no_counts, binary_df = analyze_dataframe(flags[red_flags])
+model_data = flags[
+    (flags["monitor_score"] != "unknown") & (~flags["monitor_score"].isna())
+]
+nan_counts, yes_no_counts, binary_df = analyze_dataframe(model_data[red_flags])
+# Print results
+print("NaN counts by column:")
+print(nan_counts)
+print("\nYes/No counts by column:")
+for col, counts in yes_no_counts.items():
+    print(f"{col}: {counts}")
+print("\nColumns with only yes/no values:")
+print(binary_df)
+
+
+list(flags)
+# --------------------------------------------------------------------------------
 confidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 RETURN ID(posting) AS id, r.type as flag, analysis.confidence as confidence """
 
@@ -260,7 +348,8 @@ confidence = (
     .pivot(index="id", columns="flag", values="confidence")
     .reset_index()
 )
-confidence.to_csv("results/advert_confidence.csv", index=False)
+
+confidence[["id"] + red_flags].to_csv("results/advert_confidence.csv", index=False)
 
 # ============================================================================================
 evidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
@@ -271,7 +360,7 @@ evidence = (
     .pivot(index="id", columns="flag", values="evidence")
     .reset_index()
 )
-evidence.to_csv("results/advert_evidence.csv", index=False)
+evidence[["id"] + red_flags].to_csv("results/advert_evidence.csv", index=False)
 # ============================================================================================
 explanation_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 RETURN ID(posting) AS id, r.type as flag, analysis.explanation as explanation """
@@ -282,7 +371,7 @@ explanation = (
     .pivot(index="id", columns="flag", values="explanation")
     .reset_index()
 )
-explanation.to_csv("results/advert_explanation.csv", index=False)
+explanation[["id"] + red_flags].to_csv("results/advert_explanation.csv", index=False)
 # flags = execute_neo4j_query(flag_query, parameters={})
 
 verify_analyis_existence(572527, "target_specific_group_prompt")

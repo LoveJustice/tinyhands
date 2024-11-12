@@ -105,3 +105,28 @@ prompts = [
     "vague_description_prompt",
     "assure_prompt",
 ]
+
+RED_FLAGS = [
+    "assure_prompt",
+    "bypass_prompt",
+    "callback_request_prompt",
+    "drop_off_at_secure_location_prompt",
+    "false_organization_prompt",
+    "gender_specific_prompt",
+    "illegal_activities_prompt",
+    "immediate_hiring_prompt",
+    "language_switch_prompt",
+    "multiple_provinces_prompt",
+    "no_education_skilled_prompt",
+    "no_location_prompt",
+    "overseas_prompt",
+    "quick_money_prompt",
+    "recruit_students_prompt",
+    "requires_references",
+    "suspicious_email_prompt",
+    "target_specific_group_prompt",
+    "unprofessional_writing_prompt",
+    "unrealistic_hiring_number_prompt",
+    "unusual_hours_prompt",
+    "vague_description_prompt",
+]

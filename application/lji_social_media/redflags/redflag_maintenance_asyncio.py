@@ -9,11 +9,8 @@ import pandas as pd
 import json
 import re
 from typing import Any, List, Dict, Optional
-from openai import RateLimitError
-
-# from openai.error import RateLimitError
+from openai import RateLimitError  # Correct import
 import backoff
-
 
 # Add the parent directory of both redflags and libraries to sys.path
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -44,12 +41,6 @@ asyncio.set_event_loop(loop)
 
 # Semaphore for Neo4j connections
 neo4j_semaphore = asyncio.Semaphore(8)
-# Model and memory configurations
-llm = Ollama(
-    model="llama3.1:latest", temperature=0, max_tokens=64768, request_timeout=120.0
-)
-llm = OpenAI(temperature=0, model="o1-mini", request_timeout=120.0)
-MEMORY = ChatMemoryBuffer.from_defaults(token_limit=8192)
 
 
 # Utility functions
@@ -95,14 +86,28 @@ def delete_analysis(IDn: int, prompt_name: str) -> None:
     logger.info(f"Deleted existing analysis for IDn: {IDn}, prompt: {prompt_name}")
 
 
+def get_llm(prompt_name: str) -> Any:
+    # if prompt_name == "assure_prompt":
+    #     return Ollama(
+    #         model="llama3.1:latest",
+    #         temperature=0,
+    #         max_tokens=64768,
+    #         request_timeout=120.0,
+    #     )
+
+    return OpenAI(temperature=0, model="gpt-4o-mini", request_timeout=120.0)
+
+
 @backoff.on_exception(backoff.expo, RateLimitError)
-def create_chat_engine(advert: str) -> Optional[Any]:
+def create_chat_engine(
+    advert: str, memory: ChatMemoryBuffer, llm_instance: Any
+) -> Optional[Any]:
     documents = [Document(text=advert)]
     index = VectorStoreIndex.from_documents(documents)
     return index.as_chat_engine(
         chat_mode="context",
-        llm=llm,
-        memory=MEMORY,
+        llm=llm_instance,
+        memory=memory,
         system_prompt=(
             "As a career forensic analyst, you have deep insight into crime "
             "and criminal activity, especially human trafficking. Investigate "
@@ -116,33 +121,41 @@ def create_chat_engine(advert: str) -> Optional[Any]:
 
 async def process_advert_async(IDn: int, prompt_name: str) -> None:
     try:
-        async with neo4j_semaphore:
-            # Get advert
-            advert = await loop.run_in_executor(None, nl.get_neo4j_advert, IDn)
-            if not advert:
-                logger.error(f"Failed to get advert for IDn: {IDn}")
-                return
+        # 1. Get advert - synchronously
+        advert = nl.get_neo4j_advert(IDn)  # Direct sync call
+        if not advert:
+            logger.error(f"Failed to get advert for IDn: {IDn}")
+            return
+        logger.info(f"Successfully got advert for IDn: {IDn}")
 
-            # Create chat engine
-            chat_engine = create_chat_engine(advert)
-            if not chat_engine:
-                logger.error(f"Failed to create chat engine for IDn: {IDn}")
-                return
+        # 2. Setup analysis tools - this can stay async
+        llm_instance = get_llm(prompt_name)
+        logger.info(f"Created LLM instance for IDn: {IDn}")
 
-            # Analyze advert
-            try:
-                response = await loop.run_in_executor(
-                    None, lf.analyse_advert, chat_engine, advert, prompt_name
-                )
-                if response:
-                    await loop.run_in_executor(
-                        None, nl.write_analysis_to_neo4j, IDn, prompt_name, response
-                    )
-                    logger.info(f"Successfully processed IDn: {IDn}")
-            except Exception as e:
-                logger.error(f"Error processing IDn {IDn}: {str(e)}")
+        memory = ChatMemoryBuffer.from_defaults(token_limit=8192)
+        chat_engine = await loop.run_in_executor(
+            None, create_chat_engine, advert, memory, llm_instance
+        )
+        if not chat_engine:
+            logger.error(f"Failed to create chat engine for IDn: {IDn}")
+            return
+        logger.info(f"Created chat engine for IDn: {IDn}")
+
+        # 3. Do the analysis - this can stay async
+        response = await loop.run_in_executor(
+            None, lf.analyse_advert, chat_engine, advert, prompt_name
+        )
+        if response.result == "error":
+            logger.error(f"Analysis failed for IDn {IDn}: {response.explanation}")
+            return
+        logger.info(f"Got analysis response for IDn: {IDn}")
+
+        # 4. Write results - synchronously
+        nl.write_analysis_to_neo4j(IDn, prompt_name, response)  # Direct sync call
+        logger.info(f"Successfully processed IDn: {IDn}")
+
     except Exception as e:
-        logger.error(f"Outer error processing IDn {IDn}: {str(e)}")
+        logger.error(f"Error processing IDn {IDn}: {str(e)}")
 
 
 async def process_batch_async(adverts: pd.DataFrame, prompt_name: str) -> None:
@@ -152,7 +165,7 @@ async def process_batch_async(adverts: pd.DataFrame, prompt_name: str) -> None:
 
     tasks = []
     for IDn in adverts["IDn"]:
-        task = loop.create_task(process_advert_async(IDn, prompt_name))
+        task = asyncio.create_task(process_advert_async(IDn, prompt_name))
         tasks.append(task)
 
     logger.info(f"Processing {len(tasks)} adverts for prompt: {prompt_name}")
@@ -176,23 +189,34 @@ def query_adverts(prompt_name: str) -> pd.DataFrame:
     return pd.DataFrame(result)
 
 
-def main():
-    prompt_names = [
-        "recruit_students_prompt",
-        "gender_specific_prompt",
-        "vague_description_prompt",
-        "assure_prompt",
-    ]
+async def main_async():
+    prompt_names = cp.RED_FLAGS
 
+    for prompt_name in prompt_names:
+        adverts = query_adverts(prompt_name)
+        if not adverts.empty:
+            await process_batch_async(adverts, prompt_name)
+        else:
+            logger.info(f"No adverts to process for prompt: {prompt_name}")
+
+
+def main():
     try:
-        for prompt_name in prompt_names:
-            adverts = query_adverts(prompt_name)
-            if not adverts.empty:
-                loop.run_until_complete(process_batch_async(adverts, prompt_name))
-            else:
-                logger.info(f"No adverts to process for prompt: {prompt_name}")
+        loop.run_until_complete(main_async())
+    except Exception as e:
+        logger.error(f"Error in main: {e}")
     finally:
-        loop.close()
+        # Cancel all pending tasks
+        pending = asyncio.all_tasks(loop=loop)
+        for task in pending:
+            task.cancel()
+        try:
+            loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+        except Exception as e:
+            logger.error(f"Error during loop shutdown: {e}")
+        finally:
+            loop.close()
+            logger.info("Event loop closed successfully.")
 
 
 if __name__ == "__main__":

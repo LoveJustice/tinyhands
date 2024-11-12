@@ -15,36 +15,13 @@ from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error, r2_score
 from scipy.stats import spearmanr, uniform, randint
 import libraries.model_tools as mt
+import libraries.claude_prompts as cp
 
 import datetime
 import uuid
 
 
-DATA_COLUMNS = [
-    "assure_prompt",
-    "bypass_prompt",
-    "callback_request_prompt",
-    "false_organization_prompt",
-    "gender_specific_prompt",
-    "illegal_activities_prompt",
-    "immediate_hiring_prompt",
-    "language_switch_prompt",
-    # "multiple_applicants_prompt",
-    # "multiple_jobs_prompt",
-    "multiple_provinces_prompt",
-    "no_education_skilled_prompt",
-    "no_location_prompt",
-    "quick_money_prompt",
-    "recruit_students_prompt",
-    # "requires_references",
-    "suspicious_email_prompt",
-    "target_specific_group_prompt",
-    "unprofessional_writing_prompt",
-    "unrealistic_hiring_number_prompt",
-    "unusual_hours_prompt",
-    "vague_description_prompt",
-    "wrong_link_prompt",
-]
+DATA_COLUMNS = cp.RED_FLAGS
 
 
 def get_scored_adverts():

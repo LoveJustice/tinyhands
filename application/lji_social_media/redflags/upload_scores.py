@@ -1,5 +1,8 @@
 import pandas as pd
 from libraries.neo4j_lib import execute_neo4j_query
+import os
+
+os.getcwd()
 
 
 def count_nodes_with_monitor_score():
@@ -9,7 +12,8 @@ def count_nodes_with_monitor_score():
 
 
 # Read and process the CSV file
-adverts = pd.read_csv("data/adverts_round1.csv")
+adverts = pd.read_csv("data/adverts_scores_round2.csv")
+list(adverts)
 columns = [
     "IDn",
     "advert",
