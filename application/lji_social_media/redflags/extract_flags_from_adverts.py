@@ -339,6 +339,8 @@ print(binary_df)
 
 
 list(flags)
+model_data.to_csv("results/advert_flags.csv", index=False)
+
 # --------------------------------------------------------------------------------
 confidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 RETURN ID(posting) AS id, r.type as flag, analysis.confidence as confidence """

@@ -652,51 +652,97 @@ def main():
     st.title("Facebook Advert Pages")
     st.write("This tool helps you investigate Facebook advert pages.")
     st.write(f"The webrowser should be on {st.session_state['driver'].current_url}")
+    # Store selected_post_IDn in session state for access across the app
+    if "selected_post_IDn" not in st.session_state:
+        st.session_state["selected_post_IDn"] = None
 
-    st.selectbox(
-        "Select an advert:",
-        st.session_state["group_adverts"]["post_url"],
-        key="selected_advert",
-    )
+    try:
+        # Configure grid options
+        gb = GridOptionsBuilder.from_dataframe(st.session_state["group_adverts"])
 
-    st.write("**Adverts with AgGrid:**")
+        # Dynamically configure all columns
+        for col in st.session_state["group_adverts"].columns:
+            # Convert column name to more readable header
+            header_name = col.replace("_", " ").title()
 
-    # Configure AgGrid options
-    gb = GridOptionsBuilder.from_dataframe(st.session_state["group_adverts"])
-    gb.configure_selection("single")  # Enable single row selection
-    grid_options = gb.build()
-
-    # Display the grid
-    grid_response = AgGrid(
-        st.session_state["group_adverts"],
-        gridOptions=grid_options,
-        update_mode="SELECTION_CHANGED",
-        theme="streamlit",  # Other themes: 'light', 'dark', 'blue', etc.
-        enable_enterprise_modules=False,
-        height=200,
-        fit_columns_on_grid_load=True,
-    )
-
-    # Get selected row
-    # Get selected row(s)
-    if grid_response["selected_rows"] is not None:
-        selected_row = grid_response["selected_rows"]
-        st.write("**You selected:**")
-        st.write(selected_row)
-        selected_post_url = selected_row["post_url"].values[0]
-        selected_post_IDn = selected_row["IDn"].values[0]
-        st.write(selected_post_url)
-        st.write(f"You selected the advert with IDn: {selected_post_IDn}")
-
-        if st.button("Go to selected advert"):
-            st.session_state["driver"].get(selected_post_url)
-            time.sleep(5)
-            st.session_state["post_id"] = sp.extract_post_id(
-                st.session_state["driver"].current_url
+            # Configure each column with appropriate settings
+            gb.configure_column(
+                col,
+                header_name=header_name,
+                sortable=True,
+                filterable=True,
+                # Set width based on content type
+                width=350 if "url" in col.lower() or "advert" in col.lower() else 150,
             )
-            if not st.session_state["post_id"]:
-                st.error("Could not extract post ID from the current URL.")
-                return
+
+        # Configure selection
+        gb.configure_selection("single", use_checkbox=True)
+        gb.configure_grid_options(domLayout="normal")
+        grid_options = gb.build()
+
+        # Display the grid
+        grid_response = AgGrid(
+            st.session_state["group_adverts"],
+            gridOptions=grid_options,
+            update_mode="SELECTION_CHANGED",
+            height=400,
+            fit_columns_on_grid_load=True,
+            allow_unsafe_jscode=True,
+            theme="streamlit",
+        )
+
+        # Handle selection
+        if grid_response["selected_rows"]:
+            selected_row = grid_response["selected_rows"][0]
+
+            # Show selection details
+            st.write("**Selected Advertisement:**")
+            st.json(selected_row)
+
+            # Create columns for buttons
+            col1, col2 = st.columns(2)
+
+            with col1:
+                if st.button("Go to Selected Advert"):
+                    with st.spinner("Navigating to advertisement..."):
+                        try:
+                            st.session_state["driver"].get(selected_row["post_url"])
+                            time.sleep(5)
+                            st.session_state["post_id"] = sp.extract_post_id(
+                                st.session_state["driver"].current_url
+                            )
+                            if not st.session_state["post_id"]:
+                                st.error("Could not extract post ID from the URL.")
+                            else:
+                                st.success(
+                                    f"Navigated to post ID: {st.session_state['post_id']}"
+                                )
+                        except Exception as e:
+                            st.error(f"Navigation error: {str(e)}")
+
+            with col2:
+                if st.button("Show Advert Details"):
+                    # Dynamically display all fields except URL
+                    for field, value in selected_row.items():
+                        if "url" not in field.lower():
+                            st.write(f"{field.replace('_', ' ').title()}: {value}")
+
+    except Exception as e:
+        st.error(f"Error setting up or displaying grid: {str(e)}")
+        st.write("Exception details:", e)
+
+    # Separate section for general actions
+    st.markdown("---")
+    st.subheader("Advertisement Actions")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Take snapshot and upload to Neo4J"):
+            snapshot()
+
+        if st.button("Extract advert content"):
+            advert_text = extract_advert_content()
+            advert_detail = sp.find_advert_poster()
 
         if st.button("Take snapshot and upload to Neo4J"):
             snapshot()
@@ -721,14 +767,17 @@ def main():
             else:
                 st.write("No advertisement content found.")
 
-        if st.button("Extract comments"):
-            comments = parse_fb_comments()
-            for comment in comments:
-                st.write(comment)
+        with col2:
+            if st.button("Extract comments"):
+                comments = parse_fb_comments()
+                for comment in comments:
+                    st.write(comment)
 
-        st.title("CLAUDE Image Extractor and Analyzer")
+        # Image analysis section
+        st.markdown("---")
+        st.subheader("Image Analysis")
 
-        if st.button("CLAUDE Analyze extract info from images"):
+        if st.button("Extract and Analyze Images"):
             analyze_images()
 
         if st.button("Extract image URLs"):
@@ -827,17 +876,20 @@ def main():
                 )
                 st.write(st.session_state["analysis_result"])
 
-            if "analysis_result" in st.session_state:
-                st.write(st.session_state["analysis_result"])
-                if st.button(f"Upload analysis results to Neo4J"):
-                    create_image_url_relationships(
-                        selected_post_IDn, st.session_state["analysis_result"]
-                    )
+            if (
+                "selected_img" in st.session_state
+                and st.session_state["selected_img"] is not None
+                and st.session_state.get("selected_post_IDn")
+            ):
+                if "analysis_result" in st.session_state:
+                    if st.button("Upload analysis results to Neo4J"):
+                        create_image_url_relationships(
+                            st.session_state["selected_post_IDn"],
+                            st.session_state["analysis_result"],
+                        )
 
         else:
             st.write("No img selected.")
-    else:
-        st.write("No row selected.")
 
 
 if __name__ == "__main__":
