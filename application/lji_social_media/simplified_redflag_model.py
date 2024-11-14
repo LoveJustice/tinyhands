@@ -241,23 +241,39 @@ def evaluate_model(model, X, y, dataset_name=""):
 
 
 def save_detailed_holdout_results(
-    model, holdout_data, full_data, predictions, model_id
+    model, holdout_data, y_holdout, predictions, model_id
 ):
     """
     Save detailed holdout results including all features and predictions.
+
+    Parameters:
+    -----------
+    model : sklearn Pipeline
+        The trained model
+    holdout_data : DataFrame
+        The holdout feature data
+    y_holdout : Series
+        The actual target values for holdout data
+    predictions : array-like
+        Model predictions for holdout data
+    model_id : str
+        Unique identifier for the model
     """
     # Create results DataFrame with all required columns
     results_df = pd.DataFrame()
-    results_df["IDn"] = holdout_data.index  # Assuming IDn is the index
+
+    # Add IDn if it exists in holdout_data
+    if "IDn" in holdout_data.columns:
+        results_df["IDn"] = holdout_data["IDn"]
+    elif isinstance(holdout_data.index, pd.Index):
+        results_df["IDn"] = holdout_data.index
 
     # Add all feature columns
     for col in DATA_COLUMNS:
         results_df[col] = holdout_data[col]
 
     # Add actual and predicted scores
-    results_df["actual_monitor_score"] = full_data.loc[
-        holdout_data.index, "monitor_score"
-    ]
+    results_df["actual_monitor_score"] = y_holdout
     results_df["predicted_score"] = predictions
 
     # Add model identifier
@@ -266,6 +282,7 @@ def save_detailed_holdout_results(
     # Save to CSV
     filename = f"results/holdout_predictions_{model_id}.csv"
     results_df.to_csv(filename, index=False)
+    print(f"\nSaved detailed holdout results to: {filename}")
     return filename
 
 
@@ -307,11 +324,12 @@ def main():
     )
 
     # Save detailed holdout results
+    # Save detailed holdout results
     holdout_predictions = initial_model.predict(splits["X_holdout"])
     holdout_file = save_detailed_holdout_results(
         initial_model,
         splits["X_holdout"],
-        splits["X_full"],  # Full dataset for reference
+        splits["y_holdout"],  # Pass y_holdout separately
         holdout_predictions,
         model_id,
     )
