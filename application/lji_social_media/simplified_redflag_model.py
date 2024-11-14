@@ -28,7 +28,7 @@ DATA_COLUMNS = cp.RED_FLAGS
 def load_splits(timestamp):
     """
     Load the train/holdout splits created by the data splitting script.
-    Ensures arrays are writeable for scikit-learn compatibility.
+    Ensures arrays are writeable and maintains DataFrame structure.
     """
     splits = {}
     for split_type in [
@@ -41,13 +41,17 @@ def load_splits(timestamp):
     ]:
         with open(f"data/splits/{split_type}_{timestamp}.pkl", "rb") as f:
             data = pickle.load(f)
-            # Convert to numpy array and ensure it's writeable
+            print(f"\nDEBUG: Loading {split_type}")
             if isinstance(data, pd.DataFrame):
+                print(f"Shape: {data.shape}")
+                print(f"Columns: {data.columns.tolist()}")
                 splits[split_type] = data.copy()
             elif isinstance(data, pd.Series):
+                print(f"Length: {len(data)}")
                 splits[split_type] = data.copy()
             else:
-                splits[split_type] = np.array(data, copy=True)
+                print(f"Type: {type(data)}")
+                splits[split_type] = pd.DataFrame(data, columns=DATA_COLUMNS)
 
     with open(f"data/splits/split_info_{timestamp}.json", "r") as f:
         split_info = json.load(f)
@@ -170,7 +174,7 @@ def analyze_and_save_feature_importance(
     importance_values, feature_names, timestamp, model_id
 ):
     """
-    Analyze and save feature importance results.
+    Analyze and save feature importance results for all features.
     """
     analysis_dir = f"results/feature_importance_{model_id}_{timestamp}"
     os.makedirs(analysis_dir, exist_ok=True)
@@ -178,34 +182,36 @@ def analyze_and_save_feature_importance(
     importance_summary = {}
 
     for model_name, imp_data in importance_values.items():
-        # Create and save importance DataFrame
+        # Create and save importance DataFrame with all features
         importance_df = pd.DataFrame(
             {
                 "feature": feature_names,
                 "importance_mean": imp_data["mean"],
                 "importance_std": imp_data["std"],
             }
-        ).sort_values("importance_mean", ascending=False)
+        ).sort_values(
+            "importance_mean", ascending=True
+        )  # Ascending for better bottom-to-top visualization
 
-        # Save to CSV
+        # Save complete results to CSV
         importance_df.to_csv(f"{analysis_dir}/{model_name}.csv", index=False)
 
-        # Create and save plot - using plt directly instead of seaborn
-        plt.figure(figsize=(12, 8))
-        top_10 = importance_df.head(10)
+        # Create and save plot with all features
+        plt.figure(
+            figsize=(12, max(8, len(feature_names) * 0.3))
+        )  # Dynamic figure size based on feature count
 
-        # Create bar plot
+        # Create bar plot for all features
         bars = plt.barh(
-            y=range(len(top_10)),
-            width=top_10["importance_mean"],
-            xerr=top_10["importance_std"],
+            y=range(len(importance_df)),
+            width=importance_df["importance_mean"],
+            xerr=importance_df["importance_std"],
             capsize=5,
         )
 
         # Customize plot
-        plt.yticks(range(len(top_10)), top_10["feature"])
+        plt.yticks(range(len(importance_df)), importance_df["feature"], fontsize=8)
         plt.xlabel("Mean Importance")
-        plt.ylabel("Feature")
         plt.title(f"Feature Importance - {model_name}")
 
         # Add value labels on bars
@@ -217,23 +223,76 @@ def analyze_and_save_feature_importance(
                 f"{width:.4f}",
                 ha="left",
                 va="center",
-                fontsize=10,
+                fontsize=8,
             )
+
+        # Add grid for better readability
+        plt.grid(True, axis="x", linestyle="--", alpha=0.7)
 
         plt.tight_layout()
         plt.savefig(
-            f"{analysis_dir}/{model_name}_plot.png", bbox_inches="tight", dpi=300
+            f"{analysis_dir}/{model_name}_plot_all_features.png",
+            bbox_inches="tight",
+            dpi=300,
         )
         plt.close()
 
-        # Store summary
+        # Create a separate plot for top 20 features
+        plt.figure(figsize=(12, 10))
+        top_20 = importance_df.tail(20)  # Get top 20 since we sorted ascending
+
+        bars = plt.barh(
+            y=range(len(top_20)),
+            width=top_20["importance_mean"],
+            xerr=top_20["importance_std"],
+            capsize=5,
+        )
+
+        plt.yticks(range(len(top_20)), top_20["feature"])
+        plt.xlabel("Mean Importance")
+        plt.title(f"Top 20 Most Important Features - {model_name}")
+
+        for i, bar in enumerate(bars):
+            width = bar.get_width()
+            plt.text(
+                width,
+                bar.get_y() + bar.get_height() / 2,
+                f"{width:.4f}",
+                ha="left",
+                va="center",
+            )
+
+        plt.grid(True, axis="x", linestyle="--", alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(
+            f"{analysis_dir}/{model_name}_plot_top_20.png", bbox_inches="tight", dpi=300
+        )
+        plt.close()
+
+        # Store complete summary
         importance_summary[model_name] = {
-            "top_features": importance_df.head(5)["feature"].tolist(),
-            "importance_values": importance_df.head(5)["importance_mean"].tolist(),
-            "std_values": importance_df.head(5)["importance_std"].tolist(),
+            "features": importance_df["feature"].tolist(),
+            "importance_values": importance_df["importance_mean"].tolist(),
+            "std_values": importance_df["importance_std"].tolist(),
+            "top_20_features": importance_df.tail(20)["feature"].tolist(),
+            "top_20_values": importance_df.tail(20)["importance_mean"].tolist(),
         }
 
-    # Save summary statistics
+        # Save detailed feature ranking
+        ranking_df = importance_df.reset_index(drop=True)
+        ranking_df.index = ranking_df.index + 1  # Start ranking from 1
+        ranking_df.to_csv(f"{analysis_dir}/{model_name}_feature_ranking.csv")
+
+        # Save text summary
+        with open(f"{analysis_dir}/{model_name}_feature_ranking.txt", "w") as f:
+            f.write(f"Feature Importance Ranking for {model_name}\n")
+            f.write("=" * 50 + "\n\n")
+            for idx, row in ranking_df.iterrows():
+                f.write(
+                    f"{idx}. {row['feature']}: {row['importance_mean']:.4f} ± {row['importance_std']:.4f}\n"
+                )
+
+    # Save complete summary statistics
     with open(f"{analysis_dir}/importance_summary.json", "w") as f:
         json.dump(importance_summary, f, indent=4)
 
@@ -292,10 +351,10 @@ def save_metrics(metrics, filename):
 
 
 def save_detailed_holdout_results(
-    model, holdout_data, y_holdout, predictions, model_id
+    model, holdout_data, y_holdout, predictions, model_id, original_data
 ):
     """
-    Save detailed holdout results including all features and predictions.
+    Save detailed holdout results with correct ID mapping.
 
     Parameters:
     -----------
@@ -309,26 +368,52 @@ def save_detailed_holdout_results(
         Model predictions for holdout data
     model_id : str
         Unique identifier for the model
+    original_data : DataFrame
+        The original dataset containing the true IDn column
     """
-    # Create results DataFrame with all required columns
+    print("\nDEBUG: Data shapes before processing:")
+    print(f"Holdout data shape: {holdout_data.shape}")
+    print(f"Original data shape: {original_data.shape}")
+
+    # Create results DataFrame from holdout data
+    results_df = holdout_data.copy()
+
+    # Debug current state
+    print("\nDEBUG: Holdout data index sample:")
+    print(holdout_data.index[:5])
+
+    # Add feature columns
     results_df = pd.DataFrame()
-
-    # Add IDn if it exists in holdout_data
-    if "IDn" in holdout_data.columns:
-        results_df["IDn"] = holdout_data["IDn"]
-    elif isinstance(holdout_data.index, pd.Index):
-        results_df["IDn"] = holdout_data.index
-
-    # Add all feature columns
     for col in DATA_COLUMNS:
         results_df[col] = holdout_data[col]
 
-    # Add actual and predicted scores
+    # Add predictions and actual values
     results_df["actual_monitor_score"] = y_holdout
     results_df["predicted_score"] = predictions
-
-    # Add model identifier
     results_df["model_id"] = model_id
+
+    # Add original IDn by using the same index
+    # First verify that indices match between holdout_data and original_data
+    common_indices = set(holdout_data.index).intersection(set(original_data.index))
+    if len(common_indices) != len(holdout_data):
+        print("\nWARNING: Not all holdout indices found in original data!")
+        print(f"Expected {len(holdout_data)} matches, found {len(common_indices)}")
+
+    # Get IDn for our holdout samples
+    results_df["IDn"] = original_data.loc[results_df.index, "IDn"]
+
+    print("\nDEBUG: Final results DataFrame info:")
+    print(results_df.info())
+    print("\nDEBUG: Sample of final results:")
+    print(results_df.head())
+    print("\nDEBUG: IDn sample in final results:")
+    print(results_df["IDn"].head())
+
+    # Verify no missing values
+    null_counts = results_df.isnull().sum()
+    if null_counts.any():
+        print("\nWARNING: Found null values:")
+        print(null_counts[null_counts > 0])
 
     # Save to CSV
     filename = f"results/holdout_predictions_{model_id}.csv"
@@ -337,12 +422,49 @@ def save_detailed_holdout_results(
     return filename
 
 
+def load_and_preprocess_data(file_path):
+    """
+    Load and preprocess the dataset while maintaining proper ID handling.
+    """
+    model_data = pd.read_csv(file_path)
+
+    # Store original IDn before any processing
+    original_idn = model_data["IDn"].copy()
+
+    model_data = model_data[
+        (model_data["monitor_score"] != "unknown")
+        & (~model_data["monitor_score"].isna())
+    ]
+
+    mapping = {"yes": 1, "no": 0}
+    model_data = model_data.replace(mapping)
+
+    for col in DATA_COLUMNS:
+        model_data[col] = pd.to_numeric(model_data[col], errors="coerce")
+        model_data = model_data.dropna(subset=[col])
+        model_data[col] = model_data[col].astype(int)
+
+    # Ensure IDn is preserved as a column, not an index
+    model_data["IDn"] = original_idn[model_data.index]
+
+    return model_data
+
+
 def main():
     """
-    Main function to handle train/holdout/full dataset workflow.
+    Main function with corrected ID handling.
     """
-    # Load data splits
-    splits_timestamp = "20241114_115648"  # or use input() for manual entry
+    # Load original data with proper ID handling
+    file_path = "results/advert_flags.csv"
+    print("Loading original data...")
+    original_data = pd.read_csv(file_path)
+
+    # Ensure original_data has IDn as a column
+    if "IDn" not in original_data.columns:
+        raise ValueError("Original data must contain 'IDn' column")
+
+    # Load splits
+    splits_timestamp = "20241114_115648"
     splits, split_info = load_splits(splits_timestamp)
 
     # Generate unique model identifier
@@ -373,7 +495,6 @@ def main():
         initial_model, splits["X_holdout"], splits["y_holdout"], "holdout set"
     )
 
-    # Save detailed holdout results
     holdout_predictions = initial_model.predict(splits["X_holdout"])
     holdout_file = save_detailed_holdout_results(
         initial_model,
@@ -381,6 +502,7 @@ def main():
         splits["y_holdout"],
         holdout_predictions,
         model_id,
+        original_data,
     )
     print(f"\nDetailed holdout results saved to: {holdout_file}")
 

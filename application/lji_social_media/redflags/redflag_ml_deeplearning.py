@@ -18,6 +18,12 @@ import pickle
 import libraries.claude_prompts as cp
 import time
 
+# Add these imports at the top
+from typing import Dict, List, Optional, Tuple
+import matplotlib.pyplot as plt
+import os
+import json
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -231,6 +237,130 @@ class ModelTrainer:
 
     def _get_model_copy(self):
         return {k: v.cpu().clone() for k, v in self.model.state_dict().items()}
+
+
+def analyze_and_save_feature_importance(
+    importance_values, feature_names, timestamp, model_id
+):
+    """
+    Analyze and save feature importance results for all features.
+    Matches the ensemble model's output format.
+    """
+    analysis_dir = f"results/feature_importance_{model_id}_{timestamp}"
+    os.makedirs(analysis_dir, exist_ok=True)
+
+    importance_summary = {}
+
+    for model_name, imp_data in importance_values.items():
+        # Create and save importance DataFrame with all features
+        importance_df = pd.DataFrame(
+            {
+                "feature": feature_names,
+                "importance_mean": imp_data["mean"],
+                "importance_std": imp_data["std"],
+            }
+        ).sort_values("importance_mean", ascending=True)
+
+        # Save complete results to CSV
+        importance_df.to_csv(f"{analysis_dir}/{model_name}.csv", index=False)
+
+        # Create and save plot with all features
+        plt.figure(figsize=(12, max(8, len(feature_names) * 0.3)))
+
+        # Create bar plot for all features
+        bars = plt.barh(
+            y=range(len(importance_df)),
+            width=importance_df["importance_mean"],
+            xerr=importance_df["importance_std"],
+            capsize=5,
+        )
+
+        # Customize plot
+        plt.yticks(range(len(importance_df)), importance_df["feature"], fontsize=8)
+        plt.xlabel("Mean Importance")
+        plt.title(f"Feature Importance - {model_name}")
+
+        # Add value labels on bars
+        for i, bar in enumerate(bars):
+            width = bar.get_width()
+            plt.text(
+                width,
+                bar.get_y() + bar.get_height() / 2,
+                f"{width:.4f}",
+                ha="left",
+                va="center",
+                fontsize=8,
+            )
+
+        plt.grid(True, axis="x", linestyle="--", alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(
+            f"{analysis_dir}/{model_name}_plot_all_features.png",
+            bbox_inches="tight",
+            dpi=300,
+        )
+        plt.close()
+
+        # Create a separate plot for top 20 features
+        plt.figure(figsize=(12, 10))
+        top_20 = importance_df.tail(20)
+
+        bars = plt.barh(
+            y=range(len(top_20)),
+            width=top_20["importance_mean"],
+            xerr=top_20["importance_std"],
+            capsize=5,
+        )
+
+        plt.yticks(range(len(top_20)), top_20["feature"])
+        plt.xlabel("Mean Importance")
+        plt.title(f"Top 20 Most Important Features - {model_name}")
+
+        for i, bar in enumerate(bars):
+            width = bar.get_width()
+            plt.text(
+                width,
+                bar.get_y() + bar.get_height() / 2,
+                f"{width:.4f}",
+                ha="left",
+                va="center",
+            )
+
+        plt.grid(True, axis="x", linestyle="--", alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(
+            f"{analysis_dir}/{model_name}_plot_top_20.png", bbox_inches="tight", dpi=300
+        )
+        plt.close()
+
+        # Store complete summary
+        importance_summary[model_name] = {
+            "features": importance_df["feature"].tolist(),
+            "importance_values": importance_df["importance_mean"].tolist(),
+            "std_values": importance_df["importance_std"].tolist(),
+            "top_20_features": importance_df.tail(20)["feature"].tolist(),
+            "top_20_values": importance_df.tail(20)["importance_mean"].tolist(),
+        }
+
+        # Save detailed feature ranking
+        ranking_df = importance_df.reset_index(drop=True)
+        ranking_df.index = ranking_df.index + 1
+        ranking_df.to_csv(f"{analysis_dir}/{model_name}_feature_ranking.csv")
+
+        # Save text summary
+        with open(f"{analysis_dir}/{model_name}_feature_ranking.txt", "w") as f:
+            f.write(f"Feature Importance Ranking for {model_name}\n")
+            f.write("=" * 50 + "\n\n")
+            for idx, row in ranking_df.iterrows():
+                f.write(
+                    f"{idx}. {row['feature']}: {row['importance_mean']:.4f} ± {row['importance_std']:.4f}\n"
+                )
+
+    # Save complete summary statistics
+    with open(f"{analysis_dir}/importance_summary.json", "w") as f:
+        json.dump(importance_summary, f, indent=4)
+
+    return importance_summary
 
 
 def objective(trial: optuna.Trial, X: np.ndarray, y: np.ndarray) -> float:
