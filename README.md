@@ -69,6 +69,10 @@ The sanitized database has two accounts preconfigured for testing both of which 
 - `docker rm $(docker ps -a -q)` - remove all containers on machine
 - `docker exec -it <container-id> bash` - run an interactive shell inside the actual running container
 
+## Some useful :commands
+- export DREAMSUITE_TAG=`cat /home/thi/tinyhands/dreamsuite_tag`
+- sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run -d --rm web ./manage.py backupAttachmentsToCloud
+
 # local.env and common.env files
 
 In the root project directory there are three files used that contain environment variables. These files are used inside of the containers. If you look at the docker-compose.yml file you can see that these are imported into all of the containers.

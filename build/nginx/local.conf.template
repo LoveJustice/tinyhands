@@ -62,7 +62,7 @@ server {
     # This is because the Authentication header does not get passed when opening a url directly
     # so we need to do special authentication using a cookie
     # ORDER MATTERS, this must be before the other regex with 'api' in it
-    location ~ ^/api/(staff|forms)/csv/ {
+    location ~ ^/(api/staff/csv|api/forms/csv|cloud-media)/ {
 	    proxy_set_header Authorization "Bearer ${cookie_file_access_token}";
 
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
