@@ -133,94 +133,157 @@ def find_best_hyperparameters(X_train, y_train):
 def calculate_shap_values(model, X, feature_names):
     """
     Calculate SHAP values for the model using both base estimators and final estimator.
+
+    Parameters:
+    -----------
+    model : sklearn Pipeline
+        The trained model pipeline
+    X : DataFrame
+        The feature data
+    feature_names : list
+        List of feature names
     """
     shap_values = {}
 
     # Get the transformed feature data
     X_transformed = model.named_steps["features"].transform(X)
+    X_transformed_df = pd.DataFrame(X_transformed, columns=feature_names)
 
-    # Calculate SHAP values for base estimators
-    base_models = dict(model.named_steps["regressor"].estimators)
-    for name, estimator in base_models.items():
-        explainer = shap.TreeExplainer(estimator)
-        shap_values[f"{name}_shap"] = {
-            "values": explainer.shap_values(X_transformed),
-            "explainer": explainer,
-            "expected_value": explainer.expected_value,
+    try:
+        # Calculate SHAP values for base estimators
+        base_models = dict(model.named_steps["regressor"].estimators)
+        for name, estimator in base_models.items():
+            try:
+                explainer = shap.TreeExplainer(estimator, X_transformed_df)
+                shap_values[f"{name}_shap"] = {
+                    "values": explainer.shap_values(X_transformed_df),
+                    "explainer": explainer,
+                    "expected_value": explainer.expected_value,
+                }
+            except Exception as e:
+                print(f"Warning: Could not calculate SHAP values for {name}: {str(e)}")
+                continue
+
+        # Calculate SHAP values for final estimator
+        final_estimator = model.named_steps["regressor"].final_estimator
+        try:
+            final_explainer = shap.TreeExplainer(final_estimator, X_transformed_df)
+            shap_values["final_estimator_shap"] = {
+                "values": final_explainer.shap_values(X_transformed_df),
+                "explainer": final_explainer,
+                "expected_value": final_explainer.expected_value,
+            }
+        except Exception as e:
+            print(
+                f"Warning: Could not calculate SHAP values for final estimator: {str(e)}"
+            )
+
+    except Exception as e:
+        print(f"Warning: Error in SHAP calculation: {str(e)}")
+        print("Falling back to permutation importance...")
+
+        # Fallback to permutation importance if SHAP fails
+        from sklearn.inspection import permutation_importance
+
+        r = permutation_importance(
+            model, X, model.predict(X), n_repeats=10, random_state=42
+        )
+
+        importance_df = pd.DataFrame(
+            {
+                "feature": feature_names,
+                "importance_mean": r.importances_mean,
+                "importance_std": r.importances_std,
+            }
+        )
+
+        shap_values["permutation_importance"] = {
+            "values": r.importances,
+            "mean": r.importances_mean,
+            "std": r.importances_std,
         }
 
-    # Calculate SHAP values for final estimator
-    final_estimator = model.named_steps["regressor"].final_estimator
-    final_explainer = shap.TreeExplainer(final_estimator)
-    shap_values["final_estimator_shap"] = {
-        "values": final_explainer.shap_values(X_transformed),
-        "explainer": final_explainer,
-        "expected_value": final_explainer.expected_value,
-    }
-
-    return shap_values, X_transformed
+    return shap_values, X_transformed_df
 
 
 def analyze_and_save_shap_results(
     shap_values, X_transformed, feature_names, timestamp, model_id
 ):
     """
-    Analyze SHAP values and save various visualizations and analyses.
+    Analyze SHAP/importance values and save various visualizations and analyses.
     """
-    # Create directory for SHAP analysis
-    analysis_dir = f"results/shap_analysis_{model_id}_{timestamp}"
+    analysis_dir = f"results/feature_importance_{model_id}_{timestamp}"
     os.makedirs(analysis_dir, exist_ok=True)
 
-    shap_summary = {}
+    importance_summary = {}
 
-    for model_name, shap_data in shap_values.items():
-        # Calculate mean absolute SHAP values for feature importance ranking
-        mean_abs_shap = np.abs(shap_data["values"]).mean(axis=0)
-        feature_importance = pd.DataFrame(
-            {"feature": feature_names, "mean_abs_shap": mean_abs_shap}
-        ).sort_values("mean_abs_shap", ascending=False)
+    # Handle both SHAP and permutation importance results
+    if "permutation_importance" in shap_values:
+        # Save permutation importance results
+        importance_df = pd.DataFrame(
+            {
+                "feature": feature_names,
+                "importance_mean": shap_values["permutation_importance"]["mean"],
+                "importance_std": shap_values["permutation_importance"]["std"],
+            }
+        ).sort_values("importance_mean", ascending=False)
 
-        # Save feature importance rankings
-        feature_importance.to_csv(
-            f"{analysis_dir}/{model_name}_feature_importance.csv", index=False
-        )
+        importance_df.to_csv(f"{analysis_dir}/permutation_importance.csv", index=False)
 
-        # Generate and save SHAP summary plot
+        # Create and save importance plot
         plt.figure(figsize=(12, 8))
-        shap.summary_plot(
-            shap_data["values"], X_transformed, feature_names=feature_names, show=False
+        sns.barplot(
+            data=importance_df.head(10),
+            x="importance_mean",
+            y="feature",
+            xerr=importance_df.head(10)["importance_std"],
         )
+        plt.title("Top 10 Feature Importance (Permutation)")
         plt.tight_layout()
-        plt.savefig(f"{analysis_dir}/{model_name}_summary_plot.png")
+        plt.savefig(f"{analysis_dir}/permutation_importance_plot.png")
         plt.close()
 
-        # Generate and save SHAP dependence plots for top features
-        top_features = feature_importance.head(5)["feature"].tolist()
-        for feature_idx, feature in enumerate(top_features):
-            plt.figure(figsize=(10, 6))
-            shap.dependence_plot(
-                feature_idx,
-                shap_data["values"],
-                X_transformed,
-                feature_names=feature_names,
-                show=False,
-            )
-            plt.tight_layout()
-            plt.savefig(f"{analysis_dir}/{model_name}_{feature}_dependence_plot.png")
-            plt.close()
-
-        # Store summary statistics
-        shap_summary[model_name] = {
-            "top_features": top_features,
-            "mean_abs_shap": mean_abs_shap.tolist(),
-            "expected_value": float(shap_data["expected_value"]),
+        importance_summary["permutation_importance"] = {
+            "top_features": importance_df.head(5)["feature"].tolist(),
+            "importance_values": importance_df.head(5)["importance_mean"].tolist(),
         }
 
-    # Save summary statistics
-    with open(f"{analysis_dir}/shap_summary.json", "w") as f:
-        json.dump(shap_summary, f, indent=4)
+    else:
+        # Original SHAP analysis code
+        for model_name, shap_data in shap_values.items():
+            if model_name.endswith("_shap"):
+                mean_abs_shap = np.abs(shap_data["values"]).mean(axis=0)
+                feature_importance = pd.DataFrame(
+                    {"feature": feature_names, "mean_abs_shap": mean_abs_shap}
+                ).sort_values("mean_abs_shap", ascending=False)
 
-    return shap_summary
+                feature_importance.to_csv(
+                    f"{analysis_dir}/{model_name}_feature_importance.csv", index=False
+                )
+
+                plt.figure(figsize=(12, 8))
+                shap.summary_plot(
+                    shap_data["values"],
+                    X_transformed,
+                    feature_names=feature_names,
+                    show=False,
+                )
+                plt.tight_layout()
+                plt.savefig(f"{analysis_dir}/{model_name}_summary_plot.png")
+                plt.close()
+
+                top_features = feature_importance.head(5)["feature"].tolist()
+                importance_summary[model_name] = {
+                    "top_features": top_features,
+                    "mean_abs_shap": mean_abs_shap.tolist(),
+                    "expected_value": float(shap_data["expected_value"]),
+                }
+
+    # Save summary statistics
+    with open(f"{analysis_dir}/importance_summary.json", "w") as f:
+        json.dump(importance_summary, f, indent=4)
+
+    return importance_summary
 
 
 def evaluate_model(model, X, y, dataset_name=""):
