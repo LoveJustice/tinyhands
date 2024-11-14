@@ -28,6 +28,7 @@ DATA_COLUMNS = cp.RED_FLAGS
 def load_splits(timestamp):
     """
     Load the train/holdout splits created by the data splitting script.
+    Ensures arrays are writeable for scikit-learn compatibility.
     """
     splits = {}
     for split_type in [
@@ -39,7 +40,14 @@ def load_splits(timestamp):
         "y_full",
     ]:
         with open(f"data/splits/{split_type}_{timestamp}.pkl", "rb") as f:
-            splits[split_type] = pickle.load(f)
+            data = pickle.load(f)
+            # Convert to numpy array and ensure it's writeable
+            if isinstance(data, pd.DataFrame):
+                splits[split_type] = data.copy()
+            elif isinstance(data, pd.Series):
+                splits[split_type] = data.copy()
+            else:
+                splits[split_type] = np.array(data, copy=True)
 
     with open(f"data/splits/split_info_{timestamp}.json", "r") as f:
         split_info = json.load(f)
@@ -266,7 +274,8 @@ def main():
     Main function to handle train/holdout/full dataset workflow.
     """
     # Load data splits
-    splits_timestamp = input("Enter the timestamp of the data splits to use: ")
+    # splits_timestamp = input("Enter the timestamp of the data splits to use: ")
+    splits_timestamp = "20241114_115648"
     splits, split_info = load_splits(splits_timestamp)
 
     # Generate unique model identifier
