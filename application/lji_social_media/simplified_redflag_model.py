@@ -132,152 +132,106 @@ def find_best_hyperparameters(X_train, y_train):
 
 def calculate_shap_values(model, X, feature_names):
     """
-    Calculate SHAP values for the model using both base estimators and final estimator.
-
-    Parameters:
-    -----------
-    model : sklearn Pipeline
-        The trained model pipeline
-    X : DataFrame
-        The feature data
-    feature_names : list
-        List of feature names
+    Calculate feature importance for stacking model using permutation importance
+    focusing on the full pipeline only since individual components are not directly accessible.
     """
-    shap_values = {}
+    print("Using permutation importance for feature analysis...")
 
-    # Get the transformed feature data
-    X_transformed = model.named_steps["features"].transform(X)
-    X_transformed_df = pd.DataFrame(X_transformed, columns=feature_names)
+    importance_values = {}
 
+    # Calculate only for full pipeline as individual components are not separately accessible
     try:
-        # Calculate SHAP values for base estimators
-        base_models = dict(model.named_steps["regressor"].estimators)
-        for name, estimator in base_models.items():
-            try:
-                explainer = shap.TreeExplainer(estimator, X_transformed_df)
-                shap_values[f"{name}_shap"] = {
-                    "values": explainer.shap_values(X_transformed_df),
-                    "explainer": explainer,
-                    "expected_value": explainer.expected_value,
-                }
-            except Exception as e:
-                print(f"Warning: Could not calculate SHAP values for {name}: {str(e)}")
-                continue
-
-        # Calculate SHAP values for final estimator
-        final_estimator = model.named_steps["regressor"].final_estimator
-        try:
-            final_explainer = shap.TreeExplainer(final_estimator, X_transformed_df)
-            shap_values["final_estimator_shap"] = {
-                "values": final_explainer.shap_values(X_transformed_df),
-                "explainer": final_explainer,
-                "expected_value": final_explainer.expected_value,
-            }
-        except Exception as e:
-            print(
-                f"Warning: Could not calculate SHAP values for final estimator: {str(e)}"
-            )
-
-    except Exception as e:
-        print(f"Warning: Error in SHAP calculation: {str(e)}")
-        print("Falling back to permutation importance...")
-
-        # Fallback to permutation importance if SHAP fails
         from sklearn.inspection import permutation_importance
 
+        print("Calculating importance for full pipeline...")
         r = permutation_importance(
-            model, X, model.predict(X), n_repeats=10, random_state=42
+            model,
+            X,
+            model.predict(X),
+            n_repeats=10,
+            random_state=42,
+            n_jobs=-1,  # Use all available cores
         )
 
-        importance_df = pd.DataFrame(
-            {
-                "feature": feature_names,
-                "importance_mean": r.importances_mean,
-                "importance_std": r.importances_std,
-            }
-        )
-
-        shap_values["permutation_importance"] = {
+        importance_values["full_pipeline_importance"] = {
             "values": r.importances,
             "mean": r.importances_mean,
             "std": r.importances_std,
         }
+        print("Full pipeline importance calculation completed.")
 
-    return shap_values, X_transformed_df
+    except Exception as e:
+        print(f"Warning: Could not calculate importance for full pipeline: {str(e)}")
+
+    return importance_values, X
 
 
-def analyze_and_save_shap_results(
-    shap_values, X_transformed, feature_names, timestamp, model_id
+def analyze_and_save_feature_importance(
+    importance_values, feature_names, timestamp, model_id
 ):
     """
-    Analyze SHAP/importance values and save various visualizations and analyses.
+    Analyze and save feature importance results.
     """
     analysis_dir = f"results/feature_importance_{model_id}_{timestamp}"
     os.makedirs(analysis_dir, exist_ok=True)
 
     importance_summary = {}
 
-    # Handle both SHAP and permutation importance results
-    if "permutation_importance" in shap_values:
-        # Save permutation importance results
+    for model_name, imp_data in importance_values.items():
+        # Create and save importance DataFrame
         importance_df = pd.DataFrame(
             {
                 "feature": feature_names,
-                "importance_mean": shap_values["permutation_importance"]["mean"],
-                "importance_std": shap_values["permutation_importance"]["std"],
+                "importance_mean": imp_data["mean"],
+                "importance_std": imp_data["std"],
             }
         ).sort_values("importance_mean", ascending=False)
 
-        importance_df.to_csv(f"{analysis_dir}/permutation_importance.csv", index=False)
+        # Save to CSV
+        importance_df.to_csv(f"{analysis_dir}/{model_name}.csv", index=False)
 
-        # Create and save importance plot
+        # Create and save plot - using plt directly instead of seaborn
         plt.figure(figsize=(12, 8))
-        sns.barplot(
-            data=importance_df.head(10),
-            x="importance_mean",
-            y="feature",
-            xerr=importance_df.head(10)["importance_std"],
+        top_10 = importance_df.head(10)
+
+        # Create bar plot
+        bars = plt.barh(
+            y=range(len(top_10)),
+            width=top_10["importance_mean"],
+            xerr=top_10["importance_std"],
+            capsize=5,
         )
-        plt.title("Top 10 Feature Importance (Permutation)")
+
+        # Customize plot
+        plt.yticks(range(len(top_10)), top_10["feature"])
+        plt.xlabel("Mean Importance")
+        plt.ylabel("Feature")
+        plt.title(f"Feature Importance - {model_name}")
+
+        # Add value labels on bars
+        for i, bar in enumerate(bars):
+            width = bar.get_width()
+            plt.text(
+                width,
+                bar.get_y() + bar.get_height() / 2,
+                f"{width:.4f}",
+                ha="left",
+                va="center",
+                fontsize=10,
+            )
+
         plt.tight_layout()
-        plt.savefig(f"{analysis_dir}/permutation_importance_plot.png")
+        plt.savefig(
+            f"{analysis_dir}/{model_name}_plot.png", bbox_inches="tight", dpi=300
+        )
         plt.close()
 
-        importance_summary["permutation_importance"] = {
+        # Store summary
+        importance_summary[model_name] = {
             "top_features": importance_df.head(5)["feature"].tolist(),
             "importance_values": importance_df.head(5)["importance_mean"].tolist(),
+            "std_values": importance_df.head(5)["importance_std"].tolist(),
         }
-
-    else:
-        # Original SHAP analysis code
-        for model_name, shap_data in shap_values.items():
-            if model_name.endswith("_shap"):
-                mean_abs_shap = np.abs(shap_data["values"]).mean(axis=0)
-                feature_importance = pd.DataFrame(
-                    {"feature": feature_names, "mean_abs_shap": mean_abs_shap}
-                ).sort_values("mean_abs_shap", ascending=False)
-
-                feature_importance.to_csv(
-                    f"{analysis_dir}/{model_name}_feature_importance.csv", index=False
-                )
-
-                plt.figure(figsize=(12, 8))
-                shap.summary_plot(
-                    shap_data["values"],
-                    X_transformed,
-                    feature_names=feature_names,
-                    show=False,
-                )
-                plt.tight_layout()
-                plt.savefig(f"{analysis_dir}/{model_name}_summary_plot.png")
-                plt.close()
-
-                top_features = feature_importance.head(5)["feature"].tolist()
-                importance_summary[model_name] = {
-                    "top_features": top_features,
-                    "mean_abs_shap": mean_abs_shap.tolist(),
-                    "expected_value": float(shap_data["expected_value"]),
-                }
 
     # Save summary statistics
     with open(f"{analysis_dir}/importance_summary.json", "w") as f:
@@ -288,19 +242,53 @@ def analyze_and_save_shap_results(
 
 def evaluate_model(model, X, y, dataset_name=""):
     """
-    Evaluate model performance and return metrics.
+    Evaluate model performance and return metrics with JSON-serializable values.
     """
     y_pred = model.predict(X)
-    mse = mean_squared_error(y, y_pred)
-    rmse = np.sqrt(mse)
-    r2 = r2_score(y, y_pred)
+    mse = float(mean_squared_error(y, y_pred))  # Convert to float
+    rmse = float(np.sqrt(mse))  # Convert to float
+    r2 = float(r2_score(y, y_pred))  # Convert to float
 
     print(f"\nModel performance on {dataset_name}:")
     print(f"MSE: {mse:.4f}")
     print(f"RMSE: {rmse:.4f}")
     print(f"R²: {r2:.4f}")
 
-    return {"mse": mse, "rmse": rmse, "r2": r2, "predictions": y_pred}
+    return {
+        "mse": mse,
+        "rmse": rmse,
+        "r2": r2,
+        "predictions": y_pred.tolist(),  # Convert to list
+    }
+
+
+def make_json_serializable(obj):
+    """
+    Convert a nested structure of NumPy arrays and other objects into JSON-serializable types.
+    """
+    if isinstance(obj, dict):
+        return {key: make_json_serializable(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [make_json_serializable(item) for item in obj]
+    elif isinstance(obj, (np.ndarray, np.generic)):
+        return obj.tolist()
+    elif isinstance(obj, (int, float, str, bool)):
+        return obj
+    elif obj is None:
+        return None
+    else:
+        return str(obj)  # Convert any other types to string
+
+
+def save_metrics(metrics, filename):
+    """
+    Save metrics to JSON file after ensuring all values are JSON-serializable.
+    """
+    serializable_metrics = make_json_serializable(metrics)
+
+    print(f"Saving metrics as {filename}")
+    with open(filename, "w") as f:
+        json.dump(serializable_metrics, f, indent=4)
 
 
 def save_detailed_holdout_results(
@@ -354,8 +342,7 @@ def main():
     Main function to handle train/holdout/full dataset workflow.
     """
     # Load data splits
-    # splits_timestamp = input("Enter the timestamp of the data splits to use: ")
-    splits_timestamp = "20241114_115648"
+    splits_timestamp = "20241114_115648"  # or use input() for manual entry
     splits, split_info = load_splits(splits_timestamp)
 
     # Generate unique model identifier
@@ -387,29 +374,24 @@ def main():
     )
 
     # Save detailed holdout results
-    # Save detailed holdout results
     holdout_predictions = initial_model.predict(splits["X_holdout"])
     holdout_file = save_detailed_holdout_results(
         initial_model,
         splits["X_holdout"],
-        splits["y_holdout"],  # Pass y_holdout separately
+        splits["y_holdout"],
         holdout_predictions,
         model_id,
     )
     print(f"\nDetailed holdout results saved to: {holdout_file}")
 
-    # Calculate and save SHAP values for holdout evaluation
-    print("\nCalculating SHAP values for holdout set...")
-    holdout_shap_values, X_holdout_transformed = calculate_shap_values(
+    # Calculate feature importance for holdout evaluation
+    print("\nCalculating feature importance for holdout set...")
+    holdout_importance, X_holdout_transformed = calculate_shap_values(
         initial_model, splits["X_holdout"], DATA_COLUMNS
     )
 
-    holdout_shap_summary = analyze_and_save_shap_results(
-        holdout_shap_values,
-        X_holdout_transformed,
-        DATA_COLUMNS,
-        timestamp,
-        f"{model_id}_holdout",
+    holdout_importance_summary = analyze_and_save_feature_importance(
+        holdout_importance, DATA_COLUMNS, timestamp, f"{model_id}_holdout"
     )
 
     print("\n=== Training Final Model on Full Dataset ===")
@@ -427,18 +409,14 @@ def main():
 
     final_model.fit(splits["X_full"], splits["y_full"])
 
-    # Calculate and save SHAP values for final model
-    print("\nCalculating SHAP values for final model...")
-    final_shap_values, X_final_transformed = calculate_shap_values(
+    # Calculate feature importance for final model
+    print("\nCalculating feature importance for final model...")
+    final_importance, X_final_transformed = calculate_shap_values(
         final_model, splits["X_full"], DATA_COLUMNS
     )
 
-    final_shap_summary = analyze_and_save_shap_results(
-        final_shap_values,
-        X_final_transformed,
-        DATA_COLUMNS,
-        timestamp,
-        f"{model_id}_final",
+    final_importance_summary = analyze_and_save_feature_importance(
+        final_importance, DATA_COLUMNS, timestamp, f"{model_id}_final"
     )
 
     # Save final model
@@ -454,14 +432,12 @@ def main():
         "holdout_metrics": holdout_metrics,
         "split_info": split_info,
         "best_parameters": best_params,
-        "holdout_shap_summary": holdout_shap_summary,
-        "final_shap_summary": final_shap_summary,
+        "holdout_importance_summary": holdout_importance_summary,
+        "final_importance_summary": final_importance_summary,
     }
 
     metrics_filename = f"results/metrics_{model_id}.json"
-    print(f"Saving metrics as {metrics_filename}")
-    with open(metrics_filename, "w") as f:
-        json.dump(metrics, f, indent=4)
+    save_metrics(metrics, metrics_filename)
 
 
 if __name__ == "__main__":
