@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataentry', '0262_formlog'),
+        ('dataentry', '0263_formlog_details_formlog_request'),
     ]
 
     operations = [
