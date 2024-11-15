@@ -122,10 +122,10 @@ def get_auth0_users() -> List[dict]:
     api_token_result = get_auth0_api_token()
     access_token = api_token_result['access_token']
     headers = {'Authorization': 'Bearer ' + access_token}
-    domain = os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN')
+    management_base_url = os.environ.get('AUTH0_MANAGEMENT_BASE_URL', 'UNSET_AUTH0_MANAGEMENT_BASE_URL')
     # Auth0 limits the number of users you can return.
     # If you exceed this threshold, please redefine your search
-    url_without_params = 'https://' + domain + '/api/v2/users'
+    url_without_params = management_base_url + '/api/v2/users'
 
     list_of_users = []
     has_more_users = True
@@ -165,8 +165,8 @@ def delete_auth0_user(auth0_user: dict):
     api_token_result = get_auth0_api_token()
     access_token = api_token_result['access_token']
     headers = {'Authorization': 'Bearer ' + access_token}
-    domain = os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN')
-    url = 'https://' + domain + '/api/v2/users/' + auth0_user.get('user_id')
+    management_base_url = os.environ.get('AUTH0_MANAGEMENT_BASE_URL', 'UNSET_AUTH0_MANAGEMENT_BASE_URL')
+    url = management_base_url + '/api/v2/users/' + auth0_user.get('user_id')
     response = requests.delete(url=url, headers=headers)
     if not response.ok:
         try:
@@ -183,8 +183,8 @@ def get_auth0_user_by_email(email) -> dict:
     api_token_result = get_auth0_api_token()
     access_token = api_token_result['access_token']
     headers = {'Authorization': 'Bearer ' + access_token}
-    domain = os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN')
-    url = 'https://' + domain + '/api/v2/users?q=email:\"' + email + '\"'
+    management_base_url = os.environ.get('AUTH0_MANAGEMENT_BASE_URL', 'UNSET_AUTH0_MANAGEMENT_BASE_URL')
+    url = management_base_url + '/api/v2/users?q=email:\"' + email + '\"'
     response = requests.get(url=url, headers=headers)
     if not response.ok:
         logger.warning(
@@ -205,8 +205,8 @@ def get_auth0_user(username) -> dict:
     api_token_result = get_auth0_api_token()
     access_token = api_token_result['access_token']
     headers = {'Authorization': 'Bearer ' + access_token}
-    domain = os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN')
-    url = 'https://' + domain + '/api/v2/users/' + auth0_username
+    management_base_url = os.environ.get('AUTH0_MANAGEMENT_BASE_URL', 'UNSET_AUTH0_MANAGEMENT_BASE_URL')
+    url = management_base_url + '/api/v2/users/' + auth0_username
     response = requests.get(url=url, headers=headers)
     content = response.json()
     return content
@@ -217,13 +217,14 @@ def get_auth0_api_token():
     headers = {'content-type': "application/x-www-form-urlencoded"}
     client_id = os.environ.get('AUTH0_BACKEND_CLIENT_ID', 'UNSET_AUTH0_BACKEND_CLIENT_ID')
     client_secret = os.environ.get('AUTH0_BACKEND_CLIENT_SECRET', 'UNSET_AUTH0_BACKEND_CLIENT_SECRET')
-    domain = os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN')
+    domain = os.environ.get('AUTH0_MANAGEMENT_DOMAIN', 'UNSET_AUTH0_MANAGEMENT_DOMAIN')
+    management_base_url = os.environ.get('AUTH0_MANAGEMENT_BASE_URL', 'UNSET_AUTH0_MANAGEMENT_BASE_URL')
     request_data = {
         'grant_type': 'client_credentials',
         'client_id': client_id,
         'client_secret': client_secret,
         # This is not AUTH0_AUDIENCE_ID! We are calling the auth0 api, not our own!
-        'audience': 'https://' + domain + '/api/v2/'
+        'audience': management_base_url + '/api/v2/'
     }
     url = 'https://' + domain + '/oauth/token'
     response = requests.post(url=url, data=request_data, headers=headers)
@@ -348,8 +349,8 @@ def get_auth0_job_errors(job_id: str):
     headers = {
         'Authorization': 'Bearer ' + access_token
     }
-    domain = os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN')
-    url = f'https://{domain}/api/v2/jobs/{job_id}/errors'
+    management_base_url = os.environ.get('AUTH0_MANAGEMENT_BASE_URL', 'UNSET_AUTH0_MANAGEMENT_BASE_URL')
+    url = f'{management_base_url}/api/v2/jobs/{job_id}/errors'
     error_response = requests.get(url=url, headers=headers)
     print(error_response.status_code, error_response.json())
 
@@ -361,8 +362,8 @@ def update_auth0_users_with_dicts(auth0_user_dicts: List[any]):
     headers = {
         'Authorization': 'Bearer ' + access_token
     }
-    domain = os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN')
-    url = 'https://' + domain + '/api/v2/jobs/users-imports'
+    management_base_url = os.environ.get('AUTH0_MANAGEMENT_BASE_URL', 'UNSET_AUTH0_MANAGEMENT_BASE_URL')
+    url = management_base_url + '/api/v2/jobs/users-imports'
     form_values = {
         # Get this at manage.auth0.com -> Authentication -> Database
         'connection_id': os.environ.get('AUTH0_DATABASE_CONNECTION_ID'),
