@@ -71,7 +71,9 @@ The sanitized database has two accounts preconfigured for testing both of which 
 
 ## Some useful :commands
 - export DREAMSUITE_TAG=`cat /home/thi/tinyhands/dreamsuite_tag`
-- sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run -d --rm web ./manage.py backupAttachmentsToCloud
+- sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run -d --rm web ./manage.py backupAttachmentsToCloud -d 2024-10-01
+- sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run --rm web bash
+- ./manage.py backupAttachmentsToCloud -d 2024-10-01 -p /data/media
 - docker exec -it web ./manage.py indicatorHistory --start 202405
 
 # local.env and common.env files
