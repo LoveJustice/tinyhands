@@ -75,6 +75,42 @@ def get_neo4j_advert(IDn: int) -> Optional[str]:
     return result[0]["advert"] if result else None
 
 
+def get_neo4j_advert_analysis(
+    posting_id: int, analysis_type: str
+) -> Optional[Tuple[str, str]]:
+    """
+    Retrieves the advert text and its corresponding analysis result from Neo4j.
+
+    Args:
+        posting_id (int): The internal Neo4j ID of the Posting node.
+        analysis_type (str): The type of analysis to match the HAS_ANALYSIS relationship.
+
+    Returns:
+        Optional[Tuple[str, str]]: A tuple containing the advert text and analysis result,
+                                   or None if no matching data is found.
+    """
+    query = """
+    MATCH (n:Posting)-[:HAS_ANALYSIS {type: $analysis_type}]-(analysis:Analysis)
+    WHERE ID(n) = $posting_id
+    RETURN n.text AS advert, analysis.result AS result
+    """
+    parameters = {"posting_id": posting_id, "analysis_type": analysis_type}
+
+    try:
+        result = execute_neo4j_query(query, parameters)
+        if result:
+            advert = result[0].get("advert")
+            analysis_result = result[0].get("result")
+            if advert is not None and analysis_result is not None:
+                return advert, analysis_result
+    except Exception as e:
+        # Optionally, log the exception e for debugging
+        # Example: logger.error(f"Neo4j query failed: {e}")
+        pass  # Replace with appropriate error handling
+
+    return None
+
+
 def get_adverts():
     query = """MATCH (n:Posting) WHERE (n.text IS NOT NULL) AND NOT (n.text = "") RETURN ID(n) AS IDn, n.post_id, n.post_url AS post_url, n.text AS advert"""
     postings = execute_neo4j_query(query, {})

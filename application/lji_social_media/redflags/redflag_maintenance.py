@@ -183,7 +183,7 @@ def process_advert(IDn: int, prompt_name: str) -> None:
     chat_engine = create_chat_engine(advert)
     print(f"Processing : {advert}")
     if chat_engine:
-        advert_analysis = lf.analyse_advert(chat_engine, advert, prompt_name)
+        advert_analysis = lf.analyse_advert(chat_engine, prompt_name)
         print(f"Response IDn:{IDn} to {prompt_name}: {advert_analysis}")
         if advert_analysis:
             nl.write_analysis_to_neo4j(IDn, prompt_name, advert_analysis)

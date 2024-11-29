@@ -69,24 +69,7 @@ def extract_list(response: str, key: str) -> List[str]:
     return [item.strip(' "') for item in match.group(1).split(",")] if match else []
 
 
-# Neo4j-related functions
-def check_analysis_presence(IDn: int, prompt: str) -> bool:
-    query = """MATCH (posting:Posting)-[:HAS_ANALYSIS {type: $prompt}]-(analysis:Analysis)
-               WHERE ID(posting) = $IDn
-               RETURN COUNT(analysis) AS analysis_count"""
-    result = nl.execute_neo4j_query(query, {"prompt": prompt, "IDn": IDn})
-    return result[0]["analysis_count"] > 0
-
-
-def delete_analysis(IDn: int, prompt_name: str) -> None:
-    query = """MATCH (posting:Posting)-[:HAS_ANALYSIS {type: $prompt_name}]-(analysis:Analysis)
-               WHERE ID(posting) = $IDn
-               DETACH DELETE analysis"""
-    nl.execute_neo4j_query(query, {"IDn": IDn, "prompt_name": prompt_name})
-    logger.info(f"Deleted existing analysis for IDn: {IDn}, prompt: {prompt_name}")
-
-
-def get_llm(prompt_name: str) -> Any:
+def get_llm() -> Any:
     # if prompt_name == "assure_prompt":
     #     return Ollama(
     #         model="llama3.1:latest",
@@ -129,7 +112,7 @@ async def process_advert_async(IDn: int, prompt_name: str) -> None:
         logger.info(f"Successfully got advert for IDn: {IDn}")
 
         # 2. Setup analysis tools - this can stay async
-        llm_instance = get_llm(prompt_name)
+        llm_instance = get_llm()
         logger.info(f"Created LLM instance for IDn: {IDn}")
 
         memory = ChatMemoryBuffer.from_defaults(token_limit=8192)
@@ -143,7 +126,7 @@ async def process_advert_async(IDn: int, prompt_name: str) -> None:
 
         # 3. Do the analysis - this can stay async
         response = await loop.run_in_executor(
-            None, lf.analyse_advert, chat_engine, advert, prompt_name
+            None, lf.audit_analysis, chat_engine, advert, prompt_name
         )
         if response.result == "error":
             logger.error(f"Analysis failed for IDn {IDn}: {response.explanation}")
