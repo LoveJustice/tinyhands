@@ -102,7 +102,7 @@ def analyse_advert(chat_engine: Any, prompt_name: str) -> nl.AnalysisResponse:
         )
 
 
-def audit_analysis(chat_engine: Any, prompt_name: str) -> nl.AnalysisResponse:
+def audit_analysis(chat_engine: Any, audit_prompt: str) -> nl.AnalysisResponse:
     """
     Analyze an advertisement using a chat engine and a specific prompt.
 
@@ -124,24 +124,22 @@ def audit_analysis(chat_engine: Any, prompt_name: str) -> nl.AnalysisResponse:
         )
 
     # Retrieve prompt and validate its existence
-    prompt = cp.CLAUDE_PROMPTS.get(prompt_name)
-    prompt = """Is the following """
-    if not prompt:
-        logger.error(f"Invalid or missing prompt name: {prompt_name}")
+    if not audit_prompt:
+        logger.error(f"Invalid or missing audit_prompt: {audit_prompt}")
         return nl.AnalysisResponse(
             result="error",
             evidence=[],
-            explanation=f"Invalid prompt name: {prompt_name}",
+            explanation=f"Invalid audit_prompt: {audit_prompt}",
             confidence=0.0,
         )
 
     # Combine prompt with analysis string
-    prompt += cp.ANALYSIS_STR
+    audit_prompt += cp.ANALYSIS_STR
 
     try:
         # Send prompt to chat engine
-        response = chat_engine.chat(prompt)
-        logger.info(f"Response to {prompt_name}: {response.response}")
+        response = chat_engine.chat(audit_prompt)
+        logger.info(f"Response to {audit_prompt}: {response.response}")
 
         # Parse JSON response
         json_str = response.response.strip()
@@ -153,7 +151,7 @@ def audit_analysis(chat_engine: Any, prompt_name: str) -> nl.AnalysisResponse:
         return analysis_response
 
     except json.JSONDecodeError as e:
-        logger.error(f"JSON decoding error for prompt {prompt_name}: {e}")
+        logger.error(f"JSON decoding error for audit_prompt {audit_prompt}: {e}")
         return nl.AnalysisResponse(
             result="error",
             evidence=[],
@@ -162,7 +160,7 @@ def audit_analysis(chat_engine: Any, prompt_name: str) -> nl.AnalysisResponse:
         )
 
     except ValidationError as e:
-        logger.error(f"Validation error for prompt {prompt_name}: {e}")
+        logger.error(f"Validation error for audit_prompt {audit_prompt}: {e}")
         return nl.AnalysisResponse(
             result="error",
             evidence=[],
@@ -171,7 +169,7 @@ def audit_analysis(chat_engine: Any, prompt_name: str) -> nl.AnalysisResponse:
         )
 
     except Exception as e:
-        logger.error(f"Unexpected error for prompt {prompt_name}: {e}")
+        logger.error(f"Unexpected error for audit_prompt {audit_prompt}: {e}")
         return nl.AnalysisResponse(
             result="error",
             evidence=[],

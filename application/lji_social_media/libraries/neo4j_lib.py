@@ -2,7 +2,7 @@ from neo4j import GraphDatabase
 import pandas as pd
 import os
 from datetime import datetime
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 import logging
 from pydantic import BaseModel, Field, ValidationError
 
@@ -22,6 +22,49 @@ neo4j_config = {
     "password": os.environ.get("NEO4J_PWD"),
     "uri": "bolt://localhost:7689",
 }
+
+
+def write_audit_to_neo4j(
+    IDn: int, prompt_name: str, analysis: AnalysisResponse
+) -> None:
+    """
+    Write audit results to Neo4j.
+
+    Args:
+        IDn: The ID of the posting.
+        prompt_name: The name of the prompt used for analysis.
+        analysis: The analysis results as an AnalysisResponse object.
+    """
+    logger.info(f"Writing audit to Neo4j: {IDn}, {prompt_name}, {analysis}")
+    parameters = {
+        "IDn": IDn,
+        "prompt_name": prompt_name,
+        "result": analysis.result,
+        "evidence": analysis.evidence,
+        "explanation": analysis.explanation,
+        "confidence": analysis.confidence,
+    }
+    logger.info(
+        f"Writing audit PARAMETERS to Neo4j: {IDn}, {prompt_name}, {parameters}"
+    )
+    query = """
+    MATCH (posting:Posting)-[:HAS_ANALYSIS {type:$prompt_name}]-(analysis:Analysis)
+    WHERE ID(posting) = $IDn
+    WITH analysis
+    MERGE (audit:Audit {result: $result,
+        evidence: $evidence,
+        explanation: $explanation,
+        confidence: $confidence
+    })
+    MERGE (analysis)-[:HAS_AUDIT {type: $prompt_name}]->(audit)
+    """
+
+    logger.info(f"Writing TO Neo4j: {query}, {parameters}")
+
+    try:
+        execute_neo4j_query(query, parameters)
+    except Exception as e:
+        logger.error(f"Error writing to Neo4j: {str(e)}")
 
 
 def write_analysis_to_neo4j(

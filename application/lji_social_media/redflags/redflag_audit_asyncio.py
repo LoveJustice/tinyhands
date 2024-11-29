@@ -100,12 +100,17 @@ def create_chat_engine(
 
 
 # Keep under max_connection_pool_size of 10
+def create_audit_prompt(prompt_name: str, result: str) -> str:
+    prompt_name = cp.CLAUDE_PROMPTS[prompt_name]
+    audit_prompt = f"Is the correct answer to the following question\n\n{prompt_name}\n\nAnswer: {result}\n\n?"
+    return audit_prompt
 
 
 async def process_advert_async(IDn: int, prompt_name: str) -> None:
     try:
         # 1. Get advert - synchronously
-        advert = nl.get_neo4j_advert(IDn)  # Direct sync call
+        advert, result = nl.get_neo4j_advert_analysis(IDn, prompt_name)
+
         if not advert:
             logger.error(f"Failed to get advert for IDn: {IDn}")
             return
@@ -125,8 +130,9 @@ async def process_advert_async(IDn: int, prompt_name: str) -> None:
         logger.info(f"Created chat engine for IDn: {IDn}")
 
         # 3. Do the analysis - this can stay async
+        audit_prompt = create_audit_prompt(prompt_name, result)
         response = await loop.run_in_executor(
-            None, lf.audit_analysis, chat_engine, advert, prompt_name
+            None, lf.audit_analysis, chat_engine, audit_prompt
         )
         if response.result == "error":
             logger.error(f"Analysis failed for IDn {IDn}: {response.explanation}")
@@ -134,8 +140,8 @@ async def process_advert_async(IDn: int, prompt_name: str) -> None:
         logger.info(f"Got analysis response for IDn: {IDn}")
 
         # 4. Write results - synchronously
-        nl.write_analysis_to_neo4j(IDn, prompt_name, response)  # Direct sync call
-        logger.info(f"Successfully processed IDn: {IDn}")
+        nl.write_audit_to_neo4j(IDn, prompt_name, response)  # Direct sync call
+        logger.info(f"Successfully processed IDn: {IDn} with audit.")
 
     except Exception as e:
         logger.error(f"Error processing IDn {IDn}: {str(e)}")
