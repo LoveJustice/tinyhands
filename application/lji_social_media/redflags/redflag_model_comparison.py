@@ -1,77 +1,57 @@
 import pandas as pd
-import libraries.model_tools as mt
-from libraries.claude_prompts import RED_FLAGS as DATA_COLUMNS
-import libraries.neo4j_lib as nl
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import glob
+import json
 
 
-# ============================================================================================
-flag_query = """MATCH p=(group:Group)-[]-(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
-RETURN posting.text AS advert, ID(group) AS group_id, ID(posting) AS IDn,  r.type as flag, analysis.result as result """
+def load_latest_results():
+    """Load the most recent results for each model"""
+    # Get latest files for each model
+    original = sorted(glob.glob("results/metrics_advanced_redflag_model_*.json"))[-1]
+    simplified = sorted(glob.glob("results/metrics_stacking_model_*.json"))[-1]
+    deep_learning = sorted(glob.glob("results/metrics_deep_learning_model_*.json"))[-1]
 
-# flags = execute_neo4j_query(flag_query, parameters={})
+    model_files = {
+        "Original Model": original,
+        "Simplified Model": simplified,
+        "Deep Learning Model": deep_learning,
+    }
 
-df = pd.DataFrame(nl.execute_neo4j_query(flag_query, parameters={}))
-# df = df[["advert", "group_id", "IDn", "monitor_score", "flag"]+red_flags]
-duplicates = df.duplicated(subset=["advert", "group_id", "IDn", "flag"], keep=False)
-duplicate_rows = df[duplicates].sort_values(by=["advert", "group_id", "IDn", "flag"])
-list(duplicate_rows["flag"].unique())
-print("Duplicate rows:")
-print(duplicate_rows)
-# Perform the pivot operation with multiple index columns
-flags = df.pivot(
-    index=["advert", "group_id", "IDn"],
-    columns="flag",
-    values="result",
-).reset_index()
+    # Load metrics
+    metrics = {}
+    for model_name, file_path in model_files.items():
+        with open(file_path, "r") as f:
+            data = json.load(f)
+            metrics[model_name] = data["holdout_metrics"]
 
-flags = df.pivot_table(
-    index=["advert", "group_id", "IDn", "monitor_score"],
-    columns="flag",
-    values="result",
-    aggfunc="first",
-).reset_index()
+    return pd.DataFrame(metrics).T[["mse", "rmse", "r2"]]
 
 
-file_path = "data/adverts_round_2.csv"
-adverts_round_2 = pd.read_csv(file_path)
+def compare_models():
+    """Compare the three models"""
+    # Get performance metrics
+    metrics_df = load_latest_results()
 
-model_path = "redflag_model_2024-11-05T09_03_15_91d8c8.pkl"
-trained_pipeline = mt.load_model(model_path)
+    # Create performance comparison plot
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    metrics = ["mse", "rmse", "r2"]
 
-file_path = "results/advert_flags.csv"
-advert_flags = pd.read_csv(file_path)
-advert_flags.merge(adverts_round_2, on="IDn", how="inner")
-prediction_flags = flags[flags.IDn.isin(adverts_round_2.IDn)]
+    for i, metric in enumerate(metrics):
+        sns.barplot(data=metrics_df, y=metrics_df.index, x=metric, ax=axes[i])
+        axes[i].set_title(f"{metric.upper()}")
 
-# Make predictions on the entire dataset
-prediction_flags.loc[:, "model_predictions"] = trained_pipeline.predict(
-    prediction_flags[DATA_COLUMNS].replace({"yes": 1, "no": 0})
-)
+    plt.tight_layout()
 
-prediction_flags.to_csv("results/prediction_flags.csv", index=False)
+    # Print metrics table
+    print("\nModel Performance on Holdout Set:")
+    print("=" * 80)
+    print(metrics_df.round(4))
 
-adverts = pd.read_csv("data/adverts_scores_round2.csv")
-list(adverts)
-columns = [
-    "IDn",
-    "advert",
-    "monitor_score",
-    "monitor_rank",
-    "model_score",
-    "model_rank",
-    "col0",
-    "col1",
-    "col3",
-]
-adverts.columns = columns
+    return metrics_df, fig
 
-df = prediction_flags[
-    ["advert", "group_id", "IDn", "model_predictions"] + DATA_COLUMNS
-].merge(adverts[["IDn", "monitor_score"]], on="IDn", how="inner")
-df.to_csv("results/prediction_flags.csv", index=False)
-list(
-    prediction_flags[["advert", "group_id", "IDn", "model_predictions"] + DATA_COLUMNS]
-)
-df[["monitor_score", "model_predictions"]]
-df.model_predictions.nunique()
-df["monitor_score"].nunique()
+
+if __name__ == "__main__":
+    metrics_df, fig = compare_models()
+    plt.show()

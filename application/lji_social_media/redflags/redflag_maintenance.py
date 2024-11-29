@@ -195,13 +195,14 @@ def process_advert(IDn: int, prompt_name: str) -> None:
 
 
 def main() -> None:
-    prompt_names = [
-        # "suspicious_email_prompt",
-        "recruit_students_prompt",
-        "gender_specific_prompt",
-        "vague_description_prompt",
-        "assure_prompt",
-    ]
+    # prompt_names = [
+    #     # "suspicious_email_prompt",
+    #     "recruit_students_prompt",
+    #     "gender_specific_prompt",
+    #     "vague_description_prompt",
+    #     "assure_prompt",
+    # ]
+    prompt_names = cp.RED_FLAGS
     for prompt_name in prompt_names:
         query = """
         MATCH (g:Group)-[:HAS_POSTING]-(n:Posting)

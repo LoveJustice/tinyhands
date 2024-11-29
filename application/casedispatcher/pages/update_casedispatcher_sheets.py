@@ -35,6 +35,7 @@ from libraries.google_lib import (
     get_matching_spreadsheets,
 )
 import dotenv
+
 dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
 
@@ -63,17 +64,16 @@ links = {
 def get_country_id(df, country_name):
     # Normalize the case for comparison
     normalized_country_name = country_name.strip().lower()
-    df['name_normalized'] = df['name'].str.lower()
+    df["name_normalized"] = df["name"].str.lower()
 
     # Find the matching country_id
-    matching_id = df.loc[df['name_normalized'] == normalized_country_name, 'id']
+    matching_id = df.loc[df["name_normalized"] == normalized_country_name, "id"]
 
     if not matching_id.empty:
         return matching_id.values[0]
     else:
         st.write(f"Country not found: {country_name}")
         return "Country not found"
-
 
 
 def make_predictions(model, X):
@@ -210,23 +210,53 @@ def get_exploitation_settings():
         }
     return exploitation_type
 
+
 def get_solvability_weights():
-    solvability_weights = case_dispatcher['solvability_weights']
+    solvability_weights = case_dispatcher["solvability_weights"]
     if st.checkbox("Adjust Solvability Weights"):
-        solvability_weights_text = case_dispatcher['solvability_weights_text']['text']
+        solvability_weights_text = case_dispatcher["solvability_weights_text"]["text"]
         # Using st.expander to create a collapsible section for the variable description
         with st.expander("The solvability weights"):
             st.markdown(solvability_weights_text)
         st.subheader("Adjust Solvability Weights")
         # Assume solvability_weights are fetched from case_dispatcher, initialize if not available
 
-        victim_willing_to_testify = st.slider("victim_willing_to_testify", 0.00, 10.00, solvability_weights['victim_willing_to_testify'])
-        bio_and_location_of_suspect = st.slider("bio_and_location_of_suspect", 0.00, 10.00, solvability_weights['bio_and_location_of_suspect'])
-        other_suspect_arrested = st.slider("other_suspect(s)_arrested", 0.00, 10.00, solvability_weights['other_suspect(s)_arrested'])
-        police_willing_to_arrest = st.slider("police_willing_to_arrest", 0.00, 10.00, solvability_weights['police_willing_to_arrest'])
-        recency_of_case = st.slider("recency_of_case", 0.00, 10.00, solvability_weights['recency_of_case'])
-        exploitation_reported = st.slider("exploitation_reported", 0.00, 10.00, solvability_weights['exploitation_reported'])
-        pv_believes = st.slider("pv_believes", 0.00, 10.00, solvability_weights['pv_believes'])
+        victim_willing_to_testify = st.slider(
+            "victim_willing_to_testify",
+            0.00,
+            10.00,
+            solvability_weights["victim_willing_to_testify"],
+        )
+        bio_and_location_of_suspect = st.slider(
+            "bio_and_location_of_suspect",
+            0.00,
+            10.00,
+            solvability_weights["bio_and_location_of_suspect"],
+        )
+        other_suspect_arrested = st.slider(
+            "other_suspect(s)_arrested",
+            0.00,
+            10.00,
+            solvability_weights["other_suspect(s)_arrested"],
+        )
+        police_willing_to_arrest = st.slider(
+            "police_willing_to_arrest",
+            0.00,
+            10.00,
+            solvability_weights["police_willing_to_arrest"],
+        )
+        recency_of_case = st.slider(
+            "recency_of_case", 0.00, 10.00, solvability_weights["recency_of_case"]
+        )
+        exploitation_reported = st.slider(
+            "exploitation_reported",
+            0.00,
+            10.00,
+            solvability_weights["exploitation_reported"],
+        )
+        pv_believes = st.slider(
+            "pv_believes", 0.00, 10.00, solvability_weights["pv_believes"]
+        )
         # Update solvability_weights based on slider input
         solvability_weights = {
             "victim_willing_to_testify": victim_willing_to_testify,
@@ -235,29 +265,34 @@ def get_solvability_weights():
             "police_willing_to_arrest": police_willing_to_arrest,
             "recency_of_case": recency_of_case,
             "exploitation_reported": exploitation_reported,
-            "pv_believes": pv_believes
+            "pv_believes": pv_believes,
         }
     return solvability_weights
 
+
 def get_priority_weights():
-    priority_weights = case_dispatcher['priority_weights']
+    priority_weights = case_dispatcher["priority_weights"]
     if st.checkbox("Adjust Priority Weights"):
-        priority_weights_text = case_dispatcher['priority_weights_text']['text']
+        priority_weights_text = case_dispatcher["priority_weights_text"]["text"]
         # Using st.expander to create a collapsible section for the variable description
         with st.expander("The priority weights"):
             st.markdown(priority_weights_text)
         st.subheader("Adjust Priority Weights")
         # Assume priority_weights are fetched from case_dispatcher, initialize if not available
 
-        eminence = st.slider("eminence", 0.0, 1.0, priority_weights['eminence'])
-        solvability = st.slider("solvability", 0.0, 1.00, priority_weights['solvability'])
-        strength_of_case = st.slider("strength_of_case", 0.00, 1.00, priority_weights['strength_of_case'])
+        eminence = st.slider("eminence", 0.0, 1.0, priority_weights["eminence"])
+        solvability = st.slider(
+            "solvability", 0.0, 1.00, priority_weights["solvability"]
+        )
+        strength_of_case = st.slider(
+            "strength_of_case", 0.00, 1.00, priority_weights["strength_of_case"]
+        )
         # Update priority_weights based on slider input
 
         priority_weights = {
             "eminence": eminence,
             "solvability": solvability,
-            "strength_of_case": strength_of_case
+            "strength_of_case": strength_of_case,
         }
     return priority_weights
 
@@ -272,7 +307,9 @@ def main():
         st.session_state["spreadsheet_name"] = None
 
     if "case_dispatcher_soc_df" not in st.session_state:
-        st.session_state['case_dispatcher_soc_df'] = load_data(drive_service, 'case_dispatcher_soc_df.pkl')
+        st.session_state["case_dispatcher_soc_df"] = load_data(
+            drive_service, "case_dispatcher_soc_df.pkl"
+        )
 
     exploitation_type = get_exploitation_settings()
     recency_vars = get_recency_settings()
@@ -299,8 +336,13 @@ def main():
         if operating_country_id == "Country not found":
             st.write(f"Country not found: {country}")
             return
-        st.write(f"Selected {country} has operating_country_id: {operating_country_id}, continuing...")
-        case_dispatcher_soc_df = st.session_state['case_dispatcher_soc_df'][st.session_state['case_dispatcher_soc_df'].operating_country_id==operating_country_id].copy()
+        st.write(
+            f"Selected {country} has operating_country_id: {operating_country_id}, continuing..."
+        )
+        case_dispatcher_soc_df = st.session_state["case_dispatcher_soc_df"][
+            st.session_state["case_dispatcher_soc_df"].operating_country_id
+            == operating_country_id
+        ].copy()
 
         st.session_state["country"] = country
         st.write("You selected:", country)
@@ -319,6 +361,7 @@ def main():
         # Only execute this part if the "Update" button hasn't been clicked yet
         if st.button("Update"):
             # Assuming get_gsheets and get_dfs are defined and take the necessary arguments
+            st.write(st.session_state["spreadsheet_name"])
             sheets, file_url, file_id = get_gsheets(
                 credentials, st.session_state["spreadsheet_name"], sheet_names
             )
@@ -327,21 +370,34 @@ def main():
             dfs = get_dfs(sheets)
 
             st.write(f"Get the data from collect_model_data.py")
-            db_vics = load_data(drive_service, 'new_victims.pkl')
-            db_vics = db_vics[db_vics['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
-            db_sus = load_data(drive_service, 'new_suspects.pkl')
-            db_sus = db_sus[db_sus['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
-            irf_case_notes = load_data(drive_service, 'irf_case_notes.pkl')
-            irf_case_notes = irf_case_notes[irf_case_notes['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
+            db_vics = load_data(drive_service, "new_victims.pkl")
+            db_vics = db_vics[
+                db_vics["operating_country_id"] == operating_country_id
+            ].drop(columns=["operating_country_id"])
+            db_sus = load_data(drive_service, "new_suspects.pkl")
+            db_sus = db_sus[
+                db_sus["operating_country_id"] == operating_country_id
+            ].drop(columns=["operating_country_id"])
+            irf_case_notes = load_data(drive_service, "irf_case_notes.pkl")
+            irf_case_notes = irf_case_notes[
+                irf_case_notes["operating_country_id"] == operating_country_id
+            ].drop(columns=["operating_country_id"])
             st.write(f"Get the model (pkl):")
-            case_dispatcher_model = load_data(drive_service, 'case_dispatcher_model.pkl')
+            case_dispatcher_model = load_data(
+                drive_service, "case_dispatcher_model.pkl"
+            )
             st.write("Get the model columns:")
-            case_dispatcher_model_cols = load_data(drive_service, 'case_dispatcher_model_cols.pkl')
+            case_dispatcher_model_cols = load_data(
+                drive_service, "case_dispatcher_model_cols.pkl"
+            )
             st.write(f"Predict likelihood of arrest and add prediction to dataframe")
             # st.dataframe(soc_df[model_cols])
-            case_dispatcher_soc_df.loc[:,"soc"]=0.0
+            case_dispatcher_soc_df.loc[:, "soc"] = 0.0
             # case_dispatcher_soc_df["soc"] = case_dispatcher_soc_df["soc"].astype(float)
-            soc = make_predictions(case_dispatcher_model, case_dispatcher_soc_df.loc[:,case_dispatcher_model_cols].copy())
+            soc = make_predictions(
+                case_dispatcher_model,
+                case_dispatcher_soc_df.loc[:, case_dispatcher_model_cols].copy(),
+            )
             case_dispatcher_soc_df.loc[:, "soc"] = soc
             # ===========================================================================================================
             st.write(f"Create the victims_entity from db_vics")
@@ -374,7 +430,7 @@ def main():
             for sheet in EntityGroup.sheets:
                 st.write(sheet.active_name)
                 st.dataframe(sheet.new)
-                st.write('------------------------------------------')
+                st.write("------------------------------------------")
             # st.dataframe(EntityGroup.new)
             st.write(
                 f"Create the police entity from a  copy of the suspects_entity.new"
@@ -386,17 +442,23 @@ def main():
             )
 
             EntityGroup.combine_sheets()
-            suspects_entity.active = suspects_entity.active[~(suspects_entity.active["case_id"] == '')]
+            suspects_entity.active = suspects_entity.active[
+                ~(suspects_entity.active["case_id"] == "")
+            ]
 
             st.write(f"Add irf_case_notes")
             EntityGroup.add_irf_notes(irf_case_notes)
             st.write(f"Move closed cases")
             EntityGroup.move_closed(case_dispatcher_soc_df)
-            EntityGroup.move_other_closed(suspects_entity, police_entity, victims_entity)
+            EntityGroup.move_other_closed(
+                suspects_entity, police_entity, victims_entity
+            )
             st.write(f"Get victims willing to testify")
             vics_willing = data_prep.get_vics_willing_to_testify(victims_entity.active)
             st.write(f"Add victim names")
-            police_entity.active = data_prep.add_vic_names(police_entity.active, vics_willing)
+            police_entity.active = data_prep.add_vic_names(
+                police_entity.active, vics_willing
+            )
             suspects_entity.active = data_prep.add_vic_names(
                 suspects_entity.active, vics_willing
             )
@@ -407,13 +469,15 @@ def main():
                 victims_entity.active, sus_located
             )
 
-            police_entity.active["case_status"] = police_entity.active["case_status"].astype(str)
+            police_entity.active["case_status"] = police_entity.active[
+                "case_status"
+            ].astype(str)
             suspects_entity.active["case_status"] = suspects_entity.active[
                 "case_status"
             ].astype(str)
-            suspects_entity.active[
-                "victims_willing_to_testify"
-            ] = suspects_entity.active["victims_willing_to_testify"].astype(str)
+            suspects_entity.active["victims_willing_to_testify"] = (
+                suspects_entity.active["victims_willing_to_testify"].astype(str)
+            )
 
             # Suspects = dfs["suspects"].copy()
             # sus = suspects_entity.active.copy()
@@ -474,12 +538,16 @@ def main():
                 right_on="irf_number",
                 how="left",
             ).drop(columns=["irf_number"])
-            numeric_days = pd.to_numeric(active_cases['days'], errors='coerce')
+            numeric_days = pd.to_numeric(active_cases["days"], errors="coerce")
 
             # Filter out rows where 'days' is greater than 365 and is not NaN (thus a number)
             # Also, implicitly keeps rows where 'days' is NaN or None, since comparison with NaN is false
-            filtered_active_cases = active_cases[(numeric_days <= 120) | numeric_days.isna()]
-            filtered_active_cases = filtered_active_cases[~(filtered_active_cases["case_id"]=='')]
+            filtered_active_cases = active_cases[
+                (numeric_days <= 120) | numeric_days.isna()
+            ]
+            filtered_active_cases = filtered_active_cases[
+                ~(filtered_active_cases["case_id"] == "")
+            ]
             filtered_active_cases = filtered_active_cases.drop_duplicates()
 
             EntityGroup.update_gsheets(

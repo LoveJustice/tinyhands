@@ -35,30 +35,7 @@ MEMORY = ChatMemoryBuffer.from_defaults(token_limit=4096)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
 
 
-red_flags = [
-    "assure_prompt",
-    "bypass_prompt",
-    "callback_request_prompt",
-    "drop_off_at_secure_location_prompt",
-    "false_organization_prompt",
-    "gender_specific_prompt",
-    "illegal_activities_prompt",
-    "immediate_hiring_prompt",
-    "language_switch_prompt",
-    "multiple_provinces_prompt",
-    "no_education_skilled_prompt",
-    "no_location_prompt",
-    "overseas_prompt",
-    "quick_money_prompt",
-    "recruit_students_prompt",
-    "requires_references",
-    "suspicious_email_prompt",
-    "target_specific_group_prompt",
-    "unprofessional_writing_prompt",
-    "unrealistic_hiring_number_prompt",
-    "unusual_hours_prompt",
-    "vague_description_prompt",
-]
+red_flags = cp.RED_FLAGS
 
 
 def analyze_dataframe(df):
@@ -279,12 +256,15 @@ for IDn in [573204]:
     process_advert(IDn=IDn, prompt_name="target_specific_group_prompt")
 
 # ============================================================================================
-flag_query = """MATCH p=(group:Group)-[]-(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+flag_query = """MATCH p=(group:Group)-[]-(posting:RecruitmentAdvert)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+WHERE r.type IN $red_flags
 RETURN posting.text AS advert, ID(group) AS group_id, ID(posting) AS IDn, posting.monitor_score AS monitor_score, r.type as flag, analysis.result as result """
 
 # flags = execute_neo4j_query(flag_query, parameters={})
 
-df = pd.DataFrame(nl.execute_neo4j_query(flag_query, parameters={}))
+df = pd.DataFrame(
+    nl.execute_neo4j_query(flag_query, parameters={"red_flags": red_flags})
+)
 # df = df[["advert", "group_id", "IDn", "monitor_score", "flag"]+red_flags]
 duplicates = df.duplicated(
     subset=["advert", "group_id", "IDn", "monitor_score", "flag"], keep=False
@@ -342,11 +322,14 @@ list(flags)
 model_data.to_csv("results/advert_flags.csv", index=False)
 
 # --------------------------------------------------------------------------------
-confidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+confidence_query = """MATCH p=(posting:RecruitmentAdvert)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+WHERE r.type IN $red_flags
 RETURN ID(posting) AS id, r.type as flag, analysis.confidence as confidence """
 
 confidence = (
-    pd.DataFrame(nl.execute_neo4j_query(confidence_query, parameters={}))
+    pd.DataFrame(
+        nl.execute_neo4j_query(confidence_query, parameters={"red_flags": red_flags})
+    )
     .pivot(index="id", columns="flag", values="confidence")
     .reset_index()
 )
@@ -354,22 +337,28 @@ confidence = (
 confidence[["id"] + red_flags].to_csv("results/advert_confidence.csv", index=False)
 
 # ============================================================================================
-evidence_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+evidence_query = """MATCH p=(posting:RecruitmentAdvert)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+WHERE r.type IN $red_flags
 RETURN ID(posting) AS id, r.type as flag, analysis.evidence as evidence """
 
 evidence = (
-    pd.DataFrame(nl.execute_neo4j_query(evidence_query, parameters={}))
+    pd.DataFrame(
+        nl.execute_neo4j_query(evidence_query, parameters={"red_flags": red_flags})
+    )
     .pivot(index="id", columns="flag", values="evidence")
     .reset_index()
 )
 evidence[["id"] + red_flags].to_csv("results/advert_evidence.csv", index=False)
 # ============================================================================================
-explanation_query = """MATCH p=(posting:Posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+explanation_query = """MATCH p=(posting:RecruitmentAdvert)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+WHERE r.type IN $red_flags
 RETURN ID(posting) AS id, r.type as flag, analysis.explanation as explanation """
 
 
 explanation = (
-    pd.DataFrame(nl.execute_neo4j_query(explanation_query, parameters={}))
+    pd.DataFrame(
+        nl.execute_neo4j_query(explanation_query, parameters={"red_flags": red_flags})
+    )
     .pivot(index="id", columns="flag", values="explanation")
     .reset_index()
 )

@@ -13,6 +13,8 @@ ANALYSIS_STR = """' Return your analysis STRICTLY and exclusively in the followi
 EXTRACTION_PROMPTS = {
     "phone_number_prompt": "Extract phone numbers from the following text and return your findings as a list:"
 }
+
+
 CLAUDE_PROMPTS = {
     "assure_prompt": (
         "Examine the following job advertisement. "
@@ -51,6 +53,9 @@ CLAUDE_PROMPTS = {
     "language_switch_prompt": (
         "Examine the following job advertisement. Does it change from English to other languages in the middle of the post? "
     ),
+    "link_prompt": (
+        "Analyze the following text. Is there one or more links or urls mentioned? When asked tp do so, extract the ONLY the link(s) as evidence. "
+    ),
     "multiple_provinces_prompt": (
         "Analyze the following job advertisement. Does it advertise for positions in several provinces, especially without detail? "
     ),
@@ -62,13 +67,19 @@ CLAUDE_PROMPTS = {
         "Examine the following job advertisement. Does it fail to mention a specific job location? "
     ),
     "overseas_prompt": (
-        "Examine the following job advertisement. Does it offer positions overseas (i.e. outside of South Africa)?"
+        "Examine the following job advertisement. Does it offer positions overseas (i.e. outside of South Africa)? "
+    ),
+    "phone_prompt": (
+        "Analyze the following text. Is there one or more phone numbers mentioned? When asked to do so, extract ONLY the numbers(s) as evidence. "
     ),
     "quick_money_prompt": (
         "Analyze the following job advertisement. Does it promise quick or easy money? "
     ),
     "recruit_students_prompt": (
         "Analyze the following job advertisement. Does it specifically recruit people who are under the age of 18? "
+    ),
+    "recruitment_prompt": (
+        "Analyze the following text. Is it unambiguously a recruitment advert? "
     ),
     "requires_references": (
         "Examine the following job advertisement. Does it require the applicant to provide references?"
@@ -113,7 +124,6 @@ RED_FLAGS = [
     "drop_off_at_secure_location_prompt",
     "false_organization_prompt",
     "gender_specific_prompt",
-    "illegal_activities_prompt",
     "immediate_hiring_prompt",
     "language_switch_prompt",
     "multiple_provinces_prompt",

@@ -191,6 +191,7 @@ def query_adverts(prompt_name: str) -> pd.DataFrame:
 
 async def main_async():
     prompt_names = cp.RED_FLAGS
+    prompt_names = cp.CLAUDE_PROMPTS.keys()
 
     for prompt_name in prompt_names:
         adverts = query_adverts(prompt_name)

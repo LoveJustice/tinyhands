@@ -8,10 +8,87 @@ import streamlit as st
 from googlesearch import search
 from datetime import datetime, timedelta
 import pandas as pd
+import pandas as pd
+from thefuzz import fuzz, process  # you can also use 'fuzzywuzzy' instead
+
 import tldextract
 from libraries.neo4j_lib import Neo4jConnection
 
 curl = st.secrets["face_matcher"]["curl"]
+
+
+def find_closest_match(search_name, df, column="full_name", limit=3, threshold=60):
+    """
+    Find the closest matching names in the DataFrame.
+
+    Parameters:
+    -----------
+    search_name : str
+        The name to search for
+    df : pandas.DataFrame
+        DataFrame containing the names
+    column : str
+        Column name containing the full names
+    limit : int
+        Number of matches to return
+    threshold : int
+        Minimum similarity score (0-100) to include in results
+
+    Returns:
+    --------
+    list of tuples
+        (matched_name, similarity_score)
+    """
+    # Get all matches above threshold
+    matches = process.extractBests(
+        search_name,
+        df[column].tolist(),
+        scorer=fuzz.token_sort_ratio,  # handles reordered words well
+        score_cutoff=threshold,
+        limit=limit,
+    )
+
+    return matches
+
+
+def find_matches_with_different_algorithms(search_name, df, column="full_name"):
+    """
+    Find matches using different fuzzy matching algorithms and return detailed results.
+
+    Parameters:
+    -----------
+    search_name : str
+        The name to search for
+    df : pandas.DataFrame
+        DataFrame containing the names
+    column : str
+        Column name containing the full names
+
+    Returns:
+    --------
+    pandas.DataFrame
+        DataFrame with match scores from different algorithms
+    """
+    results = []
+
+    for name in df[column]:
+        # Different matching algorithms for comparison
+        simple_ratio = fuzz.ratio(search_name.lower(), name.lower())
+        partial_ratio = fuzz.partial_ratio(search_name.lower(), name.lower())
+        token_sort = fuzz.token_sort_ratio(search_name, name)
+        token_set = fuzz.token_set_ratio(search_name, name)
+
+        results.append(
+            {
+                "name": name,
+                "simple_ratio": simple_ratio,
+                "partial_ratio": partial_ratio,
+                "token_sort_ratio": token_sort,
+                "token_set_ratio": token_set,
+            }
+        )
+
+    return pd.DataFrame(results).sort_values("token_sort_ratio", ascending=False)
 
 
 query = """SELECT irfcommon.date_of_interception AS date_of_interception \
@@ -43,7 +120,18 @@ with DB_Conn() as db:
 person_details.sort_values("date_of_interception", inplace=True, ascending=False)
 
 person_details.address[0]
+# -----------------------
+search_name = "ziqubu"
+matches = find_closest_match(search_name, person_details)
+print(f"\nClosest matches for '{search_name}':")
+for match, score in matches:
+    print(f"Match: {match}, Score: {score}")
 
+# Example 2: Detailed matching with different algorithms
+print(f"\nDetailed matching results for '{search_name}':")
+detailed_matches = find_matches_with_different_algorithms(search_name, person_details)
+print(detailed_matches)
+# ------------------------
 filtered_df = person_details[person_details["full_name"].str.split().str.len() > 2]
 filtered_df.full_name
 deduped_person_details = person_details[~person_details.duplicated(subset="irf_number")]
@@ -198,3 +286,6 @@ for url in articles:
     quality_score = assess_quality(url, query_terms)
     results[url] = quality_score
     print(f"Quality score: {quality_score}")
+
+
+person_details["full_name"] = person_d

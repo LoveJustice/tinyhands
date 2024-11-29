@@ -98,7 +98,7 @@ class Neo4jConnection:
                 max_connection_lifetime=30 * 60,
                 max_connection_pool_size=10,
             )
-            print("Neo4j connection established.")
+            # print("Neo4j connection established.")
         except Exception as e:
             print(f"Failed to create the driver: {e}")
             raise e
@@ -117,7 +117,7 @@ class Neo4jConnection:
         """Closes the Neo4j driver connection."""
         if self.__driver is not None:
             self.__driver.close()
-            print("Neo4j connection closed.")
+            # print("Neo4j connection closed.")
 
     def execute_query(self, query, parameters=None, return_df=False):
         """Executes a Neo4j query.
