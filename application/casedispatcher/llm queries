@@ -1,0 +1,34 @@
+ConnectionUnavailable: Connection has been closed
+Traceback:
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 552, in _run_script
+    exec(code, module.__dict__)
+File "/Users/user/github_repos/tinyhands/application/lji_social_media/streamlit_fb_friends.py", line 35, in <module>
+    graph = Graph(neo4j_url, user=neo4j_usr, password=neo4j_pwd)
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/database.py", line 288, in __init__
+    self.service = GraphService(profile, **settings)
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/database.py", line 119, in __init__
+    self._connector = Connector(profile, **connector_settings)
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/__init__.py", line 960, in __init__
+    self._add_pools(*self._initial_routers)
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/__init__.py", line 982, in _add_pools
+    pool = ConnectionPool.open(
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/__init__.py", line 649, in open
+    seeds = [pool.acquire() for _ in range(init_size or cls.default_init_size)]
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/__init__.py", line 649, in <listcomp>
+    seeds = [pool.acquire() for _ in range(init_size or cls.default_init_size)]
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/__init__.py", line 813, in acquire
+    cx = self._connect()
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/__init__.py", line 764, in _connect
+    cx = Connection.open(self.profile, user_agent=self.user_agent,
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/__init__.py", line 174, in open
+    return Bolt.open(profile, user_agent=user_agent,
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/bolt.py", line 361, in open
+    bolt._hello(user_agent or bolt_user_agent())
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/bolt.py", line 867, in _hello
+    self._audit(response)
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/bolt.py", line 812, in _audit
+    self.reset(force=True)
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/bolt.py", line 506, in reset
+    self._assert_open()
+File "/Users/user/github_repos/lji_social_media/venv/lib/python3.9/site-packages/py2neo/client/bolt.py", line 449, in _assert_open
+    raise ConnectionUnavailable("Connection has been closed")

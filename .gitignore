@@ -1,3 +1,4 @@
+*.pkl
 *.sqlite
 *.sqlite3
 *.sqlitebak
@@ -11,6 +12,7 @@ deploycfg_key_*
 google_cred.json
 dreamsuite_tag
 
+application/lji_social_media/models/
 
 .#*
 .coverage
