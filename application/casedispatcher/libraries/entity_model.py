@@ -126,37 +126,62 @@ class EntityGroup(GetAttr):
     def move_closed(cls, soc_df):
         """Moves closed cases to closed sheet for each Entity Group instance."""
         for sheet in cls.sheets:
+            # Handle previously closed cases
             prev_closed = sheet.newcopy[
                 sheet.newcopy[sheet.uid].isin(soc_df[soc_df.arrested == 1].suspect_id)
             ].copy()
-            prev_closed["case_status"] = prev_closed["case_status"].fillna("").astype(str)
-
+            prev_closed["case_status"] = (
+                prev_closed["case_status"].fillna("").astype(str)
+            )
             prev_closed.loc[:, "case_status"] = "Closed: Already in Legal Cases Sheet"
 
-            # Update newly_closed to be data where "Case_Status" contains "Closed"
-            newly_closed = sheet.gsheet[sheet.gsheet["case_status"].str.contains("Closed", na=False)]
+            # Handle newly closed cases
+            newly_closed = sheet.gsheet[
+                sheet.gsheet["case_status"].str.contains("Closed", na=False)
+            ]
 
-            # Populate the 'date' column with today's date
+            # Add timestamps
             today = pd.Timestamp.today().normalize()
-            newly_closed['date'] = today
+            newly_closed["date"] = today
+            newly_closed["supervisor_review"] = today
 
-            today = pd.Timestamp.today().normalize()
-            newly_closed['supervisor_review'] = today
-
+            # Remove duplicates from prev_closed
             prev_closed = prev_closed[
                 ~prev_closed[sheet.uid].isin(sheet.closed[sheet.uid])
             ]
 
-            original_cols = list(prev_closed.columns)
-            new_cols = [original_cols[i] + str(i) for i in range(len(original_cols))]
+            # Get unique columns from sheet.closed
+            target_columns = pd.Index(sheet.closed.columns).drop_duplicates()
 
-            sheet.closed.columns = new_cols
-            prev_closed.columns = new_cols
-            newly_closed.columns = new_cols
+            # Create temporary copies with unique column names
+            sheet_closed_unique = sheet.closed.loc[:, target_columns]
+            prev_closed_unique = prev_closed.loc[
+                :, prev_closed.columns.drop_duplicates()
+            ]
+            newly_closed_unique = newly_closed.loc[
+                :, newly_closed.columns.drop_duplicates()
+            ]
 
-            sheet.closed = pd.concat([sheet.closed, prev_closed, newly_closed])
-            sheet.closed.columns = original_cols
+            # Ensure all DataFrames have the same columns
+            common_columns = list(
+                set(target_columns)
+                & set(prev_closed_unique.columns)
+                & set(newly_closed_unique.columns)
+            )
+
+            # Filter to common columns before concatenation
+            sheet.closed = pd.concat(
+                [
+                    sheet_closed_unique[common_columns],
+                    prev_closed_unique[common_columns],
+                    newly_closed_unique[common_columns],
+                ]
+            )
+
+            # Remove duplicates
             sheet.closed.drop_duplicates(subset=sheet.uid, inplace=True)
+
+            # Remove closed cases from active
             sheet.active = sheet.active[
                 ~sheet.active[sheet.uid].isin(sheet.closed[sheet.uid])
             ]
@@ -269,10 +294,10 @@ class EntityGroup(GetAttr):
             sheet.active.reset_index(inplace=True)
             sheet.active = sheet.active.drop(columns="index")
             for index, row in sheet.active.iterrows():
-                sheet.active.at[
-                    index, "case_name"
-                ] = "=iferror(index(Cases!B:B,match(A{},Cases!A:A,0)),)".format(
-                    index + 2
+                sheet.active.at[index, "case_name"] = (
+                    "=iferror(index(Cases!B:B,match(A{},Cases!A:A,0)),)".format(
+                        index + 2
+                    )
                 )
 
     new_gsheets = []

@@ -455,7 +455,7 @@ def main():
     Main function with corrected ID handling.
     """
     # Load original data with proper ID handling
-    file_path = "../results/advert_flags.csv"
+    file_path = "results/advert_flags.csv"
     print("Loading original data...")
     original_data = pd.read_csv(file_path)
 
@@ -464,7 +464,7 @@ def main():
         raise ValueError("Original data must contain 'IDn' column")
 
     # Load splits
-    splits_timestamp = "20241114_115648"
+    splits_timestamp = "20241204_122617"
     splits, split_info = load_splits(splits_timestamp)
 
     # Generate unique model identifier

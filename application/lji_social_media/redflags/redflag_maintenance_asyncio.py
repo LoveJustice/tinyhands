@@ -143,7 +143,7 @@ async def process_advert_async(IDn: int, prompt_name: str) -> None:
 
         # 3. Do the analysis - this can stay async
         response = await loop.run_in_executor(
-            None, lf.analyse_advert, chat_engine, advert, prompt_name
+            None, lf.analyse_advert, chat_engine, prompt_name
         )
         if response.result == "error":
             logger.error(f"Analysis failed for IDn {IDn}: {response.explanation}")
@@ -174,7 +174,7 @@ async def process_batch_async(adverts: pd.DataFrame, prompt_name: str) -> None:
 
 def query_adverts(prompt_name: str) -> pd.DataFrame:
     query = """
-    MATCH (g:Group)-[:HAS_POSTING]-(n:Posting)
+    MATCH (g:Group)-[:HAS_POSTING]-(n:RecruitmentAdvert)
     WHERE g.country_id = 1
       AND n.text IS NOT NULL
       AND n.text <> ""
@@ -190,7 +190,7 @@ def query_adverts(prompt_name: str) -> pd.DataFrame:
 
 
 async def main_async():
-    prompt_names = cp.RED_FLAGS
+    # prompt_names = cp.RED_FLAGS
     prompt_names = cp.CLAUDE_PROMPTS.keys()
 
     for prompt_name in prompt_names:

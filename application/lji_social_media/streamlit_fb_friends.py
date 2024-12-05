@@ -3,7 +3,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from gspread_dataframe import set_with_dataframe
 import gspread
-
+import libraries.neo4j_lib as nl
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -18,21 +18,10 @@ import subprocess
 from random import randint
 import re
 from bs4 import BeautifulSoup
-from py2neo import Graph
+
+
 from datetime import datetime
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-
-
-# Environment variable fetching and error handling
-neo4j_url = os.environ.get("NEO4J_URL")
-neo4j_usr = os.environ.get("NEO4J_USR", "neo4j")  # Default to 'neo4j' if not set
-neo4j_pwd = os.environ.get("NEO4J_PWD")
-
-if not all([neo4j_url, neo4j_usr, neo4j_pwd]):
-    raise EnvironmentError("Required NEO4J environment variables are not set.")
-
-# Initialize Graph
-graph = Graph(neo4j_url, user=neo4j_usr, password=neo4j_pwd)
 
 
 from social_media.social_media import (
@@ -446,8 +435,7 @@ CALL apoc.create.addLabels(p, CASE WHEN NOT 'SourceProfile' IN labels(p) THEN ['
 CALL apoc.create.addLabels(f, CASE WHEN $follower_url = $source_url AND NOT 'FollowerProfile' IN labels(f) THEN ['FollowerProfile'] ELSE [] END) YIELD node as fNode
 RETURN pNode, fNode
 """
-
-        graph.run(query, parameters).data()
+        nl.execute_neo4j_query(query, parameters)
         profile_dicts.append(parameters)
     pd.DataFrame(profile_dicts).to_csv(
         "results/follower_profile_dicts.csv", index=False
@@ -490,7 +478,7 @@ CALL apoc.create.addLabels(f, CASE WHEN $friend_url = $source_url AND NOT 'Frien
 RETURN pNode, fNode
 """
 
-        graph.run(query, parameters).data()
+        nl.execute_neo4j_query(query, parameters)
         profile_dicts.append(parameters)
     pd.DataFrame(profile_dicts).to_csv("results/profile_dicts.csv", index=False)
     logging.info("Successfully created results/profile_dicts.csv")
