@@ -1,4 +1,4 @@
-import numpy as np
+# data_prep.py
 import streamlit as st
 import pandas as pd
 import re
@@ -9,26 +9,35 @@ from datetime import date
 logger = setup_logger("data_prep_logging", "data_prep_logging")
 
 
-def do_audit(audit_series, description = "audit"):
+def do_audit(audit_series, description="audit"):
     if st.session_state["include_audit"] == "Yes":
         # audit = audit_series.isin([st.session_state['irf_audit_number']])
-        audit = st.session_state['irf_audit_number'] in audit_series.values
-        st.write(f"irf_audit_number = {st.session_state['irf_audit_number']} is in db_irf: {audit}, with description '{description}'")
+        audit = st.session_state["irf_audit_number"] in audit_series.values
+        st.write(
+            f"irf_audit_number = {st.session_state['irf_audit_number']} is in db_irf: {audit}, with description '{description}'"
+        )
+
 
 def add_country_stats(model_data, country_stats):
     # Simplify country replacement using `np.where`
     import numpy as np
-    model_data['country'] = np.where(model_data['country'] == 'India Network', 'India', model_data['country'])
+
+    model_data["country"] = np.where(
+        model_data["country"] == "India Network", "India", model_data["country"]
+    )
 
     # Merge with country_stats and directly replace 'country' without creating a 'dummy_country'
-    merged_data = model_data.merge(country_stats, left_on='country', right_on='Country', how='left')
+    merged_data = model_data.merge(
+        country_stats, left_on="country", right_on="Country", how="left"
+    )
 
     # Drop the now redundant 'Country' column from country_stats
-    merged_data.drop(columns=['Country'], inplace=True)
+    merged_data.drop(columns=["Country"], inplace=True)
 
     # Convert 'IBR12' percentage strings to float
-    merged_data['IBR12'] = merged_data['IBR12'].str.rstrip('%').astype(float) / 100
+    merged_data["IBR12"] = merged_data["IBR12"].str.rstrip("%").astype(float) / 100
     return merged_data
+
 
 def extract_role_series(role_series):
     default_value = "missing information"
@@ -522,8 +531,9 @@ def en_features(soc_df):
 
 
 def set_vic_id(new_victims):
-    """Creates a unique ID for each victim from Case ID and subsets/renames
-    columns."""
+    if "victim_id" not in new_victims.columns:
+        logger.error("'victim_id' column is missing after setting victim IDs.")
+
     new_victims = new_victims[
         ["vdf_number", "full_name", "phone_contact", "address_notes", "social_media"]
     ]
@@ -1313,18 +1323,18 @@ def update_active_cases(
     ]
 
     # Update 'Case_Status' based on the conditions
-    active_cases.loc[
-        active_cases.case_id.isin(police_complete), "case_status"
-    ] = "Third Step Complete - Police are willing to arrest suspect."
-    active_cases.loc[
-        active_cases.case_id.isin(suspect_complete), "case_status"
-    ] = "Second Step Complete: Suspect Located"
-    active_cases.loc[
-        active_cases.case_id.isin(multiple_victims), "case_status"
-    ] = "First Step Complete: Two or more PVs willing to testify"
-    active_cases.loc[
-        active_cases.case_id.isin(single_victim), "case_status"
-    ] = "First Step Complete: One PV willing to testify"
+    active_cases.loc[active_cases.case_id.isin(police_complete), "case_status"] = (
+        "Third Step Complete - Police are willing to arrest suspect."
+    )
+    active_cases.loc[active_cases.case_id.isin(suspect_complete), "case_status"] = (
+        "Second Step Complete: Suspect Located"
+    )
+    active_cases.loc[active_cases.case_id.isin(multiple_victims), "case_status"] = (
+        "First Step Complete: Two or more PVs willing to testify"
+    )
+    active_cases.loc[active_cases.case_id.isin(single_victim), "case_status"] = (
+        "First Step Complete: One PV willing to testify"
+    )
 
     # Update 'Next_Action_Priority' based on the conditions
     active_cases["Next_Action_Priority"] = ""
