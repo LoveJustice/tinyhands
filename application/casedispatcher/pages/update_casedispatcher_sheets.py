@@ -38,7 +38,10 @@ from libraries.google_lib import (
     get_matching_spreadsheets,
 )
 import dotenv
+from libraries.case_dispatcher_logging import setup_logger
+import gspread
 
+logger = setup_logger("update_logging", "update_logging")
 dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
 
@@ -452,6 +455,7 @@ def main():
             st.write(f"Add irf_case_notes")
             EntityGroup.add_irf_notes(irf_case_notes)
             st.write(f"Move closed cases")
+            # logger.info(f"Move closed cases: {uid}")
             EntityGroup.move_closed(case_dispatcher_soc_df)
             EntityGroup.move_other_closed(
                 suspects_entity, police_entity, victims_entity
@@ -552,10 +556,12 @@ def main():
                 ~(filtered_active_cases["case_id"] == "")
             ]
             filtered_active_cases = filtered_active_cases.drop_duplicates()
-
-            EntityGroup.update_gsheets(
-                credentials, st.session_state["spreadsheet_name"], filtered_active_cases
+            logger.info(
+                f"Do EntityGroup.update_gsheets(credentials, st.session_state['spreadsheet_name'], filtered_active_cases here            # )"
             )
+            # EntityGroup.update_gsheets(
+            #     credentials, st.session_state["spreadsheet_name"], filtered_active_cases
+            # )
             # st.dataframe(active_cases)
             st.write(
                 f"Success! {st.session_state['spreadsheet_name']} has been updated."

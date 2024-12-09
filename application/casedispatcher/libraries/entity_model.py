@@ -1,85 +1,10 @@
-# entity_model.py
-# author: christo strydom
-import os
-import logging
-from datetime import datetime
 import pandas as pd
 from copy import deepcopy
 import gspread_dataframe as gd
 from .case_dispatcher_logging import setup_logger
 import gspread
 
-
-import pandas as pd
-from copy import deepcopy
-
-# from .case_dispatcher_logging import setup_logger
-
-
 logger = setup_logger("entity_model_logging", "entity_logging")
-
-
-class DataFrameValidator:
-    @staticmethod
-    def standardize_columns(df, base_columns=None):
-        """
-        Standardize DataFrame columns by removing duplicates and ensuring consistency
-        """
-        # Get unique column names while preserving order
-        seen = set()
-        unique_cols = []
-        for col in df.columns:
-            if col not in seen:
-                seen.add(col)
-                unique_cols.append(col)
-            else:
-                # If duplicate, append a unique suffix
-                counter = 1
-                while f"{col}_{counter}" in seen:
-                    counter += 1
-                unique_cols.append(f"{col}_{counter}")
-                seen.add(f"{col}_{counter}")
-
-        # Create new DataFrame with unique column names
-        df_unique = df.copy()
-        df_unique.columns = unique_cols
-
-        # If base_columns provided, ensure all required columns exist
-        if base_columns is not None:
-            for col in base_columns:
-                if col not in df_unique.columns:
-                    df_unique[col] = pd.NA
-
-        return df_unique
-
-    @staticmethod
-    def validate_required_columns(df, required_columns):
-        """
-        Validate that DataFrame has all required columns
-        """
-        missing_columns = [col for col in required_columns if col not in df.columns]
-        return len(missing_columns) == 0, missing_columns
-
-    @staticmethod
-    def safe_concat(dfs, common_columns=None):
-        """
-        Safely concatenate DataFrames ensuring column consistency
-        """
-        if not dfs:
-            return pd.DataFrame()
-
-        # If common_columns not provided, use intersection of all DataFrame columns
-        if common_columns is None:
-            common_columns = set.intersection(*[set(df.columns) for df in dfs])
-
-        # Standardize each DataFrame
-        standardized_dfs = []
-        for df in dfs:
-            std_df = DataFrameValidator.standardize_columns(df[common_columns])
-            standardized_dfs.append(std_df)
-
-        # Concatenate standardized DataFrames
-        return pd.concat(standardized_dfs, ignore_index=True)
 
 
 class GetAttr:
@@ -106,20 +31,15 @@ class GetAttr:
 """## The EntityGroup"""
 
 
-class EntityGroup:
+class EntityGroup(GetAttr):
+    """This is a class for Victims, Suspects, and Police entity groups with
+    corresponding sheets."""
+
     sheets = []
 
     def __init__(self, uid, new_cases, active_gsheet, closed_gsheet, gsdfs):
+        logger.info(f"Initializing EntityGroup with uid: {uid}")
         try:
-            logger.info(f"Initializing EntityGroup with uid: {uid}")
-            logger.debug(f"New cases columns: {new_cases.columns.tolist()}")
-            logger.debug(
-                f"Active gsheet columns: {gsdfs[active_gsheet].columns.tolist()}"
-            )
-            logger.debug(
-                f"Closed gsheet columns: {gsdfs[closed_gsheet].columns.tolist()}"
-            )
-
             EntityGroup.sheets.append(self)
             self.uid = uid
             self.new = new_cases
@@ -127,10 +47,11 @@ class EntityGroup:
             self.closed = gsdfs[closed_gsheet]
             self.active_name = active_gsheet
             self.closed_name = closed_gsheet
-
             logger.info(f"Successfully initialized EntityGroup with uid: {uid}")
         except Exception as e:
-            logger.error(f"Error initializing EntityGroup: {str(e)}", exc_info=True)
+            logger.error(
+                f"Error while initializing EntityGroup: {str(e)}", exc_info=True
+            )
             raise
 
     @classmethod
@@ -203,60 +124,80 @@ class EntityGroup:
 
     @classmethod
     def move_closed(cls, soc_df):
-        validator = DataFrameValidator()
-
+        """Moves closed cases to closed sheet for each Entity Group instance."""
         for sheet in cls.sheets:
-            logger.info(f"Processing sheet: {sheet.active_name}")
+            # Handle previously closed cases
+            logger.info(f"Here is the sheet header: {list(sheet.gsheet)}")
+            logger.info(f"Here is the sheet dir: {dir(sheet)}")
+            prev_closed = sheet.newcopy[
+                sheet.newcopy[sheet.uid].isin(soc_df[soc_df.arrested == 1].suspect_id)
+            ].copy()
+            logger.info(f"Here is the prev_closed header: {list(prev_closed)}")
+            logger.info(f"Here is the size of prev_closed: {list(prev_closed.shape)}")
+            prev_closed["case_status"] = (
+                prev_closed["case_status"].fillna("").astype(str)
+            )
+            prev_closed.loc[:, "case_status"] = "Closed: Already in Legal Cases Sheet"
 
-            try:
-                # Validate required columns
-                required_columns = [sheet.uid, "case_status", "case_id"]
-                for df_name, df in [
-                    ("sheet.newcopy", sheet.newcopy),
-                    ("soc_df", soc_df),
-                    ("sheet.closed", sheet.closed),
-                ]:
-                    valid, missing = validator.validate_required_columns(
-                        df, required_columns
-                    )
-                    if not valid:
-                        logger.error(f"Missing columns in {df_name}: {missing}")
-                        continue
+            # Handle newly closed cases
+            newly_closed = sheet.gsheet[
+                sheet.gsheet["case_status"].str.contains("Closed", na=False)
+            ]
+            logger.info(f"Here is the newly_closed header: {list(newly_closed)}")
+            # Add timestamps
+            today = pd.Timestamp.today().normalize()
+            newly_closed["date"] = today
+            newly_closed["supervisor_review"] = today
 
-                # Standardize all DataFrames before operations
-                sheet.newcopy = validator.standardize_columns(sheet.newcopy)
-                sheet.closed = validator.standardize_columns(sheet.closed)
+            # Remove duplicates from prev_closed
+            logger.info(f"Here is sheet.uid: {sheet.uid}")
+            prev_closed = prev_closed[
+                ~prev_closed[sheet.uid].isin(sheet.closed[sheet.uid])
+            ]
+            logger.info(f"Here is list(prev_closed): {list(prev_closed)}")
+            # Get unique columns from sheet.closed
+            target_columns = pd.Index(sheet.closed.columns).drop_duplicates()
+            logger.info(f"Here is target_columns: {target_columns}")
+            # Create temporary copies with unique column names
+            sheet_closed_unique = sheet.closed.loc[:, target_columns]
 
-                # Rest of your existing logic, but using safe_concat for concatenation
-                prev_closed = sheet.newcopy[
-                    sheet.newcopy[sheet.uid].isin(
-                        soc_df[soc_df.arrested == 1][sheet.uid]
-                    )
-                ].copy()
+            prev_closed_unique = prev_closed.loc[
+                :, prev_closed.columns.drop_duplicates()
+            ]
+            logger.info(
+                f"Here is prev_closed.columns.drop_duplicates(): {prev_closed.columns.drop_duplicates()}"
+            )
+            newly_closed_unique = newly_closed.loc[
+                :, newly_closed.columns.drop_duplicates()
+            ]
+            logger.info(
+                f"Here is newly_closed.columns.drop_duplicates(): {newly_closed.columns.drop_duplicates()}"
+            )
 
-                newly_closed = sheet.gsheet[
-                    sheet.gsheet["case_status"].str.contains("Closed", na=False)
+            # Ensure all DataFrames have the same columns
+            common_columns = list(
+                set(target_columns)
+                & set(prev_closed_unique.columns)
+                & set(newly_closed_unique.columns)
+            )
+            logger.info(f"Here is common_columns: {common_columns}")
+
+            # Filter to common columns before concatenation
+            sheet.closed = pd.concat(
+                [
+                    sheet_closed_unique[common_columns],
+                    prev_closed_unique[common_columns],
+                    newly_closed_unique[common_columns],
                 ]
+            )
 
-                # Safely concatenate all closed cases
-                sheet.closed = validator.safe_concat(
-                    [sheet.closed, prev_closed, newly_closed],
-                    common_columns=sheet.closed.columns,
-                )
+            # Remove duplicates
+            sheet.closed.drop_duplicates(subset=sheet.uid, inplace=True)
 
-                # Remove duplicates
-                sheet.closed = sheet.closed.drop_duplicates(subset=sheet.uid)
-
-                # Update active sheet
-                sheet.active = sheet.active[
-                    ~sheet.active[sheet.uid].isin(sheet.closed[sheet.uid])
-                ]
-
-                logger.info(f"Successfully processed sheet: {sheet.active_name}")
-
-            except Exception as e:
-                logger.error(f"Error processing sheet {sheet.active_name}: {str(e)}")
-                raise
+            # Remove closed cases from active
+            sheet.active = sheet.active[
+                ~sheet.active[sheet.uid].isin(sheet.closed[sheet.uid])
+            ]
 
     @classmethod
     def move_closed_depr(cls, soc_df):
