@@ -153,11 +153,10 @@ class EntityGroup(GetAttr):
 
             original_cols = list(prev_closed.columns)
             logger.info(f"original_cols: {original_cols}")
+
             new_cols = [original_cols[i] + str(i) for i in range(len(original_cols))]
             logger.info(f"new_cols: {new_cols}")
-            logger.info(f"----------------------")
-            logger.info(f"new_cols: {new_cols}")
-            logger.info(f"sheet.closed.columns: {sheet.closed.columns}")
+
             sheet.closed.columns = new_cols
             prev_closed.columns = new_cols
             newly_closed.columns = new_cols

@@ -19,7 +19,7 @@ from libraries.case_dispatcher_model import (
     make_new_predictions,
 )
 from libraries.data_prep import remove_non_numeric, process_columns
-from libraries.entity_model import EntityGroup
+from libraries.entity_model_gpt import EntityGroup
 from libraries.case_dispatcher_model import TypeSelector
 from libraries.case_dispatcher_data import (
     get_vdf,
@@ -41,7 +41,7 @@ import dotenv
 from libraries.case_dispatcher_logging import setup_logger
 import gspread
 
-logger = setup_logger("update_logging", "update_logging")
+logger = setup_logger("update_logger", "update_logging")
 dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
 
@@ -549,6 +549,9 @@ def main():
 
             # Filter out rows where 'days' is greater than 365 and is not NaN (thus a number)
             # Also, implicitly keeps rows where 'days' is NaN or None, since comparison with NaN is false
+            st.write("active_cases:")
+            st.dataframe(active_cases)
+
             filtered_active_cases = active_cases[
                 (numeric_days <= 120) | numeric_days.isna()
             ]
@@ -556,13 +559,16 @@ def main():
                 ~(filtered_active_cases["case_id"] == "")
             ]
             filtered_active_cases = filtered_active_cases.drop_duplicates()
+            st.write("filtered_active_cases:")
+            st.dataframe(filtered_active_cases)
+            # set(filtered_active_cases["case_id"])
             logger.info(
                 f"Do EntityGroup.update_gsheets(credentials, st.session_state['spreadsheet_name'], filtered_active_cases here            # )"
             )
-            # EntityGroup.update_gsheets(
-            #     credentials, st.session_state["spreadsheet_name"], filtered_active_cases
-            # )
-            # st.dataframe(active_cases)
+            EntityGroup.update_gsheets(
+                credentials, st.session_state["spreadsheet_name"], filtered_active_cases
+            )
+            st.dataframe(active_cases)
             st.write(
                 f"Success! {st.session_state['spreadsheet_name']} has been updated."
             )

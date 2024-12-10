@@ -6,7 +6,7 @@ from libraries.google_lib import (
     attrdict_to_dict,
     get_file_id,
     load_from_cloud,
-    load_model_and_columns
+    load_model_and_columns,
 )
 
 case_dispatcher = st.secrets["case_dispatcher"]
@@ -25,18 +25,22 @@ drive_service = build("drive", "v3", credentials=credentials)
     "case_dispatcher_model_cols.pkl",
     "case_dispatcher_soc_df.pkl",
 )
+
+
 def get_dtype_mapping(cols):
     # Only include specific columns in the dtype mapping
     dtype_map = {
-        'age': 'int64',
-        'number_of_victims': 'int64',
-        'number_of_traffickers': 'int64',
+        "age": "int64",
+        "number_of_victims": "int64",
+        "number_of_traffickers": "int64",
     }
     # Assuming all other columns in cols should be boolean
     for col in cols:
         if col not in dtype_map:
-            dtype_map[col] = 'bool'
+            dtype_map[col] = "bool"
     return dtype_map
+
+
 dtype_map = get_dtype_mapping(case_dispatcher_model_cols)
 case_dispatcher_soc_df[case_dispatcher_model_cols].dtypes
 
@@ -57,7 +61,7 @@ from libraries.case_dispatcher_model import (
     make_new_predictions,
 )
 from libraries.data_prep import remove_non_numeric, process_columns
-from libraries.entity_model import EntityGroup
+from libraries.entity_model_gpt import EntityGroup
 from libraries.case_dispatcher_model import TypeSelector
 from libraries.case_dispatcher_data import (
     get_vdf,
@@ -78,6 +82,7 @@ from libraries.google_lib import (
 import gspread
 import dotenv
 import os
+
 dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
 
@@ -91,45 +96,50 @@ toml_config_dict = attrdict_to_dict(access_token)
 creds_json = json.dumps(toml_config_dict)
 credentials = OAuth2Credentials.from_json(creds_json)
 service = build("sheets", "v4", credentials=credentials)
-spreadsheet_id = os.environ['WEIGHTS_ID']
- # Make sure your environment variable is correctly set
-named_range = 'priority_weights'  # Replace 'YourNamedRange' with the actual named range
+spreadsheet_id = os.environ["WEIGHTS_ID"]
+# Make sure your environment variable is correctly set
+named_range = "priority_weights"  # Replace 'YourNamedRange' with the actual named range
 
 # Fetch the values from the named range
-result = service.spreadsheets().values().get(
-    spreadsheetId=spreadsheet_id,
-    range=named_range
-).execute()
+result = (
+    service.spreadsheets()
+    .values()
+    .get(spreadsheetId=spreadsheet_id, range=named_range)
+    .execute()
+)
 
 # Get values
-values = result.get('values', [])
+values = result.get("values", [])
 
 # Check if values were found and print them
 if not values:
-    print('No data found.')
+    print("No data found.")
 else:
     for row in values:
         print(row)  # Each 'row' corresponds to a row of data in your named range
 
 weights = {}
-for idx in range(1,len(values[0])):
+for idx in range(1, len(values[0])):
     weights[values[0][idx]] = float(values[1][idx])
 
     print(row)  # Each 'row' corresponds to a row of data in your named range
 values[0]
-range_data = service.spreadsheets().values_get('priority_weights').execute()
+range_data = service.spreadsheets().values_get("priority_weights").execute()
+
+
 def read_from_sheet(tab: str, named_range: str):
     # Construct the range name
-    RANGE_NAME = f'{tab}!{named_range}'
+    RANGE_NAME = f"{tab}!{named_range}"
 
     # Use the Sheets API to get the data
-    request = SERVICE.spreadsheets().values().get(
-        spreadsheetId=KORRIDORBOT_UI_FEEDBACK_ID, range=RANGE_NAME)
+    request = (
+        SERVICE.spreadsheets()
+        .values()
+        .get(spreadsheetId=KORRIDORBOT_UI_FEEDBACK_ID, range=RANGE_NAME)
+    )
     response = request.execute()
 
     # The data returned is in 'values' key if the range has data
-    values = response.get('values', [])
+    values = response.get("values", [])
 
     return values
-
-

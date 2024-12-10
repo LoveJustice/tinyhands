@@ -265,6 +265,7 @@ RETURN posting.text AS advert, ID(group) AS group_id, ID(posting) AS IDn, postin
 df = pd.DataFrame(
     nl.execute_neo4j_query(flag_query, parameters={"red_flags": red_flags})
 )
+len(df["flag"].unique())
 # df = df[["advert", "group_id", "IDn", "monitor_score", "flag"]+red_flags]
 duplicates = df.duplicated(
     subset=["advert", "group_id", "IDn", "monitor_score", "flag"], keep=False

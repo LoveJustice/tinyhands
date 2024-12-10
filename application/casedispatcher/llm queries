@@ -1,347 +1,2348 @@
-Assistant I have the following script which I want to provide a high level overview of what it does. Can you help me with that?
+Assistant, I have the following code and settings.  I want you to focus in on the use of weights and how it affects the priority of cases.  I want you to elaborate on hhow all the weights come together to influence this score.
 
-```python`
+
+[case_dispatcher]
+        sheet_names= [
+        "suspects",
+        "victims",
+        "police",
+        "closed_suspects",
+        "closed_victims",
+        "closed_police",
+        "cases"    ]
+        priority_weights= { eminence = 0.2, solvability = 0.6, strength_of_case = 0.2}
+        recency_vars = {"discount_coef"= 0.01,"discount_exp"= 1.0}
+        exploitation_type = { "exploit_prostitution"= 0.5, "exploit_sexual_abuse" = 0.45,"exploit_physical_abuse" = 0.3, "exploit_debt_bondage" = 0.4,"exploit_forced_labor" = 0.5}
+        solvability_weights = {"victim_willing_to_testify"= 3.0, "bio_and_location_of_suspect"= 1.5, "other_suspect(s)_arrested"=2.5, "police_willing_to_arrest"= 3.0, "recency_of_case"= 4.0, "exploitation_reported"= 1.0, "pv_believes"= 1.0}
+        pv_believes = {"pv_believes_definitely_trafficked_many"= 1.0, "pv_believes_trafficked_some"= 0.9, "pv_believes_suspect_trafficker"= 0.5, "pv_believes_not_a_trafficker"= 0.0}
+
+
+
+[case_dispatcher.recency_text]
+"text"="""Here's your text converted into Markdown format:
+
+---
+
+### Recency Scores
+
+#### Understanding the Recency Score Calculation
+
+**What Does It Do?:**
+
+This function gives each case a score based on how recent it is. Think of it like a freshness rating for fruit - the newer the fruit, the fresher and higher its rating.
+
+**How Does It Work?:**
+
+- **Date of the Interview:**
+  The function starts by looking at the date of the interview for each case. This date helps determine how old or recent a particular case is.
+
+- **Calculating Days Since Interview:**
+  It then calculates how many days have passed since the interview took place up to today's date. For instance, if an interview took place 10 days ago, the "Days Old" value for that case would be 10.
+
+- **Scoring the Cases:**
+  Using a special formula, each case is given a score based on its "Days Old" value. The newer the case (i.e., fewer days since the interview), the higher its score. As the number of days increases, the score decreases, but it does so in a specific manner, not linearly. This means that the difference in score between a case that's 2 days old and 3 days old might be different than between a case that's 10 days old and 11 days old.
+
+- **Ensuring Positivity:**
+  The function ensures that all scores are positive. If the formula gives a negative score for any reason, it corrects it to zero.
+
+**End Result:**
+
+By the end of this process, every case in our database has a "freshness" score. This score can help prioritize more recent cases over older ones, as they might require more immediate attention.
+
+#### Detailed Description
+
+The function `calc_recency_scores` calculates a score for each case based on how recent it is. Cases that are more recent are likely to have a higher score.
+
+1. **Setting the Current Date:**
+   - The function sets `today` to the current date (without the time component).
+   - It then formats the date to the string format "MM/DD/YYYY", but this formatted date is not saved or used further.
+
+2. **Processing Dates from Strength of Case Data:**
+   - It selects two columns: "sf_number" and "interview_date" from the strength of case data (`soc_df`) and stores them in `cif_dates`.
+   - The "interview_date" column is converted to a datetime format.
+   - A new column "Days_Old" is computed, representing the number of days since the interview date up to the current date.
+   - The "sf_number" is then processed to create the "Case_ID" by removing the last character and replacing any dots.
+
+3. **Merging Suspect and Date Data:**
+   - The suspect data (`sus`) is enhanced by merging it with the "Days_Old" data from `cif_dates` using the "Case_ID" column.
+
+4. **Calculating Recency Score:**
+   - Using a mathematical formula involving weights, the function calculates a "Recency_Score" for each suspect. This score is designed to decrease as the number of days since the interview ("Days_Old") increases, thus giving more recent cases a higher score.
+   - If the computed score is negative, it's set to 0.
+
+5. **Removing Duplicates:**
+   - The function then removes any duplicate entries based on the "Suspect_ID" to ensure each suspect appears only once.
+
+6. **Returning Enhanced Suspect Data:**
+   - The function returns the enhanced suspect data with the new "Recency_Score" column.
+
+---
+"""
+
+[case_dispatcher.pv_believes_text]
+"text"="""
+---
+### Victim Opinion
+
+#### Understanding the Belief Weighting Function
+
+**What Does It Do?**
+
+This function assesses and assigns a score to each case based on specific beliefs about a suspect's involvement in trafficking.
+
+**How Does It Work?**
+
+1. **Gathering Belief Data:**
+   The function checks specific indicators that suggest:
+   - The suspect is believed to have definitely trafficked many individuals.
+   - The suspect is believed to have trafficked some individuals.
+   - The suspect is believed to be a trafficker.
+
+2. **Assigning Scores Based on Belief:**
+   Depending on which of the above beliefs is held:
+   - A score is assigned to the suspect. The score is higher if there's a stronger belief in the suspect's involvement. For example, if it's believed the suspect has trafficked many individuals, they get a higher score compared to if they're just believed to have trafficked some.
+   - If there's no specific belief about a suspect's involvement, they receive a score of 0.
+
+3. **Processing and Merging Data:**
+   The function then organizes this belief score alongside each suspect's unique identification.
+
+**End Result**
+
+By the end of this process, each suspect in our database will have a score indicating the strength of belief in their involvement in trafficking. This helps in prioritizing and taking action on cases where there's a stronger belief in a suspect's guilt.
+
+#### Detailed Description
+
+The function `weight_pv_believes` processes data related to beliefs or assumptions made about suspects and their involvement in trafficking. It adds a weighted score to the suspects based on certain criteria.
+
+1. **Select Relevant Columns:**
+   The function starts by selecting columns from the `soc_df` (strength of case data) DataFrame related to beliefs or assumptions about the trafficking involvement of suspects. The columns selected are:
+   - "sf_number"
+   - "pv_believes_definitely_trafficked_many"
+   - "pv_believes_trafficked_some"
+   - "pv_believes_suspect_trafficker"
+
+2. **Assigning Weighted Scores:**
+   The function then computes a new column "pv_believes" based on the values of the previously mentioned columns:
+   - If `pv_believes_definitely_trafficked_many` is True, it assigns the weight from `PV_Believes[pvb.columns[1]]`.
+   - If `pv_believes_trafficked_some` is True, it assigns the weight from `PV_Believes[pvb.columns[2]]`.
+   - If `pv_believes_suspect_trafficker` is True, it assigns the weight from `PV_Believes[pvb.columns[3]]`.
+   - If none of the above conditions are met, a score of 0 is assigned.
+
+3. **Processing Case ID:**
+   The function processes the "sf_number" column to create the "Case_ID" by removing the last character and replacing any dots.
+
+4. **Finalising Data:**
+   - Only the "Case_ID" and "pv_believes" columns are retained from the `pvb` DataFrame.
+   - The "pv_believes" column data type is set to float.
+   - Any duplicate entries based on "Case_ID" are removed.
+
+5. **Merging Suspect Data:**
+   The function then merges the suspect data (`sus`) with the `pvb` DataFrame using the "Case_ID" column.
+
+6. **Returning Enhanced Suspect Data:**
+   The function returns the updated suspect data with the new "pv_believes" column that indicates the weighted beliefs about the suspect's involvement.
+
+--- """
+
+[case_dispatcher.priority_weights_text]
+"text"="""
+# Understanding the Priority Score Calculation
+
+## Purpose
+
+The priority score helps field officers quickly identify which suspects in human trafficking cases should be given immediate attention. By providing a numerical value, it acts as a guide on which suspects are of higher significance based on several factors.
+
+## How It Works
+
+1. **Key Factors**
+   The calculation considers three main elements:
+   - **Solvability:** Reflects the chances of successfully resolving a case against the suspect.
+   - **Strength of Case:** Strength of case or 'soc', is the derived probability of an arrest
+   happening given circumstances past cases.
+   - **Eminence:** Gauges the importance or prominence of the case or the suspect.
+
+2. **Weighted Importance**
+   Not all factors have the same impact. Each is multiplied by a predetermined weight to reflect its importance:
+   - Solvability is adjusted by its specific weight.
+   - Strength of Case gets its own weight.
+   - Eminence gets an additional multiplier (0.1) before being adjusted by its weight.
+
+3. **Final Score & Ranking**
+   The scores from these factors are combined, resulting in a final priority score for each suspect. Suspects are then ranked based on this score, with those having higher scores being of greater priority.
+
+## Using the Score
+
+Field officers should refer to the "Priority Score" as a guide when deciding which suspects to focus on. A higher score indicates a suspect that should be given more immediate attention due to a combination of the strength of evidence, the solvability of the case, and the importance of the suspect or case.
+
+## Detailed Description
+
+This `calc_priority` function calculates a priority score for each suspect in a case of human trafficking. The priority score is a weighted sum of several factors, helping to determine which suspects should be prioritised for further investigation or action.
+
+1. **Factors Considered:**
+   The priority score is derived from three main factors:
+   - `Solvability`: Represents the likelihood of successfully solving a case against the suspect.
+   - `Strength_of_Case`: Indicates the robustness of the case against the suspect based on available evidence.
+   - `Em2` (Eminence Score): Provides a measure of the significance or prominence of the case or suspect.
+
+2. **Weighted Scoring:**
+   Each of these factors is multiplied by its respective weight from the `weights` dictionary:
+   - Solvability is weighted by `weights["Solvability"]`.
+   - Strength_of_Case is weighted by `weights["Strength_of_Case"]`.
+   - Eminence Score (Em2) is given an additional factor of 0.1 before being multiplied by its weight `weights["Eminence"]`.
+
+3. **Combining Scores:**
+   The weighted scores of these three factors are added together to compute the total priority score for each suspect.
+
+4. **Final Adjustments:**
+   - The calculated priority score is rounded to three decimal places to provide a concise and easily interpretable value.
+   - Any missing priority scores are replaced with 0.
+   - The data is then sorted in descending order of priority, placing suspects with the highest priority at the top.
+   - Only the columns present in the provided `Suspects` data are retained, and any duplicates based on "Suspect_ID" are removed.
+"""
+
+[case_dispatcher.solvability_weights_text]
+"text"="""
+# Solvability
+
+## Understanding the Solvability Score Calculation
+
+### Purpose
+
+The solvability score is a tool designed to quickly inform field officers about the likelihood of resolving a case successfully. It combines various pieces of information related to a case and provides a single, comprehensive score.
+
+### How It Works
+
+1. **Factors in Play:**
+   The solvability score is determined by considering several key factors:
+   - **Victim's Cooperation:** The willingness of the victim to testify.
+   - **Suspect Information:** Whether we have the bio and location details of the suspect.
+   - **Arrest Status:** If other related suspects have already been apprehended.
+   - **Police Cooperation:** The readiness of the police force to make an arrest.
+   - **Case Freshness:** How recent the case is, as newer cases might have more actionable information.
+   - **Belief Level:** A score that represents how strongly the case indicates the suspect's involvement.
+   - **Severity of Exploitation:** The type and intensity of exploitation reported.
+
+2. **Weighted Importance:**
+   Each of the above factors carries a different weight, indicating its importance in solving a case. For instance, a victim's willingness to testify might be given more importance than the recency of a case.
+
+3. **Calculation:**
+   The score for each factor is multiplied by its weight. These weighted scores are then added together to form a combined score.
+
+4. **Normalisation:**
+   To ensure the solvability score remains within an easily interpretable range, it's normalised by dividing it with the total of all weights.
+
+### Using the Score
+
+The resulting "Solvability Score" serves as a quick reference for field officers. A higher score suggests a higher likelihood of resolving the case successfully. It aids officers in prioritising cases and allocating resources more effectively.
+
+## Detailed Description
+
+The `calc_solvability` function calculates a solvability score for each entry in the suspect data (`sus`). The solvability score is essentially a weighted sum of various individual scores which contribute to the likelihood of solving a case. Let's break down its workings:
+
+1. **Factors Considered:**
+   The solvability score is a combination of several factors:
+   - `V_Mult`: This represents the weight or significance of the victim's willingness to testify.
+   - `Bio_Known`: Indicates if the bio and location of the suspect are known.
+   - `Others_Arrested`: Represents if other suspects related to the case have been arrested.
+   - `Willing_to_Arrest`: Indicates if the police are willing to make an arrest.
+   - `Recency_Score`: Represents how recent the case is.
+   - `pv_believes`: A score representing the belief level in the suspect's involvement.
+   - `exp`: This indicates the exploitation type and its severity.
+
+2. **Weighted Scoring**
+   Each of the factors mentioned above is multiplied by its respective weight from the `weights` dictionary. For instance, the weight for `V_Mult` is retrieved using `weights["Victim_Willing_to_Testify"]`.
+
+3. **Handling Missing Values**
+   If any factor is missing for a particular entry, it's treated as 0 (using `fillna(0)`).
+
+4. **Combining Scores**
+   All the weighted scores are summed up to give a total score for each entry.
+
+5. **Normalising the Score**
+   The combined score is then divided by the sum of all weights to normalise it.
+
+6. **Updating Suspect Data**
+   The resulting solvability score is stored in a new column "Solvability" in the `sus` DataFrame.
+
+"""
+[case_dispatcher.exploitation_type_text]
+"text"="""
+---
+
+### Exploitation Scoring
+
+#### Understanding the Exploitation Score Calculation
+
+**Purpose**
+
+This tool calculates an "Exploitation Score" for each case. Think of this score as a measure of the severity or intensity of exploitation reported in the case.
+
+**How It Works**
+
+1. **Identifying Key Details:**
+   - The tool scans the case details to pinpoint specific markers that suggest different types of exploitation. For example, it looks for indicators of forced labor, sexual exploitation, and so on.
+
+2. **Assigning Scores:**
+   - Each type of exploitation has a predetermined score associated with it. For instance, one type of exploitation might carry a score of 5, while another type might have a score of 10.
+   - The tool then checks which exploitation types are marked as 'True' for a case and sums up their scores. So, if a case has indicators for two types of exploitations with scores 5 and 10, the total score for that case would be 15.
+
+3. **Organising the Results:**
+   - Once the scores are calculated, they are neatly paired with their respective case IDs. This makes it easy to understand which case has what score.
+
+**Using the Score:**
+
+The resulting "Exploitation Score" gives you a quick way to gauge the intensity or severity of exploitation in each case. Higher scores typically indicate more severe or multiple types of exploitations. This can be valuable in prioritising cases or deciding on the course of action.
+
+#### Detailed Description
+
+The `get_exp_score` function determines a score for each case based on the type of exploitation reported. Let's break down the function and understand its components before refactoring:
+
+1. **Identifying Exploitation Columns:**
+   - The function begins by identifying all columns in `soc_df` (strength of case data) that contain the keyword "exploitation".
+   - It then appends the "sf_number" column to this list. This list of columns is stored in `exp_cols`.
+
+2. **Extracting Relevant Data:**
+   - The function creates a new DataFrame, `exp_df`, containing only the columns listed in `exp_cols`.
+   - It initialises a new column "exp" in `exp_df` with a default value of 0. This column will eventually store the exploitation score for each entry.
+
+3. **Calculating Exploitation Score:**
+   - For each column in `exp_df`, the function checks if the value is True. If True, it adds the corresponding score from the `Exploitation_Type` dictionary to the "exp" column. The score is added cumulatively, meaning if multiple columns are True for an entry, all their corresponding scores get added up.
+   - If a column isn't found in the `Exploitation_Type` dictionary, the function simply continues to the next column without raising an error.
+
+4. **Processing Case ID:**
+   - The function processes the "sf_number" column to create the "Case_ID" by removing the last character and replacing any dots.
+
+5. **Finalising Data:**
+   - Only the "Case_ID" and "exp" columns are retained from `exp_df`.
+   - The "exp" column data type is set to float.
+   - Any duplicate entries based on "Case_ID" are removed.
+
+6. **Merging Suspect Data:**
+   - The function then merges the suspect data (`sus`) with the `exp_df` DataFrame using the "Case_ID" column.
+
+7. **Returning Enhanced Suspect Data:**
+   - The function returns the updated suspect data with the new "exp" column that indicates the exploitation score for each case.
+
+---
+"""
+
+# data_prep.py
+import streamlit as st
 import pandas as pd
-import numpy as np
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from datetime import date
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV
-from time import time
+import re
+from copy import deepcopy
 from .case_dispatcher_logging import setup_logger
-from pathlib import Path
-import pickle
-from datetime import datetime
-from sklearn.preprocessing import FunctionTransformer
+from datetime import date
+
+logger = setup_logger("data_prep_logging", "data_prep_logging")
 
 
-logger = setup_logger("model_logging", "model")
+def do_audit(audit_series, description="audit"):
+    if st.session_state["include_audit"] == "Yes":
+        # audit = audit_series.isin([st.session_state['irf_audit_number']])
+        audit = st.session_state["irf_audit_number"] in audit_series.values
+        st.write(
+            f"irf_audit_number = {st.session_state['irf_audit_number']} is in db_irf: {audit}, with description '{description}'"
+        )
 
 
-class TypeSelector(BaseEstimator, TransformerMixin):
+def add_country_stats(model_data, country_stats):
+    # Simplify country replacement using `np.where`
+    import numpy as np
+
+    model_data["country"] = np.where(
+        model_data["country"] == "India Network", "India", model_data["country"]
+    )
+
+    # Merge with country_stats and directly replace 'country' without creating a 'dummy_country'
+    merged_data = model_data.merge(
+        country_stats, left_on="country", right_on="Country", how="left"
+    )
+
+    # Drop the now redundant 'Country' column from country_stats
+    merged_data.drop(columns=["Country"], inplace=True)
+
+    # Convert 'IBR12' percentage strings to float
+    merged_data["IBR12"] = merged_data["IBR12"].str.rstrip("%").astype(float) / 100
+    return merged_data
+
+
+def extract_role_series(role_series):
+    default_value = "missing information"
+
+    def clean_item(item):
+        replacements = {
+            "rapiSuspect": "suspect",
+            "hosuspect": "suspect",
+            "diver": "driver",
+            "ST": "suspect",
+            "st": "suspect",
+            "PVOT": "victim",
+            "pvot": "victim",
+            "Suspect2": "suspect",
+            "rapisuspect": "suspect",
+            "hosuspect": "suspect",
+            "masuspecter": "suspect",
+            "boy friend": "boyfriend",
+        }
+        item = re.sub(r"\.$", "", item)
+        return replacements.get(item, default_value if item == "none" else item)
+
+    def process_series(series):
+        series = series.fillna(default_value).replace("", default_value)
+        series = series.str.lower().replace(
+            {"\[": "", ", ": ";", "/": ";", " ;": ";"}, regex=True
+        )
+        series = series.str.split(";")
+        series = series.apply(lambda lst: sorted(set(clean_item(item) for item in lst)))
+        return series
+
+    processed_series = process_series(role_series)
+
+    roles_txt_series = processed_series.apply(";".join)
+
+    # Flatten the list of lists into a single list and extract unique elements
+    unique_elements = set(item for sublist in processed_series for item in sublist)
+
+    return processed_series, roles_txt_series, unique_elements
+
+
+def pre_proc_sus(suspects):
+    """Generates suspect IDs and narratives."""
+    # Create a new dataframe called 'soc_df' that only contains rows from the 'db_cif' dataframe where the 'role' column is not 'Complainant' or 'Witness'
+    # soc_df = db_cif[(db_cif.role != "Complainant") & (db_cif.role != "Witness")]
+
+    # Filter the 'soc_df' dataframe to only include rows where the 'pb_number' column is not null
+    suspects = suspects[~suspects["sf_number"].isna()]
+
+    # Convert the data type of the 'pb_number' column from float to integer
+    # suspects["suspect_id"] = suspects["suspect_id"].astype(int)
+
+    suspects["suspect_id"] = (
+        suspects["sf_number"].str[:-1] + ".sus" + suspects["suspect_id"].map(str)
+    )
+    # Uncomment the following line to remove duplicate rows in the 'soc_df' dataframe based on the 'suspect_id' column
+    # soc_df = soc_df.drop_duplicates(subset='suspect_id')
+
+    # Call the 'generate_narrative()' function on the 'soc_df' dataframe and store the result in the 'soc_df' dataframe
+    # soc_df = generate_narrative(soc_df)
+
+    return suspects
+
+
+def process_columns(column_series, default_value):
     """
-    A transformer for selecting columns based on data type.
-
-    Parameters
-    ----------
-    dtype : str or list-like of str
-        The data type(s) to include.
-
-    Attributes
-    ----------
-    dtype : str or list-like of str
-        The data type(s) to include.
-
-    Methods
-    -------
-    fit :
-        No operation is performed.
-    transform :
-        Selects columns of the input data frame that have the specified data type(s).
-
-    Example
-    -------
-    >>> selector = TypeSelector("float64")
-    >>> X = pd.DataFrame({"col1": [1, 2, 3], "col2": [0.1, 0.2, 0.3]})
-    >>> selector.transform(X)
-       col2
-    0  0.1
-    1  0.2
-    2  0.3
-    """
-
-    def __init__(self, dtype):
-        self.dtype = dtype
-
-    def fit(self, X, y=None):
-        """No operation is performed."""
-        return self
-
-    def transform(self, X):
-        """
-        Selects columns of the input data frame that have the specified data type(s).
-
-        Parameters
-        ----------
-        X : pd.DataFrame
-            The input data frame.
-
-        Returns
-        -------
-        X_selected : pd.DataFrame
-            The selected columns of the input data frame.
-        """
-        assert isinstance(X, pd.DataFrame)
-        return X.select_dtypes(include=[self.dtype])
-
-
-def save_results(best_model, X_validation):
-    """Pickles model and column names and saves them for later use with a timestamp."""
-
-    # Get current date and time
-
-    datetime_now = datetime.now()
-    # Format the date and time in a string (e.g., '2023_12_07_15_30')
-    timestamp = datetime_now.strftime("%Y_%m_%d_%H_%M")
-
-    # Append timestamp to filenames
-    model_filename = f"models/u21_rf_model_{timestamp}.sav"
-    xcols_filename = f"model_compare_data/xcols_{timestamp}.txt"
-
-    # Save the model
-    pickle.dump(best_model, open(model_filename, "wb"))
-
-    # Save the column names
-    xcols = list(X_validation.columns)
-    with open(xcols_filename, "w") as f:
-        for item in xcols:
-            f.write("%s\n" % item)
-
-
-# You can then call this function with your model and validation data
-# save_results(your_model, your_validation_data)
-def build_transformer():
-    """
-    Builds a transformer that applies a no-operation (identity function) to the data,
-    preserving both the data and column order exactly as is.
-    """
-    # No-op transformer for the entire DataFrame
-    no_op_transformer = FunctionTransformer()
-
-    # Wrap the no-op transformer in a pipeline (optional, depending on further needs)
-    transformer = Pipeline([
-        ("no_op", no_op_transformer),
-    ])
-
-    return transformer
-
-def build_transformer_depr():
-    """
-    Builds a transformer for processing data without altering the original types of boolean and integer columns.
-    """
-    transformer = Pipeline([
-        ("features", FeatureUnion(
-            transformer_list=[
-                ("boolean",
-                    Pipeline([
-                        ("selector", TypeSelector("bool")),
-                        # Potentially add steps if needed, but none are needed now
-                    ])
-                ),
-                ("integers",
-                    Pipeline([
-                        ("selector", TypeSelector('int')),
-                        # No scaling or further steps for integers
-                    ])
-                ),
-                # Add a branch for floats if any specific processing is required for float columns
-            ],
-            n_jobs=1,
-        )),
-    ])
-
-    return transformer
-
-
-
-def remove_recent(soc_df, cutoff_days):
-    """
-    Eliminates cases more recent than the cutoff date.
+    Process a given column series from a dataframe.
 
     Parameters:
-        soc_df (pandas.DataFrame): A dataframe containing case information.
-        cutoff_days (int): The number of days from the present to use as the cutoff point.
+    - column_series (pd.Series): The series to be processed.
+    - default_value (str): The default value to replace missing or empty values.
 
     Returns:
-        pandas.DataFrame: A dataframe containing only cases that are older than the cutoff date or that resulted in an arrest.
+    - new_cols (pd.DataFrame): Dataframe containing new columns to be concatenated with the original dataframe.
+    - cols_above_threshold (list): List of column names that are above the threshold.
     """
-    # Get the current date and format it as a string
-    today = date.today()
-    today.strftime("%m/%d/%Y")
 
-    # Calculate the number of days between today and the interview date for each case
-    # df['Days'] = (today - df.loc[:, 'interview_date']) / np.timedelta64(1, 'D')
-    today = pd.Timestamp(today)
+    # Handle missing and empty values
+    column_series = column_series.fillna(default_value).replace("", default_value)
 
-    soc_df["interview_date"] = pd.to_datetime(soc_df["interview_date"])
-    soc_df["Days"] = (today - soc_df.loc[:, "interview_date"]).dt.days
+    # Format the column values
+    column_series = (
+        column_series.str.lower()
+        .str.replace(" ", "_")
+        .str.replace("'", "")
+        .str.replace(",", ";")
+        .str.strip()
+        .str.strip("_")
+    )  # Strip leading and trailing underscores
 
-    # Create a new dataframe containing only cases that are older than the cutoff date or that resulted in an arrest
-    sub_df = soc_df[(soc_df["Days"] > cutoff_days) | (soc_df["arrested"] == 1)]
+    all_values = set()
+    column_series.str.split(";").apply(all_values.update)
+    all_values = {
+        value.strip("_") for value in all_values if value.strip()
+    }  # Ensure no leading/trailing underscores
 
-    return sub_df
+    # Generate new columns
+
+    new_cols = pd.DataFrame(
+        {value: column_series.str.contains(re.escape(value)) for value in all_values}
+    )
+
+    threshold = 0.01 * len(column_series)
+    cols_above_threshold = [
+        col for col, col_sum in new_cols.sum().items() if col_sum > threshold
+    ]
+    cols_below_threshold = list(all_values - set(cols_above_threshold))
+
+    # Add/update the default value column
+    new_cols[default_value] = new_cols[cols_below_threshold].any(axis=1)
+    new_cols.drop(columns=cols_below_threshold, inplace=True)
+
+    return new_cols, cols_above_threshold
 
 
-def train_test_val_split(sub_df, te_size=0.2, val_size=0.1):
-    """
-    Splits dataset into training, testing, and validation sets.
+# @title
+def generate_narrative(db_cif):
+    """For cases that are missing a narrative, generate one from selected columns."""
+    # without_cn = db_cif[db_cif['case_notes'] == '']
+    without_cn = db_cif
+    without_cn["narrative_broker_recruited"] = np.where(
+        without_cn["recruited_broker"] == True, "They were recruited by a broker. ", ""
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_promised_job"] == True,
+        "Recruited by job promise. ",
+        "",
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_married"] == True,
+        "Recruited by marriage. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_promised_marriage"] == True,
+        "Recruited by marriage promise. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_at_work"] == True,
+        "Recruited at work. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_at_school"] == True,
+        "Recruited at school. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_job_ad"] == True,
+        "Recruited through job ad. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_broker_online"] == True,
+        "Recruited online. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_broker_approached"] == True,
+        "Recruited by broker approaching them. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_broker_approached"] == True,
+        "Recruited by broker approaching them. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_broker_through_friends"] == True,
+        "Recruited through friends. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_recruited"] = np.where(
+        without_cn["how_recruited_broker_through_family"] == True,
+        "Recruited through family. " + without_cn["narrative_recruited"],
+        without_cn["narrative_recruited"],
+    )
+    without_cn["narrative_travel_expenses_paid_themselves"] = np.where(
+        without_cn["travel_expenses_paid_themselves"] == True,
+        "They paid the travel expenses themselves. ",
+        "",
+    )
+    without_cn["narrative_travel_expenses_paid_by_broker"] = np.where(
+        without_cn["travel_expenses_paid_by_broker"] == True,
+        "The broker paid the travel expenses. ",
+        "",
+    )
+    without_cn["narrative_expected_earnings"] = np.where(
+        without_cn["expected_earning"] != "",
+        "Broker said they would be earning "
+        + without_cn["expected_earning"]
+        + " per month. ",
+        "",
+    )
+    without_cn["narrative_purpose"] = np.where(
+        without_cn["purpose_for_leaving_education"] == True,
+        "Left home for education. ",
+        "",
+    )
+    without_cn["narrative_purpose"] = np.where(
+        without_cn["purpose_for_leaving_travel_tour"] == True,
+        "Left home for travel or tour. ",
+        without_cn["narrative_purpose"],
+    )
+    without_cn["narrative_purpose"] = np.where(
+        without_cn["purpose_for_leaving_marriage"] == True,
+        "Left home for marriage. ",
+        without_cn["narrative_purpose"],
+    )
+    without_cn["narrative_purpose"] = np.where(
+        without_cn["purpose_for_leaving_family"] == True,
+        "Left home for family. ",
+        without_cn["narrative_purpose"],
+    )
+    without_cn["narrative_purpose"] = np.where(
+        without_cn["purpose_for_leaving_medical"] == True,
+        "Left home for medical reasons. ",
+        without_cn["narrative_purpose"],
+    )
+    without_cn["narrative_purpose"] = np.where(
+        without_cn["purpose_for_leaving_job_hotel"] == True,
+        "Left home for job at hotel. ",
+        without_cn["narrative_purpose"],
+    )
+    without_cn["narrative_purpose"] = np.where(
+        without_cn["purpose_for_leaving_job_household"] == True,
+        "Left home for household job. ",
+        without_cn["narrative_purpose"],
+    )
+    without_cn["narrative_destination"] = np.where(
+        without_cn["planned_destination"] != "",
+        "Planned destination: " + without_cn["planned_destination"] + " ",
+        "",
+    )
+    without_cn["narrative_id"] = np.where(
+        without_cn["id_made_no"] == True, "No ID made. ", ""
+    )
+    without_cn["narrative_id"] = np.where(
+        without_cn["id_made_real"] == True, "Real ID made. ", without_cn["narrative_id"]
+    )
+    without_cn["narrative_id"] = np.where(
+        without_cn["id_made_fake"] == True, "Fake ID made. ", without_cn["narrative_id"]
+    )
+    without_cn["narrative_id"] = np.where(
+        without_cn["id_made_false_name"] == True,
+        "ID with false name made. ",
+        without_cn["narrative_id"],
+    )
+    without_cn["narrative_id"] = np.where(
+        without_cn["id_made_other_false"] == True,
+        "ID made with other false info. ",
+        without_cn["narrative_id"],
+    )
+    without_cn["narrative_legal"] = np.where(
+        without_cn["legal_action_taken"].str.contains("yes"), "Legal Case Filed. ", ""
+    )
+    without_cn["narrative_pv_believes"] = np.where(
+        without_cn["pv_believes"].str.contains("Definitely", regex=False),
+        "PV believes the suspect has definitely trafficked many. ",
+        "",
+    )
+    without_cn["narrative_pv_believes"] = np.where(
+        without_cn["pv_believes"].str.contains("some", regex=False),
+        "PV believes the suspect has trafficked some. ",
+        without_cn["narrative_pv_believes"],
+    )
+    without_cn["narrative_pv_believes"] = np.where(
+        without_cn["pv_believes"].str.contains("Suspect", regex=False),
+        "PV suspects they are a trafficker. ",
+        without_cn["narrative_pv_believes"],
+    )
+    without_cn["narrative_pv_believes"] = np.where(
+        without_cn["pv_believes"].str.contains("Don", regex=False),
+        "PV does not believe the suspect is a trafficker. ",
+        without_cn["narrative_pv_believes"],
+    )
+    without_cn["narrative"] = (
+        without_cn["narrative_broker_recruited"].fillna("")
+        + without_cn["narrative_recruited"].fillna("")
+        + without_cn["narrative_travel_expenses_paid_themselves"].fillna("")
+        + without_cn["narrative_travel_expenses_paid_by_broker"].fillna("")
+        + without_cn["narrative_expected_earnings"].fillna("")
+        + without_cn["narrative_purpose"].fillna("")
+        + without_cn["narrative_destination"].fillna("")
+        + without_cn["narrative_id"].fillna("")
+        + without_cn["narrative_legal"].fillna("")
+        + without_cn["narrative_pv_believes"].fillna("")
+    )
+    without_cn["case_notes"] = np.where(
+        without_cn["case_notes"] == "",
+        without_cn["narrative"],
+        without_cn["case_notes"],
+    )
+    without_cn["case_notes"] = (
+        without_cn["case_notes"].replace("nan", np.nan).fillna("")
+    )
+    without_cn = without_cn[
+        without_cn.columns[~without_cn.columns.str.contains("narrative")]
+    ]
+    return without_cn
 
-    Parameters
-    ----------
-    sub_df : DataFrame
-        The input DataFrame to split.
-    te_size : float, optional
-        The size of the test set, as a fraction of the input data. The default is 0.2.
-    val_size : float, optional
-        The size of the validation set, as a fraction of the training set. The default is 0.1.
 
-    Returns
-    -------
-    tuple
-        Four DataFrames, representing the training, validation, and testing sets.
-    """
-    # Save the 'Arrest' column as y
-    sub_df.to_csv(Path("data/modelbuild_sub_df.csv"))
-    y = sub_df.arrested
+def pre_proc(db_cif):
+    """Generates suspect IDs and narratives."""
+    # Create a new dataframe called 'soc_df' that only contains rows from the 'db_cif' dataframe where the 'role' column is not 'Complainant' or 'Witness'
+    soc_df = db_cif[(db_cif.role != "Complainant") & (db_cif.role != "Witness")]
 
-    # Remove certain columns from the DataFrame, except 'Arrest'
-    X = sub_df.drop(
+    # Filter the 'soc_df' dataframe to only include rows where the 'pb_number' column is not null
+    soc_df = soc_df[~soc_df["pb_number"].isna()]
+
+    # Replace all '.' characters with an empty string in the 'cif_number' column and store the result in a new 'suspect_id' column
+    soc_df["suspect_id"] = soc_df["cif_number"].str.replace(".", "")
+
+    # Convert the data type of the 'pb_number' column from float to integer
+    soc_df["pb_number"] = soc_df["pb_number"].astype(int)
+
+    # Concatenate the 'suspect_id' column, '.PB', and the 'pb_number' column (converted to a string) and store the result in the 'suspect_id' column
+    soc_df["suspect_id"] = (
+        soc_df["suspect_id"].str[:-1] + ".PB" + soc_df["pb_number"].map(str)
+    )
+
+    # Uncomment the following line to remove duplicate rows in the 'soc_df' dataframe based on the 'suspect_id' column
+    # soc_df = soc_df.drop_duplicates(subset='suspect_id')
+
+    # Call the 'generate_narrative()' function on the 'soc_df' dataframe and store the result in the 'soc_df' dataframe
+    soc_df = generate_narrative(soc_df)
+
+    return soc_df
+
+
+def organize_uganda_dest(soc_df):
+    """Clean and organize desitnation data so it is ready for feature union."""
+    # Replace all non-alphanumeric characters in the 'planned_destination' column with an empty string
+    soc_df["planned_destination"] = soc_df["planned_destination"].str.replace(
+        r"[^\w\s]+", ""
+    )
+
+    # Create a new column called 'destination_gulf' in the 'soc_df' dataframe
+    # The value of this column will depend on the value of the 'planned_destination' column
+    # If the value of 'planned_destination' contains any of the following strings: 'Gulf', 'Kuwait', 'Dubai', 'UAE', 'Oman', 'Saudi', 'Iraq', 'Qatar', or 'Bahrain', then the value of 'destination_gulf' will be True
+    # Otherwise, the value of 'destination_gulf' will be False
+    soc_df["destination_gulf"] = np.where(
+        soc_df["planned_destination"].str.contains(
+            "Gulf|Kuwait|Dubai|UAE|Oman|Saudi|Iraq|Qatar|Bahrain"
+        ),
+        True,
+        False,
+    )
+
+    # Create a list of destinations
+    dest = ["Kampala", "Kyegegwa", "Nairobi", "Kenya"]
+
+    # For each destination in the 'dest' list, create a new column in the 'soc_df' dataframe called 'destination_' + destination (e.g. 'destination_Kampala')
+    # The value of this column will depend on the value of the 'planned_destination' column
+    # If the value of 'planned_destination' contains the current destination, then the value of 'destination_' + destination will be True
+    # Otherwise, the value of 'destination_' + destination will be False
+    for d in dest:
+        soc_df["destination_" + str(d)] = np.where(
+            soc_df["planned_destination"].str.contains(d), True, False
+        )
+
+    # Uncomment the following two lines to fill null values in the 'pb_number' column with 0 and convert the data type of the 'pb_number' column from float to integer
+    # soc_df.pb_number = soc_df.pb_number.fillna(0)
+    # soc_df.pb_number = soc_df.pb_number.astype(int)
+
+    return soc_df
+
+
+def organize_dtypes(soc_df):
+    """Assigns relevant data types to variables."""
+
+    # Define a list of numerical features
+    num_features = [
+        "number_of_traffickers",
+        "number_of_victims",
+    ]
+
+    # Define a list of boolean features by subtracting the numerical features and a list of non-boolean features from the full list of columns
+    boolean_features = list(
+        set(list(soc_df.columns))
+        - set(num_features)
+        - set(
+            [
+                "suspect_id",
+                "interview_date",
+                "case_notes",
+                "sf_number_group",
+                "master_person_id",
+                "sf_number",
+                "person_id",
+            ]
+        )
+    )
+
+    # Convert the data type of the boolean features to boolean
+    soc_df[boolean_features] = soc_df[boolean_features].astype(bool)
+
+    # Fill null values in the numerical features with 0 and convert the data type to float
+    logger.error(f"<<< data_prep line 367")
+    soc_df[num_features] = soc_df[num_features].fillna(0).astype(float)
+    logger.error(f">>> data_prep line 369")
+    return soc_df
+
+
+def remove_non_numeric(x):
+    try:
+        x = re.sub("[^0-9]", 0, x)
+    except:
+        x = 0
+    return x
+
+
+def engineer_features(soc_df):
+    """Engineer features for selected destinations Person Box variables."""
+    # soc_df = organize_uganda_dest(soc_df)
+
+    soc_df["job_promised_amount"] = soc_df["job_promised_amount"].apply(
+        lambda x: remove_non_numeric(x)
+    )
+    # soc_df['expected_earning'] = soc_df['expected_earning'].astype(int)
+
+    soc_df["number_of_victims"] = np.where(
+        soc_df["number_of_victims"].isna(), 1, soc_df["number_of_victims"]
+    )
+
+    soc_df = soc_df.drop(
         columns=[
             "arrested",
-            "sf_number",
-            "Days",
-            "interview_date",
-            "suspect_id",
-            "person_id",
-            "case_notes",
-            "social_media",
-            "master_person_id",
-            "operating_country_id",
-            "country",
-            "sf_number_group",
+            "borderstation_id",
+            "role",
+            "where_going_destination",
+            "station_name",
+            "role",
+            "full_name",
+            "phone_contact",
         ]
     )
 
-    # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=te_size)
+    soc_df = organize_dtypes(soc_df)
 
-    # Calculate the validation set size as a fraction of the training set
-    val_size = val_size / (1 - te_size)
+    soc_df = soc_df.loc[:, (soc_df != False).any(axis=0)]
+    return soc_df
 
-    # Split the training set into training and validation sets
-    X_train, X_validation, y_train, y_validation = train_test_split(
-        X_train, y_train, test_size=val_size
+
+def en_features(soc_df):
+    """Engineer features for selected destinations Person Box variables."""
+    soc_df = organize_uganda_dest(soc_df)
+
+    soc_df["job_promised_amount"] = soc_df["job_promised_amount"].apply(
+        lambda x: remove_non_numeric(x)
+    )
+    # soc_df['expected_earning'] = soc_df['expected_earning'].astype(int)
+
+    soc_df["number_of_victims"] = np.where(
+        soc_df["number_of_victims"].isna(), 1, soc_df["number_of_victims"]
     )
 
-    # Return the training, validation, and testing sets
-    return X_train, X_validation, y_train, y_validation
+    soc_df["pv_believes_definitely_trafficked_many"] = np.where(
+        soc_df["pv_believes"].str.contains("Definitely", regex=False), True, False
+    )
+    soc_df["pv_believes_trafficked_some"] = np.where(
+        soc_df["pv_believes"].str.contains("some", regex=False), True, False
+    )
+    soc_df["pv_believes_suspect_trafficker"] = np.where(
+        soc_df["pv_believes"].str.contains("Suspect", regex=False), True, False
+    )
+    soc_df["pv_believes_not_a_trafficker"] = np.where(
+        soc_df["pv_believes"].str.contains("Don", regex=False), True, False
+    )
+
+    soc_df = soc_df.drop(
+        columns=[
+            "arrested",
+            "station_id",
+            "cif_id",
+            "pb_number",
+            "role",
+            "where_going_destination",
+            "pv_believes",
+            "legal_action_taken",
+            "station_name",
+        ]
+    )
+
+    soc_df = organize_dtypes(soc_df)
+
+    soc_df = soc_df.loc[:, (soc_df != False).any(axis=0)]
+
+    return soc_df
 
 
-def get_cls_pipe(clf=RandomForestClassifier()):
-    """
-    Builds a pipeline with a transformer and a classifier algorithm.
+def set_vic_id(new_victims):
+    if "victim_id" not in new_victims.columns:
+        logger.error("'victim_id' column is missing after setting victim IDs.")
 
-    Args:
-        clf (object, optional): The classifier algorithm to use in the pipeline. Defaults to a RandomForestClassifier.
-
-    Returns:
-        object: A pipeline with a transformer and classifier.
-    """
-    # Build the transformer
-    transformer = build_transformer()
-
-    # Create the pipeline with the transformer and classifier
-    cls_pipeline = Pipeline([("transformer", transformer), ("clf", clf)])
-    logger.info(f"Case Dispatcher 6.0: Built cls pipeline")
-
-    # Return the pipeline
-    return cls_pipeline
-
-
-
-def pipe_predict(cls_pipeline, X_train, y_train, X_validation):
-    """Make predictions with classifier pipeline."""
-    cls_pipeline.fit(X_train, y_train)
-    y_rf = cls_pipeline.predict_proba(X_validation)
-    return y_rf
-
-
-def do_gridsearch(cls_pipeline, X_train, y_train):
-    """
-    Conduct grid search cross-validation on a classifier pipeline to find the best model.
-
-    Args:
-        cls_pipeline: A scikit-learn pipeline object containing a classifier.
-        X_train (array-like): Training data.
-        y_train (array-like): Training labels.
-
-    Returns:
-        sklearn.model_selection._search.GridSearchCV: The best model found by grid search.
-    """
-    # Define the parameter grid for the grid search
-    search_space = [
-        {
-            "clf": [RandomForestClassifier()],
-            "clf__bootstrap": [False, True],
-            "clf__n_estimators": [10, 100],
-            #'clf__max_depth': [5, 10, 20, 30, 40, 50, None],
-            "clf__max_depth": [20, 30],
-            #'clf__max_features': [0.5, 0.6, 0.7, 0.8, 1],
-            "clf__max_features": [0.5, 0.6],
-            "clf__class_weight": ["balanced", None],
-        }
+    new_victims = new_victims[
+        ["vdf_number", "full_name", "phone_contact", "address_notes", "social_media"]
     ]
-    #'clf__class_weight': ["balanced",
-    #                      "balanced_subsample", None]}]
-    logger.info(f"Case Dispatcher 3.0: Start grid search")
-    # Create a grid search object using the classifier pipeline and parameter grid
-    grid_search = GridSearchCV(cls_pipeline, search_space, cv=4, n_jobs=-1, verbose=1)
-    logger.info(f"Case Dispatcher 3.0: Completed grid search")
-    # Print the parameters being searched
-    print("Performing grid search...")
-    print("parameters:")
-    print(search_space)
-
-    # Start the timer and conduct the grid search
-    t0 = time()
-    best_model = grid_search.fit(X_train, y_train)
-    print("done in %0.3fs" % (time() - t0))
-    print()
-
-    # Get the best parameters from the model
-    best_parameters = best_model.best_estimator_.get_params()["clf"]
-
-    # Print the best score and parameters found by the grid search
-    print("Best score: %0.3f" % grid_search.best_score_)
-    print("Best parameters set:")
-    print(best_parameters)
-
-    # Return the best model
-    return best_model
-
-
-def full_gridsearch_pipe(soc_df, cutoff_days=90):
-    sub_df = remove_recent(soc_df, cutoff_days)
-    X_train, X_validation, y_train, y_validation = train_test_val_split(sub_df)
-    X_train.to_csv("data/case_dispatcher_X_train.csv", index=False)
-    y_train.to_csv("data/case_dispatcher_y_train.csv", index=False)
-    X_validation.to_csv("data/case_dispatcher_X_validation.csv", index=False)
-    y_validation.to_csv("data/case_dispatcher_y_validation.csv", index=False)
-    cls_pipeline = get_cls_pipe()
-    best_model = do_gridsearch(cls_pipeline, X_train, y_train)
-    x_cols = list(X_validation.columns)
-    return best_model, x_cols, X_validation
+    new_victims.loc[:, "Victim_ID"] = new_victims["vdf_number"]
+    replacements = {
+        "Victim_ID": {
+            r"(\.1|A$)": ".V1",
+            r"B$": ".V2",
+            r"C$": ".V3",
+            r"D$": ".V4",
+            r"E$": ".V5",
+            r"F$": ".V6",
+            r"G$": ".V7",
+            r"H$": ".V8",
+            r"I$": ".V9",
+            r"J$": ".V10",
+        }
+    }
+    new_victims.replace(replacements, regex=True, inplace=True)
+    new_victims.sort_values("full_name", inplace=True)
+    new_victims = new_victims.drop_duplicates(subset="Victim_ID")
+    non_blanks = new_victims["full_name"] != ""
+    new_victims = new_victims[non_blanks]
+    vcols = [
+        "case_id",
+        "name",
+        "phone_numbers",
+        "address",
+        "social_media",
+        "victim_id",
+    ]
+    new_victims.columns = vcols
+    new_victims["narrative"] = ""
+    return new_victims
 
 
-def check_grid_search_cv(soc_df, gscv, cutoff_days):
-    """Check to see if Grid Search CV is on, and if it is run Grid Search CV."""
-    if gscv == "On":
-        best_model, x_cols, X_Validation = full_gridsearch_pipe(soc_df, cutoff_days)
-    return best_model, x_cols, X_Validation
+def set_sus_id_depr(new_suspects, db_cif):
+    """Creates a unique ID for each suspect from Case ID and subsets/renames
+    columns."""
+    new_suspects = new_suspects[
+        ["person_id", "full_name", "phone_contact", "address_notes", "social_media"]
+    ]
+    cif_ids = db_cif[["cif_number", "person_id", "pb_number", "case_notes"]]
+    new_suspects = pd.merge(
+        new_suspects,
+        cif_ids,
+        how="outer",
+        on="person_id",
+        sort=True,
+        suffixes=("x", "y"),
+        copy=True,
+    )
+    new_suspects.loc[:, "pb_number"] = new_suspects["pb_number"].fillna(0).astype(int)
+    new_suspects.loc[:, "Suspect_ID"] = new_suspects.loc[:, "cif_number"].str.replace(
+        ".", ""
+    )
+    new_suspects.loc[:, "Suspect_ID"] = (
+        new_suspects.loc[:, "Suspect_ID"].str[:-1]
+        + ".PB"
+        + new_suspects["pb_number"].map(str)
+    )
+    new_suspects = new_suspects.drop_duplicates(subset="Suspect_ID")
+    new_suspects = new_suspects[
+        [
+            "cif_number",
+            "Suspect_ID",
+            "full_name",
+            "phone_contact",
+            "address_notes",
+            "social_media",
+            "case_notes",
+        ]
+    ]
+    new_suspects.rename(
+        columns={
+            "full_name": "Name",
+            "phone_contact": "Phone Number(s)",
+            "address_notes": "Address",
+            "social_media": "Social Media ID",
+            "cif_number": "Case_ID",
+            "case_notes": "Narrative",
+        },
+        inplace=True,
+    )
+    return new_suspects
 
 
-def make_new_predictions(df, soc_model, x_cols):
-    """Use existing classifier algorithm on new cases without recalculating
-    best fit."""
-    X = df[df.columns.intersection(x_cols)]
-    df["soc"] = soc_model.predict_proba(X)[:, 1]
+def set_suspect_id(
+    new_suspects: pd.DataFrame, db_suspects: pd.DataFrame
+) -> pd.DataFrame:
+    """Creates a unique ID for each suspect from Case ID and subsets/renames columns."""
+
+    # Define columns for selection and renaming
+    new_suspect_cols = [
+        "person_id",
+        "full_name",
+        "phone_contact",
+        "address_notes",
+        "social_media",
+    ]
+    db_suspect_cols = [
+        "suspect_id",
+        "person_id",
+        "sf_number",
+        "sf_number_group",
+        "case_notes",
+    ]
+    column_rename = {
+        "full_name": "name",
+        "phone_contact": "phone_numbers",
+        "address_notes": "address",
+        "social_media": "social_media_id",
+        "sf_number": "case_id",
+        "case_notes": "narrative",
+        "suspect_id": "suspect_id",
+    }
+
+    # Subset columns
+    filtered_new_suspects = new_suspects[new_suspect_cols]
+    filtered_db_suspects = db_suspects[db_suspect_cols]
+
+    # Merge dataframes
+    merged_suspects = pd.merge(
+        filtered_new_suspects,
+        filtered_db_suspects,
+        how="outer",
+        on="person_id",
+        sort=True,
+        suffixes=("x", "y"),
+    )
+
+    # Drop duplicates and select final columns
+    merged_suspects.rename(columns=column_rename, inplace=True)
+    merged_suspects = merged_suspects.drop_duplicates(subset="suspect_id")
+    merged_suspects = merged_suspects[list(column_rename.values())]
+
+    # Rename columns
+
+    return merged_suspects
+
+
+def sum_and_join_vic(x):
+    """Aggregate count of victims willing to testify by Case ID."""
+    return pd.Series(
+        dict(
+            count=x["count"].sum(),
+            willing_to_testify=", ".join(x.astype(str)["willing_to_testify"]),
+        )
+    )
+
+
+def sum_and_join_sus(x):
+    """Aggregate count of suspects located by Case ID."""
+    return pd.Series(
+        dict(count=x["count"].sum(), located=", ".join(x.astype(str)["located"]))
+    )
+
+
+def get_vics_willing_to_testify(victims):
+    """Get subset of victims who have indicated they're willing to testify
+    against traffickers."""
+    vics_willing = victims.loc[
+        victims["case_status"] == "Step Complete: Victim is willing to press charges"
+    ]
+    if len(vics_willing) > 0:
+        vics_willing = vics_willing[["case_id", "name"]]
+        vics_willing.rename(columns={"name": "willing_to_testify"}, inplace=True)
+        vics_willing["count"] = 1
+        vics_willing = vics_willing.groupby("case_id").apply(sum_and_join_vic)
+    else:
+        vics_willing["willing_to_testify"] = ""
+    return vics_willing
+
+
+def add_vic_names(target_sheet, vics_willing):
+    """Add comma separated list of victims willing to testify to active police
+    or suspect sheet."""
+    if len(vics_willing) > 0:
+        target_sheet = pd.merge(target_sheet, vics_willing, how="left", on="case_id")
+        target_sheet["victims_willing_to_testify"] = target_sheet[
+            "willing_to_testify"
+        ].fillna("")
+        target_sheet.drop(columns=["willing_to_testify", "count"], inplace=True)
+    return target_sheet
+
+
+def get_sus_located(suspects):
+    """Get subset of suspects who have been identified and located."""
+    sus_located = suspects.loc[
+        suspects.case_status.str.contains("Step Complete", na=False)
+    ]
+    if len(sus_located) > 0:
+        sus_located = sus_located[["case_id", "name"]]
+        sus_located.rename(columns={"name": "located"}, inplace=True)
+        sus_located["count"] = 1
+        sus_located = sus_located.groupby("case_id").apply(sum_and_join_sus)
+    return sus_located
+
+
+def add_sus_located(target_sheet, sus_located):
+    """Add comma separated list of suspects identified and located to other
+    sheet."""
+    if len(sus_located) > 0:
+        target_sheet = pd.merge(target_sheet, sus_located, how="left", on="case_id")
+        target_sheet["suspects_identified_and_located"] = target_sheet[
+            "located"
+        ].fillna("")
+        target_sheet.drop(columns=["located", "count"], inplace=True)
+    return target_sheet
+
+
+import pandas as pd
+
+
+def calc_vics_willing_scores(suspects, vics_willing):
+    """Calculate scores for the number of victims willing to testify and add them to the suspect sheet."""
+
+    # Define victim multiplier
+    v_mult = {0: 0, 1: 0.5, 7: 1}
+    for i in range(2, 7):
+        v_mult[i] = v_mult[i - 1] + (1 - v_mult[i - 1]) * 0.5
+
+    if not vics_willing.empty:
+        # Merge data
+        suspects = pd.merge(suspects, vics_willing, how="left", on="case_id")
+        suspects["count"] = suspects["count"].fillna(0).astype(int)
+
+        # Map counts to multipliers
+        suspects["v_mult"] = suspects["count"].map(v_mult.get).fillna(0.0).astype(float)
+
+        # Drop unnecessary columns
+        suspects.drop(columns=["willing_to_testify", "count"], inplace=True)
+    else:
+        suspects["v_mult"] = 0.0
+
+    return suspects
+
+
+def calc_arrest_scores(suspects, states_of_charge, police):
+    """Calculate scores based on the number of other suspects arrested in each case,
+    and create fields for 'bio known' and for police willingness to arrest."""
+
+    # Setting the 'Bio_Known' column
+    suspects["bio_known"] = (
+        suspects["case_status"] != "Step Complete: Identity and Location Confirmed"
+    ).astype(int)
+
+    # Fetching and merging arrest data
+    arrests = get_total_arrests(states_of_charge[["sf_number_group", "arrested"]])
+    suspects = suspects.merge(arrests, on="case_id", how="left")
+    suspects["others_arrested"] = suspects.pop("total_arrests").fillna(0).astype(int)
+
+    # Identifying police willingness to arrest
+    police["willing_to_arrest"] = (
+        police["case_status"].str.contains("Step Complete", na=False).astype(int)
+    )
+
+    # Merging police willingness data
+    suspects = suspects.merge(
+        police[["case_id", "willing_to_arrest"]], on="case_id", how="left"
+    )
+
+    return suspects
+
+
+def get_total_arrests(soc_df):
+    """Create case_id from suspect_id and aggregate arrests. ['sf_number_group',
+    'case_id', 'arrested']"""
+
+    # Create case_id from sf_number_group and aggregate arrests
+    arrests = soc_df.assign(case_id=soc_df["sf_number_group"])
+    arrests = arrests.groupby("case_id")["arrested"].sum().reset_index()
+    arrests.columns = ["case_id", "total_arrests"]
+
+    return arrests
+
+
+import numpy as np
+
+
+def weight_pv_believes(suspects, states_of_charge, pv_believes):
+    """Weight beliefs about suspects' involvement in trafficking."""
+
+    # Extract and compute the "pv_believes" score
+    pvb = states_of_charge[
+        [
+            "sf_number",
+            "pv_believes_definitely_trafficked_many",
+            "pv_believes_trafficked_some",
+            "pv_believes_suspect_trafficker",
+        ]
+    ].copy()
+
+    conditions = [
+        pvb["pv_believes_definitely_trafficked_many"],
+        pvb["pv_believes_trafficked_some"],
+        pvb["pv_believes_suspect_trafficker"],
+    ]
+    choices = [pv_believes[col] for col in pvb.columns[1:]]
+    pvb["pv_believes"] = np.select(conditions, choices, default=0)
+
+    # Process the Case ID
+    pvb["case_id"] = pvb["sf_number"].str.rstrip(".").replace(".", "", regex=True)
+
+    # Clean up and finalize the data
+    logger.error(f"<<< data_prep pvb['pv_believes']")
+    pvb = pvb[["case_id", "pv_believes"]].copy()
+    pvb["pv_believes"] = pvb["pv_believes"].astype(float)
+    logger.error(f">>> data_prep pvb['pv_believes']")
+    pvb.drop_duplicates(subset="case_id", inplace=True)
+
+    # Merging the data
+    suspects = suspects.merge(pvb, on="case_id", how="left")
+
+    return suspects
+
+
+import numpy as np
+
+
+def get_exp_score(suspects, states_of_charges, exploitation_type):
+    """Calculate exploitation score based on parameters and reported exploitation."""
+
+    # Extract relevant columns and data
+    exp_cols = [col for col in states_of_charges.columns if "exploitation" in col] + [
+        "sf_number"
+    ]
+    exp_df = states_of_charges[exp_cols].copy()
+    exp_df["exp"] = 0
+
+    # Compute the exploitation score
+    for col in exp_cols:
+        if col in exploitation_type:
+            exp_df["exp"] += (exp_df[col] == True) * exploitation_type[col]
+
+    # Process the Case ID and finalize the data
+    exp_df["case_id"] = exp_df["sf_number"].str.rstrip(".").replace(".", "", regex=True)
+    exp_df = exp_df[["case_id", "exp"]].copy()
+    logger.error(f"<<< data_prep exp_df['exp'].astype(float)")
+    exp_df["exp"] = exp_df["exp"].astype(float)
+    logger.error(f">>> data_prep exp_df['exp'].astype(float)")
+    exp_df.drop_duplicates(subset="case_id", inplace=True)
+
+    # Merge suspect data with the exploitation score data
+    suspects = suspects.merge(exp_df, on="case_id", how="left")
+
+    return suspects
+
+
+def calc_recency_scores(suspects, states_of_charge, weights):
+    """Assign score to each case that is higher the more recent it is."""
+
+    # Calculate days since interview
+    today = pd.Timestamp.now().normalize()
+    cif_dates = states_of_charge[["sf_number", "interview_date"]].copy()
+    cif_dates["interview_date"] = pd.to_datetime(cif_dates["interview_date"])
+    cif_dates["days_old"] = (today - cif_dates["interview_date"]).dt.days
+    cif_dates["case_id"] = (
+        cif_dates["sf_number"].str.rstrip(".").replace(".", "", regex=True)
+    )
+
+    # Merge suspects data with days since interview
+    suspects = suspects.merge(
+        cif_dates[["case_id", "days_old"]], on="case_id", how="left"
+    )
+
+    # Calculate the Recency Score
+    coef, exp = weights["discount_coef"], weights["discount_exp"]
+    score_formula = 1 - coef * suspects["days_old"] ** exp
+    suspects["recency_score"] = np.maximum(score_formula, 0)
+
+    # Remove duplicate entries based on Suspect_ID
+    suspects = suspects.drop_duplicates(subset="suspect_id")
+
+    return suspects
+
+
+def calc_network_scores(sus_with_links, sus):
+    """
+    Calculate weighted scores based on 1st and 2nd degree links that each suspect
+    has with suspects from other cases and add these scores to the 'sus' dataframe.
+
+        1st degree case link = two suspects have a direct connection
+        2nd degree case link = two suspects are connected by one or more mutual contacts
+
+    The calculations are made by dividing the number of first and second degree case links
+    by the log (base 10) of the total number of connections the suspect has (plus nine).
+    Nine is added to the number of connections so that if the number of connections is
+    between 1-9 the product of the log will not be less than 1.
+    """
+    sus_with_links["1d_case_score"] = sus_with_links[
+        "first_degree_case_links"
+    ] / np.log10(sus_with_links["first_degree_links"] + 9)
+    sus_with_links["2d_case_score"] = sus_with_links[
+        "second_degree_case_links"
+    ] / np.log10(sus_with_links["first_degree_links"] + 9)
+    sus = pd.merge(
+        sus,
+        sus_with_links[["suspect_case_id", "1d_case_score", "2d_case_score"]],
+        how="left",
+        left_on="Suspect_ID",
+        right_on="suspect_case_id",
+    )
+    sus.drop(columns=["suspect_case_id"], inplace=True)
+    return sus
+
+
+def get_network_weights(parameters):
+    """Get weights for network analysis from Parameters Google Sheet."""
+    net_weights = pd.DataFrame(parameters.iloc[5:9, 4:6])
+    net_weights.columns = ["key", "value"]
+    return net_weights
+
+
+def weight_network_scores(sus, net_weights):
+    """Weight the network scores according to the weights provided in the
+    Parameters Sheet."""
+    s = net_weights.set_index("key")["value"]
+    one_link_add = float(s["1 Link Em Added"])
+    max_add = float(s["Max Em Added"])
+    second_d_weight = float(s["2nd Degree Weight"])
+    sus["net_weight"] = (
+        sus["1d_case_score"] * one_link_add
+        + (sus["2d_case_score"] * one_link_add) * second_d_weight
+    )
+    sus["net_weight"].round(2)
+    sus["net_weight"] = np.where(
+        sus["net_weight"] > max_add, max_add, sus["net_weight"]
+    )
+    sus.drop(columns=["1d_case_score", "2d_case_score"], inplace=True)
+    return sus
+
+
+def check_update_links(sus_with_links, sus, Parameters):
+    """Check to see if Network Analysis is on, and if it is calculate network
+    scores and weight."""
+    net_weights = get_network_weights(Parameters)
+    if net_weights.iloc[0, 1] == "On":
+        sus = calc_network_scores(sus_with_links, sus)
+        sus = weight_network_scores(sus, net_weights)
+    return sus
+
+
+def get_eminence_score(suspects):
+    """Get eminence score from active sheet, if blank enter '1'."""
+    suspects["em2"] = suspects["eminence"].fillna(1)
+    suspects.loc[suspects["eminence"].str.len() < 1, "em2"] = 1
+    logger.error(f">>> data_prep sus['em2'] = sus['em2'].astype(float)")
+    suspects["em2"] = suspects["em2"].astype(float)
+    logger.error(f"<<< data_prep sus['em2'] = sus['em2'].astype(float)")
+    if "net_weight" in suspects:
+        suspects["em2"] += suspects["net_weight"]
+        suspects["em2"] = np.where(suspects["em2"] > 9, 9, suspects["em2"])
+        suspects["em2"] = suspects["em2"].fillna(0)
+        suspects.drop(columns=["net_weight"], inplace=True)
+    return suspects
+
+
+def get_sus_located_in(sus, location):
+    """Get subset of suspects who have a particular location mentioned in
+    their address."""
+    sus["loc"] = np.where(sus["Address"].str.contains(location), 1, 0)
+    return sus
+
+
+def get_new_soc_score(suspects, states_of_charges):
+    """Merge newly calculated Strength of Case scores to suspects sheet."""
+    suspects = pd.merge(
+        suspects,
+        states_of_charges[["suspect_id", "soc"]],
+        how="left",
+        left_on="suspect_id",
+        right_on="suspect_id",
+    )
+    suspects["strength_of_case"] = suspects["soc"].round(decimals=3)
+    return suspects
+
+
+def calculate_weights(Parameters):
+    """Get current weights from Parameters Google Sheet."""
+    logger.error(
+        f"<<< data_prep     weights_vs = ( \
+        pd.Series(Parameters.iloc[0:16, 1]) \
+        .replace('', 0) \
+        .append(pd.Series(Parameters.iloc[0:3, 5])) \
+        .astype(float) \
+    )"
+    )
+    weights_vs = (
+        pd.Series(Parameters.iloc[0:16, 1])
+        .replace("", 0)
+        .append(pd.Series(Parameters.iloc[0:3, 5]))
+        .astype(float)
+    )
+    logger.error(
+        f">>> data_prep     weights_vs = ( \
+        pd.Series(Parameters.iloc[0:16, 1]) \
+        .replace('', 0) \
+        .append(pd.Series(Parameters.iloc[0:3, 5])) \
+        .astype(float) \
+    )"
+    )
+    weights_keys = pd.Series(Parameters.iloc[0:16, 0]).append(
+        pd.Series(Parameters.iloc[0:3, 4])
+    )
+    weights = {k: v for k, v in zip(weights_keys, weights_vs)}
+    return weights
+
+
+def calc_solvability(suspects, weights):
+    """Calculate weighted solvability score on active suspects."""
+
+    factors = [
+        ("v_mult", "victim_willing_to_testify"),
+        ("bio_known", "bio_and_location_of_suspect"),
+        ("others_arrested", "other_suspect(s)_arrested"),
+        ("willing_to_arrest", "police_willing_to_arrest"),
+        ("recency_score", "recency_of_case"),
+        ("pv_believes", "pv_believes"),
+        ("exp", "exploitation_reported"),
+    ]
+
+    weighted_scores = [
+        suspects[factor].fillna(0) * weights[weight_key]
+        for factor, weight_key in factors
+    ]
+
+    suspects["solvability"] = sum(weighted_scores) / sum(weights.values())
+
+    return suspects
+
+
+def calc_priority(new_suspects, weights, existing_suspects):
+    """Calculate weighted priority score on active suspects."""
+    logger.info(f"""existing_suspects.columns {existing_suspects.columns}""")
+    logger.info(f"""new_suspects.columns {new_suspects.columns}""")
+    factors = [
+        ("solvability", weights["solvability"]),
+        ("strength_of_case", weights["strength_of_case"]),
+        ("em2", 0.1 * weights["eminence"]),
+    ]
+
+    weighted_scores = [new_suspects[factor] * weight for factor, weight in factors]
+
+    logger.info(f"""new_suspects.columns {new_suspects.columns}""")
+    new_suspects["priority"] = sum(weighted_scores).round(decimals=3)
+
+    logger.info(f"""new_suspects.columns {new_suspects.columns}""")
+    new_suspects["priority"] = new_suspects["priority"].fillna(0)
+
+    logger.info(f"""new_suspects.columns {new_suspects.columns}""")
+    new_suspects.sort_values("priority", ascending=False, inplace=True)
+
+    logger.info(f"""new_suspects.columns {new_suspects.columns}""")
+    # new_suspects = new_suspects[existing_suspects.columns].fillna("").drop_duplicates(subset="suspect_id")
+    new_suspects = (
+        new_suspects.iloc[:, 0 : len(existing_suspects.columns)]
+        .fillna("")
+        .drop_duplicates(subset="suspect_id")
+    )
+    logger.info(f"""new_suspects.columns {new_suspects.columns}""")
+    return new_suspects
+
+
+def truncate_rows(df, nrow=200):
+    df = df.iloc[:nrow, :]
     return df
 
 
-def load_model(dir_name, file_prefix):
-    model_filename = f"{dir_name}/{file_prefix}_model.sav"
-    loaded_model = pickle.load(open(model_filename, "rb"))
-    return loaded_model
+def calc_all_sus_scores(
+    suspects_entity_active, vics_willing, pol, weights, soc_df, google_sheets_suspects
+):
+    """Complete all suspect sheet calculations in priority_calc module."""
+
+    def record_columns(
+        description, new_columns, current_columns, original_columns, counter
+    ):
+        current_difference = list(set(new_columns) - set(current_columns))
+        current_columns = new_columns
+        original_difference = list(set(current_columns) - set(original_columns))
+        logger.info(f""" {counter}. after {description} sus.columns = {new_columns}""")
+        logger.info(
+            f""" {counter}. after {description} current_differences = {current_difference}"""
+        )
+        logger.info(
+            f""" {counter}. after {description} original_difference = {original_difference}"""
+        )
+        return current_columns, original_columns
+
+    original_columns = suspects_entity_active.columns
+    current_columns = suspects_entity_active.columns
+    logger.info(
+        f"""at start of calc_all_sus_scores
+    sus.columns = {suspects_entity_active.columns}, \
+    vics_willing.columns = {vics_willing.columns}, \
+    pol.columns = {pol.columns}, \
+    soc_df.columns = {soc_df.columns}, \
+    Supects.columns = {google_sheets_suspects.columns}
+    """
+    )
+
+    suspects_entity_active = calc_vics_willing_scores(
+        suspects_entity_active, vics_willing
+    )
+    record_columns(
+        "calc_vics_willing_scores",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        1,
+    )
+    current_columns = suspects_entity_active.columns
+
+    suspects_entity_active = calc_arrest_scores(suspects_entity_active, soc_df, pol)
+    record_columns(
+        "calc_arrest_scores",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        2,
+    )
+    current_columns = suspects_entity_active.columns
+
+    suspects_entity_active = calc_recency_scores(
+        suspects_entity_active, soc_df, weights
+    )
+    record_columns(
+        "calc_recency_scores",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        3,
+    )
+    current_columns = suspects_entity_active.columns
+
+    suspects_entity_active = weight_pv_believes(suspects_entity_active, soc_df, weights)
+    record_columns(
+        "weight_pv_believes",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        4,
+    )
+    current_columns = suspects_entity_active.columns
+
+    suspects_entity_active = get_exp_score(suspects_entity_active, soc_df, weights)
+    record_columns(
+        "get_exp_score",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        5,
+    )
+    current_columns = suspects_entity_active.columns
+
+    suspects_entity_active = get_new_soc_score(suspects_entity_active, soc_df)
+    record_columns(
+        "get_new_soc_score",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        6,
+    )
+    current_columns = suspects_entity_active.columns
+
+    suspects_entity_active = get_eminence_score(suspects_entity_active)
+    record_columns(
+        "get_eminence_score",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        7,
+    )
+    current_columns = suspects_entity_active.columns
+
+    suspects_entity_active = calc_solvability(suspects_entity_active, weights)
+    record_columns(
+        "calc_solvability",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        8,
+    )
+    current_columns = suspects_entity_active.columns
+
+    logger.info(
+        f""" BEFORE calc_priority len(suspects_entity_active) {len(suspects_entity_active)}"""
+    )
+    suspects_entity_active = calc_priority(
+        suspects_entity_active, weights, google_sheets_suspects
+    )
+    logger.info(
+        f"""AFTER calc_priority len(suspects_entity_active) {len(suspects_entity_active)}"""
+    )
+
+    record_columns(
+        "calc_priority",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        9,
+    )
+    current_columns = suspects_entity_active.columns
+
+    suspects_entity_active = truncate_rows(suspects_entity_active)
+    record_columns(
+        "truncate_rows",
+        suspects_entity_active.columns,
+        current_columns,
+        original_columns,
+        10,
+    )
+    current_columns = suspects_entity_active.columns
+    return suspects_entity_active
+
+
+def add_priority_to_others(sus, other_entity_group, id_type, entity_gsheet, uid):
+    """Copy priority score from suspects to other active sheets and sort them
+    by priority."""
+    other_entity_group = pd.merge(
+        other_entity_group,
+        sus[[id_type, "priority", "narrative"]],
+        how="outer",
+        on=id_type,
+    )
+    other_entity_group = other_entity_group[other_entity_group["priority"] != ""]
+    logger.error(f"<<< data_prep priority")
+    other_entity_group["priority"] = (
+        other_entity_group["priority"].fillna(0).astype(float)
+    )
+    logger.error(f">>> data_prep priority")
+    other_entity_group["narrative_x"] = other_entity_group["narrative_y"]
+    other_entity_group.rename(columns={"narrative_x": "narrative"}, inplace=True)
+    other_entity_group.drop_duplicates(subset=uid, inplace=True)
+    other_entity_group.sort_values("priority", ascending=False, inplace=True)
+    other_entity_group = other_entity_group.iloc[
+        :, 0 : len(entity_gsheet.columns)
+    ].fillna("")
+    return other_entity_group
+
+
+def update_status_based_on_conditions(row, condition_tuples):
+    for condition_set, status in condition_tuples:
+        if row["case_id"] in condition_set:
+            return status
+    return ""
+
+
+def update_active_cases(
+    active_suspects: pd.DataFrame, active_police: pd.DataFrame
+) -> pd.DataFrame:
+    """
+    Updates active cases based on the status and actions of suspects and police.
+
+    Parameters:
+    active_suspects (pd.DataFrame): A DataFrame containing information about active suspects.
+    active_police (pd.DataFrame): A DataFrame containing information about active police actions.
+
+    Returns:
+    pd.DataFrame: A DataFrame with updated active cases information.
+    """
+
+    # Select only relevant columns from active_suspects
+    active_cases = active_suspects[
+        [
+            "case_id",
+            "case_name",
+            "priority",
+            "irf_case_notes",
+            "narrative",
+            "case_status",
+        ]
+    ].copy()
+
+    # Create a mask for each condition
+    police_complete = active_police[active_police.case_status.str.contains("Complete")][
+        "case_id"
+    ]
+    suspect_complete = active_suspects[
+        active_suspects.case_status.str.contains("Complete")
+    ]["case_id"]
+    multiple_victims = active_suspects[
+        active_suspects.victims_willing_to_testify.str.contains(",")
+    ]["case_id"]
+    single_victim = active_suspects[active_suspects.victims_willing_to_testify != ""][
+        "case_id"
+    ]
+
+    # Update 'Case_Status' based on the conditions
+    active_cases.loc[active_cases.case_id.isin(police_complete), "case_status"] = (
+        "Third Step Complete - Police are willing to arrest suspect."
+    )
+    active_cases.loc[active_cases.case_id.isin(suspect_complete), "case_status"] = (
+        "Second Step Complete: Suspect Located"
+    )
+    active_cases.loc[active_cases.case_id.isin(multiple_victims), "case_status"] = (
+        "First Step Complete: Two or more PVs willing to testify"
+    )
+    active_cases.loc[active_cases.case_id.isin(single_victim), "case_status"] = (
+        "First Step Complete: One PV willing to testify"
+    )
+
+    # Update 'Next_Action_Priority' based on the conditions
+    active_cases["Next_Action_Priority"] = ""
+    active_cases.loc[
+        active_cases.case_id.isin(police_complete), "Next_Action_Priority"
+    ] = "Ensure Arrest is Made"
+    active_cases.loc[
+        active_cases.case_id.isin(suspect_complete), "Next_Action_Priority"
+    ] = "Ask Police to Arrest"
+    active_cases.loc[
+        active_cases.case_id.isin(single_victim), "Next_Action_Priority"
+    ] = "Locate Suspect"
+    active_cases.loc[
+        ~active_cases.case_id.isin(single_victim), "Next_Action_Priority"
+    ] = "Contact Victim"
+
+    # Drop duplicates based on 'Case_ID'
+    active_cases = active_cases.drop_duplicates("case_id")
+
+    return active_cases
+
+
+def update_active_cases_2(active_suspects, active_police):
+    """
+    This function updates the status and next action priority for active human trafficking cases.
+    It takes in two dataframes: active_suspects and active_police.
+    """
+
+    def get_status_conditions():
+        is_in_completed_police_cases = active_cases.case_id.isin(
+            active_police[active_police.case_status.str.contains("Complete")]["case_id"]
+        )
+        is_in_completed_suspect_cases = active_cases.case_id.isin(
+            active_suspects[active_suspects.case_status.str.contains("Complete")][
+                "case_id"
+            ]
+        )
+        has_multiple_victims_willing = active_cases.case_id.isin(
+            active_suspects[
+                active_suspects.victims_willing_to_testify.str.contains(",")
+            ]["case_id"]
+        )
+        has_at_least_one_victim_willing = active_cases.case_id.isin(
+            active_suspects[pd.notna(active_suspects.victims_willing_to_testify)][
+                "case_id"
+            ]
+        )
+        logger.info(
+            f"get_status_conditions: {active_suspects.victims_willing_to_testify.value_counts()}"
+        )
+
+        return [
+            is_in_completed_police_cases,
+            is_in_completed_suspect_cases,
+            has_multiple_victims_willing,
+            has_at_least_one_victim_willing,
+        ]
+
+    def get_next_action_conditions():
+        return get_status_conditions()[:-1]  # Exclude the last condition
+
+    # Extract relevant columns
+    active_cases = active_suspects[
+        [
+            "case_id",
+            "case_name",
+            "priority",
+            "irf_case_notes",
+            "narrative",
+            "case_status",
+        ]
+    ].copy()
+
+    # Define status values
+    case_status_values = [
+        "Third Step Complete - Police are willing to arrest suspect.",
+        "Second Step Complete: Suspect Located",
+        "First Step Complete: Two or more PVs willing to testify",
+        "First Step Complete: One PV willing to testify",
+    ]
+
+    # Define next action values
+    next_action_priority_values = [
+        "Ensure Arrest is Made",
+        "Ask Police to Arrest",
+        "Locate Suspect",
+    ]
+
+    # Update Case_Status and Next_Action_Priority columns
+    active_cases["case_status"] = np.select(
+        get_status_conditions(), case_status_values, default=""
+    )
+    active_cases["next_action_priority"] = np.select(
+        get_next_action_conditions(),
+        next_action_priority_values,
+        default="Contact Victim",
+    )
+
+    # Remove duplicates
+    active_cases.drop_duplicates("case_id", inplace=True)
+
+    return active_cases
+
+
+# update_casedispatcher_sheets.py
+# author: christo strydom
+
+import os
+
+import streamlit as st
+import json
+import pandas as pd
+import numpy as np
+from datetime import date
+from googleapiclient.discovery import build
+from copy import deepcopy
+from oauth2client.client import OAuth2Credentials
+import libraries.data_prep as data_prep
+import pickle
+from libraries.case_dispatcher_model import (
+    check_grid_search_cv,
+    save_results,
+    make_new_predictions,
+)
+from libraries.data_prep import remove_non_numeric, process_columns
+from libraries.entity_model_gpt import EntityGroup
+from libraries.case_dispatcher_model import TypeSelector
+from libraries.case_dispatcher_data import (
+    get_vdf,
+    get_suspects,
+    get_irf,
+    get_suspect_evaluations,
+    get_countries,
+)
+from libraries.google_lib import (
+    get_gsheets,
+    get_dfs,
+    attrdict_to_dict,
+    make_file_bytes,
+    save_to_cloud,
+    load_data,
+    get_matching_spreadsheets,
+)
+import dotenv
+from libraries.case_dispatcher_logging import setup_logger
+import gspread
+
+logger = setup_logger("update_logging", "update_logging")
+dotenv_file = dotenv.find_dotenv()
+dotenv.load_dotenv(dotenv_file)
+
+countries = get_countries()
+country_list = ["Select a country..."] + ["Nepal", "Uganda", "Malawi", "Namibia"]
+case_dispatcher = st.secrets["case_dispatcher"]
+access_token = case_dispatcher["access_token"]
+sheet_names = case_dispatcher["sheet_names"]
+
+toml_config_dict = attrdict_to_dict(access_token)
+creds_json = json.dumps(toml_config_dict)
+credentials = OAuth2Credentials.from_json(creds_json)
+drive_service = build("drive", "v3", credentials=credentials)
+
+
+links = {
+    "Uganda": os.environ["UGANDA"],
+    "Nepal": os.environ["NEPAL"],
+    "Malawi": os.environ["MALAWI"],
+    "Namibia": os.environ["NAMIBIA"],
+    "Mozambique": os.environ["MOZAMBIQUE"],
+    "Lesotho": os.environ["LESOTHO"],
+}
+
+
+def get_country_id(df, country_name):
+    # Normalize the case for comparison
+    normalized_country_name = country_name.strip().lower()
+    df["name_normalized"] = df["name"].str.lower()
+
+    # Find the matching country_id
+    matching_id = df.loc[df["name_normalized"] == normalized_country_name, "id"]
+
+    if not matching_id.empty:
+        return matching_id.values[0]
+    else:
+        st.write(f"Country not found: {country_name}")
+        return "Country not found"
+
+
+def make_predictions(model, X):
+    best_pipeline = model.best_estimator_
+
+    # Extract the RandomForestClassifier from the pipeline
+    clf = best_pipeline.named_steps["clf"]
+
+    # Transform the user input data with all pipeline steps except the classifier
+    X_transformed = best_pipeline[:-1].transform(X)
+
+    # Make a prediction using only the classifier
+    prediction = clf.predict_proba(X_transformed)[:, 1]
+    return prediction
+
+
+def get_pv_believes_settings():
+    pv_believes = case_dispatcher["pv_believes"]
+    if st.checkbox("Adjust PV Believes"):
+        pv_believes_text = case_dispatcher["pv_believes_text"]["text"]
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The PV believes settings"):
+            st.markdown(pv_believes_text)
+        st.subheader("Adjust PV Believes")
+        # Assume pv_believes are fetched from case_dispatcher, initialize if not available
+
+        pv_believes_definitely_trafficked_many = st.slider(
+            "pv_believes_definitely_trafficked_many",
+            0,
+            1,
+            int(pv_believes["pv_believes_definitely_trafficked_many"]),
+        )
+        pv_believes_not_a_trafficker = st.slider(
+            "pv_believes_not_a_trafficker",
+            0,
+            1,
+            int(pv_believes["pv_believes_not_a_trafficker"]),
+        )
+        pv_believes_trafficked_some = st.slider(
+            "pv_believes_trafficked_some",
+            0,
+            1,
+            int(pv_believes["pv_believes_trafficked_some"]),
+        )
+        pv_believes_suspect_trafficker = st.slider(
+            "pv_believes_suspect_trafficker",
+            0,
+            1,
+            int(pv_believes["pv_believes_suspect_trafficker"]),
+        )
+
+        # Update pv_believes based on slider input
+        pv_believes = {
+            "pv_believes_definitely_trafficked_many": pv_believes_definitely_trafficked_many,
+            "pv_believes_not_a_trafficker": pv_believes_not_a_trafficker,
+            "pv_believes_trafficked_some": pv_believes_trafficked_some,
+            "pv_believes_suspect_trafficker": pv_believes_suspect_trafficker,
+        }
+    return pv_believes
+
+
+def get_recency_settings():
+    recency_vars = case_dispatcher["recency_vars"]
+    if st.checkbox("Adjust Recency Variables"):
+        recency_text = case_dispatcher["recency_text"]["text"]
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The recency settings"):
+            st.markdown(recency_text)
+        st.subheader("Adjust Recency Variables")
+        # Assume recency_vars are fetched from case_dispatcher, initialize if not available
+
+        discount_coef = st.slider(
+            "Discount Coefficient (discount_coef)",
+            0.00,
+            0.10,
+            recency_vars["discount_coef"],
+        )
+        discount_exp = st.slider(
+            "Discount Exponent (discount_exp)", 0, 5, recency_vars["discount_exp"]
+        )
+
+        # Update recency_vars based on slider input
+        recency_vars = {"discount_coef": discount_coef, "discount_exp": discount_exp}
+    return recency_vars
+
+
+def get_exploitation_settings():
+    exploitation_type = case_dispatcher["exploitation_type"]
+    if st.checkbox("Adjust Exploitation Variables"):
+        exploitation_type_text = case_dispatcher["exploitation_type_text"]["text"]
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The exploitation settings"):
+            st.markdown(exploitation_type_text)
+        st.subheader("Adjust Exploitation Variables")
+        # Assume recency_vars are fetched from case_dispatcher, initialize if not available
+
+        exploit_prostitution = st.slider(
+            "exploit_prostitution",
+            0.00,
+            1.00,
+            exploitation_type["exploit_prostitution"],
+        )
+        exploit_sexual_abuse = st.slider(
+            "exploit_sexual_abuse",
+            0.00,
+            1.00,
+            exploitation_type["exploit_sexual_abuse"],
+        )
+        exploit_physical_abuse = st.slider(
+            "exploit_physical_abuse",
+            0.00,
+            1.00,
+            exploitation_type["exploit_physical_abuse"],
+        )
+        exploit_debt_bondage = st.slider(
+            "exploit_debt_bondage",
+            0.00,
+            1.00,
+            exploitation_type["exploit_debt_bondage"],
+        )
+        exploit_forced_labor = st.slider(
+            "exploit_forced_labor",
+            0.00,
+            1.00,
+            exploitation_type["exploit_forced_labor"],
+        )
+        # Update recency_vars based on slider input
+        exploitation_type = {
+            "exploit_prostitution": exploit_prostitution,
+            "exploit_sexual_abuse": exploit_sexual_abuse,
+            "exploit_physical_abuse": exploit_physical_abuse,
+            "exploit_debt_bondage": exploit_forced_labor,
+            "exploit_forced_labor": exploit_forced_labor,
+        }
+    return exploitation_type
+
+
+def get_solvability_weights():
+    solvability_weights = case_dispatcher["solvability_weights"]
+    if st.checkbox("Adjust Solvability Weights"):
+        solvability_weights_text = case_dispatcher["solvability_weights_text"]["text"]
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The solvability weights"):
+            st.markdown(solvability_weights_text)
+        st.subheader("Adjust Solvability Weights")
+        # Assume solvability_weights are fetched from case_dispatcher, initialize if not available
+
+        victim_willing_to_testify = st.slider(
+            "victim_willing_to_testify",
+            0.00,
+            10.00,
+            solvability_weights["victim_willing_to_testify"],
+        )
+        bio_and_location_of_suspect = st.slider(
+            "bio_and_location_of_suspect",
+            0.00,
+            10.00,
+            solvability_weights["bio_and_location_of_suspect"],
+        )
+        other_suspect_arrested = st.slider(
+            "other_suspect(s)_arrested",
+            0.00,
+            10.00,
+            solvability_weights["other_suspect(s)_arrested"],
+        )
+        police_willing_to_arrest = st.slider(
+            "police_willing_to_arrest",
+            0.00,
+            10.00,
+            solvability_weights["police_willing_to_arrest"],
+        )
+        recency_of_case = st.slider(
+            "recency_of_case", 0.00, 10.00, solvability_weights["recency_of_case"]
+        )
+        exploitation_reported = st.slider(
+            "exploitation_reported",
+            0.00,
+            10.00,
+            solvability_weights["exploitation_reported"],
+        )
+        pv_believes = st.slider(
+            "pv_believes", 0.00, 10.00, solvability_weights["pv_believes"]
+        )
+        # Update solvability_weights based on slider input
+        solvability_weights = {
+            "victim_willing_to_testify": victim_willing_to_testify,
+            "bio_and_location_of_suspect": bio_and_location_of_suspect,
+            "other_suspect(s)_arrested": other_suspect_arrested,
+            "police_willing_to_arrest": police_willing_to_arrest,
+            "recency_of_case": recency_of_case,
+            "exploitation_reported": exploitation_reported,
+            "pv_believes": pv_believes,
+        }
+    return solvability_weights
+
+
+def get_priority_weights():
+    priority_weights = case_dispatcher["priority_weights"]
+    if st.checkbox("Adjust Priority Weights"):
+        priority_weights_text = case_dispatcher["priority_weights_text"]["text"]
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The priority weights"):
+            st.markdown(priority_weights_text)
+        st.subheader("Adjust Priority Weights")
+        # Assume priority_weights are fetched from case_dispatcher, initialize if not available
+
+        eminence = st.slider("eminence", 0.0, 1.0, priority_weights["eminence"])
+        solvability = st.slider(
+            "solvability", 0.0, 1.00, priority_weights["solvability"]
+        )
+        strength_of_case = st.slider(
+            "strength_of_case", 0.00, 1.00, priority_weights["strength_of_case"]
+        )
+        # Update priority_weights based on slider input
+
+        priority_weights = {
+            "eminence": eminence,
+            "solvability": solvability,
+            "strength_of_case": strength_of_case,
+        }
+    return priority_weights
+
+
+def main():
+
+    # Initialize session state variables if they don't exist
+    if "country" not in st.session_state:
+        st.session_state["country"] = None
+
+    if "spreadsheet_name" not in st.session_state:
+        st.session_state["spreadsheet_name"] = None
+
+    if "case_dispatcher_soc_df" not in st.session_state:
+        st.session_state["case_dispatcher_soc_df"] = load_data(
+            drive_service, "case_dispatcher_soc_df.pkl"
+        )
+
+    exploitation_type = get_exploitation_settings()
+    recency_vars = get_recency_settings()
+    pv_believes = get_pv_believes_settings()
+    solvability_weights = get_solvability_weights()
+    priority_weights = get_priority_weights()
+
+    # Now recency_vars is updated, you can proceed to construct weights
+    weights = {
+        **solvability_weights,
+        **recency_vars,
+        **exploitation_type,
+        **pv_believes,
+        **priority_weights,
+    }
+
+    # Country selection
+    country_list = ["Select a country..."] + list(links.keys())
+    country = st.selectbox("Select a country to update", country_list, index=0)
+
+    # Proceed only if a country has been selected
+    if country and country != "Select a country...":
+        operating_country_id = get_country_id(countries, country)
+        if operating_country_id == "Country not found":
+            st.write(f"Country not found: {country}")
+            return
+        st.write(
+            f"Selected {country} has operating_country_id: {operating_country_id}, continuing..."
+        )
+        case_dispatcher_soc_df = st.session_state["case_dispatcher_soc_df"][
+            st.session_state["case_dispatcher_soc_df"].operating_country_id
+            == operating_country_id
+        ].copy()
+
+        st.session_state["country"] = country
+        st.write("You selected:", country)
+        st.session_state["spreadsheet_name"] = f"Case Dispatcher 6.0 - {country}"
+        url = links[country]
+        st.markdown(f"[Open {country} Google Sheet]({url})")
+    else:
+        st.session_state["spreadsheet_name"] = None
+
+    # Proceed only if a spreadsheet has been selected
+    if st.session_state["spreadsheet_name"]:
+        st.write(
+            f"Get the sheets from the selected spreadsheet {st.session_state['spreadsheet_name']}"
+        )
+
+        # Only execute this part if the "Update" button hasn't been clicked yet
+        if st.button("Update"):
+            # Assuming get_gsheets and get_dfs are defined and take the necessary arguments
+            st.write(st.session_state["spreadsheet_name"])
+            sheets, file_url, file_id = get_gsheets(
+                credentials, st.session_state["spreadsheet_name"], sheet_names
+            )
+            st.write(f"Found the following sheets {sheets}")
+            st.write(f"Found the following file_url {file_url}")
+            dfs = get_dfs(sheets)
+
+            st.write(f"Get the data from collect_model_data.py")
+            db_vics = load_data(drive_service, "new_victims.pkl")
+            db_vics = db_vics[
+                db_vics["operating_country_id"] == operating_country_id
+            ].drop(columns=["operating_country_id"])
+            db_sus = load_data(drive_service, "new_suspects.pkl")
+            db_sus = db_sus[
+                db_sus["operating_country_id"] == operating_country_id
+            ].drop(columns=["operating_country_id"])
+            irf_case_notes = load_data(drive_service, "irf_case_notes.pkl")
+            irf_case_notes = irf_case_notes[
+                irf_case_notes["operating_country_id"] == operating_country_id
+            ].drop(columns=["operating_country_id"])
+            st.write(f"Get the model (pkl):")
+            case_dispatcher_model = load_data(
+                drive_service, "case_dispatcher_model.pkl"
+            )
+            st.write("Get the model columns:")
+            case_dispatcher_model_cols = load_data(
+                drive_service, "case_dispatcher_model_cols.pkl"
+            )
+            st.write(f"Predict likelihood of arrest and add prediction to dataframe")
+            # st.dataframe(soc_df[model_cols])
+            case_dispatcher_soc_df.loc[:, "soc"] = 0.0
+            # case_dispatcher_soc_df["soc"] = case_dispatcher_soc_df["soc"].astype(float)
+            soc = make_predictions(
+                case_dispatcher_model,
+                case_dispatcher_soc_df.loc[:, case_dispatcher_model_cols].copy(),
+            )
+            case_dispatcher_soc_df.loc[:, "soc"] = soc
+            # ===========================================================================================================
+            st.write(f"Create the victims_entity from db_vics")
+            new_victims = db_vics.copy()
+            EntityGroup.sheets = []
+            victims_entity = EntityGroup(
+                "victim_id", new_victims, "victims", "closed_victims", dfs
+            )
+
+            victims_entity.new = data_prep.set_vic_id(victims_entity.new)
+            st.write("st.dataframe(victims_entity.new):\n")
+            st.dataframe(victims_entity.new)
+
+            st.write("for sheet in EntityGroup.sheets:\n")
+            for sheet in EntityGroup.sheets:
+                st.write(sheet.active_name)
+                st.dataframe(sheet.new)
+            # st.dataframe(EntityGroup.new)
+            # -----------------------------------------------------------------------------------
+
+            new_suspects = db_sus.copy()
+            st.dataframe(new_suspects)
+            suspects_entity = EntityGroup(
+                "suspect_id", new_suspects, "suspects", "closed_suspects", dfs
+            )
+            suspects_entity.new = data_prep.set_suspect_id(suspects_entity.new, db_sus)
+            st.dataframe(suspects_entity.new)
+            # -----------------------------------------------------------------------------------
+            EntityGroup.set_case_id()
+            for sheet in EntityGroup.sheets:
+                st.write(sheet.active_name)
+                st.dataframe(sheet.new)
+                st.write("------------------------------------------")
+            # st.dataframe(EntityGroup.new)
+            st.write(
+                f"Create the police entity from a  copy of the suspects_entity.new"
+            )
+            new_police = deepcopy(x=suspects_entity.new)
+            new_police.rename(columns={"name": "suspect_name"}, inplace=True)
+            police_entity = EntityGroup(
+                "suspect_id", new_police, "police", "closed_police", dfs
+            )
+
+            EntityGroup.combine_sheets()
+            suspects_entity.active = suspects_entity.active[
+                ~(suspects_entity.active["case_id"] == "")
+            ]
+
+            st.write(f"Add irf_case_notes")
+            EntityGroup.add_irf_notes(irf_case_notes)
+            st.write(f"Move closed cases")
+            # logger.info(f"Move closed cases: {uid}")
+            EntityGroup.move_closed(case_dispatcher_soc_df)
+            EntityGroup.move_other_closed(
+                suspects_entity, police_entity, victims_entity
+            )
+            st.write(f"Get victims willing to testify")
+            vics_willing = data_prep.get_vics_willing_to_testify(victims_entity.active)
+            st.write(f"Add victim names")
+            police_entity.active = data_prep.add_vic_names(
+                police_entity.active, vics_willing
+            )
+            suspects_entity.active = data_prep.add_vic_names(
+                suspects_entity.active, vics_willing
+            )
+            suspects_entity.active = suspects_entity.active.drop_duplicates()
+            st.write(f"Get located suspects")
+            sus_located = data_prep.get_sus_located(suspects_entity.active)
+            victims_entity.active = data_prep.add_sus_located(
+                victims_entity.active, sus_located
+            )
+
+            police_entity.active["case_status"] = police_entity.active[
+                "case_status"
+            ].astype(str)
+            suspects_entity.active["case_status"] = suspects_entity.active[
+                "case_status"
+            ].astype(str)
+            suspects_entity.active["victims_willing_to_testify"] = (
+                suspects_entity.active["victims_willing_to_testify"].astype(str)
+            )
+
+            # Suspects = dfs["suspects"].copy()
+            # sus = suspects_entity.active.copy()
+
+            # -------------------------------------------------------------------------------------
+            st.write(f"Calculate all suspect scores")
+            suspects_entity.active = data_prep.calc_all_sus_scores(
+                suspects_entity.active,
+                vics_willing,
+                police_entity.active,
+                weights,
+                case_dispatcher_soc_df,
+                dfs["suspects"],
+            )
+            st.write(
+                """At data_prep.calc_all_sus_scores(
+                suspects_entity.active,
+                vics_willing,
+                police.active,
+                weights,
+                soc_df,
+                dfs["suspects"],
+            )"""
+            )
+
+            st.write(f"Add priorities to victims")
+            victims_entity.active = data_prep.add_priority_to_others(
+                suspects_entity.active,
+                victims_entity.active,
+                "case_id",
+                dfs["victims"],
+                "victim_id",
+            )
+            st.write(f"Add priorities to police")
+            police_entity.active = data_prep.add_priority_to_others(
+                suspects_entity.active,
+                police_entity.active,
+                "suspect_id",
+                dfs["police"],
+                "suspect_id",
+            )
+            # -------------------------------------------------------------------------------------
+            st.write(f"Derive active cases")
+            active_cases = data_prep.update_active_cases(
+                suspects_entity.active, police_entity.active
+            )
+
+            EntityGroup.add_case_name_formula()
+            # st.dataframe(soc_df[["irf_number", "days"]])
+            st.write("Update Case Dispatcher Google Sheet")
+            active_cases["priority"] = (
+                active_cases["priority"] - active_cases["priority"].min()
+            ) / (active_cases["priority"].max() - active_cases["priority"].min())
+
+            active_cases = active_cases.merge(
+                case_dispatcher_soc_df[["irf_number", "days"]].drop_duplicates().copy(),
+                left_on="case_id",
+                right_on="irf_number",
+                how="left",
+            ).drop(columns=["irf_number"])
+            numeric_days = pd.to_numeric(active_cases["days"], errors="coerce")
+
+            # Filter out rows where 'days' is greater than 365 and is not NaN (thus a number)
+            # Also, implicitly keeps rows where 'days' is NaN or None, since comparison with NaN is false
+            st.write("active_cases:")
+            st.dataframe(active_cases)
+
+            filtered_active_cases = active_cases[
+                (numeric_days <= 120) | numeric_days.isna()
+            ]
+            filtered_active_cases = filtered_active_cases[
+                ~(filtered_active_cases["case_id"] == "")
+            ]
+            filtered_active_cases = filtered_active_cases.drop_duplicates()
+            st.write("filtered_active_cases:")
+            st.dataframe(filtered_active_cases)
+            # set(filtered_active_cases["case_id"])
+            logger.info(
+                f"Do EntityGroup.update_gsheets(credentials, st.session_state['spreadsheet_name'], filtered_active_cases here            # )"
+            )
+            # EntityGroup.update_gsheets(
+            #     credentials, st.session_state["spreadsheet_name"], filtered_active_cases
+            # )
+            # st.dataframe(active_cases)
+            st.write(
+                f"Success! {st.session_state['spreadsheet_name']} has been updated."
+            )
+            st.dataframe(filtered_active_cases)
+
+
+if __name__ == "__main__":
+    main()

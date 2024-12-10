@@ -174,7 +174,6 @@ RED_FLAGS = [
     "no_location_prompt",
     "overseas_position_prompt",
     "recruit_minors_prompt",
-    "sense_of_urgency_prompt",
     "soccer_trial_prompt",
     "suspicious_assurance_prompt",
     "suspicious_email_prompt",

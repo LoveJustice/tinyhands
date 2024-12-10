@@ -14,7 +14,7 @@ from libraries.case_dispatcher_model import (
     make_new_predictions,
 )
 from libraries.data_prep import remove_non_numeric, process_columns, do_audit
-from libraries.entity_model import EntityGroup
+from libraries.entity_model_gpt import EntityGroup
 from libraries.case_dispatcher_model import TypeSelector
 from libraries.case_dispatcher_data import (
     get_vdf,
@@ -93,9 +93,8 @@ non_boolean_features = [
     "operating_country_id",
     "social_media",
     "irf_number",
-    "gender"
+    "gender",
 ]
-
 
 
 def refine_model_cols(cols):
@@ -153,26 +152,28 @@ def main():
         # Assuming get_gsheets and get_dfs are defined and take the necessary arguments
         st.write("Retrieve vdf data ...")
         db_vdf = get_vdf(country)
-        counter+=1
+        counter += 1
         db_vdf.to_csv(f"data_trace/vdf_{counter}.csv", index=False)
         st.write("Retrieve suspect data ...")
         db_sus = get_suspects(country)
-        counter+=1
+        counter += 1
         db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         st.write("Retrieve irf data ...")
         db_irf = get_irf(country)
-        counter+=1
+        counter += 1
         db_irf.to_csv(f"data_trace/irf_{counter}.csv", index=False)
         st.write("Retrieve suspect_evaluations data ...")
         suspect_evaluations = get_suspect_evaluations(country)
-        counter+=1
-        suspect_evaluations.to_csv(f"data_trace/suspect_evaluations_{counter}.csv", index=False)
+        counter += 1
+        suspect_evaluations.to_csv(
+            f"data_trace/suspect_evaluations_{counter}.csv", index=False
+        )
         st.write("Start data manipulation  ...")
         db_sus = db_sus.dropna(subset=["suspect_arrested"])
         # Create the 'any_arrest' column
         st.write("Process the role column ...")
-        do_audit(db_irf["irf_number"], '*** Audit 1')
-        do_audit(db_sus["sf_number"].str[:6], '*** Audit original db_sus')
+        do_audit(db_irf["irf_number"], "*** Audit 1")
+        do_audit(db_sus["sf_number"].str[:6], "*** Audit original db_sus")
 
         (
             processed_series,
@@ -233,7 +234,7 @@ def main():
         ]
         db_sus["sf_number_group"] = db_sus["sf_number"].str[:6]
         # db_vdf = db_vdf.merge(db_irf[merge_cols], left_on='sf_number_group', right_on="irf_number", how="inner")
-        counter+=1
+        counter += 1
         db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         db_sus = db_sus.merge(
             db_irf[merge_cols],
@@ -242,10 +243,10 @@ def main():
             how="inner",
         )
 
-        do_audit(db_sus["irf_number"], '*** Audit 2 on db_sus')
+        do_audit(db_sus["irf_number"], "*** Audit 2 on db_sus")
 
         db_sus = db_sus.drop_duplicates()
-        counter+=1
+        counter += 1
         db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         # db_sus = db_sus[~db_sus.arrested.isna()]
 
@@ -297,7 +298,7 @@ def main():
                 "address_notes",
                 "social_media",
                 "person_id",
-                "operating_country_id"
+                "operating_country_id",
             ]
         ]
 
@@ -329,7 +330,7 @@ def main():
                 "irf_number",
             ]
         ].merge(db_sus, left_on="irf_number", right_on="irf_number", how="inner")
-        do_audit(db_sus["irf_number"], 'db_sus and db_vdf merge')
+        do_audit(db_sus["irf_number"], "db_sus and db_vdf merge")
         # ======================================================================
         st.write("Create the suspect_id column in db_sus: ...")
         db_sus["suspect_id"] = (
@@ -340,18 +341,23 @@ def main():
             db_sus["arrested"].fillna("No").replace({"Yes": 1, "No": 0}).astype(int)
         )
 
-        gender_dummies = pd.get_dummies(db_sus['gender'], prefix='gender')
+        gender_dummies = pd.get_dummies(db_sus["gender"], prefix="gender")
 
         # Rename the columns to the desired names
-        gender_dummies.columns = ['gender_F', 'gender_M', 'gender_U']
+        gender_dummies.columns = ["gender_F", "gender_M", "gender_U"]
 
         # If you prefer specific column names like male, female, unknown_gender, you can rename them:
-        gender_dummies.rename(columns={'gender_F': 'female', 'gender_M': 'male', 'gender_U': 'unknown_gender'},
-                              inplace=True)
+        gender_dummies.rename(
+            columns={
+                "gender_F": "female",
+                "gender_M": "male",
+                "gender_U": "unknown_gender",
+            },
+            inplace=True,
+        )
 
         # Now, concatenate these new columns back to the original DataFrame
         db_sus = pd.concat([db_sus, gender_dummies], axis=1)
-
 
         # # Determine the top N countries to keep
         # top_n_countries = db_sus['country'].value_counts().nlargest(10).index
@@ -396,12 +402,12 @@ def main():
             on="master_person_id",
             how="left",
         )
-        do_audit(db_sus["irf_number"], 'soc_df merge with grouped')
+        do_audit(db_sus["irf_number"], "soc_df merge with grouped")
 
         soc_df["job_promised_amount"] = soc_df["job_promised_amount"].apply(
             remove_non_numeric
         )
-        do_audit(db_sus["irf_number"], 'remove_non_numeric')
+        do_audit(db_sus["irf_number"], "remove_non_numeric")
 
         st.write(
             "Extract interview_date from the suspect_evaluations table and merge onto soc_df"
@@ -411,7 +417,7 @@ def main():
             on="master_person_id",
             how="left",
         )
-        do_audit(db_sus["irf_number"], 'suspect_evaluations merge with soc_df')
+        do_audit(db_sus["irf_number"], "suspect_evaluations merge with soc_df")
 
         st.write("Calculate days since interview: ...")
         today = pd.Timestamp(date.today())
@@ -441,7 +447,7 @@ def main():
         ]
         st.write(f"Drop irrelevant columns {columns_to_drop}")
         soc_df = soc_df.drop(columns=columns_to_drop)
-        counter+=1
+        counter += 1
         soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
         boolean_features = list(
             set(soc_df.columns) - set(num_features) - set(non_boolean_features)
@@ -464,24 +470,26 @@ def main():
         st.write("Convert 'irf_number' to string values")
         soc_df["irf_number"].astype(str)
         st.write("Drop columns that have only False values")
-        do_audit(db_sus["irf_number"], ' *** before excluding all false columns.')
+        do_audit(db_sus["irf_number"], " *** before excluding all false columns.")
         soc_df = soc_df.loc[:, (soc_df != False).any(axis=0)]
-        do_audit(db_sus["irf_number"], ' *** after excluding all false columns.')
-        counter+=1
+        do_audit(db_sus["irf_number"], " *** after excluding all false columns.")
+        counter += 1
         soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
         # TODO: Rework the model to use the new features
         soc_df = soc_df.drop_duplicates()
-        counter+=1
+        counter += 1
         soc_df.to_csv(f"data_trace/soc_df_{counter}.csv", index=False)
-        counter+=1
+        counter += 1
         db_vics.to_csv(f"data_trace/db_vics_{counter}.csv", index=False)
         db_vics = db_vics.drop_duplicates()
-        counter+=1
+        counter += 1
         db_vics.to_csv(f"data_trace/db_vics_{counter}.csv", index=False)
         db_sus = db_sus.drop_duplicates()
         irf_case_notes = irf_case_notes.drop_duplicates()
 
-        soc_df = data_prep.add_country_stats(model_data = soc_df, country_stats=pd.read_csv('data/final_data.csv'))
+        soc_df = data_prep.add_country_stats(
+            model_data=soc_df, country_stats=pd.read_csv("data/final_data.csv")
+        )
         file_bytes = make_file_bytes(soc_df)
         file_metadata = {"name": "case_dispatcher_soc_df.pkl"}
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
@@ -493,23 +501,24 @@ def main():
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
         st.write(f"Save new_victims to cloud with file_id: {file_id}")
 
-        counter+=1
+        counter += 1
         db_sus.to_csv(f"data_trace/new_suspects_{counter}.csv", index=False)
         file_bytes = make_file_bytes(db_sus)
         file_metadata = {"name": "new_suspects.pkl"}
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
         st.write(f"Save new_suspects to cloud with file_id: {file_id}")
-        do_audit(db_sus["irf_number"], ' *** last audit on db_sus.')
+        do_audit(db_sus["irf_number"], " *** last audit on db_sus.")
 
-        counter+=1
+        counter += 1
         irf_case_notes.to_csv(f"data_trace/irf_case_notes_{counter}.csv", index=False)
         file_bytes = make_file_bytes(irf_case_notes)
         file_metadata = {"name": "irf_case_notes.pkl"}
         file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
         st.write(f"Save irf_case_notes to cloud with file_id: {file_id}")
-        st.write(f"Success!  New victims, suspects, and irf_case_notes have been save to the cloud.")
-        do_audit(irf_case_notes["irf_number"], ' *** last audit on irf_case_notes.')
-
+        st.write(
+            f"Success!  New victims, suspects, and irf_case_notes have been save to the cloud."
+        )
+        do_audit(irf_case_notes["irf_number"], " *** last audit on irf_case_notes.")
 
 
 if __name__ == "__main__":
