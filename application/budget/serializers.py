@@ -1,5 +1,6 @@
 from dateutil.relativedelta import relativedelta
 from rest_framework import serializers
+from django.core.files.storage import default_storage
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffBudgetItem
 from budget.models import MdfItem, ProjectRequest, ProjectRequestDiscussion, ProjectRequestAttachment, ProjectRequestComment
 from budget.models import MonthlyDistributionForm, MonthlyDistributionMultipliers
@@ -9,6 +10,7 @@ from static_border_stations.models import Staff
 from static_border_stations.serializers import StaffSerializer
 from budget.mdf_constants import REQUEST_CATEGORY_CHOICES_MDF
 import budget.mdf_constants as constants
+from django.conf import settings
 
 
 class BorderStationBudgetCalculationListSerializer(serializers.ModelSerializer):
@@ -238,7 +240,8 @@ class MonthlyDistributionFormSerializer(serializers.ModelSerializer):
     drop_decimal = serializers.SerializerMethodField(read_only=True)
     past_month_sent = serializers.SerializerMethodField(read_only=True)
     exchange_rate = serializers.SerializerMethodField(read_only=True)
-    last_months_total = serializers.SerializerMethodField(read_only=True)  
+    last_months_total = serializers.SerializerMethodField(read_only=True)
+    signed_pbs = serializers.SerializerMethodField(read_only=True)
     
     def get_station_name(self, obj):
         return obj.border_station.station_name
@@ -307,5 +310,14 @@ class MonthlyDistributionFormSerializer(serializers.ModelSerializer):
                 result = str(budgets[0].station_total(obj.border_station) - budgets[0].money_not_spent_to_deduct_total(obj.border_station))
         
         return result
+    
+    def get_signed_pbs(self, obj):
+        result = ''
+        if obj.signed_pbs.name is not None and obj.signed_pbs.name != '':
+            result  = settings.MEDIA_URL + obj.signed_pbs.name
+        
+        return result
+    
+    
         
         

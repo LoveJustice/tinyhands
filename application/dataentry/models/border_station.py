@@ -37,7 +37,7 @@ class BorderStation(models.Model):
         return self.id
     
     def get_key(self):
-        return station_code
+        return self.station_code
     
     def pre_save(self, form_data):
         pass

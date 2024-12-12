@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import re_path, path
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView, InterceptionAlertViewSet, PermissionViewSet, UserLocationPermissionViewSet
 from dataentry.views import PersonViewSet, MasterPersonViewSet, PendingMatchViewSet
@@ -20,6 +20,7 @@ from dataentry.views import IncidentViewSet
 from dataentry.views import MonitorAppViewSet
 from dataentry.views import FormExportCsv
 from help.views import VideoViewSet
+from dataentry.views import auth0 as auth0_views
 
 list = {'get': 'list', 'post': 'create'}
 detail = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
@@ -208,4 +209,7 @@ urlpatterns = [
         
         re_path(r'^diagnostic/$', ClientDiagnosticViewSet.as_view(list), name='Diagnostic'),
         re_path(r'^monitor-form/$', MonitorAppViewSet.as_view({'post':'create'}), name='MonitorApp'),
+
+        re_path(r'^auth0/send-me-password-reset-email$', auth0_views.send_current_user_password_reset_email),
+        path('auth0/update-user/<str:username>', auth0_views.update_auth0_user_view),
 ]

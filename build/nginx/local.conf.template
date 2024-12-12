@@ -30,6 +30,7 @@ server {
         proxy_set_header Host $http_host;
         proxy_pass_request_body off;
         proxy_set_header        Content-Length "";
+	    proxy_set_header Authorization "Bearer ${cookie_file_access_token}";
     }
 
 	location /robots.txt {
@@ -38,6 +39,38 @@ server {
 
     location / {
         alias /data/dist/;
+    }
+
+    # This assumes you are building the react client and not running it on localhost
+    # If you are running it on localhost please use the vite port (http://localhost:5173/)
+    # instead of the nginx port (http://localhost:80 or http://localhost)
+    location /re/ {
+    	alias /data/react_dist/;
+
+        # https://stackoverflow.com/a/56436590/13815107
+        add_header Cache-Control "private, no-store, no-cache";
+
+        # Without this, react router routes will 404.
+        #  Try to find the files in the above alias (which will work for .css, .js. html
+        #  But if you can't, like for /my-page, rout to /index.html and let react router handle it
+        # https://stackoverflow.com/q/43951720
+        #  TODO use a more robust solution like the ones in the StackOverflow comments
+        try_files $uri /re/index.html;
+    }
+
+    # This is the same as the below block but with an additional Authorization header
+    # This is because the Authentication header does not get passed when opening a url directly
+    # so we need to do special authentication using a cookie
+    # ORDER MATTERS, this must be before the other regex with 'api' in it
+    location ~ ^/(api/staff/csv|api/forms/csv|cloud-media)/ {
+	    proxy_set_header Authorization "Bearer ${cookie_file_access_token}";
+
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_pass http://web:9001;
+        proxy_connect_timeout 300s;
+        proxy_read_timeout 300s;
     }
 
     location ~ ^/(data-entry|api|login|logout|interceptee_fuzzy_matching|admin)/ {
