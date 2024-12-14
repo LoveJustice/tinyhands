@@ -8,7 +8,7 @@ class LegalChargeSerializer(serializers.ModelSerializer):
         model = LegalCharge
         fields = [field.name for field in model._meta.fields] # all the model fields
         fields = fields + ['form_name','incident_number', 'country_id','station_code','number_victims','number_suspects','number_arrests',
-                           'number_cases', 'number_convictions', 'charges', 'last_timeline_date']
+                           'number_cases', 'number_convictions', 'charges', 'last_timeline_date', 'incident_date', 'number_verified_arrests']
     
     form_name = serializers.SerializerMethodField(read_only=True)
     incident_number = serializers.SerializerMethodField(read_only=True)
@@ -21,6 +21,8 @@ class LegalChargeSerializer(serializers.ModelSerializer):
     number_convictions = serializers.SerializerMethodField(read_only=True)
     charges = serializers.SerializerMethodField(read_only=True)
     last_timeline_date = serializers.SerializerMethodField(read_only=True)
+    incident_date = serializers.SerializerMethodField(read_only=True)
+    number_verified_arrests = serializers.SerializerMethodField(read_only=True)
     
     def get_form_name(self, obj):
         forms = Form.objects.filter(form_type__name='LEGAL_CASE', stations__id=obj.station.id)
@@ -31,6 +33,9 @@ class LegalChargeSerializer(serializers.ModelSerializer):
     
     def get_incident_number(self, obj):
         return obj.incident.incident_number
+    
+    def get_incident_date(self, obj):
+        return obj.incident.incident_date
     
     def get_country_id(self, obj):
         return obj.station.operating_country.id
@@ -46,6 +51,9 @@ class LegalChargeSerializer(serializers.ModelSerializer):
     
     def get_number_arrests(self, obj):
         return LegalChargeSuspect.objects.filter(legal_charge=obj, arrested="Yes").count()
+    
+    def get_number_verified_arrests(self, obj):
+        return LegalChargeSuspect.objects.filter(legal_charge=obj, arrested="Yes", verified_date__isnull=False).count()
     
     def get_number_cases(self, obj):
         return CourtCase.objects.filter(legal_charge=obj).count()
