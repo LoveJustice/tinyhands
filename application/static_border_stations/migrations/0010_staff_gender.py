@@ -10,14 +10,14 @@ class Migration(migrations.Migration):
     ]
 
     def migrate_id_expiration(apps, schema_editor):
+        countries_to_migrate = ['Uganda', 'Mozambique'];
+
         misc_type_class = apps.get_model(app_label='static_border_stations', model_name='StaffMiscellaneousTypes')
         id_expiration_type = misc_type_class()
         id_expiration_type.name = 'ID Card Expiration'
         id_expiration_type.type = 'date'
         id_expiration_type.save()
 
-
-        countries_to_migrate = ['Uganda', 'Mozambique'];
         country_model = apps.get_model(app_label='dataentry', model_name='Country')
         countries = country_model.objects.filter(name__in=countries_to_migrate)
         for country in countries:
