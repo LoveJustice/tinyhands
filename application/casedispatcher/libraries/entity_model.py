@@ -3,8 +3,11 @@ from copy import deepcopy
 import gspread_dataframe as gd
 from .case_dispatcher_logging import setup_logger
 import gspread
+import pickle
 
 logger = setup_logger("entity_model_logging", "entity_logging")
+
+# logger = setup_logger("entity_model_logging", "entity_logging", level=logging.DEBUG)
 
 
 class GetAttr:
@@ -126,48 +129,87 @@ class EntityGroup(GetAttr):
     def move_closed(cls, soc_df):
         """Moves closed cases to closed sheet for each Entity Group instance."""
         for sheet in cls.sheets:
-            prev_closed = sheet.newcopy[
-                sheet.newcopy[sheet.uid].isin(soc_df[soc_df.arrested == 1].suspect_id)
-            ].copy()
-            prev_closed["case_status"] = (
-                prev_closed["case_status"].fillna("").astype(str)
-            )
+            logger.info(f"Processing sheet: {sheet.active_name}")
+            try:
+                # Filter previously closed cases based on soc_df
+                prev_closed = sheet.newcopy[
+                    sheet.newcopy[sheet.uid].isin(
+                        soc_df[soc_df.arrested == 1].suspect_id
+                    )
+                ].copy()
+                logger.debug(f"Filtered prev_closed: {prev_closed.shape[0]} records")
 
-            prev_closed.loc[:, "case_status"] = "Closed: Already in Legal Cases Sheet"
-            logger.info(f"list(prev_closed): {list(prev_closed)}")
-            # Update newly_closed to be data where "Case_Status" contains "Closed"
-            newly_closed = sheet.gsheet[
-                sheet.gsheet["case_status"].str.contains("Closed", na=False)
-            ]
+                # Update case_status for previously closed cases
+                prev_closed["case_status"] = (
+                    prev_closed["case_status"].fillna("").astype(str)
+                )
+                prev_closed.loc[:, "case_status"] = (
+                    "Closed: Already in Legal Cases Sheet"
+                )
+                logger.info(f"Updated case_status for prev_closed")
 
-            # Populate the 'date' column with today's date
-            today = pd.Timestamp.today().normalize()
-            newly_closed["date"] = today
+                # Log the list of prev_closed columns
+                logger.info(f"list(prev_closed): {list(prev_closed.columns)}")
 
-            today = pd.Timestamp.today().normalize()
-            newly_closed["supervisor_review"] = today
+                # Update newly_closed to include cases where "case_status" contains "Closed"
+                newly_closed = sheet.gsheet[
+                    sheet.gsheet["case_status"].str.contains("Closed", na=False)
+                ].copy()
+                logger.debug(f"Filtered newly_closed: {newly_closed.shape[0]} records")
 
-            prev_closed = prev_closed[
-                ~prev_closed[sheet.uid].isin(sheet.closed[sheet.uid])
-            ]
+                # Populate the 'date' and 'supervisor_review' columns with today's date
+                today = pd.Timestamp.today().normalize()
+                newly_closed["date"] = today
+                newly_closed["supervisor_review"] = today
+                logger.info(
+                    "Updated 'date' and 'supervisor_review' columns in newly_closed"
+                )
 
-            original_cols = list(prev_closed.columns)
-            logger.info(f"original_cols: {original_cols}")
-            new_cols = [original_cols[i] + str(i) for i in range(len(original_cols))]
-            logger.info(f"new_cols: {new_cols}")
-            logger.info(f"----------------------")
-            logger.info(f"new_cols: {new_cols}")
-            logger.info(f"sheet.closed.columns: {sheet.closed.columns}")
-            sheet.closed.columns = new_cols
-            prev_closed.columns = new_cols
-            newly_closed.columns = new_cols
+                # Exclude already closed cases from prev_closed
+                prev_closed = prev_closed[
+                    ~prev_closed[sheet.uid].isin(sheet.closed[sheet.uid])
+                ]
+                logger.debug(
+                    f"After exclusion, prev_closed has {prev_closed.shape[0]} records"
+                )
 
-            sheet.closed = pd.concat([sheet.closed, prev_closed, newly_closed])
-            sheet.closed.columns = original_cols
-            sheet.closed.drop_duplicates(subset=sheet.uid, inplace=True)
-            sheet.active = sheet.active[
-                ~sheet.active[sheet.uid].isin(sheet.closed[sheet.uid])
-            ]
+                # Rename columns to avoid duplication during concatenation
+                original_cols = list(prev_closed.columns)
+                new_cols = [f"{col}_{i}" for i, col in enumerate(original_cols)]
+                logger.info(f"Original columns: {original_cols}")
+                logger.info(f"New columns: {new_cols}")
+
+                # Rename columns in closed, prev_closed, and newly_closed
+                sheet.closed.columns = new_cols
+                prev_closed.columns = new_cols
+                newly_closed.columns = new_cols
+                logger.info("Renamed columns for concatenation")
+
+                # Concatenate closed, prev_closed, and newly_closed dataframes
+                sheet.closed = pd.concat(
+                    [sheet.closed, prev_closed, newly_closed], ignore_index=True
+                )
+                sheet.closed.columns = original_cols
+                sheet.closed.drop_duplicates(subset=sheet.uid, inplace=True)
+                logger.info(
+                    f"Concatenated and deduplicated closed cases. Total closed: {sheet.closed.shape[0]}"
+                )
+
+                # Update active sheet by removing closed cases
+                sheet.active = sheet.active[
+                    ~sheet.active[sheet.uid].isin(sheet.closed[sheet.uid])
+                ]
+                logger.info(
+                    f"Updated active cases. Remaining active: {sheet.active.shape[0]}"
+                )
+
+                logger.info(f"Finished processing sheet: {sheet.active_name}")
+
+            except Exception as e:
+                logger.error(
+                    f"Error while moving closed cases for sheet '{sheet.active_name}': {str(e)}",
+                    exc_info=True,
+                )
 
     @classmethod
     def move_closed_depr(cls, soc_df):
@@ -243,18 +285,42 @@ class EntityGroup(GetAttr):
     def update_gsheets(cls, credentials, gs_name, active_cases):
         """Update Google Sheets with new data."""
         client = gspread.authorize(credentials)
+        sheet_columns_dict = {}
 
         for sheet in cls.sheets:
-
+            # Process active sheet
             target_sheet = client.open(gs_name).worksheet(sheet.active_name)
             up_sheet = sheet.active.iloc[:, : len(sheet.active.columns) - 1]
-
+            sheet_columns_dict[sheet.active_name] = (
+                up_sheet.columns.tolist()
+            )  # Add active sheet columns
             gd.set_with_dataframe(target_sheet, up_sheet)
+
+            # Process closed sheet
             target_sheet = client.open(gs_name).worksheet(sheet.closed_name)
+            sheet_columns_dict[sheet.closed_name] = (
+                sheet.closed.columns.tolist()
+            )  # Add closed sheet columns
             gd.set_with_dataframe(target_sheet, sheet.closed)
+
+        # Process active cases sheet
         target_sheet = client.open(gs_name).worksheet("cases")
         up_sheet = active_cases.iloc[:, : len(active_cases.columns)]
+        sheet_columns_dict["cases"] = (
+            up_sheet.columns.tolist()
+        )  # Add active cases columns
         gd.set_with_dataframe(target_sheet, up_sheet)
+
+        # Save the sheet columns dictionary to a file
+        with open("sheet_columns.pkl", "wb") as file:
+            pickle.dump(sheet_columns_dict, file)
+        print("Sheet columns dictionary saved to sheet_columns.pkl")
+
+    # To reload the dictionary later:
+    def load_sheet_columns(filename="sheet_columns.pkl"):
+        with open(filename, "rb") as file:
+            sheet_columns_dict = pickle.load(file)
+        return sheet_columns_dict
 
     @classmethod
     def add_irf_notes(cls, irf_notes):

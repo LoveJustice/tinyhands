@@ -1,3 +1,14 @@
+Redundant: What is the Case Name is it really required?
+Confusing: What is nan?
+Redundant: Find a way to merge suspect and police column and clean it up - it seems that there items in both columns are identical. Moreover, reducing the number of columns would make it easier to read and go through - many have the same information across all tabs. If some were removed you’d find a tab has like only maybe 6-7 columns instead of the 10-25 as seen in suspect & victim tabs.
+Redundant: Case Status and Case Updates are one in the same, do both really need to be there?
+Confusing: The mathematics behind column D-G is dizzying and hard to understand - does it really need to be there or can it be hidden - how will it help us
+Redundant: Do we need all 7 columns the closed section can’t it be pulled into one tab
+Still cannot edit certain cells - in fact most cells that were meant to be edited/updated are blocked - making it harder to track cases where arrests have happened and close them
+Why is information not pulled from SL - the whole point of CD is to make it easier
+Add more on the guardians and other contacts i.e. Brokers, Transporters etc because they would help with tracking down a suspect far better than any suspect information on file
+
+
 Assistant, I have the following code and settings.  I want you to focus in on the use of weights and how it affects the priority of cases.  I want you to elaborate on hhow all the weights come together to influence this score.
 
 

@@ -8,6 +8,20 @@ from libraries.google_lib import (
     load_from_cloud,
     load_model_and_columns,
 )
+import pickle
+
+
+# To reload the dictionary later:
+def load_sheet_columns(filename="sheet_columns.pkl"):
+    with open(filename, "rb") as file:
+        sheet_columns_dict = pickle.load(file)
+    return sheet_columns_dict
+
+
+sheet_columns_dict = load_sheet_columns()
+for key, value in sheet_columns_dict.items():
+    print(key, value)
+
 
 case_dispatcher = st.secrets["case_dispatcher"]
 access_token = case_dispatcher["access_token"]
@@ -47,22 +61,10 @@ case_dispatcher_soc_df[case_dispatcher_model_cols].dtypes
 
 import streamlit as st
 import json
-import pandas as pd
-import numpy as np
-from datetime import date
 from googleapiclient.discovery import build
-from copy import deepcopy
 from oauth2client.client import OAuth2Credentials
-import libraries.data_prep as data_prep
+
 import pickle
-from libraries.case_dispatcher_model import (
-    check_grid_search_cv,
-    save_results,
-    make_new_predictions,
-)
-from libraries.data_prep import remove_non_numeric, process_columns
-from libraries.entity_model_gpt import EntityGroup
-from libraries.case_dispatcher_model import TypeSelector
 from libraries.case_dispatcher_data import (
     get_vdf,
     get_suspects,
@@ -86,19 +88,63 @@ import os
 dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
 
-countries = get_countries()
-country_list = ["Select a country..."] + ["Nepal", "Uganda", "Malawi", "Namibia"]
+
 case_dispatcher = st.secrets["case_dispatcher"]
 access_token = case_dispatcher["access_token"]
-sheet_names = case_dispatcher["sheet_names"]
+
 
 toml_config_dict = attrdict_to_dict(access_token)
 creds_json = json.dumps(toml_config_dict)
 credentials = OAuth2Credentials.from_json(creds_json)
 service = build("sheets", "v4", credentials=credentials)
+workbook_name = "Case Dispatcher 6.0 - Uganda"
+
+"""Return a list of Google worksheets along with the workbook's link and file ID."""
+gc = gspread.authorize(credentials)
+
+# Open the workbook
+workbook = gc.open(workbook_name)
+
+# Get the file ID and URL from the workbook
+file_id = workbook.id
+file_url = workbook.url
+
+# Get the worksheets
+
+
+def get_weights(weights_sheet, range_name):
+    result = weights_sheet.get_values(range_name)
+    weights = {}
+    for idx in range(1, len(result[0])):
+        weights[result[0][idx]] = float(result[1][idx])
+    return weights
+
+
+def get_all_weights(range_names):
+    weights_sheet = workbook.worksheet("weights")
+    weights = {}
+    for range_name in range_names:
+        weights[range_name] = get_weights(weights_sheet, range_name)
+    return weights
+
+
+range_names = [
+    "priority_weights",
+    "recency_vars",
+    "exploitation_type",
+    "solvability_weights",
+    "pv_believes",
+]
+all_weights = get_all_weights(range_names)
+result = weights_sheet.get_values("priority_weights")
+weights = {}
+for idx in range(1, len(result[0])):
+    weights[result[0][idx]] = float(result[1][idx])
+
+
 spreadsheet_id = os.environ["WEIGHTS_ID"]
 # Make sure your environment variable is correctly set
-named_range = "priority_weights"  # Replace 'YourNamedRange' with the actual named range
+named_range = "priority_weights"  #
 
 # Fetch the values from the named range
 result = (

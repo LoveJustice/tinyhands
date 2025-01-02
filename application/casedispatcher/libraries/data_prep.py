@@ -1297,6 +1297,9 @@ def update_active_cases(
     """
 
     # Select only relevant columns from active_suspects
+    active_police.loc[active_police["case_status"] == "nan", "case_status"] = ""
+    active_suspects.loc[active_suspects["case_status"] == "nan", "case_status"] = ""
+
     active_cases = active_suspects[
         [
             "case_id",
@@ -1307,7 +1310,8 @@ def update_active_cases(
             "case_status",
         ]
     ].copy()
-
+    active_cases.loc[:, "case_status"] = active_cases.loc[:, "case_status"].fillna("")
+    active_cases.loc[active_cases["case_status"] == "nan", "case_status"] = ""
     # Create a mask for each condition
     police_complete = active_police[active_police.case_status.str.contains("Complete")][
         "case_id"
@@ -1318,9 +1322,10 @@ def update_active_cases(
     multiple_victims = active_suspects[
         active_suspects.victims_willing_to_testify.str.contains(",")
     ]["case_id"]
-    single_victim = active_suspects[active_suspects.victims_willing_to_testify != ""][
-        "case_id"
-    ]
+    single_victim = active_suspects[
+        (active_suspects.victims_willing_to_testify != "")
+        | (active_suspects.victims_willing_to_testify.isna())
+    ]["case_id"]
 
     # Update 'Case_Status' based on the conditions
     active_cases.loc[active_cases.case_id.isin(police_complete), "case_status"] = (

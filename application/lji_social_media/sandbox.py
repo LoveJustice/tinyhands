@@ -10,6 +10,50 @@ from googleapiclient.discovery import build
 from libraries.neo4j_lib import Neo4jConnection, execute_neo4j_query
 import ast
 import re
+from libraries.claude_prompts import CLAUDE_PROMPTS, RED_FLAGS
+
+query = """MATCH (ad:RecruitmentAdvert)-[ha:HAS_ANALYSIS]->(analysis:Analysis)-[hau:HAS_AUDIT]->(audit:Audit)
+WHERE ha.type = hau.type AND ID(ad)=audit.posting_id AND analysis.result <> audit.result
+WITH ad, ha.type as analysis_type, analysis.result as analysis_result, audit.result as audit_result, analysis.explanation as analysis_explanation, audit.confidence as confidence
+RETURN
+    analysis_type,
+    count(*) as count,
+    max(confidence) as max_confidence,
+    min(confidence) as min_confidence,
+    avg(confidence) as avg_confidence
+ORDER BY count DESC;"""
+df = pd.DataFrame(execute_neo4j_query(query, {}))
+df.to_csv("results/analysis_audit_mismatch_confidence.csv", index=False)
+
+
+query = """MATCH (ad:RecruitmentAdvert)-[ha:HAS_ANALYSIS]->(analysis:Analysis)-[hau:HAS_AUDIT]->(audit:Audit)
+WHERE ha.type = hau.type AND ID(ad)=audit.posting_id AND analysis.result <> audit.result
+WITH ad, ha.type as analysis_type, analysis.result as analysis_result, audit.result as audit_result
+RETURN
+    analysis_type,
+    analysis_result,
+    audit_result,
+    count(*) as count
+ORDER BY count DESC;"""
+df = pd.DataFrame(execute_neo4j_query(query, {}))
+df.to_csv("results/analysis_audit_mismatch.csv", index=False)
+set(RED_FLAGS) - set(df["analysis_type"].to_list())
+query = """MATCH (ad:RecruitmentAdvert)-[ha:HAS_ANALYSIS {type:'unprofessional_writing_prompt'}]->(analysis:Analysis)-[hau:HAS_AUDIT]->(audit:Audit)
+WHERE ha.type = hau.type AND ID(ad)=audit.posting_id AND analysis.result <> audit.result
+WITH ad, ha.type as analysis_type, analysis.result as analysis_result, audit.result as audit_result, analysis.explanation as analysis_explanation, audit.explanation as audit_explanation
+RETURN
+    ID(ad) as IDn,
+    ad.text as ad,
+    analysis_type,
+    analysis_result,
+    audit_result,
+    analysis_explanation,
+    audit_explanation,
+    count(*) as count
+ORDER BY analysis_type;"""
+df = pd.DataFrame(execute_neo4j_query(query, {}))
+df.to_csv("results/unprofessional_writing_mismatch.csv", index=False)
+
 
 url = "https://www.facebook.com/groups/3261269040799650/posts/3683233125269904"
 GROUP_POST_ID_PATTERN = re.compile(r"groups/([\w]+)/posts/([\w]+)/?")

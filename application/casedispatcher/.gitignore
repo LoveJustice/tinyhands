@@ -21,6 +21,8 @@ poc-knowledge-graph-venv/etc/
 poc-knowledge-graph-venv/include/
 poc-knowledge-graph-venv/share/
 
+*.log
+*.txt
 *.sav
 *.set
 *.toml

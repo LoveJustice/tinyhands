@@ -19,7 +19,7 @@ from libraries.case_dispatcher_model import (
     make_new_predictions,
 )
 from libraries.data_prep import remove_non_numeric, process_columns
-from libraries.entity_model_gpt import EntityGroup
+from libraries.entity_model import EntityGroup
 from libraries.case_dispatcher_model import TypeSelector
 from libraries.case_dispatcher_data import (
     get_vdf,
@@ -46,7 +46,7 @@ dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
 
 countries = get_countries()
-country_list = ["Select a country..."] + ["Nepal", "Uganda", "Malawi", "Namibia"]
+# country_list = ["Select a country..."] + ["Nepal", "Uganda", "Malawi", "Namibia"]
 case_dispatcher = st.secrets["case_dispatcher"]
 access_token = case_dispatcher["access_token"]
 sheet_names = case_dispatcher["sheet_names"]
@@ -64,6 +64,7 @@ links = {
     "Namibia": os.environ["NAMIBIA"],
     "Mozambique": os.environ["MOZAMBIQUE"],
     "Lesotho": os.environ["LESOTHO"],
+    "UgandaSandbox": os.environ["UGANDASANDBOX"],
 }
 
 
@@ -303,6 +304,27 @@ def get_priority_weights():
     return priority_weights
 
 
+def sort_cases(cases, to_sort, sort_heading):
+    # 1. Verify that 'case_id' in 'cases' is unique
+    if not cases["case_id"].is_unique:
+        raise ValueError("The 'case_id' in 'cases' DataFrame must be unique.")
+
+    # 2. Create a list of 'case_id' in the desired order from 'cases'
+    cases_order = cases["case_id"].tolist()
+
+    # 3. Convert 'case_id' in 'victims' to a categorical type with the specified order
+    to_sort["case_id"] = pd.Categorical(
+        to_sort["case_id"], categories=cases_order, ordered=True
+    )
+
+    # 4. Sort 'victims' based on the categorical 'case_id'
+    sorted = to_sort.sort_values("case_id").reset_index(drop=True)
+
+    # Optional: If you have other sorting preferences within the same 'case_id', you can add them
+    # For example, sorting by 'victim_id' within each 'case_id'
+    return sorted.sort_values(["case_id", sort_heading]).reset_index(drop=True)
+
+
 def main():
 
     # Initialize session state variables if they don't exist
@@ -317,6 +339,12 @@ def main():
             drive_service, "case_dispatcher_soc_df.pkl"
         )
 
+    # Get the settings from the case_dispatcher
+    st.dataframe(
+        st.session_state["case_dispatcher_soc_df"].loc[
+            st.session_state["case_dispatcher_soc_df"]["irf_number"] == "BUS089", :
+        ]
+    )
     exploitation_type = get_exploitation_settings()
     recency_vars = get_recency_settings()
     pv_believes = get_pv_believes_settings()
@@ -367,6 +395,9 @@ def main():
         # Only execute this part if the "Update" button hasn't been clicked yet
         if st.button("Update"):
             # Assuming get_gsheets and get_dfs are defined and take the necessary arguments
+            # st.dataframe(st.session_state["case_dispatcher_soc_df"].loc[
+            #              st.session_state["case_dispatcher_soc_df"]["irf_number"] == "BUS089", :])
+
             st.write(st.session_state["spreadsheet_name"])
             sheets, file_url, file_id = get_gsheets(
                 credentials, st.session_state["spreadsheet_name"], sheet_names
@@ -430,6 +461,7 @@ def main():
                 "suspect_id", new_suspects, "suspects", "closed_suspects", dfs
             )
             suspects_entity.new = data_prep.set_suspect_id(suspects_entity.new, db_sus)
+            st.write("st.dataframe(suspects_entity.new):")
             st.dataframe(suspects_entity.new)
             # -----------------------------------------------------------------------------------
             EntityGroup.set_case_id()
@@ -479,6 +511,12 @@ def main():
             police_entity.active["case_status"] = police_entity.active[
                 "case_status"
             ].astype(str)
+            police_entity.active.loc[
+                (police_entity.active["case_status"] == "nan"), "case_status"
+            ] = ""
+            suspects_entity.active.loc[
+                (suspects_entity.active["case_status"] == "nan"), "case_status"
+            ] = ""
             suspects_entity.active["case_status"] = suspects_entity.active[
                 "case_status"
             ].astype(str)
@@ -545,6 +583,7 @@ def main():
                 right_on="irf_number",
                 how="left",
             ).drop(columns=["irf_number"])
+
             numeric_days = pd.to_numeric(active_cases["days"], errors="coerce")
 
             # Filter out rows where 'days' is greater than 365 and is not NaN (thus a number)
@@ -565,6 +604,75 @@ def main():
             logger.info(
                 f"Do EntityGroup.update_gsheets(credentials, st.session_state['spreadsheet_name'], filtered_active_cases here            # )"
             )
+            # filtered_active_cases = filtered_active_cases[['case_id','priority','irf_case_notes','narrative','case_status','Next_Action_Priority','days']]
+            police_entity.active = sort_cases(
+                filtered_active_cases, police_entity.active, "suspect_id"
+            )
+            victims_entity.active = sort_cases(
+                filtered_active_cases, victims_entity.active, "victim_id"
+            )
+            suspects_entity.active = sort_cases(
+                filtered_active_cases, suspects_entity.active, "suspect_id"
+            )
+            #
+            #             victims_entity.active = victims_entity.active[['case_id',
+            # 'victim_id',
+            # 'case_status',
+            # 'date',
+            # 'willing_to_file_a_case_against',
+            # 'name',
+            # 'address',
+            # 'phone_numbers',
+            # 'social_media',
+            # 'phone_number_failure',
+            # 'suspect_verification_needed',
+            # 'identity_confirmed',
+            # 'identity_denied',
+            # 'narrative',
+            # 'irf_case_notes',
+            # 'updates',
+            # 'victim_interview',
+            # 'social_media',
+            # 'phone_records',
+            # 'legal_info',
+            # 'border_station',
+            # 'informants',
+            # 'community_groups',
+            # 'supervisor_review',
+            # 'boom_button',
+            # 'date_closed',]]
+            #             police_entity.active = police_entity.active[['case_id',
+            # 'suspect_id',
+            # 'case_status',
+            # 'date',
+            # 'suspect_name',
+            # 'victims_willing_to_testify',
+            # 'suspect_location',
+            # 'legal_status',
+            # 'police_station',
+            # 'phone_numbers',
+            # 'narrative',
+            # 'irf_case_notes',
+            # 'updates',
+            # 'date_closed',]]
+            #
+            #             suspects_entity.active=suspects_entity.active[['case_id',
+            # 'suspect_id',
+            # 'case_status',
+            # 'date',
+            # 'name',
+            # 'address',
+            # 'phone_numbers',
+            # 'social_media_id',
+            # 'phone_#_failure',
+            # 'victims_willing_to_testify',
+            # 'relationships',
+            # 'date_relationships_updated',
+            # 'narrative',
+            # 'irf_case_notes',
+            # 'updates',
+            # 'date_closed',]]
+
             EntityGroup.update_gsheets(
                 credentials, st.session_state["spreadsheet_name"], filtered_active_cases
             )
