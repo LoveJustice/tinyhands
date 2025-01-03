@@ -120,7 +120,9 @@ def get_weights(weights_sheet, range_name):
     return weights
 
 
-def get_all_weights(range_names):
+def get_all_weights(credentials, workbook_name, range_names):
+    gc = gspread.authorize(credentials)
+    workbook = gc.open(workbook_name)
     weights_sheet = workbook.worksheet("weights")
     weights = {}
     for range_name in range_names:
@@ -135,6 +137,8 @@ range_names = [
     "solvability_weights",
     "pv_believes",
 ]
+
+
 all_weights = get_all_weights(range_names)
 result = weights_sheet.get_values("priority_weights")
 weights = {}

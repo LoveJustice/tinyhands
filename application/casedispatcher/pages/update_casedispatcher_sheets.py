@@ -32,6 +32,7 @@ from libraries.google_lib import (
     get_gsheets,
     get_dfs,
     attrdict_to_dict,
+    get_all_weights,
     make_file_bytes,
     save_to_cloud,
     load_data,
@@ -44,7 +45,7 @@ import gspread
 logger = setup_logger("update_logger", "update_logging")
 dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
-
+WEIGHT_NAMES = os.getenv("WEIGHT_NAMES").split(",")
 countries = get_countries()
 # country_list = ["Select a country..."] + ["Nepal", "Uganda", "Malawi", "Namibia"]
 case_dispatcher = st.secrets["case_dispatcher"]
@@ -340,25 +341,22 @@ def main():
         )
 
     # Get the settings from the case_dispatcher
-    st.dataframe(
-        st.session_state["case_dispatcher_soc_df"].loc[
-            st.session_state["case_dispatcher_soc_df"]["irf_number"] == "BUS089", :
-        ]
-    )
-    exploitation_type = get_exploitation_settings()
-    recency_vars = get_recency_settings()
-    pv_believes = get_pv_believes_settings()
-    solvability_weights = get_solvability_weights()
-    priority_weights = get_priority_weights()
 
-    # Now recency_vars is updated, you can proceed to construct weights
-    weights = {
-        **solvability_weights,
-        **recency_vars,
-        **exploitation_type,
-        **pv_believes,
-        **priority_weights,
-    }
+    # exploitation_type = get_exploitation_settings()
+    # recency_vars = get_recency_settings()
+    # pv_believes = get_pv_believes_settings()
+    # solvability_weights = get_solvability_weights()
+    # priority_weights = get_priority_weights()
+    #
+    # # Now recency_vars is updated, you can proceed to construct weights
+    # weights = {
+    #     **solvability_weights,
+    #     **recency_vars,
+    #     **exploitation_type,
+    #     **pv_believes,
+    #     **priority_weights,
+    # }
+    # st.write(f"weights: {weights}")
 
     # Country selection
     country_list = ["Select a country..."] + list(links.keys())
@@ -381,6 +379,11 @@ def main():
         st.session_state["country"] = country
         st.write("You selected:", country)
         st.session_state["spreadsheet_name"] = f"Case Dispatcher 6.0 - {country}"
+
+        weights = get_all_weights(
+            credentials, st.session_state["spreadsheet_name"], WEIGHT_NAMES
+        )
+
         url = links[country]
         st.markdown(f"[Open {country} Google Sheet]({url})")
     else:

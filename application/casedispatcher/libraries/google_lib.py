@@ -12,7 +12,9 @@ from .case_dispatcher_logging import setup_logger
 import pickle
 import io
 from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
-
+from typing import Dict, List, Any
+from oauth2client.client import OAuth2Credentials
+from gspread.worksheet import Worksheet
 
 
 logger = setup_logger("google_logging", "cloud")
@@ -22,6 +24,45 @@ SCOPE = st.secrets["google"]["SCOPE"]
 CLIENT_ID = st.secrets["google"]["CLIENT_ID"]
 CLIENT_SECRET = st.secrets["google"]["CLIENT_SECRET"]
 REDIRECT_URI = st.secrets["google"]["REDIRECT_URI"]
+
+
+def get_weights(weights_sheet: Worksheet, range_name: str) -> Dict[str, float]:
+    """
+    Extract weights from a specific named range in a worksheet.
+
+    Args:
+        weights_sheet: Worksheet containing weight configurations
+        range_name: Name of the range to extract weights from
+
+    Returns:
+        Dictionary mapping weight names to their float values
+    """
+    result = weights_sheet.get_values(range_name)
+    if not result or len(result) < 2:
+        raise ValueError(f"Invalid data format in range {range_name}")
+
+    return {result[0][i]: float(result[1][i]) for i in range(1, len(result[0]))}
+
+
+def get_all_weights(
+    credentials: OAuth2Credentials, workbook_name: str, range_names: List[str]
+) -> Dict[str, Dict[str, float]]:
+    """
+    Get all weight configurations from specified ranges.
+
+    Args:
+        credentials: OAuth credentials for Google Sheets
+        workbook_name: Name of the workbook containing weights
+        range_names: List of named ranges to extract weights from
+
+    Returns:
+        Nested dictionary mapping range names to their weight configurations
+    """
+    gc = gspread.authorize(credentials)
+    workbook = gc.open(workbook_name)
+    weights_sheet = workbook.worksheet("weights")
+    weights = {name: get_weights(weights_sheet, name) for name in range_names}
+    return {k: v for d in weights.values() for k, v in d.items()}
 
 
 def load_model_and_columns(drive_service, model_name, cols_name, data_name):
@@ -50,16 +91,18 @@ def create_chart_metadata(chart_name, parent_id=None):
         dict: File metadata for the chart.
     """
     file_metadata = {
-        'name': chart_name,
-        'mimeType': 'image/png',  # MIME type for PNG images
+        "name": chart_name,
+        "mimeType": "image/png",  # MIME type for PNG images
     }
 
     if parent_id:
-        file_metadata['parents'] = [parent_id]
+        file_metadata["parents"] = [parent_id]
 
     return file_metadata
 
+
 # Assuming other necessary Google Drive API setup is done elsewhere
+
 
 def save_chart_to_cloud(chart, drive_service, file_metadata, chart_format="png"):
     """
@@ -159,12 +202,12 @@ def load_from_cloud(drive_service, file_id):
     downloaded_bytes.seek(0)  # Reset the position to the start of the stream
     return pickle.load(downloaded_bytes)
 
+
 def load_data(drive_service, filename):
-    file_id = get_file_id(
-        filename, drive_service
-    )
+    file_id = get_file_id(filename, drive_service)
     data = load_from_cloud(drive_service, file_id)
     return data
+
 
 def save_to_cloud(model_bytes, drive_service, file_metadata):
     # Serialize the model to a bytes-like object
