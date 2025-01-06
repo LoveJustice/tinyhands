@@ -546,7 +546,7 @@ def main():
         raise ValueError("Original data must contain 'IDn' column")
 
     # Load the same splits as ensemble model
-    splits_timestamp = "20241204_122617"
+    splits_timestamp = "20250103_151354"
     splits, split_info = load_splits(splits_timestamp)
 
     # Generate unique model identifier

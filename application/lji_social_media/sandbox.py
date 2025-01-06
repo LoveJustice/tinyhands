@@ -12,6 +12,94 @@ import ast
 import re
 from libraries.claude_prompts import CLAUDE_PROMPTS, RED_FLAGS
 
+import os
+
+# Define file paths
+PRESENCE_CSV = "results/advert_flags.csv"
+CONFIDENCE_CSV = "results/advert_confidence.csv"
+
+# Load Presence DataFrame
+advert_flags = pd.read_csv(PRESENCE_CSV)
+presence = advert_flags.copy()
+# Define mapping for presence values
+presence_mapping = {"yes": 1, "no": 0}
+
+# Replace categorical values with numerical mapping
+presence.replace(presence_mapping, inplace=True)
+
+# Load Confidence DataFrame
+confidence = pd.read_csv(CONFIDENCE_CSV)
+
+# Rename 'id' column to 'IDn' for consistency
+confidence.rename(columns={"id": "IDn"}, inplace=True)
+
+# Set 'IDn' as the index for both DataFrames
+confidence.set_index("IDn", inplace=True)
+presence.set_index("IDn", inplace=True)
+
+# Check for duplicate IDs in Presence DataFrame
+if presence.index.duplicated().any():
+    duplicated_ids = presence.index[presence.index.duplicated()].unique()
+    raise ValueError(
+        f"Duplicate IDn values found in presence DataFrame: {duplicated_ids}"
+    )
+
+# Check for duplicate IDs in Confidence DataFrame
+if confidence.index.duplicated().any():
+    duplicated_ids = confidence.index[confidence.index.duplicated()].unique()
+    raise ValueError(
+        f"Duplicate IDn values found in confidence DataFrame: {duplicated_ids}"
+    )
+
+# Identify common IDn values
+common_idn = presence.index.intersection(confidence.index)
+
+# Filter both DataFrames to include only common IDs
+presence = presence.loc[common_idn]
+confidence = confidence.loc[common_idn]
+
+# Verify that the indices are identical and sorted
+assert presence.index.equals(
+    confidence.index
+), "Indices of presence and confidence DataFrames do not match."
+
+# Define the list of features to transform
+# Replace this with your actual list of 20 features
+
+
+# Ensure that RED_FLAGS columns exist in both DataFrames
+missing_features_presence = set(RED_FLAGS) - set(presence.columns)
+missing_features_confidence = set(RED_FLAGS) - set(confidence.columns)
+
+if missing_features_presence:
+    raise ValueError(
+        f"The following RED_FLAGS columns are missing in presence DataFrame: {missing_features_presence}"
+    )
+
+if missing_features_confidence:
+    raise ValueError(
+        f"The following RED_FLAGS columns are missing in confidence DataFrame: {missing_features_confidence}"
+    )
+
+# Transform presence: 1 -> 1, 0 -> -1
+presence_transformed = 2 * presence[RED_FLAGS] - 1
+
+# Calculate new_presence by multiplying transformed presence with confidence
+new_presence = presence_transformed * confidence[RED_FLAGS]
+
+# Reset index to bring 'IDn' back as a column
+new_presence.reset_index(inplace=True)
+advert_flags[
+    ["IDn"] + list(set(list(advert_flags)) - set(list(new_presence.columns)))
+].merge(new_presence, on="IDn").to_csv("results/new_presence.csv", index=False)
+
+# Optionally, save the new_presence DataFrame to a CSV file
+new_presence.to_csv("results/new_presence.csv", index=False)
+
+# Display the first few rows to verify
+print(new_presence.head())
+
+
 query = """MATCH (ad:RecruitmentAdvert)-[ha:HAS_ANALYSIS]->(analysis:Analysis)-[hau:HAS_AUDIT]->(audit:Audit)
 WHERE ha.type = hau.type AND ID(ad)=audit.posting_id AND analysis.result <> audit.result
 WITH ad, ha.type as analysis_type, analysis.result as analysis_result, audit.result as audit_result, analysis.explanation as analysis_explanation, audit.confidence as confidence

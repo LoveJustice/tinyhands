@@ -175,21 +175,3 @@ for idx in range(1, len(values[0])):
     print(row)  # Each 'row' corresponds to a row of data in your named range
 values[0]
 range_data = service.spreadsheets().values_get("priority_weights").execute()
-
-
-def read_from_sheet(tab: str, named_range: str):
-    # Construct the range name
-    RANGE_NAME = f"{tab}!{named_range}"
-
-    # Use the Sheets API to get the data
-    request = (
-        SERVICE.spreadsheets()
-        .values()
-        .get(spreadsheetId=KORRIDORBOT_UI_FEEDBACK_ID, range=RANGE_NAME)
-    )
-    response = request.execute()
-
-    # The data returned is in 'values' key if the range has data
-    values = response.get("values", [])
-
-    return values

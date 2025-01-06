@@ -29,12 +29,12 @@ def load_and_preprocess_data(file_path):
     return model_data
 
 
-def create_data_splits():
+def create_data_splits(file_path):
     """
     Create and save train/holdout splits for model comparison.
     """
     # Load data
-    file_path = "results/advert_flags.csv"
+
     print("Loading and preprocessing data...")
     data = load_and_preprocess_data(file_path)
 
@@ -116,7 +116,8 @@ def main():
     """
     Create initial data splits to be used across all model comparisons.
     """
-    timestamp = create_data_splits()
+    file_path = "results/new_presence.csv"
+    timestamp = create_data_splits(file_path)
     print("\nTo use these splits in your modeling scripts, load them using:")
     print(f"splits, split_info = load_data_splits('{timestamp}')")
 
