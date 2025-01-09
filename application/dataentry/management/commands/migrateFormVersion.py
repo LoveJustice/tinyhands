@@ -6,7 +6,7 @@ from datetime import date
 from django.db import transaction, IntegrityError
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
-from dataentry.models import Country, Form, LocationForm, VdfCommon
+from dataentry.models import Country, Form, LocationForm, Suspect, SuspectLegalPv, VdfCommon
 
 
 def field_has_data(field_value):
@@ -104,6 +104,87 @@ class Command(BaseCommand):
 
             if lf_modified:
                 lf.save()
+
+        self.update_forms(country, from_form, to_form)
+
+    def add_checkbox_group(self, existing, new_value):
+        if existing is None or existing == '':
+            return new_value
+        else:
+            return existing + ';' + new_value
+
+    def migrate_sfCommon202409(self, country, from_form, to_form):
+        address_none = {'value': None}
+        sfs = Suspect.objects.filter(station__operating_country=country)
+        for sf in sfs:
+            associations = sf.suspectassociation_set.all()
+            for association in associations:
+                modified = False
+                if association.associated_pvs is not None and len(association.associated_pvs) > 0:
+                    association.associated_pvs = association.associated_pvs.replace(';',', ')
+                if association.associated_suspects is not None and len(association.associated_suspects) > 0:
+                    association.associated_suspects = association.associated_suspects.replace(';', ', ')
+                association.save()
+
+            legal_list = sf.suspectlegal_set.all()
+            for legal in legal_list:  # should be only one
+                new_location_attempt = ''
+                if legal.location_attempt is not None and len(legal.location_attempt) > 0:
+                    attempt = legal.location_attempt.split(';')
+
+                    if 'In Police Custody' in attempt:
+                        new_location_attempt = self.add_checkbox_group(new_location_attempt,
+                                                                       'In police custody')
+                if (legal.location_last_address is not None and legal.location_last_address != address_none and
+                        legal.location_last_address != ''):
+                    new_location_attempt = self.add_checkbox_group(new_location_attempt,'Last known location')
+                if legal.location_unable is not None and len(legal.location_unable) > 0:
+                    unable = legal.location_unable.split(';')
+                    if 'Insufficient Suspect Bio Details' not in unable:
+                        new_location_attempt = self.add_checkbox_group(new_location_attempt,
+                                                                       'Sufficient biographical details to identify the suspect')
+                legal.location_attempt = new_location_attempt
+
+                new_police_attempt = ''
+                if legal.police_attempt == 'True':
+                    new_police_attempt = self.add_checkbox_group(new_police_attempt, 'Yes')
+                if legal.police_unable is not None and len(legal.police_unable) > 0:
+                    unable = legal.police_unable.split(';')
+                    if 'No' in unable:
+                        new_police_attempt = self.add_checkbox_group(new_police_attempt,"No")
+                    if 'Police say not enough evidence' in unable:
+                        new_location_attempt = self.add_checkbox_group(new_police_attempt,
+                                                                       "Police say not enough evidence")
+                legal.police_attempt = new_police_attempt
+                legal.save()
+
+                suspect_pv = SuspectLegalPv()
+                suspect_pv.suspect = sf
+                suspect_pv.incident = legal.incident
+                suspect_pv.pv_name = "Unspecified"
+                if legal.pv_attempt is not None and len(legal.pv_attempt) > 0:
+                    suspect_pv.willing_to_file = self.add_checkbox_group(suspect_pv.willing_to_file, 'Yes, willing')
+                if legal.pv_unable is not None:
+                    unable = legal.pv_unable.split(';')
+                    if 'No' in unable:
+                        suspect_pv.willing_to_file = self.add_checkbox_group(suspect_pv.willing_to_file,
+                                                                              'Not willing to file a case at all')
+                    if "Couldn't reestablish contact with PV" in unable:
+                        suspect_pv.willing_to_file = self.add_checkbox_group(suspect_pv.willing_to_file,
+                                                                             "Couldn’t establish contact with PV")
+                    if "PV afraid for reputation" in unable:
+                        suspect_pv.hesitation_concern = self.add_checkbox_group( suspect_pv.hesitation_concern,
+                                                                                 "Afraid for reputation")
+                    if "PV afraid for their safety" in unable:
+                        suspect_pv.hesitation_concern = self.add_checkbox_group(suspect_pv.hesitation_concern,
+                                                                                "Afraid for their safety")
+                    if "PVs don't believe they were being trafficked" in unable:
+                        suspect_pv.hesitation_concern = self.add_checkbox_group(suspect_pv.hesitation_concern,
+                                                                                "Don’t believe they were being trafficked")
+                    if "PV family not willing" in unable:
+                        suspect_pv.hesitation_concern = self.add_checkbox_group(suspect_pv.hesitation_concern,
+                                                                                "Family not willing")
+                suspect_pv.save()
 
         self.update_forms(country, from_form, to_form)
 
