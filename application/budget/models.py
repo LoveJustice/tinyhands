@@ -393,6 +393,7 @@ class MonthlyDistributionForm(models.Model):
     notes = models.TextField('Notes', blank=True)
     
     requests = models.ManyToManyField(ProjectRequest)
+    signed_pbs = models.FileField(upload_to='pbs_attachments', default='', blank=True)
     mdf_combined = GenericRelation('MdfCombined')
     
     def include_request(self, request):

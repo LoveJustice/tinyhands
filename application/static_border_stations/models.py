@@ -92,6 +92,14 @@ class Staff(Person):
     
     
     general_staff = '__general_staff'
+    
+    def get_staff_projects(self):
+        return self.staffproject_set.all()
+    
+    def get_country_id(self):
+        if self.country:
+            return self.country.id
+        return None
 
     def get_staff_benefits_projects(self):
         results = []
@@ -229,17 +237,35 @@ class StaffReview(models.Model):
     boldness = models.FloatField(null=True)
     questioning = models.FloatField(null=True)
     teamwork = models.FloatField(null=True)
+    
+    def get_country_id(self):
+        return staff.get_country_id()
+    
+    def get_staff_projects(self):
+        return staff.get_staff_projects()
 
 class StaffMiscellaneousTypes(models.Model):
     name = models.CharField(max_length=127)
     countries = models.ManyToManyField(Country)
     type = models.CharField(max_length=127)
     choices = models.TextField(blank=True)
+    
+    def get_country_id(self):
+        return staff.get_country_id()
+    
+    def get_staff_projects(self):
+        return staff.get_staff_projects()
 
 class StaffMiscellaneous(models.Model):
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
     type = models.ForeignKey(StaffMiscellaneousTypes, on_delete=models.CASCADE)
-    value = models.CharField(max_length=127, blank=True) 
+    value = models.CharField(max_length=127, blank=True)
+    
+    def get_country_id(self):
+        return staff.get_country_id()
+    
+    def get_staff_projects(self):
+        return staff.get_staff_projects()
 
 class CommitteeMember(Person):
     class Meta:
@@ -327,6 +353,12 @@ class StaffProject(models.Model):
     
     def set_parent(self, parent):
         self.staff = parent
+    
+    def get_country_id(self):
+        return staff.get_country_id()
+    
+    def get_staff_projects(self):
+        return staff.get_staff_projects()
 
 class StaffAttachment(models.Model):
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
@@ -335,6 +367,12 @@ class StaffAttachment(models.Model):
     attach_date = models.DateField(auto_now_add=True)
     expiration_date = models.DateField(null=True)
     description = models.CharField(max_length=126, null=True)
+    
+    def get_country_id(self):
+        return staff.get_country_id()
+    
+    def get_staff_projects(self):
+        return staff.get_staff_projects()
     
 
 
