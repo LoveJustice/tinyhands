@@ -15,4 +15,9 @@ class Migration(migrations.Migration):
             name='notes',
             field=models.TextField(blank=True, verbose_name='Notes'),
         ),
+        migrations.AddField(
+            model_name='monthlydistributionform',
+            name='signed_pbs',
+            field=models.FileField(blank=True, default='', upload_to='pbs_attachments'),
+        ),
     ]
