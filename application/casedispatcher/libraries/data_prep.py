@@ -1683,7 +1683,7 @@ def weight_pv_believes(
 def get_exp_score(
     suspects: pd.DataFrame,
     states_of_charges: pd.DataFrame,
-    exploitation_type: Dict[str, float],
+    weights: Dict[str, float],
 ) -> pd.DataFrame:
     """
     Calculate exploitation score based on parameters and reported exploitation.
@@ -1724,6 +1724,19 @@ def get_exp_score(
         RuntimeError:
             If any step in the calculation process fails due to missing columns or other issues.
     """
+
+    def get_exploitation_weights(weights):
+
+        exploitation_weights = {
+            "exploit_prostitution": weights["exploit_prostitution"],
+            "exploit_sexual_abuse": weights["exploit_sexual_abuse"],
+            "exploit_physical_abuse": weights["exploit_physical_abuse"],
+            "exploit_debt_bondage": weights["exploit_forced_labor"],
+            "exploit_forced_labor": weights["exploit_forced_labor"],
+        }
+        return exploitation_weights
+
+    exploitation_type = get_exploitation_weights(weights)
     try:
         # Log the initial state of the DataFrames
         logger.info(
@@ -2661,7 +2674,7 @@ def calc_all_sus_scores(
     suspects_entity_active: pd.DataFrame,
     vics_willing: pd.DataFrame,
     pol: pd.DataFrame,
-    weights: pd.DataFrame,
+    weights: Dict[str, Any],
     soc_df: pd.DataFrame,
     google_sheets_suspects: pd.DataFrame,
 ) -> pd.DataFrame:
