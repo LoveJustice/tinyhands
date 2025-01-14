@@ -59,7 +59,6 @@ def check_grid_search_cv(soc_df, gscv, cutoff_days):
     return best_model, x_cols, X_Validation
 
 
-
 def remove_recent(soc_df, cutoff_days):
     """
     Eliminates cases more recent than the cutoff date.
@@ -118,7 +117,6 @@ def train_test_val_split(sub_df, te_size=0.2, val_size=0.1):
             "days",
             "interview_date",
             "date_of_interception",
-            "suspect_id",
             "person_id",
             "case_notes",
             "social_media",
@@ -127,7 +125,7 @@ def train_test_val_split(sub_df, te_size=0.2, val_size=0.1):
             "operating_country_id",
             "country",
             "gender",
-            "sf_number_group",
+            "case_id",
         ]
     )
 
@@ -207,9 +205,6 @@ def make_new_predictions(X, soc_model):
     best fit."""
 
     return soc_model.predict_proba(X)[:, 1]
-
-
-
 
 
 def plot_roc_curve_altair(y_true, model_predictions, model_names):
@@ -307,9 +302,12 @@ def build_and_train_model(model_data, day_limit):
         y_validation,
     )
 
+
 def get_sorted_feature_importances(model, feature_names):
     feature_importances = model.best_estimator_.named_steps["clf"].feature_importances_
-    importance_df = pd.DataFrame({"Feature": feature_names, "Importance": feature_importances})
+    importance_df = pd.DataFrame(
+        {"Feature": feature_names, "Importance": feature_importances}
+    )
     sorted_importance_df = importance_df.sort_values(by="Importance", ascending=False)
     return sorted_importance_df
 
@@ -329,8 +327,9 @@ def create_feature_importance_chart(importance_df):
     return chart
 
 
-
-def display_feature_importances_and_save(model, feature_names, drive_service, file_metadata):
+def display_feature_importances_and_save(
+    model, feature_names, drive_service, file_metadata
+):
     # Step 1: Extract and sort feature importances
     sorted_importance_df = get_sorted_feature_importances(model, feature_names)
 
@@ -339,7 +338,7 @@ def display_feature_importances_and_save(model, feature_names, drive_service, fi
 
     # Step 3: Save the chart to a BytesIO object
     chart_bytes = io.BytesIO()
-    chart.save(chart_bytes, format='png')
+    chart.save(chart_bytes, format="png")
     chart_bytes.seek(0)  # Rewind to the beginning of the BytesIO object
 
     # Step 4: Save the chart to Google Drive
@@ -418,6 +417,7 @@ def main():
 
     if st.button("Build model"):
         case_dispatcher_soc_df = load_data()
+
         (
             case_dispatcher_model,
             case_dispatcher_model_cols,

@@ -124,9 +124,9 @@ def pre_proc_sus(suspects):
     # Convert the data type of the 'pb_number' column from float to integer
     # suspects["suspect_id"] = suspects["suspect_id"].astype(int)
 
-    suspects["suspect_id"] = (
-        suspects["sf_number"].str[:-1] + ".sus" + suspects["suspect_id"].map(str)
-    )
+    # suspects["suspect_id"] = (
+    #     suspects["sf_number"].str[:-1] + ".sus" + suspects["suspect_id"].map(str)
+    # )
     # Uncomment the following line to remove duplicate rows in the 'soc_df' dataframe based on the 'suspect_id' column
     # soc_df = soc_df.drop_duplicates(subset='suspect_id')
 
@@ -375,32 +375,32 @@ def generate_narrative(db_cif):
     return without_cn
 
 
-def pre_proc(db_cif):
-    """Generates suspect IDs and narratives."""
-    # Create a new dataframe called 'soc_df' that only contains rows from the 'db_cif' dataframe where the 'role' column is not 'Complainant' or 'Witness'
-    soc_df = db_cif[(db_cif.role != "Complainant") & (db_cif.role != "Witness")]
-
-    # Filter the 'soc_df' dataframe to only include rows where the 'pb_number' column is not null
-    soc_df = soc_df[~soc_df["pb_number"].isna()]
-
-    # Replace all '.' characters with an empty string in the 'cif_number' column and store the result in a new 'suspect_id' column
-    soc_df["suspect_id"] = soc_df["cif_number"].str.replace(".", "")
-
-    # Convert the data type of the 'pb_number' column from float to integer
-    soc_df["pb_number"] = soc_df["pb_number"].astype(int)
-
-    # Concatenate the 'suspect_id' column, '.PB', and the 'pb_number' column (converted to a string) and store the result in the 'suspect_id' column
-    soc_df["suspect_id"] = (
-        soc_df["suspect_id"].str[:-1] + ".PB" + soc_df["pb_number"].map(str)
-    )
-
-    # Uncomment the following line to remove duplicate rows in the 'soc_df' dataframe based on the 'suspect_id' column
-    # soc_df = soc_df.drop_duplicates(subset='suspect_id')
-
-    # Call the 'generate_narrative()' function on the 'soc_df' dataframe and store the result in the 'soc_df' dataframe
-    soc_df = generate_narrative(soc_df)
-
-    return soc_df
+# def pre_proc(db_cif):
+#     """Generates suspect IDs and narratives."""
+#     # Create a new dataframe called 'soc_df' that only contains rows from the 'db_cif' dataframe where the 'role' column is not 'Complainant' or 'Witness'
+#     soc_df = db_cif[(db_cif.role != "Complainant") & (db_cif.role != "Witness")]
+#
+#     # Filter the 'soc_df' dataframe to only include rows where the 'pb_number' column is not null
+#     soc_df = soc_df[~soc_df["pb_number"].isna()]
+#
+#     # Replace all '.' characters with an empty string in the 'cif_number' column and store the result in a new 'suspect_id' column
+#     soc_df["suspect_id"] = soc_df["cif_number"].str.replace(".", "")
+#
+#     # Convert the data type of the 'pb_number' column from float to integer
+#     soc_df["pb_number"] = soc_df["pb_number"].astype(int)
+#
+#     # Concatenate the 'suspect_id' column, '.PB', and the 'pb_number' column (converted to a string) and store the result in the 'suspect_id' column
+#     soc_df["suspect_id"] = (
+#         soc_df["suspect_id"].str[:-1] + ".PB" + soc_df["pb_number"].map(str)
+#     )
+#
+#     # Uncomment the following line to remove duplicate rows in the 'soc_df' dataframe based on the 'suspect_id' column
+#     # soc_df = soc_df.drop_duplicates(subset='suspect_id')
+#
+#     # Call the 'generate_narrative()' function on the 'soc_df' dataframe and store the result in the 'soc_df' dataframe
+#     soc_df = generate_narrative(soc_df)
+#
+#     return soc_df
 
 
 def organize_uganda_dest(soc_df):
@@ -456,7 +456,6 @@ def organize_dtypes(soc_df):
         - set(num_features)
         - set(
             [
-                "suspect_id",
                 "interview_date",
                 "case_notes",
                 "case_id",
@@ -604,234 +603,152 @@ def set_vic_id(new_victims):
     return new_victims
 
 
-def set_sus_id_depr(new_suspects, db_cif):
-    """Creates a unique ID for each suspect from Case ID and subsets/renames
-    columns."""
-    new_suspects = new_suspects[
-        ["person_id", "full_name", "phone_contact", "address_notes", "social_media"]
-    ]
-    cif_ids = db_cif[["cif_number", "person_id", "pb_number", "case_notes"]]
-    new_suspects = pd.merge(
-        new_suspects,
-        cif_ids,
-        how="outer",
-        on="person_id",
-        sort=True,
-        suffixes=("x", "y"),
-        copy=True,
-    )
-    new_suspects.loc[:, "pb_number"] = new_suspects["pb_number"].fillna(0).astype(int)
-    new_suspects.loc[:, "Suspect_ID"] = new_suspects.loc[:, "cif_number"].str.replace(
-        ".", ""
-    )
-    new_suspects.loc[:, "Suspect_ID"] = (
-        new_suspects.loc[:, "Suspect_ID"].str[:-1]
-        + ".PB"
-        + new_suspects["pb_number"].map(str)
-    )
-    new_suspects = new_suspects.drop_duplicates(subset="Suspect_ID")
-    new_suspects = new_suspects[
-        [
-            "cif_number",
-            "Suspect_ID",
-            "full_name",
-            "phone_contact",
-            "address_notes",
-            "social_media",
-            "case_notes",
-        ]
-    ]
-    new_suspects.rename(
-        columns={
-            "full_name": "Name",
-            "phone_contact": "Phone Number(s)",
-            "address_notes": "Address",
-            "social_media": "Social Media ID",
-            "cif_number": "Case_ID",
-            "case_notes": "Narrative",
-        },
-        inplace=True,
-    )
-    return new_suspects
+def require_columns(df: pd.DataFrame, required: set, df_name: str) -> None:
+    """
+    Verify that the given DataFrame contains all the required columns.
+
+    Parameters:
+        df (pd.DataFrame): The DataFrame to check.
+        required (set): A set of column names that are required.
+        df_name (str): The name of the DataFrame (used for logging purposes).
+
+    Raises:
+        RuntimeError: If any of the required columns are missing.
+    """
+    missing = required - set(df.columns)
+    if missing:
+        error_msg = f"{df_name} DataFrame is missing required columns: {missing}"
+        logger.error(error_msg)
+        raise RuntimeError(error_msg)
+    logger.debug(f"All required columns are present in {df_name} DataFrame.")
+
+
+def rename_columns(df: pd.DataFrame, rename_dict: dict) -> pd.DataFrame:
+    """
+    Rename the columns of a DataFrame using a provided mapping.
+
+    Parameters:
+        df (pd.DataFrame): The DataFrame whose columns need to be renamed.
+        rename_dict (dict): A dictionary mapping old column names to new column names.
+
+    Returns:
+        pd.DataFrame: A new DataFrame with renamed columns.
+    """
+    return df.rename(columns=rename_dict)
 
 
 def set_suspect_id(
     new_suspects: pd.DataFrame, db_suspects: pd.DataFrame
 ) -> pd.DataFrame:
     """
-    Create a unique ID for each suspect by merging new and database suspect data.
+    Create a unique suspect identifier by merging new suspect data with existing
+    database suspect data.
 
-    This function performs the following operations:
-        1. Selects and renames relevant columns from the `new_suspects` and `db_suspects` DataFrames.
-        2. Merges the two DataFrames on `person_id` using an outer join.
-        3. Renames columns according to a predefined mapping.
-        4. Drops duplicate entries based on `suspect_id`.
-        5. Selects and orders the final set of columns.
+    This function:
+      1. Checks that the required columns exist in both DataFrames.
+      2. Selects and deduplicates specified columns from both new_suspects and db_suspects.
+      3. Merges the two DataFrames on 'person_id' using an outer join.
+      4. Renames columns based on a predefined mapping.
+      5. Drops duplicate entries based on 'sf_number'.
+      6. Ensures that all expected final columns exist (adding missing ones with default values if needed).
+      7. Returns a DataFrame with the final, merged columns.
 
     Parameters:
-        new_suspects (pd.DataFrame):
-            DataFrame containing new suspect information. Must include the following columns:
-                - `person_id`
-                - `full_name`
-                - `phone_contact`
-                - `address_notes`
-                - `social_media`
-
-        db_suspects (pd.DataFrame):
-            DataFrame containing existing database suspect information. Must include the following columns:
-                - `suspect_id`
-                - `person_id`
-                - `sf_number`
-                - `case_id`
-                - `case_notes`
+        new_suspects (pd.DataFrame): DataFrame with new suspect information.
+            Must include the following columns:
+              - 'person_id'
+              - 'full_name'
+              - 'phone_contact'
+              - 'address_notes'
+              - 'social_media'
+        db_suspects (pd.DataFrame): DataFrame with existing database suspect information.
+            Must include the following columns:
+              - 'sf_number'
+              - 'person_id'
+              - 'case_id'
+              - 'case_notes'
 
     Returns:
-        pd.DataFrame:
-            The merged and processed DataFrame containing unique suspect records with the following columns:
-                - `name`
-                - `phone_numbers`
-                - `address`
-                - `social_media_id`
-                - `suspect_id`
-                - `case_id`
-                - `narrative`
+        pd.DataFrame: The merged and processed DataFrame with the following columns:
+              - 'name'
+              - 'phone_numbers'
+              - 'address'
+              - 'social_media_id'
+              - 'sf_number'
+              - 'case_id'
+              - 'narrative'
 
     Raises:
-        RuntimeError:
-            If required columns are missing from either input DataFrame or if the merge operation fails.
+        RuntimeError: If any required column is missing or if an error occurs during merging.
     """
-    try:
-        logger.info("Starting set_suspect_id function.")
+    logger.info("Starting set_suspect_id function.")
 
-        # Define required columns for new_suspects
-        new_suspect_required_columns = {
-            "person_id",
-            "full_name",
-            "phone_contact",
-            "address_notes",
-            "social_media",
-        }
-        missing_new_suspect_cols = new_suspect_required_columns - set(
-            new_suspects.columns
-        )
-        if missing_new_suspect_cols:
-            error_msg = f"new_suspects DataFrame is missing required columns: {missing_new_suspect_cols}"
-            logger.error(error_msg)
-            raise RuntimeError(error_msg)
-        logger.debug("All required columns are present in new_suspects DataFrame.")
+    # Check required columns
+    require_columns(
+        new_suspects,
+        {"person_id", "full_name", "phone_contact", "address_notes", "social_media"},
+        "new_suspects",
+    )
+    require_columns(
+        db_suspects, {"sf_number", "person_id", "case_id", "case_notes"}, "db_suspects"
+    )
 
-        # Define required columns for db_suspects
-        db_suspect_required_columns = {
-            "suspect_id",
-            "person_id",
-            "sf_number",
-            "case_id",
-            "case_notes",
-        }
-        missing_db_suspect_cols = db_suspect_required_columns - set(db_suspects.columns)
-        if missing_db_suspect_cols:
-            error_msg = f"db_suspects DataFrame is missing required columns: {missing_db_suspect_cols}"
-            logger.error(error_msg)
-            raise RuntimeError(error_msg)
-        logger.debug("All required columns are present in db_suspects DataFrame.")
+    # Select columns and rename in one go
+    new_cols = [
+        "person_id",
+        "full_name",
+        "phone_contact",
+        "address_notes",
+        "social_media",
+    ]
+    db_cols = ["person_id", "sf_number", "case_id", "case_notes"]
 
-        # Define columns for selection and renaming
-        new_suspect_cols = [
-            "person_id",
-            "full_name",
-            "phone_contact",
-            "address_notes",
-            "social_media",
-        ]
-        db_suspect_cols = [
-            "suspect_id",
-            "person_id",
-            "sf_number",
-            "case_id",
-            "case_notes",
-        ]
-        column_rename = {
-            "full_name": "name",
-            "phone_contact": "phone_numbers",
-            "address_notes": "address",
-            "social_media": "social_media_id",
-            "case_notes": "narrative",
-            # "sf_number": "case_id", # This line is commented out in original code
-            "suspect_id": "suspect_id",
-            "case_id": "case_id",
-        }
+    filtered_new = new_suspects[new_cols].drop_duplicates()
+    filtered_db = db_suspects[db_cols].drop_duplicates()
 
-        logger.debug(
-            "Selecting and renaming columns from new_suspects and db_suspects."
-        )
+    logger.info("Merging new_suspects with db_suspects on 'person_id'.")
+    merged = pd.merge(
+        filtered_new,
+        filtered_db,
+        how="outer",
+        on="person_id",
+        sort=True,
+        suffixes=("x", "y"),
+        validate="many_to_one",
+    )
 
-        # Subset columns
-        filtered_new_suspects = new_suspects[new_suspect_cols].copy().drop_duplicates()
-        logger.debug(f"Selected columns from new_suspects: {new_suspect_cols}")
+    column_rename = {
+        "full_name": "name",
+        "phone_contact": "phone_numbers",
+        "address_notes": "address",
+        "social_media": "social_media_id",
+        "sf_number": "sf_number",
+        "case_id": "case_id",
+        "case_notes": "narrative",
+    }
+    merged.rename(columns=column_rename, inplace=True)
+    logger.debug(f"Columns after renaming: {list(merged.columns)}")
 
-        filtered_db_suspects = db_suspects[db_suspect_cols].copy().drop_duplicates()
-        logger.debug(f"Selected columns from db_suspects: {db_suspect_cols}")
-
-        # Merge dataframes
-        logger.info("Merging new_suspects with db_suspects on 'person_id'.")
-        merged_suspects = pd.merge(
-            filtered_new_suspects,
-            filtered_db_suspects,
-            how="outer",
-            on="person_id",
-            sort=True,
-            suffixes=("x", "y"),
-            validate="many_to_one",  # assuming each person_id in new_suspects is unique
-        )
-        logger.debug("Merge operation completed successfully.")
-
-        # Rename columns
-        logger.debug("Renaming columns as per the column_rename mapping.")
-        merged_suspects.rename(columns=column_rename, inplace=True)
-        logger.debug(f"Columns after renaming: {list(merged_suspects.columns)}")
-
-        # Drop duplicates based on 'suspect_id'
-        if "suspect_id" not in merged_suspects.columns:
-            error_msg = "'suspect_id' column is missing after merging."
-            logger.error(error_msg)
-            raise RuntimeError(error_msg)
-
-        logger.info("Dropping duplicate entries based on 'suspect_id'.")
-        before_dropping = len(merged_suspects)
-        merged_suspects.drop_duplicates(subset="suspect_id", inplace=True)
-        after_dropping = len(merged_suspects)
-        logger.debug(f"Dropped {before_dropping - after_dropping} duplicate records.")
-
-        # Select final columns
-        final_columns = list(column_rename.values())
-        # Ensure all final_columns are in merged_suspects
-        missing_final_columns = set(final_columns) - set(merged_suspects.columns)
-        if missing_final_columns:
-            # Depending on the use case, could fill missing columns with empty strings or other defaults
-            logger.warning(
-                f"The following expected columns are missing after renaming: {missing_final_columns}. Adding them with default values."
-            )
-            for col in missing_final_columns:
-                merged_suspects[col] = ""
-
-        logger.debug(f"Selecting final columns: {final_columns}")
-        merged_suspects = merged_suspects[final_columns]
-
-        logger.info("Completed set_suspect_id function successfully.")
-        return merged_suspects
-
-    except KeyError as ke:
-        error_msg = f"Key error during set_suspect_id: {ke}"
+    if "sf_number" not in merged.columns:
+        error_msg = "'sf_number' column is missing after merging."
         logger.error(error_msg)
-        raise RuntimeError(error_msg) from ke
-    except pd.errors.MergeError as me:
-        error_msg = f"Merge error during set_suspect_id: {me}"
-        logger.error(error_msg)
-        raise RuntimeError(error_msg) from me
-    except Exception as e:
-        error_msg = f"An unexpected error occurred in set_suspect_id: {e}"
-        logger.error(error_msg)
-        raise RuntimeError(error_msg) from e
+        raise RuntimeError(error_msg)
+
+    logger.info("Dropping duplicate entries based on 'sf_number'.")
+    merged.drop_duplicates(subset="sf_number", inplace=True)
+
+    final_columns = list(column_rename.values())
+    missing_final = set(final_columns) - set(merged.columns)
+    if missing_final:
+        logger.warning(
+            f"Missing columns {missing_final} found after renaming. Filling with defaults."
+        )
+        for col in missing_final:
+            merged[col] = ""
+    merged = merged[final_columns]
+
+    logger.info("Completed set_suspect_id function successfully.")
+    return merged
 
 
 def sum_and_join_vic(x):
@@ -1312,6 +1229,7 @@ def calc_vics_willing_scores(
 
             # Drop unnecessary columns if they exist
             columns_to_drop = ["willing_to_testify", "count"]
+
             existing_columns_to_drop = [
                 col for col in columns_to_drop if col in suspects.columns
             ]
@@ -1434,6 +1352,7 @@ def calc_arrest_scores(
             arrests[["case_id", "total_arrests"]], on="case_id", how="left"
         )
         suspects["others_arrested"] = suspects["total_arrests"].fillna(0).astype(int)
+
         suspects.drop(columns=["total_arrests"], inplace=True)
         logger.info("'others_arrested' column added successfully.")
 
@@ -1479,7 +1398,7 @@ def calc_arrest_scores(
 
 
 def get_total_arrests(soc_df):
-    """Create case_id from suspect_id and aggregate arrests. ['case_id',
+    """Create case_id from sf_number and aggregate arrests. ['case_id',
     'case_id', 'arrested']"""
 
     # Create case_id from case_id and aggregate arrests
@@ -1511,7 +1430,7 @@ def weight_pv_believes(
         suspects (pd.DataFrame):
             DataFrame containing suspect information. Must include:
                 - `case_id`: Identifier for each case.
-                - `suspect_id`: Unique identifier for each suspect.
+                - `sf_number`: Unique identifier for each suspect.
 
         states_of_charge (pd.DataFrame):
             DataFrame containing state of charge information. Must include:
@@ -1545,7 +1464,7 @@ def weight_pv_believes(
         )
 
         # Define required columns for each DataFrame
-        required_suspects_cols = {"case_id", "suspect_id"}
+        required_suspects_cols = {"case_id", "sf_number"}
         required_states_cols = {
             "sf_number",
             "pv_believes_definitely_trafficked_many",
@@ -1703,7 +1622,7 @@ def get_exp_score(
         suspects (pd.DataFrame):
             DataFrame containing suspect information. Must include:
                 - `case_id`: Identifier for each case.
-                - `suspect_id`: Unique identifier for each suspect.
+                - `sf_number`: Unique identifier for each suspect.
 
         states_of_charges (pd.DataFrame):
             DataFrame containing state of charge information. Must include:
@@ -1747,7 +1666,7 @@ def get_exp_score(
         )
 
         # Define required columns for each DataFrame
-        required_suspects_cols = {"case_id", "suspect_id"}
+        required_suspects_cols = {"case_id", "sf_number"}
         required_states_cols = set(exploitation_type.keys()).union({"sf_number"})
 
         # Validate required columns in suspects DataFrame
@@ -1862,13 +1781,13 @@ def calc_recency_scores(
         1. Calculates the number of days since each suspect's interview.
         2. Merges this information into the suspects DataFrame.
         3. Computes the recency score using provided weights.
-        4. Removes duplicate suspect entries based on 'suspect_id'.
+        4. Removes duplicate suspect entries based on 'sf_number'.
 
     Parameters:
         suspects (pd.DataFrame):
             DataFrame containing suspect information. Must include:
                 - `case_id`: Identifier for each case.
-                - `suspect_id`: Unique identifier for each suspect.
+                - `sf_number`: Unique identifier for each suspect.
 
         states_of_charge (pd.DataFrame):
             DataFrame containing state of charge information. Must include:
@@ -1899,7 +1818,7 @@ def calc_recency_scores(
         )
 
         # Define required columns and keys
-        required_suspects_cols = {"case_id", "suspect_id"}
+        required_suspects_cols = {"case_id", "sf_number"}
         required_states_cols = {"sf_number", "interview_date"}
         required_weights_keys = {"discount_coef", "discount_exp"}
 
@@ -1913,7 +1832,7 @@ def calc_recency_scores(
         # 1. Calculate days since interview
         logger.info("Calculating days since interview.")
         today = pd.Timestamp.now().normalize()
-        cif_dates = states_of_charge[["sf_number", "interview_date"]].copy()
+        cif_dates = states_of_charge[["case_id", "interview_date"]].copy()
 
         # Convert 'interview_date' to datetime; coerce errors to NaT
         cif_dates["interview_date"] = pd.to_datetime(
@@ -1926,7 +1845,7 @@ def calc_recency_scores(
                 "These will be assigned a default 'days_old' value."
             )
             logger.debug(
-                f"Invalid 'interview_date' records (sample):\n{invalid_dates[['sf_number']].head()}"
+                f"Invalid 'interview_date' records (sample):\n{invalid_dates[['case_id']].head()}"
             )
 
         # Calculate 'days_old'
@@ -1938,7 +1857,7 @@ def calc_recency_scores(
         # Derive 'case_id' from 'sf_number'
         logger.info("Deriving 'case_id' from 'sf_number'.")
         cif_dates["case_id"] = (
-            cif_dates["sf_number"]
+            cif_dates["case_id"]
             .astype(str)
             .str.rstrip(".")
             .str.replace(".", "", regex=False)
@@ -1977,10 +1896,10 @@ def calc_recency_scores(
         suspects["recency_score"] = np.maximum(score_formula, 0)
         logger.info("'recency_score' calculated successfully.")
 
-        # 4. Remove duplicate entries based on 'suspect_id'
-        logger.info("Removing duplicate suspects based on 'suspect_id'.")
+        # 4. Remove duplicate entries based on 'sf_number'
+        logger.info("Removing duplicate suspects based on 'sf_number'.")
         before_dropping = len(suspects)
-        suspects = suspects.drop_duplicates(subset="suspect_id")
+        suspects = suspects.drop_duplicates(subset="sf_number")
         after_dropping = len(suspects)
         logger.info(f"Removed {before_dropping - after_dropping} duplicate suspects.")
 
@@ -2080,7 +1999,7 @@ def get_eminence_score(suspects: pd.DataFrame) -> pd.DataFrame:
     Parameters:
         suspects (pd.DataFrame):
             DataFrame containing suspect information. Must include:
-                - `suspect_id`: Unique identifier for each suspect.
+                - `sf_number`: Unique identifier for each suspect.
                 - `eminence`: Current eminence score (can be missing or empty).
 
     Returns:
@@ -2099,7 +2018,7 @@ def get_eminence_score(suspects: pd.DataFrame) -> pd.DataFrame:
         )
 
         # Define required columns for the DataFrame
-        required_suspects_cols = {"suspect_id", "eminence"}
+        required_suspects_cols = {"sf_number", "eminence"}
 
         # Validate required columns in suspects DataFrame
         missing_suspects_cols = required_suspects_cols - set(suspects.columns)
@@ -2186,17 +2105,17 @@ def get_new_soc_score(
     This function performs the following operations:
         1. Validates the presence of required columns in the input DataFrames.
         2. Selects the necessary columns from the `states_of_charges` DataFrame.
-        3. Merges the SOC scores into the `suspects` DataFrame based on `suspect_id`.
+        3. Merges the SOC scores into the `suspects` DataFrame based on `sf_number`.
         4. Rounds the SOC scores to six decimal places.
 
     Parameters:
         suspects (pd.DataFrame):
             DataFrame containing suspect information. Must include:
-                - `suspect_id`: Unique identifier for each suspect.
+                - `sf_number`: Unique identifier for each suspect.
 
         states_of_charges (pd.DataFrame):
             DataFrame containing state of charge information. Must include:
-                - `suspect_id`: Unique identifier for each suspect.
+                - `sf_number`: Unique identifier for each suspect.
                 - `soc`: Strength of Case score.
 
     Returns:
@@ -2216,8 +2135,8 @@ def get_new_soc_score(
         )
 
         # Define required columns for each DataFrame
-        required_suspects_cols = {"suspect_id"}
-        required_soc_cols = {"suspect_id", "soc"}
+        required_suspects_cols = {"sf_number"}
+        required_soc_cols = {"sf_number", "soc"}
 
         # Validate required columns in suspects DataFrame
         missing_suspects_cols = required_suspects_cols - set(suspects.columns)
@@ -2234,8 +2153,8 @@ def get_new_soc_score(
             raise ValueError(error_msg)
 
         # 1. Extract necessary columns from states_of_charges
-        logger.info("Extracting 'suspect_id' and 'soc' columns from states_of_charges.")
-        soc_df = states_of_charges[["suspect_id", "soc"]].copy()
+        logger.info("Extracting 'sf_number' and 'soc' columns from states_of_charges.")
+        soc_df = states_of_charges[["sf_number", "soc"]].copy()
 
         # Ensure 'soc' column is numeric
         logger.info("Ensuring 'soc' column is numeric.")
@@ -2247,7 +2166,7 @@ def get_new_soc_score(
 
         # 2. Merge SOC scores into suspects DataFrame
         logger.info("Merging SOC scores into suspects DataFrame.")
-        suspects = suspects.merge(soc_df, on="suspect_id", how="left")
+        suspects = suspects.merge(soc_df, on="sf_number", how="left")
 
         # 3. Handle missing SOC scores by filling with default value (e.g., 0.0)
         logger.info("Handling missing SOC scores by filling with 0.0.")
@@ -2312,18 +2231,6 @@ def calculate_weights(Parameters):
     return weights
 
 
-import pandas as pd
-import numpy as np
-import logging
-from typing import Any, Dict, List, Tuple
-
-# Assuming the logger is already set up as per your provided setup_logger function
-from .case_dispatcher_logging import setup_logger
-
-# Initialize the existing logger
-logger = setup_logger("data_prep_logging", "data_prep_logging")
-
-
 def calc_solvability(suspects: pd.DataFrame, weights: Dict[str, Any]) -> pd.DataFrame:
     """
     Calculate a weighted solvability score for each active suspect.
@@ -2348,7 +2255,7 @@ def calc_solvability(suspects: pd.DataFrame, weights: Dict[str, Any]) -> pd.Data
                 - `recency_score`: Score representing the recency of the case.
                 - `pv_believes`: Belief score regarding suspects' involvement.
                 - `exp`: Exploitation score based on reported exploitation.
-                - `suspect_id`: Unique identifier for each suspect.
+                - `sf_number`: Unique identifier for each suspect.
 
         weights (Dict[str, Any]):
             Dictionary containing weight parameters for each factor. Must include the following keys:
@@ -2393,7 +2300,7 @@ def calc_solvability(suspects: pd.DataFrame, weights: Dict[str, Any]) -> pd.Data
         weight_keys: List[str] = [weight_key for _, weight_key in factors]
 
         # Validate required columns in suspects DataFrame
-        missing_suspects_cols = set(factor_columns).union({"suspect_id"}) - set(
+        missing_suspects_cols = set(factor_columns).union({"sf_number"}) - set(
             suspects.columns
         )
         if missing_suspects_cols:
@@ -2454,10 +2361,10 @@ def calc_solvability(suspects: pd.DataFrame, weights: Dict[str, Any]) -> pd.Data
         suspects["solvability"] = suspects["solvability"].fillna(0.0).astype(float)
         logger.info("'solvability' scores calculated and NaN values handled.")
 
-        # 4. Remove duplicate entries based on 'suspect_id'
-        logger.info("Removing duplicate suspects based on 'suspect_id'.")
+        # 4. Remove duplicate entries based on 'sf_number'
+        logger.info("Removing duplicate suspects based on 'sf_number'.")
         before_dropping = len(suspects)
-        suspects = suspects.drop_duplicates(subset="suspect_id")
+        suspects = suspects.drop_duplicates(subset="sf_number")
         after_dropping = len(suspects)
         logger.info(f"Removed {before_dropping - after_dropping} duplicate suspects.")
 
@@ -2477,18 +2384,6 @@ def calc_solvability(suspects: pd.DataFrame, weights: Dict[str, Any]) -> pd.Data
     return suspects
 
 
-import pandas as pd
-import numpy as np
-import logging
-from typing import Any, Dict, List, Tuple
-
-# Assuming the logger is already set up as per your provided setup_logger function
-from .case_dispatcher_logging import setup_logger
-
-# Initialize the existing logger
-logger = setup_logger("data_prep_logging", "data_prep_logging")
-
-
 def calc_priority(
     new_suspects: pd.DataFrame, weights: Dict[str, Any], existing_suspects: pd.DataFrame
 ) -> pd.DataFrame:
@@ -2506,12 +2401,12 @@ def calc_priority(
         4. Handles any missing values and ensures data consistency.
         5. Sorts the suspects based on the priority score in descending order.
         6. Aligns the columns of the updated suspects DataFrame with the existing suspects DataFrame.
-        7. Removes duplicate entries based on 'suspect_id'.
+        7. Removes duplicate entries based on 'sf_number'.
 
     Parameters:
         new_suspects (pd.DataFrame):
             DataFrame containing updated suspect information. Must include:
-                - `suspect_id`: Unique identifier for each suspect.
+                - `sf_number`: Unique identifier for each suspect.
                 - `solvability`: Solvability score of the case.
                 - `strength_of_case`: Strength of the case score.
                 - `em2`: Eminence score.
@@ -2551,11 +2446,19 @@ def calc_priority(
         ]
 
         # Extract factor names and weight keys
-        factor_columns: List[str] = [factor for factor, _ in factors]
+        # factor_columns: List[str] = [factor for factor, _ in factors]
         weight_keys: List[str] = [weight_key for _, weight_key in factors]
+        weight_keys = ["solvability", "strength_of_case", "eminence"]
+        # # Validate required columns in new_suspects DataFrame
+        # required_new_suspects_cols = set(factor_columns).union({"sf_number"})
 
-        # Validate required columns in new_suspects DataFrame
-        required_new_suspects_cols = set(factor_columns).union({"suspect_id"})
+        required_new_suspects_cols = {
+            "solvability",
+            "strength_of_case",
+            "em2",
+            "sf_number",
+        }
+
         missing_new_suspects_cols = required_new_suspects_cols - set(
             new_suspects.columns
         )
@@ -2643,9 +2546,9 @@ def calc_priority(
         logger.debug(f"Aligned columns: {list(new_suspects.columns)}")
 
         # 6. Remove duplicate entries based on 'suspect_id'
-        logger.info("Removing duplicate suspects based on 'suspect_id'.")
+        logger.info("Removing duplicate suspects based on 'sf_number'.")
         before_dropping = len(new_suspects)
-        new_suspects = new_suspects.drop_duplicates(subset="suspect_id")
+        new_suspects = new_suspects.drop_duplicates(subset="sf_number")
         after_dropping = len(new_suspects)
         logger.info(f"Removed {before_dropping - after_dropping} duplicate suspects.")
 
@@ -2778,7 +2681,8 @@ def calc_all_sus_scores(
         )
 
         # Select only required columns for calc_vics_willing_scores
-        required_vics_columns = {"case_id", "count"}
+
+        required_vics_columns = {"case_id", "count", "willing_to_testify"}
         if not required_vics_columns.issubset(vics_willing.columns):
             missing = required_vics_columns - set(vics_willing.columns)
             error_msg = f"vics_willing is missing required columns: {missing}"
@@ -2944,7 +2848,7 @@ def add_priority_to_others(
         logger.info("Merging sus DataFrame with other_entity_group DataFrame.")
         merged_df = pd.merge(
             other_entity_group,
-            sus[[id_type, "priority", "narrative"]],
+            sus[[id_type, "priority", "narrative"]].drop_duplicates(subset=id_type),
             how="outer",
             on=id_type,
             validate="many_to_one",  # Assuming each id_type in other_entity_group is unique
@@ -3043,20 +2947,73 @@ def update_active_cases(
     active_suspects: pd.DataFrame, active_police: pd.DataFrame
 ) -> pd.DataFrame:
     """
-    Updates active cases based on the status and actions of suspects and police.
+    Update active case records based on the current status and actions from suspects and police.
+
+    This function performs the following steps:
+
+      1. **Cleanup of Case Status Columns:**
+         - For both active_suspects and active_police, any string value equal to "nan"
+           in the "case_status" column is replaced with an empty string.
+
+      2. **Selection and Preparation of Active Cases:**
+         - A working copy of active case records is created using selected columns from
+           the active_suspects DataFrame. The "case_status" column is further cleaned by
+           ensuring no missing or "nan" values remain.
+
+      3. **Derivation of Conditional Masks:**
+         - **Police Complete:** Cases from active_police whose "case_status" contains the
+           substring "Complete".
+         - **Suspect Complete:** Cases from active_suspects whose "case_status" contains the
+           substring "Complete".
+         - **Multiple Victims:** Cases from active_suspects with a comma in the
+           "victims_willing_to_testify" field (indicating two or more victims).
+         - **Single Victim:** Cases from active_suspects where there is a non-empty value in
+           the "victims_willing_to_testify" field. (Note: This mask applies only when the
+           case does not meet any higher-priority condition.)
+
+      4. **Update Case Status:**
+         Cases are updated with a descriptive status message based on the highest-priority
+         condition met:
+           - If the case is in police complete:
+             "Third Step Complete - Police are willing to arrest suspect."
+           - Else if the case is in suspect complete:
+             "Second Step Complete: Suspect Located."
+           - Else if the case has multiple victims willing to testify:
+             "First Step Complete: Two or more PVs willing to testify."
+           - Else if the case has a single victim willing to testify:
+             "First Step Complete: One PV willing to testify."
+
+      5. **Update Next Action Priority:**
+         Based on the same prioritized conditions:
+           - If the case is in police complete: "Ensure Arrest is Made."
+           - Else if the case is in suspect complete: "Ask Police to Arrest."
+           - Else if the case has multiple victims: "Locate Suspect and Verify Victim Testimonies."
+           - Else if the case has a single victim: "Locate Suspect."
+           - Otherwise, default to "Contact Victim."
+
+      6. **Finalization:**
+         - Duplicate case records (based on "case_id") are removed.
+         - The updated DataFrame with all active case information is returned.
 
     Parameters:
-    active_suspects (pd.DataFrame): A DataFrame containing information about active suspects.
-    active_police (pd.DataFrame): A DataFrame containing information about active police actions.
+      active_suspects (pd.DataFrame):
+          A DataFrame containing information about active suspect cases. Expected to include
+          at least the columns: "case_id", "case_name", "priority", "irf_case_notes", "narrative",
+          "case_status", and "victims_willing_to_testify".
+
+      active_police (pd.DataFrame):
+          A DataFrame containing information about active police actions. Expected to include
+          at least the columns: "case_id" and "case_status".
 
     Returns:
-    pd.DataFrame: A DataFrame with updated active cases information.
+      pd.DataFrame: A DataFrame with updated active case records, where the "case_status" and
+      "Next_Action_Priority" columns have been updated according to the defined conditions.
     """
-
-    # Select only relevant columns from active_suspects
+    # Clean up string "nan" values for case_status in both DataFrames.
     active_police.loc[active_police["case_status"] == "nan", "case_status"] = ""
     active_suspects.loc[active_suspects["case_status"] == "nan", "case_status"] = ""
 
+    # Select relevant columns from active_suspects and create a working copy.
     active_cases = active_suspects[
         [
             "case_id",
@@ -3067,54 +3024,103 @@ def update_active_cases(
             "case_status",
         ]
     ].copy()
-    active_cases.loc[:, "case_status"] = active_cases.loc[:, "case_status"].fillna("")
+    active_cases["case_status"] = active_cases["case_status"].fillna("")
     active_cases.loc[active_cases["case_status"] == "nan", "case_status"] = ""
-    # Create a mask for each condition
-    police_complete = active_police[active_police.case_status.str.contains("Complete")][
-        "case_id"
-    ]
-    suspect_complete = active_suspects[
-        active_suspects.case_status.str.contains("Complete")
-    ]["case_id"]
-    multiple_victims = active_suspects[
-        active_suspects.victims_willing_to_testify.str.contains(",")
-    ]["case_id"]
-    single_victim = active_suspects[
-        (active_suspects.victims_willing_to_testify != "")
-        | (active_suspects.victims_willing_to_testify.isna())
-    ]["case_id"]
 
-    # Update 'Case_Status' based on the conditions
-    active_cases.loc[active_cases.case_id.isin(police_complete), "case_status"] = (
-        "Third Step Complete - Police are willing to arrest suspect."
+    # --- Derive Conditional Masks ---
+    # Note: These masks are based on columns from the original data sources.
+    # Police Complete: Active police cases with "Complete" in case_status.
+    mask_police_complete = active_police["case_status"].str.contains(
+        "Complete", na=False
     )
-    active_cases.loc[active_cases.case_id.isin(suspect_complete), "case_status"] = (
-        "Second Step Complete: Suspect Located"
+    police_complete_ids = set(active_police.loc[mask_police_complete, "case_id"])
+
+    # Suspect Complete: Active suspect cases with "Complete" in case_status.
+    mask_suspect_complete = active_suspects["case_status"].str.contains(
+        "Complete", na=False
     )
-    active_cases.loc[active_cases.case_id.isin(multiple_victims), "case_status"] = (
-        "First Step Complete: Two or more PVs willing to testify"
+    suspect_complete_ids = set(active_suspects.loc[mask_suspect_complete, "case_id"])
+
+    # Multiple Victims: Active suspect cases where victims_willing_to_testify contains a comma.
+    mask_multiple_victims = (
+        active_suspects["victims_willing_to_testify"]
+        .astype(str)
+        .str.contains(",", na=False)
     )
-    active_cases.loc[active_cases.case_id.isin(single_victim), "case_status"] = (
-        "First Step Complete: One PV willing to testify"
+    multiple_victims_ids = set(active_suspects.loc[mask_multiple_victims, "case_id"])
+
+    # Single Victim: Active suspect cases where there is a non-empty value for victims_willing_to_testify.
+    # Use trim to ensure that any spaces only strings are treated as empty.
+    mask_single_victim = (
+        active_suspects["victims_willing_to_testify"].astype(str).str.strip() != ""
+    )
+    # Remove case IDs that are already in the multiple victims set.
+    single_victim_ids = (
+        set(active_suspects.loc[mask_single_victim, "case_id"]) - multiple_victims_ids
     )
 
-    # Update 'Next_Action_Priority' based on the conditions
-    active_cases["Next_Action_Priority"] = ""
+    # --- Update 'case_status' based on prioritized conditions ---
+    # Start with a default status (could be the existing case_status or blank).
+    updated_status = active_cases["case_status"].copy()
+
+    # Highest priority: Police Complete
+    updated_status = updated_status.mask(
+        active_cases["case_id"].isin(police_complete_ids),
+        "Third Step Complete - Police are willing to arrest suspect.",
+    )
+    # Next priority: Suspect Complete (only update if not already set by police condition)
+    updated_status = updated_status.mask(
+        (active_cases["case_id"].isin(suspect_complete_ids))
+        & (~active_cases["case_id"].isin(police_complete_ids)),
+        "Second Step Complete: Suspect Located.",
+    )
+    # Next priority: Multiple Victims
+    updated_status = updated_status.mask(
+        (active_cases["case_id"].isin(multiple_victims_ids))
+        & (~active_cases["case_id"].isin(police_complete_ids))
+        & (~active_cases["case_id"].isin(suspect_complete_ids)),
+        "First Step Complete: Two or more PVs willing to testify.",
+    )
+    # Last priority: Single Victim (only update if not meeting any higher condition)
+    updated_status = updated_status.mask(
+        (active_cases["case_id"].isin(single_victim_ids))
+        & (~active_cases["case_id"].isin(police_complete_ids))
+        & (~active_cases["case_id"].isin(suspect_complete_ids))
+        & (~active_cases["case_id"].isin(multiple_victims_ids)),
+        "First Step Complete: One PV willing to testify.",
+    )
+
+    active_cases["case_status"] = updated_status
+
+    # --- Update 'Next_Action_Priority' based on the same conditions ---
+    # Initialize the column with a default value.
+    active_cases["Next_Action_Priority"] = "Contact Victim"  # default action
+
+    # Use similar prioritized updates:
     active_cases.loc[
-        active_cases.case_id.isin(police_complete), "Next_Action_Priority"
+        active_cases["case_id"].isin(police_complete_ids), "Next_Action_Priority"
     ] = "Ensure Arrest is Made"
     active_cases.loc[
-        active_cases.case_id.isin(suspect_complete), "Next_Action_Priority"
+        (active_cases["case_id"].isin(suspect_complete_ids))
+        & (~active_cases["case_id"].isin(police_complete_ids)),
+        "Next_Action_Priority",
     ] = "Ask Police to Arrest"
     active_cases.loc[
-        active_cases.case_id.isin(single_victim), "Next_Action_Priority"
-    ] = "Locate Suspect"
+        (active_cases["case_id"].isin(multiple_victims_ids))
+        & (~active_cases["case_id"].isin(police_complete_ids))
+        & (~active_cases["case_id"].isin(suspect_complete_ids)),
+        "Next_Action_Priority",
+    ] = "Locate Suspect and Verify Victim Testimonies"
     active_cases.loc[
-        ~active_cases.case_id.isin(single_victim), "Next_Action_Priority"
-    ] = "Contact Victim"
+        (active_cases["case_id"].isin(single_victim_ids))
+        & (~active_cases["case_id"].isin(police_complete_ids))
+        & (~active_cases["case_id"].isin(suspect_complete_ids))
+        & (~active_cases["case_id"].isin(multiple_victims_ids)),
+        "Next_Action_Priority",
+    ] = "Locate Suspect"
 
-    # Drop duplicates based on 'Case_ID'
-    active_cases = active_cases.drop_duplicates("case_id")
+    # --- Finalize: Remove duplicate case records ---
+    active_cases = active_cases.drop_duplicates(subset="case_id")
 
     return active_cases
 

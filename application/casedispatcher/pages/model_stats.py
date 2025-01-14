@@ -17,14 +17,16 @@ from libraries.google_lib import (
     attrdict_to_dict,
     get_file_id,
     load_from_cloud,
-    load_model_and_columns
+    load_model_and_columns,
 )
+
 case_dispatcher = st.secrets["case_dispatcher"]
 access_token = case_dispatcher["access_token"]
 toml_config_dict = attrdict_to_dict(access_token)
 creds_json = json.dumps(toml_config_dict)
 credentials = OAuth2Credentials.from_json(creds_json)
 drive_service = build("drive", "v3", credentials=credentials)
+
 
 def main():
     if "case_dispatcher_model" not in st.session_state:
@@ -38,7 +40,11 @@ def main():
             "case_dispatcher_model_cols.pkl",
             "case_dispatcher_soc_df.pkl",
         )
-        st.session_state['tree'] = st.session_state["case_dispatcher_model"].best_estimator_.named_steps["clf"].estimators_[0]
+        st.session_state["tree"] = (
+            st.session_state["case_dispatcher_model"]
+            .best_estimator_.named_steps["clf"]
+            .estimators_[0]
+        )
         st.session_state["best_pipeline"] = st.session_state[
             "case_dispatcher_model"
         ].best_estimator_
@@ -53,43 +59,61 @@ def main():
         st.write(st.session_state["case_dispatcher_model_cols"])
 
     with st.expander("See model_data_transformed:"):
-        display_model_data_transformed = pd.DataFrame(st.session_state["model_data_transformed"].copy())
-        display_model_data_transformed.columns = st.session_state["case_dispatcher_model_cols"]
+        display_model_data_transformed = pd.DataFrame(
+            st.session_state["model_data_transformed"].copy()
+        )
+        display_model_data_transformed.columns = st.session_state[
+            "case_dispatcher_model_cols"
+        ]
         st.dataframe(display_model_data_transformed)
         st.write(display_model_data_transformed.dtypes)
 
     with st.expander("See decision tree rules:"):
-        tree = st.session_state['case_dispatcher_model'].best_estimator_.named_steps["clf"].estimators_[0]
-        tree_rules = export_text(tree, feature_names=st.session_state["case_dispatcher_model_cols"])
+        tree = (
+            st.session_state["case_dispatcher_model"]
+            .best_estimator_.named_steps["clf"]
+            .estimators_[0]
+        )
+        tree_rules = export_text(
+            tree, feature_names=st.session_state["case_dispatcher_model_cols"]
+        )
         st.text(tree_rules)
 
     with st.expander("See feature importances:"):
-        display_feature_importances(st.session_state["case_dispatcher_model"],
-                                    st.session_state["case_dispatcher_model_cols"])
+        display_feature_importances(
+            st.session_state["case_dispatcher_model"],
+            st.session_state["case_dispatcher_model_cols"],
+        )
 
-    x_validation_id = get_file_id(
-        'x_validation.pkl', drive_service
-    )
+    x_validation_id = get_file_id("x_validation.pkl", drive_service)
     x_validation = load_from_cloud(drive_service=drive_service, file_id=x_validation_id)
 
     with st.expander("See validation data:"):
         display_x_validation = pd.DataFrame(x_validation)
-        st.dataframe(display_x_validation[st.session_state["case_dispatcher_model_cols"]])
+        st.dataframe(
+            display_x_validation[st.session_state["case_dispatcher_model_cols"]]
+        )
 
     with st.expander("See case_dispatcher_model_cols:"):
         st.dataframe(st.session_state["case_dispatcher_model_cols"])
 
     with st.expander("case_dispatcher_soc_df:"):
-        st.dataframe(st.session_state["case_dispatcher_soc_df"][st.session_state["case_dispatcher_model_cols"]])
+        st.dataframe(
+            st.session_state["case_dispatcher_soc_df"][
+                st.session_state["case_dispatcher_model_cols"]
+            ]
+        )
 
-    y_validation_id = get_file_id(
-        'y_validation.pkl', drive_service
-    )
+    y_validation_id = get_file_id("y_validation.pkl", drive_service)
     y_validation = load_from_cloud(drive_service=drive_service, file_id=y_validation_id)
-
-    x_validation["rf_arrest_prediction"] = st.session_state["case_dispatcher_model"].predict_proba(
-        x_validation[x_validation.columns.intersection(st.session_state["case_dispatcher_model_cols"])]
-    )[:, 1]
+    st.write(x_validation.columns)
+    st.write(st.session_state["case_dispatcher_model_cols"])
+    # x_validation["rf_arrest_prediction"] = st.session_state["case_dispatcher_model"].predict_proba(
+    #     x_validation[x_validation.columns.intersection(st.session_state["case_dispatcher_model_cols"])]
+    # )[:, 1]
+    x_validation["rf_arrest_prediction"] = st.session_state[
+        "case_dispatcher_model"
+    ].predict_proba(x_validation[st.session_state["case_dispatcher_model_cols"]])[:, 1]
     y_true = y_validation
     predictions_rf = x_validation["rf_arrest_prediction"]
 
@@ -115,7 +139,10 @@ def main():
     st.altair_chart(roc_chart, use_container_width=True)
     # Use Markdown for headings
     st.markdown("## Model Performance Metrics")
-    baseline_accuracy = (st.session_state["case_dispatcher_soc_df"].shape[0] - st.session_state["case_dispatcher_soc_df"]['arrested'].sum()) / st.session_state["case_dispatcher_soc_df"].shape[0]
+    baseline_accuracy = (
+        st.session_state["case_dispatcher_soc_df"].shape[0]
+        - st.session_state["case_dispatcher_soc_df"]["arrested"].sum()
+    ) / st.session_state["case_dispatcher_soc_df"].shape[0]
 
     # Use Streamlit's metric function for a dashboard-like display
     col1, col2 = st.columns(2)
@@ -129,38 +156,48 @@ def main():
         st.metric("Recall", f"{recall_rf:.3f}")
         st.metric("Baseline Accuracy", f"{baseline_accuracy:.3f}")
 
-
-
-    df_arrested = st.session_state["case_dispatcher_soc_df"][st.session_state["case_dispatcher_soc_df"]['arrested'] == 1]
+    df_arrested = st.session_state["case_dispatcher_soc_df"][
+        st.session_state["case_dispatcher_soc_df"]["arrested"] == 1
+    ]
 
     # Define a range slider for selecting the range of days to display
     day_range = st.slider(
-        'Select range of days:',
-        min_value=int(df_arrested['days'].min()),
-        max_value=int(df_arrested['days'].max()),
-        value=(int(df_arrested['days'].min()), int(df_arrested['days'].max())),
-        step=5
+        "Select range of days:",
+        min_value=int(df_arrested["days"].min()),
+        max_value=int(df_arrested["days"].max()),
+        value=(int(df_arrested["days"].min()), int(df_arrested["days"].max())),
+        step=5,
     )
 
     # Filter the dataframe based on the selected range of days
-    df_filtered = df_arrested[(df_arrested['days'] >= day_range[0]) & (df_arrested['days'] <= day_range[1])]
+    df_filtered = df_arrested[
+        (df_arrested["days"] >= day_range[0]) & (df_arrested["days"] <= day_range[1])
+    ]
 
     # Adjust the chart height here. You might set a fixed height or a maximum height as desired.
     # For example, setting a fixed height:
     fixed_height = 300  # You can adjust this value as needed
 
     # Create a histogram of days using Altair
-    chart = alt.Chart(df_filtered).mark_bar().encode(
-        x=alt.X('days:Q', bin=alt.Bin(maxbins=50), title='Days Lapsed between Incident and Arrest'),
-        y=alt.Y('count()', title='Number of Arrests'),
-        tooltip=['days', 'count()']
-    ).properties(
-        height=fixed_height,  # Use the fixed height for the chart
-        width=600  # Or use_container_width=True for a responsive width
+    chart = (
+        alt.Chart(df_filtered)
+        .mark_bar()
+        .encode(
+            x=alt.X(
+                "days:Q",
+                bin=alt.Bin(maxbins=50),
+                title="Days Lapsed between Incident and Arrest",
+            ),
+            y=alt.Y("count()", title="Number of Arrests"),
+            tooltip=["days", "count()"],
+        )
+        .properties(
+            height=fixed_height,  # Use the fixed height for the chart
+            width=600,  # Or use_container_width=True for a responsive width
+        )
     )
 
     st.altair_chart(chart, use_container_width=True)
-
 
 
 if __name__ == "__main__":

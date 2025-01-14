@@ -13,7 +13,12 @@ from libraries.case_dispatcher_model import (
     save_results,
     make_new_predictions,
 )
-from libraries.data_prep import remove_non_numeric, process_columns, do_audit
+from libraries.data_prep import (
+    remove_non_numeric,
+    process_columns,
+    do_audit,
+    extract_case_id,
+)
 from libraries.entity_model_gpt import EntityGroup
 from libraries.case_dispatcher_model import TypeSelector
 from libraries.case_dispatcher_data import (
@@ -82,10 +87,9 @@ num_features = [
 
 # Define boolean features
 non_boolean_features = [
-    "suspect_id",
     "interview_date",
     "case_notes",
-    "sf_number_group",
+    "case_id",
     "master_person_id",
     "sf_number",
     "person_id",
@@ -169,11 +173,15 @@ def main():
             f"data_trace/suspect_evaluations_{counter}.csv", index=False
         )
         st.write("Start data manipulation  ...")
-        db_sus = db_sus.dropna(subset=["suspect_arrested"])
+        # TODO: This is commented out.  In the model building process, we need to remove the rows with missing values
+        # db_sus = db_sus.dropna(subset=["suspect_arrested"])
+        db_sus["suspect_arrested"].fillna("No", inplace=True)
         # Create the 'any_arrest' column
         st.write("Process the role column ...")
         do_audit(db_irf["irf_number"], "*** Audit 1")
-        do_audit(db_sus["sf_number"].str[:6], "*** Audit original db_sus")
+        do_audit(
+            db_sus["sf_number"].apply(extract_case_id), "*** Audit original db_sus"
+        )
 
         (
             processed_series,
@@ -222,8 +230,20 @@ def main():
         )
         st.write(f"Extract irf_case_notes ...")
         # Extract irf_case_notes from db_irf dataframe
-        irf_case_notes = db_irf[["irf_number", "case_notes", "operating_country_id"]]
+        irf_case_notes = db_irf[
+            ["irf_number", "case_notes", "operating_country_id", "date_of_interception"]
+        ]
+        st.write("Calculate days since interview: ...")
+        today = pd.Timestamp(date.today())
+        # Convert 'interview_date' to datetime, errors='coerce' will turn incorrect formats to NaT
+        irf_case_notes["date_of_interception"] = pd.to_datetime(
+            irf_case_notes["date_of_interception"], errors="coerce"
+        )
 
+        # Calculate the number of days, with a default of -999 for NaT or missing values
+        irf_case_notes["days"] = (
+            today - irf_case_notes["date_of_interception"]
+        ).dt.days
         # Merge db_vdf and db_sus with db_irf on 'master_person_id'
         merge_cols = [
             "irf_number",
@@ -232,13 +252,14 @@ def main():
             "case_notes",
             "date_of_interception",
         ]
-        db_sus["sf_number_group"] = db_sus["sf_number"].str[:6]
-        # db_vdf = db_vdf.merge(db_irf[merge_cols], left_on='sf_number_group', right_on="irf_number", how="inner")
+
+        db_sus["case_id"] = db_sus["sf_number"].apply(extract_case_id)
+        # db_vdf = db_vdf.merge(db_irf[merge_cols], left_on='case_id', right_on="irf_number", how="inner")
         counter += 1
         db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         db_sus = db_sus.merge(
             db_irf[merge_cols],
-            left_on=["sf_number_group"],
+            left_on=["case_id"],
             right_on=["irf_number"],
             how="inner",
         )
@@ -250,7 +271,7 @@ def main():
         db_sus.to_csv(f"data_trace/db_sus_{counter}.csv", index=False)
         # db_sus = db_sus[~db_sus.arrested.isna()]
 
-        # Merge db_sus with suspect_evaluation_types on 'suspect_id'
+        # Merge db_sus with suspect_evaluation_types on 'master_person_id'
         st.write(
             f"Merge db_sus with suspect_evaluation_types on 'master_person_id' ..."
         )
@@ -269,7 +290,7 @@ def main():
                 "pv_expenses_paid_how",
                 "pv_expenses_paid_other",
             ),
-            "db_sus_1": (db_sus, "role", "role_other"),
+            # "db_sus_1": (db_sus, "role", "role_other"),
         }
 
         # Process columns based on the data mappings
@@ -302,7 +323,7 @@ def main():
             ]
         ]
 
-        db_vdf["irf_number"] = db_vdf["vdf_number"].str[:6]
+        db_vdf["irf_number"] = db_vdf["vdf_number"].apply(extract_case_id)
         do_audit(db_vdf["irf_number"])
 
         list_db_vdf_columns = list(db_vdf)
@@ -332,10 +353,6 @@ def main():
         ].merge(db_sus, left_on="irf_number", right_on="irf_number", how="inner")
         do_audit(db_sus["irf_number"], "db_sus and db_vdf merge")
         # ======================================================================
-        st.write("Create the suspect_id column in db_sus: ...")
-        db_sus["suspect_id"] = (
-            db_sus["sf_number"].str[:-1] + ".sus" + db_sus["suspect_id"].map(str)
-        )
 
         db_sus["arrested"] = (
             db_sus["arrested"].fillna("No").replace({"Yes": 1, "No": 0}).astype(int)

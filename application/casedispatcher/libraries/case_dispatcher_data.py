@@ -22,7 +22,7 @@ def get_suspect_evaluations(country=None):
     # Base SQL query
     sql_query = """
         SELECT
-            suspect.id AS suspect_id,
+            suspect.sf_number AS sf_number,
             suspectevaluation.evaluation,
             country.name AS country,
             person.id AS person_id,
@@ -49,8 +49,7 @@ def get_suspect_evaluations(country=None):
 
 def get_suspects(country=None):
     parameters = {}
-    sql_query = """SELECT suspect.id AS suspect_id \
-                            ,person.full_name AS full_name \
+    sql_query = """SELECT person.full_name AS full_name \
                             ,person.phone_contact AS phone_contact \
                             ,person.address_notes AS address_notes \
                             ,person.case_filed_against AS case_filed_against \

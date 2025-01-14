@@ -84,6 +84,17 @@ def get_country_id(df, country_name):
         return "Country not found"
 
 
+def filter_on_days(days_data, cases):
+    cases = cases.merge(
+        days_data[["irf_number", "days"]].drop_duplicates().copy(),
+        left_on="case_id",
+        right_on="irf_number",
+        how="left",
+    ).drop(columns=["irf_number"])
+    numeric_days = pd.to_numeric(cases["days"], errors="coerce")
+    return cases[(numeric_days <= 120) | numeric_days.isna()]
+
+
 def make_predictions(model, X):
     best_pipeline = model.best_estimator_
 
@@ -439,9 +450,14 @@ def main():
                 case_dispatcher_soc_df.loc[:, case_dispatcher_model_cols].copy(),
             )
             case_dispatcher_soc_df.loc[:, "soc"] = soc
+            case_dispatcher_soc_df.to_csv(
+                "data_trace/case_dispatcher_soc_df.csv", index=False
+            )
+            # st.dataframe()
             # ===========================================================================================================
             st.write(f"Create the victims_entity from db_vics")
             new_victims = db_vics.copy()
+            st.dataframe(new_victims)
             EntityGroup.sheets = []
             victims_entity = EntityGroup(
                 "victim_id", new_victims, "victims", "closed_victims", dfs
@@ -461,7 +477,7 @@ def main():
             new_suspects = db_sus.copy()
             st.dataframe(new_suspects)
             suspects_entity = EntityGroup(
-                "suspect_id", new_suspects, "suspects", "closed_suspects", dfs
+                "sf_number", new_suspects, "suspects", "closed_suspects", dfs
             )
             suspects_entity.new = data_prep.set_suspect_id(suspects_entity.new, db_sus)
             st.write("st.dataframe(suspects_entity.new):")
@@ -479,7 +495,7 @@ def main():
             new_police = deepcopy(x=suspects_entity.new)
             new_police.rename(columns={"name": "suspect_name"}, inplace=True)
             police_entity = EntityGroup(
-                "suspect_id", new_police, "police", "closed_police", dfs
+                "sf_number", new_police, "police", "closed_police", dfs
             )
 
             EntityGroup.combine_sheets()
@@ -488,7 +504,7 @@ def main():
             ]
 
             st.write(f"Add irf_case_notes")
-            EntityGroup.add_irf_notes(irf_case_notes)
+            EntityGroup.add_irf_notes(irf_case_notes[["irf_number", "case_notes"]])
             st.write(f"Move closed cases")
             # logger.info(f"Move closed cases: {uid}")
             EntityGroup.move_closed(case_dispatcher_soc_df)
@@ -532,6 +548,7 @@ def main():
 
             # -------------------------------------------------------------------------------------
             st.write(f"Calculate all suspect scores")
+            st.dataframe(suspects_entity.active)
             suspects_entity.active = data_prep.calc_all_sus_scores(
                 suspects_entity.active,
                 vics_willing,
@@ -540,6 +557,7 @@ def main():
                 case_dispatcher_soc_df,
                 dfs["suspects"],
             )
+            st.dataframe(suspects_entity.active)
             st.write(
                 """At data_prep.calc_all_sus_scores(
                 suspects_entity.active,
@@ -550,7 +568,7 @@ def main():
                 dfs["suspects"],
             )"""
             )
-
+            pd.DataFrame(suspects_entity.active)
             st.write(f"Add priorities to victims")
             victims_entity.active = data_prep.add_priority_to_others(
                 suspects_entity.active,
@@ -563,9 +581,9 @@ def main():
             police_entity.active = data_prep.add_priority_to_others(
                 suspects_entity.active,
                 police_entity.active,
-                "suspect_id",
+                "sf_number",
                 dfs["police"],
-                "suspect_id",
+                "sf_number",
             )
             # -------------------------------------------------------------------------------------
             st.write(f"Derive active cases")
@@ -579,111 +597,47 @@ def main():
             active_cases["priority"] = (
                 active_cases["priority"] - active_cases["priority"].min()
             ) / (active_cases["priority"].max() - active_cases["priority"].min())
+            st.write("---active_cases before merge:")
+            st.dataframe(active_cases)
 
-            active_cases = active_cases.merge(
-                case_dispatcher_soc_df[["irf_number", "days"]].drop_duplicates().copy(),
-                left_on="case_id",
-                right_on="irf_number",
-                how="left",
-            ).drop(columns=["irf_number"])
-
-            numeric_days = pd.to_numeric(active_cases["days"], errors="coerce")
+            active_cases = filter_on_days(irf_case_notes, active_cases)
 
             # Filter out rows where 'days' is greater than 365 and is not NaN (thus a number)
             # Also, implicitly keeps rows where 'days' is NaN or None, since comparison with NaN is false
-            st.write("active_cases:")
-            st.dataframe(active_cases)
 
-            filtered_active_cases = active_cases[
-                (numeric_days <= 120) | numeric_days.isna()
-            ]
-            filtered_active_cases = filtered_active_cases[
-                ~(filtered_active_cases["case_id"] == "")
-            ]
-            filtered_active_cases = filtered_active_cases.drop_duplicates()
-            st.write("filtered_active_cases:")
-            st.dataframe(filtered_active_cases)
+            active_cases = active_cases[~(active_cases["case_id"] == "")]
+
             # set(filtered_active_cases["case_id"])
             logger.info(
                 f"Do EntityGroup.update_gsheets(credentials, st.session_state['spreadsheet_name'], filtered_active_cases here            # )"
             )
             # filtered_active_cases = filtered_active_cases[['case_id','priority','irf_case_notes','narrative','case_status','Next_Action_Priority','days']]
+            police_entity.active = filter_on_days(irf_case_notes, police_entity.active)
+            victims_entity.active = filter_on_days(
+                irf_case_notes, victims_entity.active
+            )
+            suspects_entity.active = filter_on_days(
+                irf_case_notes, suspects_entity.active
+            )
+            st.write("st.dataframe(suspects_entity.active):")
+            st.dataframe(suspects_entity.closed)
             police_entity.active = sort_cases(
-                filtered_active_cases, police_entity.active, "suspect_id"
+                active_cases, police_entity.active, "sf_number"
             )
             victims_entity.active = sort_cases(
-                filtered_active_cases, victims_entity.active, "victim_id"
+                active_cases, victims_entity.active, "victim_id"
             )
             suspects_entity.active = sort_cases(
-                filtered_active_cases, suspects_entity.active, "suspect_id"
+                active_cases, suspects_entity.active, "sf_number"
             )
-            #
-            #             victims_entity.active = victims_entity.active[['case_id',
-            # 'victim_id',
-            # 'case_status',
-            # 'date',
-            # 'willing_to_file_a_case_against',
-            # 'name',
-            # 'address',
-            # 'phone_numbers',
-            # 'social_media',
-            # 'phone_number_failure',
-            # 'suspect_verification_needed',
-            # 'identity_confirmed',
-            # 'identity_denied',
-            # 'narrative',
-            # 'irf_case_notes',
-            # 'updates',
-            # 'victim_interview',
-            # 'social_media',
-            # 'phone_records',
-            # 'legal_info',
-            # 'border_station',
-            # 'informants',
-            # 'community_groups',
-            # 'supervisor_review',
-            # 'boom_button',
-            # 'date_closed',]]
-            #             police_entity.active = police_entity.active[['case_id',
-            # 'suspect_id',
-            # 'case_status',
-            # 'date',
-            # 'suspect_name',
-            # 'victims_willing_to_testify',
-            # 'suspect_location',
-            # 'legal_status',
-            # 'police_station',
-            # 'phone_numbers',
-            # 'narrative',
-            # 'irf_case_notes',
-            # 'updates',
-            # 'date_closed',]]
-            #
-            #             suspects_entity.active=suspects_entity.active[['case_id',
-            # 'suspect_id',
-            # 'case_status',
-            # 'date',
-            # 'name',
-            # 'address',
-            # 'phone_numbers',
-            # 'social_media_id',
-            # 'phone_#_failure',
-            # 'victims_willing_to_testify',
-            # 'relationships',
-            # 'date_relationships_updated',
-            # 'narrative',
-            # 'irf_case_notes',
-            # 'updates',
-            # 'date_closed',]]
 
             EntityGroup.update_gsheets(
-                credentials, st.session_state["spreadsheet_name"], filtered_active_cases
+                credentials, st.session_state["spreadsheet_name"], active_cases
             )
             st.dataframe(active_cases)
             st.write(
                 f"Success! {st.session_state['spreadsheet_name']} has been updated."
             )
-            st.dataframe(filtered_active_cases)
 
 
 if __name__ == "__main__":

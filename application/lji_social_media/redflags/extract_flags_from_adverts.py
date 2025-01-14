@@ -323,6 +323,21 @@ list(flags)
 model_data.to_csv("results/advert_flags.csv", index=False)
 
 # --------------------------------------------------------------------------------
+flags_query = """MATCH p=(posting:RecruitmentAdvert)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+WHERE r.type IN $red_flags
+RETURN ID(posting) AS id, posting.text as advert, r.type as flag, analysis.result as result """
+
+flags = (
+    pd.DataFrame(
+        nl.execute_neo4j_query(flags_query, parameters={"red_flags": red_flags})
+    )
+    .pivot(index=["id", "advert"], columns="flag", values="result")
+    .reset_index()
+)
+
+flags[["id", "advert"] + red_flags].to_csv("results/all_advert_flags.csv", index=False)
+
+# --------------------------------------------------------------------------------
 confidence_query = """MATCH p=(posting:RecruitmentAdvert)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 WHERE r.type IN $red_flags
 RETURN ID(posting) AS id, r.type as flag, analysis.confidence as confidence """
