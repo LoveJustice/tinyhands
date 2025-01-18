@@ -120,25 +120,28 @@ PUBLIC_ROOT = os.path.join(BASE_DIR, 'public')
 PUBLIC_URL = '/public/'
 
 STORAGES = {
+    #"default": {
+    #    # "BACKEND": "storages.backends.azure_storage.AzureStorage",
+    #    "BACKEND": "azure_storage.azure_storage_with_reverse_proxy.AzureStorageWithReverseProxy",
+    #    "OPTIONS": {
+    #        # Try a bunch of different Azure login methods until one works
+    #        "token_credential": DefaultAzureCredential(),
+    #        # Ideally we would use Managed Identities instead
+    #        # https://mijailovic.net/2019/11/01/django-managed-identitites/
+    #        # Or we would use a Key Vault
+    #        # But it looks like it is quite a process to set up and I don't really understand it
+    #        "account_name": os.environ.get("AZURE_STORAGE_ACCOUNT_NAME"),
+    #        "account_key": os.environ.get("AZURE_ACCOUNT_KEY"),
+    #        # Create this in the Storage Browser of your Azure Storage Account before use
+    #        "azure_container": os.environ.get("AZURE_CONTAINER"),
+    #        # Currently the IRF saves files twice in a row, or something
+    #        # Because overwriting is the default with the normal FileStorage
+    #        # Set this to preserve current functionality
+    #        "overwrite_files": True,
+    #    },
+    #},
     "default": {
-        # "BACKEND": "storages.backends.azure_storage.AzureStorage",
-        "BACKEND": "azure_storage.azure_storage_with_reverse_proxy.AzureStorageWithReverseProxy",
-        "OPTIONS": {
-            # Try a bunch of different Azure login methods until one works
-            "token_credential": DefaultAzureCredential(),
-            # Ideally we would use Managed Identities instead
-            # https://mijailovic.net/2019/11/01/django-managed-identitites/
-            # Or we would use a Key Vault
-            # But it looks like it is quite a process to set up and I don't really understand it
-            "account_name": os.environ.get("AZURE_STORAGE_ACCOUNT_NAME"),
-            "account_key": os.environ.get("AZURE_ACCOUNT_KEY"),
-            # Create this in the Storage Browser of your Azure Storage Account before use
-            "azure_container": os.environ.get("AZURE_CONTAINER"),
-            # Currently the IRF saves files twice in a row, or something
-            # Because overwriting is the default with the normal FileStorage
-            # Set this to preserve current functionality
-            "overwrite_files": True,
-        },
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
