@@ -45,6 +45,7 @@ class Person(models.Model):
     aliases = None
     
     photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
+    photo_added_date_time = models.DateTimeField(null=True)
     anonymized_photo = models.CharField(max_length=126, null=True)
     
     case_filed_against = models.CharField(max_length=126, null=True)
