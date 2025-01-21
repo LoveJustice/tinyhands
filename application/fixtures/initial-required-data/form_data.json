@@ -515,6 +515,19 @@
 },
 {
    "model": "dataentry.storage",
+   "pk": 205,
+   "fields": {
+      "form_tag": "BorderStationAttachment",
+      "module_name": "dataentry.models.border_station",
+      "form_model_name": "BorderStationAttachment",
+      "response_model_name": null,
+      "parent_storage": 193,
+      "foreign_key_field_parent": "project",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
    "pk": 194,
    "fields": {
       "form_tag": "CommitteeMember",
@@ -2273,6 +2286,15 @@
       "form_tag": "borderStationCommittee",
       "category_type": 2,
       "description": "Committee Member for Border Station"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 371,
+   "fields": {
+      "form_tag": "borderStationAttachments",
+      "category_type": 2,
+      "description": "Attachments for Border Station"
    }
 },
 {
@@ -12775,9 +12797,20 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 52,
+      "category": 371,
+      "name": "Attachments",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": 205
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 52,
       "category": 199,
       "name": "Location",
-      "order": 4,
+      "order": 5,
       "form_category_question_config": null,
       "storage": 196
    }
@@ -12788,7 +12821,7 @@
       "form": 52,
       "category": 200,
       "name": "Forms",
-      "order": 5,
+      "order": 6,
       "form_category_question_config": null,
       "storage": null
    }
@@ -22113,6 +22146,21 @@
       "answer_type": 1,
       "params": null,
       "export_name": "Time Zone",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2082,
+   "fields": {
+      "form_tag": "attachments",
+      "prompt": "Attachments",
+      "description": null,
+      "answer_type": 12,
+      "params": {
+         "subdirectory": "project_attachments/"
+      },
+      "export_name": "Attachments",
       "export_params": null
    }
 },
@@ -42445,6 +42493,15 @@
    "fields": {
       "question": 988,
       "category": 145,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2082,
+      "category": 371,
       "weight": 0,
       "form_config": null
    }

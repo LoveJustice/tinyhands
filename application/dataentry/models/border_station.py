@@ -47,3 +47,13 @@ class BorderStation(models.Model):
 
     def __str__(self):
         return self.station_name
+
+
+class BorderStationAttachment(models.Model):
+    project = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    attachment_number = models.PositiveIntegerField(null=True, blank=True)
+    attachment = models.FileField('Attach scanned forms related to projects', upload_to='project_attachments')
+    option = models.CharField(max_length=126, null=True)
+
+    def set_parent(self, the_parent):
+        self.project = the_parent
