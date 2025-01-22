@@ -33,8 +33,9 @@ CLAUDE_PROMPTS = {
     "unprofessional_writing_prompt": "Analyze the following job advertisement for signs of unprofessional writing such as poor grammar or spelling. Accept that missing spaces or words not separated by a space or spaces in the text, such as 'andcleaners', 'towork', is NOT a sign of unprofessional writing.",
     "unrealistic_hiring_number_prompt": "Analyze the following job advertisement. Does it claim to be hiring an unrealistically high number of people?",
 }
-
-#
+"Review the following job advertisement. Does it specifically seek applicants of one gender only (e.g., only males or only females)? Exclude cases where both genders are explicitly mentioned or where specifying gender is a legitimate requirement for the role, such as caregiving roles involving personal care."
+"Analyze the following job advertisement. Does it target a specific group of people (e.g., women from a particular country or region, or individuals from specific ethnic or linguistic communities)? Ensure your analysis identifies any explicit or implicit targeting, focusing on groups such as [Shona, Ndebele, Basotho, Tswana, Zulu, Mozambicans, Chewa, Yao] if relevant, but not limited to these."
+"Analyze the following job advertisement for poor grammar or spelling, informal language use or exaggerated use of punctuation marks. Ignore missing spaces or words not separated by a space or spaces in the text, such as 'andcleaners', 'towork'."
 #
 # CLAUDE_PROMPTS = {
 #     "assure_prompt": (
