@@ -11,7 +11,7 @@ import csv
 import argparse
 import logging
 from datetime import datetime, timedelta
-from typing import List
+from typing import List, Optional
 from urllib.parse import urlparse
 import tldextract
 from googlesearch import search  # Ensure you are using the correct googlesearch package.
@@ -19,18 +19,40 @@ import json
 import os
 from libraries.neo4j_lib import execute_neo4j_query
 from libraries.work_with_db import URLDatabase, DatabaseError
-
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService
 # ------------------------------
 # Configuration Loading & Logger Setup
 # ------------------------------
 def load_config(config_path: str) -> dict:
-    # Get the directory containing the script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    # Construct the full path to config file
-    config_path = os.path.join(script_dir, config_path)
+    """
+    Load configuration from a JSON file.
 
-    with open(config_path, "r") as f:
-        return json.load(f)
+    Args:
+        config_path: Name of or path to the configuration file
+
+    Returns:
+        dict: Loaded configuration
+
+    Raises:
+        FileNotFoundError: If config file doesn't exist
+        json.JSONDecodeError: If config file isn't valid JSON
+    """
+    # Look for config in current directory
+    current_dir = os.getcwd()
+    full_path = os.path.join(current_dir, config_path)
+
+    if not os.path.exists(full_path):
+        raise FileNotFoundError(f"Configuration file not found: {full_path}")
+
+    try:
+        with open(full_path, "r") as f:
+            return json.load(f)
+    except json.JSONDecodeError as e:
+        raise json.JSONDecodeError(f"Invalid JSON in config file: {str(e)}", e.doc, e.pos)
+
+
 
 config = load_config("search_config.json")
 
@@ -42,6 +64,73 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 logger.info("Google Miner service started (refactored, sync version).")
+
+def initialize_selenium() -> Optional[webdriver.Chrome]:
+    """
+    Initializes the Selenium WebDriver with headless Chrome,
+    using a manually downloaded Apple Silicon chromedriver.
+
+    Returns:
+        webdriver.Chrome: An instance of the Selenium WebDriver.
+    """
+    try:
+        # Update this path to wherever you placed your local (arm64) chromedriver
+        driver_path = "/opt/homebrew/bin/chromedriver"
+
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--window-size=1920x1080")
+        chrome_options.add_argument(
+            "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/85.0.4183.102 Safari/537.36"
+        )
+
+        driver = webdriver.Chrome(
+            service=ChromeService(driver_path),
+            options=chrome_options,
+        )
+        logger.info("Selenium WebDriver initialized successfully.")
+        return driver
+
+    except Exception as e:
+        logger.error(f"Failed to initialize Selenium WebDriver: {e}")
+        return None
+
+# URL = st.text_input("Enter Article URL", key="search_url")
+def extract_main_text_selenium(driver, url: str) -> str:
+    """
+    Extracts the main text from a given URL using Selenium.
+
+    Args:
+        url (str): The URL of the article to extract.
+
+    Returns:
+        str: The main text of the article.
+    """
+    try:
+
+
+        # Adjust the CSS selector based on the website's structure
+        try:
+            article_body = driver.find_element("css selector", "div.detail-content")
+            text = article_body.text
+            logger.info("Main article content extracted successfully.")
+        except Exception:
+            # Fallback to extracting all body text
+            text = driver.find_element("tag name", "body").text
+            logger.warning(
+                "Specific article content not found; extracted entire body text."
+            )
+
+
+        return text
+    except Exception as e:
+        logger.error(f"Selenium extraction failed for URL {url}: {e}")
+        return ""
 
 
 # ------------------------------
@@ -394,12 +483,16 @@ class TraffickingNewsSearch:
         Save filtered articles to a SQLite database.
         """
         db = URLDatabase()
+        driver = initialize_selenium()
+
         for url in urls:
             extracted = tldextract.extract(url)
             domain_name = extracted.domain
-
+            driver.get(url)
+            driver.implicitly_wait(10)  # seconds
+            text = extract_main_text_selenium(driver, url)
             try:
-                db.insert_url({"url": url, "domain_name": domain_name, "source": "google_miner"})
+                db.insert_url({"url": url, "domain_name": domain_name, "source": "google_miner", "content": text})
                 logger.info(f"Saved URL to database: {url}")
             except DatabaseError as e:
                 logger.error(f"Error saving URL to database: {e}")
@@ -438,11 +531,11 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--days_back", type=int, help="Number of days to search back.", default=7)
     args = parser.parse_args()
-    db=URLDatabase()
+
 
     # Override days_back from command-line if provided.
     for search_config in config.get('run_configs', []):
-        search_config['days_back'] = args.days_back
+        search_config['days_back'] = 1 #args.days_back
 
         searcher = TraffickingNewsSearch(search_config)
         articles = searcher.get_recent_articles()
@@ -459,6 +552,7 @@ def main() -> None:
         # searcher.save_to_neo4j(articles)
 
         searcher.save_to_csv(articles)
+        searcher.save_to_db(articles)
 
 if __name__ == "__main__":
     main()
