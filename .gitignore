@@ -1,3 +1,6 @@
+# Jupyter Notebooks
+*.ipynb
+.ipynb_checkpoints/
 diff_output.txt
 *.log
 *.txt

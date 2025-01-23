@@ -17,8 +17,8 @@ import tldextract
 from googlesearch import search  # Ensure you are using the correct googlesearch package.
 import json
 import os
-
 from libraries.neo4j_lib import execute_neo4j_query
+from libraries.work_with_db import URLDatabase, DatabaseError
 
 # ------------------------------
 # Configuration Loading & Logger Setup
@@ -389,6 +389,21 @@ class TraffickingNewsSearch:
             execute_neo4j_query(query, parameters)
             logger.info(f"Saved URL to Neo4j: {url}")
 
+    def save_to_db(self, urls: List[str]) -> None:
+        """
+        Save filtered articles to a SQLite database.
+        """
+        db = URLDatabase()
+        for url in urls:
+            extracted = tldextract.extract(url)
+            domain_name = extracted.domain
+
+            try:
+                db.insert_url({"url": url, "domain_name": domain_name, "source": "google_miner"})
+                logger.info(f"Saved URL to database: {url}")
+            except DatabaseError as e:
+                logger.error(f"Error saving URL to database: {e}")
+
     def save_to_csv(self, urls: List[str]) -> None:
         """
         Save filtered articles to a CSV file.
@@ -423,6 +438,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--days_back", type=int, help="Number of days to search back.", default=7)
     args = parser.parse_args()
+    db=URLDatabase()
 
     # Override days_back from command-line if provided.
     for search_config in config.get('run_configs', []):
