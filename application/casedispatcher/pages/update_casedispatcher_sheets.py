@@ -549,14 +549,9 @@ def main():
             # -------------------------------------------------------------------------------------
             st.write(f"Calculate all suspect scores")
             st.dataframe(suspects_entity.active)
-            suspects_entity.active = data_prep.calc_all_sus_scores(
-                suspects_entity.active,
-                vics_willing,
-                police_entity.active,
-                weights,
-                case_dispatcher_soc_df,
-                dfs["suspects"],
-            )
+            suspects_entity.active = data_prep.calc_all_sus_scores(suspects_entity.active, vics_willing,
+                                                                   police_entity.active, weights,
+                                                                   case_dispatcher_soc_df, dfs["suspects"])
             st.dataframe(suspects_entity.active)
             st.write(
                 """At data_prep.calc_all_sus_scores(

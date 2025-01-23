@@ -164,10 +164,10 @@ def process_adverts_from_dataframe(IDn_list: list) -> None:
 def process_advert(IDn: int, prompt_name: str) -> None:
     advert = nl.get_neo4j_advert(IDn)
     chat_engine = create_chat_engine(advert)
-    print(f"Processing : {advert}")
+    print(f"Processing : {advert} \n")
     if chat_engine:
         advert_analysis = lf.analyse_advert(chat_engine, prompt_name)
-        print(f"Response to {prompt_name}: {advert_analysis}")
+        print(f"Response to {prompt_name}: {advert_analysis} \n")
         nl.write_analysis_to_neo4j(IDn, prompt_name, advert_analysis)
     else:
         print(f"Failed to create chat engine for advert {advert}")
@@ -175,15 +175,13 @@ def process_advert(IDn: int, prompt_name: str) -> None:
 
 
 def main() -> None:
-    query = """MATCH (g:Group)-[:HAS_POSTING]-(n:Posting) WHERE (g.country_id) = 1 AND (n.text IS NOT NULL) AND NOT (n.text = "") RETURN ID(n) AS IDn, n.post_id AS post_id, n.text AS advert"""
+    query = """MATCH (g:Group)-[:HAS_POSTING]-(n:RecruitmentAdvert) 
+    WHERE (g.country_id) = 1 AND (n.text IS NOT NULL) AND NOT (n.text = "") 
+    RETURN ID(n) AS IDn, n.post_id AS post_id, n.text AS advert"""
     parameters = {}
     adverts = pd.DataFrame(nl.execute_neo4j_query(query, parameters))
 
-    new_prompts = [
-        "requires_references",
-        "multiple_applicants_prompt",
-        "multiple_jobs_prompt",
-    ]
+    new_prompts = list(cp.CLAUDE_PROMPTS.keys())
 
     # Loop through the outer loop with a progress bar
     for IDn in tqdm(adverts["IDn"], desc="Processing IDs"):

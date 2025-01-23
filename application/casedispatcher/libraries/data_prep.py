@@ -1226,6 +1226,7 @@ def calc_vics_willing_scores(
 
             # Map counts to multipliers
             suspects["v_mult"] = suspects["count"].map(v_mult).fillna(0.0).astype(float)
+            suspects[["sf_number", "case_id", "v_mult", "count"]]
 
             # Drop unnecessary columns if they exist
             columns_to_drop = ["willing_to_testify", "count"]
@@ -1250,9 +1251,7 @@ def calc_vics_willing_scores(
     return suspects
 
 
-def calc_arrest_scores(
-    suspects: pd.DataFrame, states_of_charge: pd.DataFrame, police: pd.DataFrame
-) -> pd.DataFrame:
+def calc_arrest_scores(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, police: pd.DataFrame) -> pd.DataFrame:
     """
     Calculate scores based on the number of other suspects arrested in each case,
     and create fields for 'bio_known' and for police willingness to arrest.
@@ -1268,7 +1267,7 @@ def calc_arrest_scores(
                 - `case_id`: Identifier for each case.
                 - `case_status`: Status of the case.
 
-        states_of_charge (pd.DataFrame):
+        case_dispatcher_soc_df (pd.DataFrame):
             DataFrame containing state of charge information. Must include:
                 - `case_id`: Group identifier (used in `get_total_arrests`).
                 - `arrested`: Indicator if arrested.
@@ -1295,7 +1294,7 @@ def calc_arrest_scores(
         logger.info(
             f"Starting calc_arrest_scores with the following DataFrame columns:\n"
             f"suspects.columns = {list(suspects.columns)},\n"
-            f"states_of_charge.columns = {list(states_of_charge.columns)},\n"
+            f"states_of_charge.columns = {list(case_dispatcher_soc_df.columns)},\n"
             f"police.columns = {list(police.columns)}"
         )
 
@@ -1312,7 +1311,7 @@ def calc_arrest_scores(
             raise ValueError(error_msg)
 
         # Validate required columns in states_of_charge DataFrame
-        missing_states_cols = required_states_cols - set(states_of_charge.columns)
+        missing_states_cols = required_states_cols - set(case_dispatcher_soc_df.columns)
         if missing_states_cols:
             error_msg = f"states_of_charge DataFrame is missing required columns: {missing_states_cols}"
             logger.error(error_msg)
@@ -1337,7 +1336,7 @@ def calc_arrest_scores(
         # 2. Fetching and merging arrest data
         logger.info("Fetching total arrests using 'get_total_arrests' function.")
         # Select only required columns for get_total_arrests
-        states_subset = states_of_charge[["arrested", "case_id"]].copy()
+        states_subset = case_dispatcher_soc_df[["arrested", "case_id"]].copy()
         arrests = get_total_arrests(states_subset)
         logger.info("Total arrests fetched successfully.")
 
@@ -1397,21 +1396,19 @@ def calc_arrest_scores(
     return suspects
 
 
-def get_total_arrests(soc_df):
+def get_total_arrests(case_dispatcher_soc_df):
     """Create case_id from sf_number and aggregate arrests. ['case_id',
     'case_id', 'arrested']"""
 
     # Create case_id from case_id and aggregate arrests
-    arrests = soc_df.assign(case_id=soc_df["case_id"])
+    arrests = case_dispatcher_soc_df.assign(case_id=case_dispatcher_soc_df["case_id"])
     arrests = arrests.groupby("case_id")["arrested"].sum().reset_index()
     arrests.columns = ["case_id", "total_arrests"]
 
     return arrests
 
 
-def weight_pv_believes(
-    suspects: pd.DataFrame, states_of_charge: pd.DataFrame, weights: Dict[str, Any]
-) -> pd.DataFrame:
+def weight_pv_believes(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, weights: Dict[str, Any]) -> pd.DataFrame:
     """
     Weight beliefs about suspects' involvement in trafficking.
 
@@ -1432,7 +1429,7 @@ def weight_pv_believes(
                 - `case_id`: Identifier for each case.
                 - `sf_number`: Unique identifier for each suspect.
 
-        states_of_charge (pd.DataFrame):
+        case_dispatcher_soc_df (pd.DataFrame):
             DataFrame containing state of charge information. Must include:
                 - `sf_number`: Group identifier used to derive `case_id`.
                 - `pv_believes_definitely_trafficked_many`: Indicator of definite trafficking beliefs.
@@ -1459,7 +1456,7 @@ def weight_pv_believes(
         logger.info(
             "Starting weight_pv_believes with the following DataFrame columns:\n"
             f"suspects.columns = {list(suspects.columns)},\n"
-            f"states_of_charge.columns = {list(states_of_charge.columns)},\n"
+            f"states_of_charge.columns = {list(case_dispatcher_soc_df.columns)},\n"
             f"weights keys = {list(weights.keys())}"
         )
 
@@ -1470,11 +1467,13 @@ def weight_pv_believes(
             "pv_believes_definitely_trafficked_many",
             "pv_believes_trafficked_some",
             "pv_believes_suspect_trafficker",
+            "pv_believes_not_a_trafficker"
         }
         required_weights_keys = {
             "pv_believes_definitely_trafficked_many",
             "pv_believes_trafficked_some",
             "pv_believes_suspect_trafficker",
+            "pv_believes_not_a_trafficker"
         }
 
         # Validate required columns in suspects DataFrame
@@ -1486,7 +1485,7 @@ def weight_pv_believes(
         logger.debug("All required columns are present in suspects DataFrame.")
 
         # Validate required columns in states_of_charge DataFrame
-        missing_states_cols = required_states_cols - set(states_of_charge.columns)
+        missing_states_cols = required_states_cols - set(case_dispatcher_soc_df.columns)
         if missing_states_cols:
             error_msg = f"states_of_charge DataFrame is missing required columns: {missing_states_cols}"
             logger.error(error_msg)
@@ -1507,12 +1506,13 @@ def weight_pv_believes(
         logger.info(
             "Extracting relevant columns from states_of_charge for pv_believes calculation."
         )
-        pvb = states_of_charge[
+        pvb = case_dispatcher_soc_df[
             [
                 "sf_number",
                 "pv_believes_definitely_trafficked_many",
                 "pv_believes_trafficked_some",
                 "pv_believes_suspect_trafficker",
+                "pv_believes_not_a_trafficker"
             ]
         ].copy()
 
@@ -1521,6 +1521,7 @@ def weight_pv_believes(
             "pv_believes_definitely_trafficked_many",
             "pv_believes_trafficked_some",
             "pv_believes_suspect_trafficker",
+            "pv_believes_not_a_trafficker"
         ]
         for col in belief_indicators:
             pvb[col] = pd.to_numeric(pvb[col], errors="coerce").fillna(0)
@@ -1538,6 +1539,7 @@ def weight_pv_believes(
             ],
             "pv_believes_trafficked_some": weights["pv_believes_trafficked_some"],
             "pv_believes_suspect_trafficker": weights["pv_believes_suspect_trafficker"],
+            "pv_believes_not_a_trafficker": weights["pv_believes_not_a_trafficker"],
         }
 
         # Validate weights are numeric
@@ -1556,31 +1558,34 @@ def weight_pv_believes(
             * weights_dict["pv_believes_trafficked_some"]
             + pvb["pv_believes_suspect_trafficker"]
             * weights_dict["pv_believes_suspect_trafficker"]
+            + pvb["pv_believes_not_a_trafficker"]
+            * weights_dict["pv_believes_not_a_trafficker"]
         )
         logger.info("'pv_believes' score calculated successfully.")
 
         # 2. Process the Case ID
         logger.info("Deriving 'case_id' from 'sf_number'.")
-        pvb["case_id"] = (
-            pvb["sf_number"]
-            .astype(str)
-            .str.rstrip(".")
-            .str.replace(".", "", regex=False)
-        )
+        # pvb["case_id"] = (
+        #     pvb["sf_number"]
+        #     .astype(str)
+        #     .str.rstrip(".")
+        #     .str.replace(".", "", regex=False)
+        # )
         logger.debug("Derived 'case_id' successfully.")
 
         # 3. Clean up and finalize the data
         logger.info("Preparing 'pvb' DataFrame for merging.")
-        pvb = pvb[["case_id", "pv_believes"]].copy()
+        pvb = pvb[["sf_number", "pv_believes"]].copy()
         pvb["pv_believes"] = pvb["pv_believes"].astype(float)
         logger.debug(f"pv_believes DataFrame after cleanup:\n{pvb.head()}")
-        pvb.drop_duplicates(subset="case_id", inplace=True)
+        pvb.drop_duplicates(subset="sf_number", inplace=True)
         logger.info("Cleaned 'pvb' DataFrame successfully.")
 
         # 4. Merge the data
         logger.info("Merging 'pv_believes' scores into suspects DataFrame.")
-        suspects = suspects.merge(pvb, on="case_id", how="left")
+        suspects = suspects.merge(pvb, on="sf_number", how="left")
         suspects["pv_believes"] = suspects["pv_believes"].fillna(0.0).astype(float)
+        suspects[["sf_number"]+belief_indicators].to_csv("data_trace/pv_believes.csv", index=False)
         logger.info("'pv_believes' scores merged successfully.")
 
     except RuntimeError as re:
@@ -1599,11 +1604,7 @@ def weight_pv_believes(
     return suspects
 
 
-def get_exp_score(
-    suspects: pd.DataFrame,
-    states_of_charges: pd.DataFrame,
-    weights: Dict[str, float],
-) -> pd.DataFrame:
+def get_exp_score(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, weights: Dict[str, float]) -> pd.DataFrame:
     """
     Calculate exploitation score based on parameters and reported exploitation.
 
@@ -1624,7 +1625,7 @@ def get_exp_score(
                 - `case_id`: Identifier for each case.
                 - `sf_number`: Unique identifier for each suspect.
 
-        states_of_charges (pd.DataFrame):
+        case_dispatcher_soc_df (pd.DataFrame):
             DataFrame containing state of charge information. Must include:
                 - `sf_number`: Group identifier used to derive `case_id`.
                 - Various exploitation indicator columns containing boolean values (e.g.,
@@ -1661,7 +1662,7 @@ def get_exp_score(
         logger.info(
             "Starting get_exp_score with the following DataFrame columns:\n"
             f"suspects.columns = {list(suspects.columns)},\n"
-            f"states_of_charges.columns = {list(states_of_charges.columns)},\n"
+            f"states_of_charges.columns = {list(case_dispatcher_soc_df.columns)},\n"
             f"exploitation_type.keys() = {list(exploitation_type.keys())}"
         )
 
@@ -1677,7 +1678,7 @@ def get_exp_score(
             raise ValueError(error_msg)
 
         # Validate required columns in states_of_charges DataFrame
-        missing_states_cols = required_states_cols - set(states_of_charges.columns)
+        missing_states_cols = required_states_cols - set(case_dispatcher_soc_df.columns)
         if missing_states_cols:
             error_msg = f"states_of_charges DataFrame is missing required columns: {missing_states_cols}"
             logger.error(error_msg)
@@ -1686,9 +1687,9 @@ def get_exp_score(
         # 1. Extract relevant columns and data
         logger.info("Extracting relevant exploitation columns from states_of_charges.")
         exp_cols = [
-            col for col in states_of_charges.columns if "exploitation" in col
+            col for col in case_dispatcher_soc_df.columns if "exploitation" in col
         ] + ["sf_number"]
-        exp_df = states_of_charges[exp_cols].copy()
+        exp_df = case_dispatcher_soc_df[exp_cols].copy()
         exp_df["exp"] = 0.0  # Initialize exploitation score
 
         # 2. Compute the exploitation score
@@ -1767,9 +1768,7 @@ def validate_required_keys(dictionary, required_keys, dict_name):
     return True
 
 
-def calc_recency_scores(
-    suspects: pd.DataFrame, states_of_charge: pd.DataFrame, weights: Dict[str, Any]
-) -> pd.DataFrame:
+def calc_recency_scores(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, weights: Dict[str, Any]) -> pd.DataFrame:
     """
     Assign a recency score to each suspect based on the number of days since their interview.
 
@@ -1789,7 +1788,7 @@ def calc_recency_scores(
                 - `case_id`: Identifier for each case.
                 - `sf_number`: Unique identifier for each suspect.
 
-        states_of_charge (pd.DataFrame):
+        case_dispatcher_soc_df (pd.DataFrame):
             DataFrame containing state of charge information. Must include:
                 - `sf_number`: Group identifier used to derive `case_id`.
                 - `interview_date`: Date of the suspect's interview.
@@ -1813,7 +1812,7 @@ def calc_recency_scores(
         logger.info(
             "Starting calc_recency_scores with the following DataFrame columns:\n"
             f"  suspects.columns = {list(suspects.columns)},\n"
-            f"  states_of_charge.columns = {list(states_of_charge.columns)},\n"
+            f"  states_of_charge.columns = {list(case_dispatcher_soc_df.columns)},\n"
             f"  weights keys = {list(weights.keys())}"
         )
 
@@ -1825,14 +1824,14 @@ def calc_recency_scores(
         # Validate required columns and keys using helper functions
         validate_required_columns(suspects, required_suspects_cols, "suspects")
         validate_required_columns(
-            states_of_charge, required_states_cols, "states_of_charge"
+            case_dispatcher_soc_df, required_states_cols, "states_of_charge"
         )
         validate_required_keys(weights, required_weights_keys, "weights")
 
         # 1. Calculate days since interview
         logger.info("Calculating days since interview.")
         today = pd.Timestamp.now().normalize()
-        cif_dates = states_of_charge[["case_id", "interview_date"]].copy()
+        cif_dates = case_dispatcher_soc_df[["case_id", "interview_date"]].copy()
 
         # Convert 'interview_date' to datetime; coerce errors to NaT
         cif_dates["interview_date"] = pd.to_datetime(
@@ -2096,9 +2095,7 @@ def get_sus_located_in(sus, location):
     return sus
 
 
-def get_new_soc_score(
-    suspects: pd.DataFrame, states_of_charges: pd.DataFrame
-) -> pd.DataFrame:
+def get_new_soc_score(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame) -> pd.DataFrame:
     """
     Merge newly calculated Strength of Case (SOC) scores into the suspects DataFrame.
 
@@ -2113,7 +2110,7 @@ def get_new_soc_score(
             DataFrame containing suspect information. Must include:
                 - `sf_number`: Unique identifier for each suspect.
 
-        states_of_charges (pd.DataFrame):
+        case_dispatcher_soc_df (pd.DataFrame):
             DataFrame containing state of charge information. Must include:
                 - `sf_number`: Unique identifier for each suspect.
                 - `soc`: Strength of Case score.
@@ -2131,7 +2128,7 @@ def get_new_soc_score(
         logger.info(
             "Starting get_new_soc_score with the following DataFrame columns:\n"
             f"suspects.columns = {list(suspects.columns)},\n"
-            f"states_of_charges.columns = {list(states_of_charges.columns)}"
+            f"states_of_charges.columns = {list(case_dispatcher_soc_df.columns)}"
         )
 
         # Define required columns for each DataFrame
@@ -2146,7 +2143,7 @@ def get_new_soc_score(
             raise ValueError(error_msg)
 
         # Validate required columns in states_of_charges DataFrame
-        missing_soc_cols = required_soc_cols - set(states_of_charges.columns)
+        missing_soc_cols = required_soc_cols - set(case_dispatcher_soc_df.columns)
         if missing_soc_cols:
             error_msg = f"states_of_charges DataFrame is missing required columns: {missing_soc_cols}"
             logger.error(error_msg)
@@ -2154,7 +2151,7 @@ def get_new_soc_score(
 
         # 1. Extract necessary columns from states_of_charges
         logger.info("Extracting 'sf_number' and 'soc' columns from states_of_charges.")
-        soc_df = states_of_charges[["sf_number", "soc"]].copy()
+        soc_df = case_dispatcher_soc_df[["sf_number", "soc"]].copy()
 
         # Ensure 'soc' column is numeric
         logger.info("Ensuring 'soc' column is numeric.")
@@ -2573,14 +2570,9 @@ def truncate_rows(df, nrow=200):
     return df
 
 
-def calc_all_sus_scores(
-    suspects_entity_active: pd.DataFrame,
-    vics_willing: pd.DataFrame,
-    pol: pd.DataFrame,
-    weights: Dict[str, Any],
-    soc_df: pd.DataFrame,
-    google_sheets_suspects: pd.DataFrame,
-) -> pd.DataFrame:
+def calc_all_sus_scores(suspects_entity_active: pd.DataFrame, vics_willing: pd.DataFrame,
+                        police_entity_active: pd.DataFrame, weights: Dict[str, Any],
+                        case_dispatcher_soc_df: pd.DataFrame, google_sheets_suspects: pd.DataFrame) -> pd.DataFrame:
     """
     Calculate and integrate comprehensive scores for active suspects.
 
@@ -2641,7 +2633,7 @@ def calc_all_sus_scores(
             DataFrame containing victim willingness data. Must include `case_id` and `count` columns, where `count` indicates
             the number of victims willing to testify.
 
-        pol (pd.DataFrame):
+        police_entity_active (pd.DataFrame):
             DataFrame containing police-related information necessary for calculating arrest scores. Must include relevant
             `case_id` and `case_status` columns.
 
@@ -2649,7 +2641,7 @@ def calc_all_sus_scores(
             DataFrame containing weight parameters used across various scoring functions. Must include all necessary weight
             columns as referenced by the individual scoring functions.
 
-        soc_df (pd.DataFrame):
+        case_dispatcher_soc_df (pd.DataFrame):
             DataFrame containing social and case-related data relevant to scoring. Must include necessary identifiers and
             metrics required by the scoring functions.
 
@@ -2675,8 +2667,8 @@ def calc_all_sus_scores(
             f"Starting calc_all_sus_scores with the following DataFrame columns:\n"
             f"suspects_entity_active.columns = {list(suspects_entity_active.columns)},\n"
             f"vics_willing.columns = {list(vics_willing.columns)},\n"
-            f"pol.columns = {list(pol.columns)},\n"
-            f"soc_df.columns = {list(soc_df.columns)},\n"
+            f"pol.columns = {list(police_entity_active.columns)},\n"
+            f"soc_df.columns = {list(case_dispatcher_soc_df.columns)},\n"
             f"google_sheets_suspects.columns = {list(google_sheets_suspects.columns)}"
         )
 
@@ -2699,27 +2691,24 @@ def calc_all_sus_scores(
         logger.info("Completed calc_vics_willing_scores.")
 
         # 2. Calculate arrest scores
-        suspects_entity_active = calc_arrest_scores(suspects_entity_active, soc_df, pol)
+        suspects_entity_active = calc_arrest_scores(suspects_entity_active, case_dispatcher_soc_df,
+                                                    police_entity_active)
         logger.info("Completed calc_arrest_scores.")
 
         # 3. Calculate recency scores
-        suspects_entity_active = calc_recency_scores(
-            suspects_entity_active, soc_df, weights
-        )
+        suspects_entity_active = calc_recency_scores(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed calc_recency_scores.")
 
         # 4. Weight belief scores
-        suspects_entity_active = weight_pv_believes(
-            suspects_entity_active, soc_df, weights
-        )
+        suspects_entity_active = weight_pv_believes(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed weight_pv_believes.")
 
         # 5. Calculate exploitation scores
-        suspects_entity_active = get_exp_score(suspects_entity_active, soc_df, weights)
+        suspects_entity_active = get_exp_score(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed get_exp_score.")
 
         # 6. Merge and round Strength of Case (SOC) scores
-        suspects_entity_active = get_new_soc_score(suspects_entity_active, soc_df)
+        suspects_entity_active = get_new_soc_score(suspects_entity_active, case_dispatcher_soc_df)
         logger.info("Completed get_new_soc_score.")
 
         # 7. Assign and adjust eminence scores

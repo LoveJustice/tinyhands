@@ -35,7 +35,7 @@ MEMORY = ChatMemoryBuffer.from_defaults(token_limit=4096)
 # llm = Anthropic(temperature=0, model="claude-3-opus-20240229")
 
 
-red_flags = cp.RED_FLAGS
+red_flags = list(cp.CLAUDE_PROMPTS.keys())
 
 
 def analyze_dataframe(df):

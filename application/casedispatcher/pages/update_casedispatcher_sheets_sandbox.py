@@ -180,7 +180,7 @@ def main():
     country = "Uganda"
     spreadsheet_name = "Case Dispatcher 6.0 - Uganda"
     case_dispatcher_soc_df = load_data(drive_service, "case_dispatcher_soc_df.pkl")
-
+    case_dispatcher_soc_df.to_csv("data/case_dispatcher_soc_df.csv", index=False)
     # Get the settings from the case_dispatcher
 
     # exploitation_type = get_exploitation_settings()
@@ -329,6 +329,7 @@ def main():
     soc_df = case_dispatcher_soc_df
     pol = police_entity.active
     google_sheets_suspects = dfs["suspects"]
+    case_dispatcher_soc_df.loc[case_dispatcher_soc_df["days"]<120, ['case_id', 'sf_number', 'arrested', 'interview_date', 'pv_believes_definitely_trafficked_many', 'pv_believes_not_a_trafficker', 'pv_believes_trafficked_some', 'pv_believes_suspect_trafficker', 'exploit_debt_bondage', 'exploit_forced_labor', 'exploit_physical_abuse', 'exploit_prostitution', 'exploit_sexual_abuse']].to_csv("data/case_dispatcher_soc_df.csv", index=False)
     try:
         # Log the initial state of the DataFrames
         logger.info(
@@ -358,35 +359,25 @@ def main():
         logger.info("Completed calc_vics_willing_scores.")
 
         # 2. Calculate arrest scores
-        suspects_entity_active = data_prep.calc_arrest_scores(
-            suspects_entity_active, soc_df, pol
-        )
+        suspects_entity_active = data_prep.calc_arrest_scores(suspects_entity_active, soc_df, pol)
         logger.info("Completed calc_arrest_scores.")
 
         # 3. Calculate recency scores
-        suspects_entity_active = data_prep.calc_recency_scores(
-            suspects_entity_active, soc_df, weights
-        )
+        suspects_entity_active = data_prep.calc_recency_scores(suspects_entity_active, soc_df, weights)
         logger.info("Completed calc_recency_scores.")
 
         # ------------------------------------------------------
         # 4. Weight belief scores
-        suspects_entity_active = data_prep.weight_pv_believes(
-            suspects_entity_active, case_dispatcher_soc_df, weights
-        )
+        suspects_entity_active = data_prep.weight_pv_believes(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed weight_pv_believes.")
 
         # 5. Calculate exploitation scores
 
-        suspects_entity_active = data_prep.get_exp_score(
-            suspects_entity_active, case_dispatcher_soc_df, weights
-        )
+        suspects_entity_active = data_prep.get_exp_score(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed get_exp_score.")
 
         # 6. Merge and round Strength of Case (SOC) scores
-        suspects_entity_active = data_prep.get_new_soc_score(
-            suspects_entity_active, case_dispatcher_soc_df
-        )
+        suspects_entity_active = data_prep.get_new_soc_score(suspects_entity_active, case_dispatcher_soc_df)
         logger.info("Completed get_new_soc_score.")
 
         # 7. Assign and adjust eminence scores
@@ -434,14 +425,8 @@ def main():
 
     # ----------------------------------------------------------------------------------------
 
-    suspects_entity.active = data_prep.calc_all_sus_scores(
-        suspects_entity.active,
-        vics_willing,
-        police_entity.active,
-        weights,
-        case_dispatcher_soc_df,
-        dfs["suspects"],
-    )
+    suspects_entity.active = data_prep.calc_all_sus_scores(suspects_entity.active, vics_willing, police_entity.active,
+                                                           weights, case_dispatcher_soc_df, dfs["suspects"])
 
     victims_entity.active = data_prep.add_priority_to_others(
         suspects_entity.active,

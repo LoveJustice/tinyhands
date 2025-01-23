@@ -98,6 +98,7 @@ non_boolean_features = [
     "social_media",
     "irf_number",
     "gender",
+    "date_of_interception"
 ]
 
 
@@ -178,6 +179,7 @@ def main():
         db_sus["suspect_arrested"].fillna("No", inplace=True)
         # Create the 'any_arrest' column
         st.write("Process the role column ...")
+        st.write(f"Unique values for 'role' in db_sus: {db_sus['role'].unique()}")
         do_audit(db_irf["irf_number"], "*** Audit 1")
         do_audit(
             db_sus["sf_number"].apply(extract_case_id), "*** Audit original db_sus"
@@ -324,10 +326,12 @@ def main():
         ]
 
         db_vdf["irf_number"] = db_vdf["vdf_number"].apply(extract_case_id)
-        do_audit(db_vdf["irf_number"])
+        do_audit(db_vdf["irf_number"], )
 
         list_db_vdf_columns = list(db_vdf)
         st.write(f"A list of the db_vdf columns {list_db_vdf_columns}")
+        st.write(f"Refine db_vdf and create db_vics...")
+        st.write(f"Unigue values for 'role' in db_sus: {db_vdf['role'].unique()}")
         db_vdf.query("role == 'PVOT'", inplace=True)
 
         merge_cols = [
@@ -338,6 +342,7 @@ def main():
             "exploit_sexual_abuse",
         ]
         st.write(f"Merge suspect and victim dataframes...")
+
         db_sus = db_vdf[
             [
                 "exploit_debt_bondage",
@@ -350,7 +355,7 @@ def main():
                 "pv_recruited_no",
                 "irf_number",
             ]
-        ].merge(db_sus, left_on="irf_number", right_on="irf_number", how="inner")
+        ].merge(db_sus, left_on="irf_number", right_on="irf_number", how="right")
         do_audit(db_sus["irf_number"], "db_sus and db_vdf merge")
         # ======================================================================
 
@@ -359,16 +364,17 @@ def main():
         )
 
         gender_dummies = pd.get_dummies(db_sus["gender"], prefix="gender")
-
+        st.write(f"Columns of gender_dummies: {gender_dummies.columns}")
         # Rename the columns to the desired names
-        gender_dummies.columns = ["gender_F", "gender_M", "gender_U"]
-
+        # gender_dummies.columns = ["gender_N", "gender_F", "gender_M", "gender_U"]
+        # 'gender_', 'gender_F', 'gender_M', 'gender_U'
         # If you prefer specific column names like male, female, unknown_gender, you can rename them:
         gender_dummies.rename(
             columns={
                 "gender_F": "female",
                 "gender_M": "male",
                 "gender_U": "unknown_gender",
+                "gender_": "none_gender"
             },
             inplace=True,
         )
@@ -460,6 +466,7 @@ def main():
             "full_name",
             "phone_contact",
             "address_notes",
+            "gender",
             # "irf_number",
         ]
         st.write(f"Drop irrelevant columns {columns_to_drop}")
@@ -473,8 +480,14 @@ def main():
             f"Convert the data type of the boolean features to boolean {boolean_features}"
         )
         # Convert the data type of the boolean features to boolean
-        soc_df[boolean_features] = soc_df[boolean_features].astype(bool)
+        st.write(soc_df[soc_df["sf_number"] == "LWK1158A"][
+            ['exploit_debt_bondage', 'exploit_forced_labor', 'exploit_physical_abuse', 'exploit_prostitution',
+             'exploit_sexual_abuse']])
 
+        soc_df[boolean_features] = soc_df[boolean_features].fillna(False).astype(bool)
+        st.write(soc_df[soc_df["sf_number"] == "LWK1158A"][
+            ['exploit_debt_bondage', 'exploit_forced_labor', 'exploit_physical_abuse', 'exploit_prostitution',
+             'exploit_sexual_abuse']])
         # Fill null values in the numerical features with 0 and convert the data type to float
         st.write(
             f"Fill null values in the numerical features with 0 and convert the data type to float {num_features}"

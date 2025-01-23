@@ -1,5 +1,8 @@
 import json
 
+from nltk.sem.chat80 import country
+
+import libraries.case_dispatcher_data as cdd
 import pandas as pd
 import streamlit as st
 from googleapiclient.discovery import build
@@ -15,9 +18,117 @@ from libraries.google_lib import (
 import pickle
 import os
 from libraries.google_lib import DB_Conn
+from pages.irf_evaluation import case_dispatcher_soc_df
 
 os.getcwd()
+country="Uganda"
+suspect_evaluations = cdd.get_suspect_evaluations(country=country)
+sql_query =  """SELECT person.arrested AS arrested \
+    ,vdfcommon.station_id AS station_id \
+    ,person.id AS person_id \
+    ,vdfcommon.pv_recruited_how AS pv_recruited_how \
+    ,vdfcommon.pv_recruited_no AS pv_recruited_no \
+    ,vdfcommon.pv_recruited_broker AS pv_recruited_broker \
+    ,vdfcommon.pv_recruited_agency AS pv_recruited_agency \
+    ,vdfcommon.exploit_prostitution AS exploit_prostitution \
+    ,vdfcommon.exploit_forced_labor AS exploit_forced_labor \
+    ,vdfcommon.exploit_physical_abuse AS exploit_physical_abuse \
+    ,vdfcommon.exploit_sexual_abuse AS exploit_sexual_abuse \
+    ,vdfcommon.exploit_debt_bondage AS exploit_debt_bondage \
+    ,vdfcommon.pv_expenses_paid_how AS pv_expenses_paid_how \
+    ,vdfcommon.job_promised_amount AS job_promised_amount \
+    ,vdfcommon.vdf_number AS vdf_number \
+    ,person.full_name AS full_name \
+    ,person.phone_contact AS phone_contact \
+    ,person.address_notes AS address_notes \
+    ,person.role AS role \
+    ,person.social_media AS social_media \
+    ,borderstation.station_name AS station_name \
+    ,country.name AS country \
+    ,country.id AS operating_country_id \
+    ,person.master_person_id AS master_person_id \
+    FROM public.dataentry_vdfcommon vdfcommon \
+    INNER JOIN public.dataentry_person person ON person.id = vdfcommon.victim_id  \
+    INNER JOIN public.dataentry_borderstation borderstation ON borderstation.id = vdfcommon.station_id \
+    INNER JOIN public.dataentry_country country ON country.id = borderstation.operating_country_id \
+    WHERE vdfcommon.exploit_prostitution IS TRUE \
+    OR vdfcommon.exploit_forced_labor IS TRUE \
+    OR vdfcommon.exploit_physical_abuse IS TRUE \
+    OR vdfcommon.exploit_sexual_abuse IS TRUE \
+    OR vdfcommon.exploit_debt_bondage IS TRUE"""
 
+parameters={}
+country='Uganda'
+sql_query += " AND country.name = %(country)s"
+parameters["country"] = country
+with DB_Conn() as dbc:
+    result = dbc.ex_query(sql_query, parameters)
+result["case_id"] = result["vdf_number"].apply(extract_case_id)
+df = case_dispatcher_soc_df[case_dispatcher_soc_df["case_id"].isin(result["case_id"])]
+df[df["days"]<120]
+
+sql_query = """
+    SELECT
+        suspect.sf_number AS sf_number,
+        suspectevaluation.evaluation,
+        country.name AS country,
+        person.id AS person_id,
+        person.arrested AS arrested,
+        person.master_person_id AS master_person_id,
+        suspect_information.interview_date AS interview_date
+    FROM public.dataentry_person person
+    INNER JOIN public.dataentry_suspect suspect ON suspect.merged_person_id = person.id
+    INNER JOIN public.dataentry_suspectlegal suspectlegal ON suspectlegal.suspect_id = suspect.id
+    INNER JOIN public.dataentry_borderstation borderstation ON borderstation.id = suspect.station_id
+    INNER JOIN public.dataentry_country country ON country.id = borderstation.operating_country_id
+    INNER JOIN public.dataentry_suspectevaluation suspectevaluation ON suspectevaluation.suspect_id = suspect.id
+    INNER JOIN public.dataentry_suspectinformation suspect_information ON suspect_information.suspect_id = suspect.id
+    WHERE suspectevaluation.evaluator_type = 'PV'
+"""
+parameters={}
+country='Uganda'
+sql_query += " AND country.name = %(country)s"
+parameters["country"] = country
+with DB_Conn() as dbc:
+    result = dbc.ex_query(sql_query, parameters)
+result["case_id"] = result["sf_number"].apply(extract_case_id)
+
+result = suspect_evaluations.drop_duplicates()
+pivoted_results = (
+    result.assign(val=True)
+    .pivot_table(
+        index="sf_number",
+        columns="evaluation",
+        values="val",
+        fill_value=False,
+    )
+    .reset_index()
+)
+evaluation_types = pivoted_results.astype(
+    {
+        col: bool
+        for col in pivoted_results.columns
+        if col != "sf_number"
+    }
+)
+
+column_rename_mapping = {
+    "Definitely trafficked many people": "pv_believes_definitely_trafficked_many",
+    "Don't believe s/he's a trafficker": "pv_believes_not_a_trafficker",
+    "Has trafficked some people": "pv_believes_trafficked_some",
+    "Suspect s/he's a trafficker": "pv_believes_suspect_trafficker",
+}
+suspect_evaluation_types = evaluation_types.rename(
+    columns=column_rename_mapping
+)
+
+
+
+
+
+evaluation_types["case_id"] = evaluation_types["sf_number"].apply(extract_case_id)
+df = case_dispatcher_soc_df[case_dispatcher_soc_df["case_id"].isin(evaluation_types["case_id"])]
+df = df[df["days"]<120]
 
 def get_suspects(country=None):
     parameters = {}
@@ -53,6 +164,10 @@ def get_suspects(country=None):
 
     return suspects
 
+vdf = cdd.get_vdf(country="Uganda")
+df = vdf[vdf["vdf_number"] == "LWK1158A"][['exploit_debt_bondage', 'exploit_forced_labor', 'exploit_physical_abuse', 'exploit_prostitution', 'exploit_sexual_abuse']]
+db_vics_11 = pd.read_csv("data_trace/soc_df_8.csv")
+db_vics_11[db_vics_11["sf_number"] == "LWK1158A"][['exploit_debt_bondage', 'exploit_forced_labor', 'exploit_physical_abuse', 'exploit_prostitution', 'exploit_sexual_abuse']]
 
 suspects = get_suspects(country="Uganda")
 # Copy and extract suspect_id from the closed entity

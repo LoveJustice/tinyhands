@@ -18,7 +18,7 @@ CLAUDE_PROMPTS = {
     "dance_bar_prompt": "Analyze the following job advertisement. Does it offer a job position in a dance bar or gentlemen's club?",
     "drop_off_at_secure_location_prompt": "Analyze the following job advertisement in detail. Are applicants asked to drop off their CVs at a real and official location in person-, i.e. a physical location?",
     "false_organization_prompt": "Examine the following job advertisement. Does it recruit for an organization that has publicly stated they don't advertise job posts on social media? Some of these companies include, but are not limited to, [Shoprite, Woolworths, Capitec Bank, Pick n Pay, Spar, Coca-Cola, Transnet, Sasol]",
-    "gender_specific_prompt": "Review the following job advertisement. Does it specifically seek only male or only female applicants for a job that is not inherently gender-specific? Exclude scenarios where specifying gender is reasonable, such as caregiving roles requiring a same-gender caregiver for personal care.",
+    "gender_specific_prompt": "Review the following job advertisement. Does it specifically seek applicants of one gender only (e.g., only males or only females)? Exclude cases where both genders are explicitly mentioned or where specifying gender is a legitimate requirement for the role, such as caregiving roles involving personal care.",
     "language_switch_prompt": "Examine the following job advertisement. Does it change from English to other languages in the middle of the post?",
     "massage_or_spa_prompt": "Analyze the following job advertisement. Does it offer a job in a massage parlour, spa or similar institution?",
     "multiple_provinces_prompt": "Analyze the following job advertisement. Does it advertise for positions in several provinces, especially without detail?",
@@ -28,14 +28,12 @@ CLAUDE_PROMPTS = {
     "recruit_minors_prompt": "Analyze the following job advertisement. Does it specifically recruit people who are under the age of 18?",
     "soccer_trial_prompt": "Analyze the following job advertisement. Does it offer soccer or other sports trial opportunities for applicants?",
     "suspicious_assurance_prompt": "Analyze the job advertisement for unusual or suspicious assurance that the person will be hired more easily or surely than would be typical.",
-    "suspicious_email_prompt": "Analyze the following job advertisement. Does it contain an email address that appears suspicious in the context of the job advertisement? Make sure to differentiate between email addresses and links and make your assessment only based on email addresses and not links.",
-    "target_specific_group_prompt": "Analyze the following job advertisement. Does it target a specific group of people (e.g., women from a particular country or region)? Consider vulnerable groups to include these, but not exclusively, [Shona,Ndebele,Basotho, Tswana', Zulu, Mozambicans, Chewa, Yao]",
-    "unprofessional_writing_prompt": "Analyze the following job advertisement for signs of unprofessional writing such as poor grammar or spelling. Accept that missing spaces or words not separated by a space or spaces in the text, such as 'andcleaners', 'towork', is NOT a sign of unprofessional writing.",
+    "target_specific_group_prompt": "Analyze the following job advertisement. Does it target a specific group of people (e.g., women from a particular country or region, or individuals from specific ethnic or linguistic communities)? Ensure your analysis identifies any explicit or implicit targeting, focusing on groups such as [Shona, Ndebele, Basotho, Tswana, Zulu, Mozambicans, Chewa, Yao] if relevant, but not limited to these.",
+    "unprofessional_writing_prompt": "Analyze the following job advertisement for poor grammar or spelling, informal language use or exaggerated use of punctuation marks. Ignore missing spaces or words not separated by a space or spaces in the text, such as 'andcleaners', 'towork'.",
     "unrealistic_hiring_number_prompt": "Analyze the following job advertisement. Does it claim to be hiring an unrealistically high number of people?",
 }
-"Review the following job advertisement. Does it specifically seek applicants of one gender only (e.g., only males or only females)? Exclude cases where both genders are explicitly mentioned or where specifying gender is a legitimate requirement for the role, such as caregiving roles involving personal care."
-"Analyze the following job advertisement. Does it target a specific group of people (e.g., women from a particular country or region, or individuals from specific ethnic or linguistic communities)? Ensure your analysis identifies any explicit or implicit targeting, focusing on groups such as [Shona, Ndebele, Basotho, Tswana, Zulu, Mozambicans, Chewa, Yao] if relevant, but not limited to these."
-"Analyze the following job advertisement for poor grammar or spelling, informal language use or exaggerated use of punctuation marks. Ignore missing spaces or words not separated by a space or spaces in the text, such as 'andcleaners', 'towork'."
+
+
 #
 # CLAUDE_PROMPTS = {
 #     "assure_prompt": (
@@ -162,23 +160,22 @@ prompts = [
 #     "unusual_hours_prompt",
 #     "vague_description_prompt",
 # ]
-RED_FLAGS = [
-    "callback_request_prompt",
-    "dance_bar_prompt",
-    "drop_off_at_secure_location_prompt",
-    "false_organization_prompt",
-    "gender_specific_prompt",
-    "language_switch_prompt",
-    "massage_or_spa_prompt",
-    "multiple_provinces_prompt",
-    "no_education_skilled_prompt",
-    "no_location_prompt",
-    "overseas_position_prompt",
-    "recruit_minors_prompt",
-    "soccer_trial_prompt",
-    "suspicious_assurance_prompt",
-    "suspicious_email_prompt",
-    "target_specific_group_prompt",
-    "unprofessional_writing_prompt",
-    "unrealistic_hiring_number_prompt",
-]
+# RED_FLAGS = [
+#     "callback_request_prompt",
+#     "dance_bar_prompt",
+#     "drop_off_at_secure_location_prompt",
+#     "false_organization_prompt",
+#     "gender_specific_prompt",
+#     "language_switch_prompt",
+#     "massage_or_spa_prompt",
+#     "multiple_provinces_prompt",
+#     "no_education_skilled_prompt",
+#     "no_location_prompt",
+#     "overseas_position_prompt",
+#     "recruit_minors_prompt",
+#     "soccer_trial_prompt",
+#     "suspicious_assurance_prompt",
+#     "target_specific_group_prompt",
+#     "unprofessional_writing_prompt",
+#     "unrealistic_hiring_number_prompt",
+# ]

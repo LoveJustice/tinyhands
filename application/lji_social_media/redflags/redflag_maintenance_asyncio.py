@@ -95,7 +95,7 @@ def get_llm(prompt_name: str) -> Any:
     #         request_timeout=120.0,
     #     )
 
-    return OpenAI(temperature=0, model="gpt-4o-mini", request_timeout=120.0)
+    return OpenAI(temperature=0, model="gpt-4o", request_timeout=120.0)
 
 
 @backoff.on_exception(backoff.expo, RateLimitError)

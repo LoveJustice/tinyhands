@@ -19,10 +19,29 @@ PRESENCE_CSV = "results/advert_flags.csv"
 CONFIDENCE_CSV = "results/advert_confidence.csv"
 
 # Load Presence DataFrame
-advert_flags = pd.read_csv(PRESENCE_CSV)
-presence = advert_flags.copy()
+new_advert_flags = pd.read_csv(PRESENCE_CSV)
+old_advert_flags = pd.read_csv("results/archive/advert_flags.csv")
+presence = new_advert_flags.copy()
 # Define mapping for presence values
 presence_mapping = {"yes": 1, "no": 0}
+new_advert_flags["unprofessional_writing_prompt"]
+old_advert_flags["unprofessional_writing_prompt"]
+new_advert_flags["unprofessional_writing_prompt"].equals(
+    old_advert_flags["unprofessional_writing_prompt"]
+)
+sum(
+    new_advert_flags["unprofessional_writing_prompt"]
+    == old_advert_flags["unprofessional_writing_prompt"]
+)
+sum(
+    new_advert_flags["target_specific_group_prompt"]
+    == old_advert_flags["target_specific_group_prompt"]
+)
+
+sum(
+    new_advert_flags["gender_specific_prompt"]
+    == old_advert_flags["gender_specific_prompt"]
+)
 
 # Replace categorical values with numerical mapping
 presence.replace(presence_mapping, inplace=True)
