@@ -19,6 +19,7 @@ google_cred.json
 dreamsuite_tag
 
 application/lji_social_media/models/
+application/url_miner/logs/
 
 .#*
 .coverage
