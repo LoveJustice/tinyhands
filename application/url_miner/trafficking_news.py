@@ -13,6 +13,8 @@ import logging
 from datetime import datetime, timedelta
 from typing import List
 from urllib.parse import urlparse
+
+import pandas as pd
 import tldextract
 from googlesearch import search  # Ensure you are using the correct googlesearch package.
 import json
@@ -357,6 +359,7 @@ class TraffickingNewsSearch:
         logger.debug(f"Constructed query: {final_query}")
         return final_query
 
+
     def fetch_articles(self, query: str, max_results: int = 200) -> List[str]:
         """
         Fetch articles synchronously using google search.
@@ -378,7 +381,7 @@ class TraffickingNewsSearch:
             logger.error(f"Error fetching articles: {e}")
             return []
 
-    def get_recent_articles(self) -> List[str]:
+    def get_recent_articles(self, max_results: int = 200) -> List[str]:
         """
         Retrieve recent articles based on days_back in the configuration.
         """
@@ -390,7 +393,7 @@ class TraffickingNewsSearch:
             end_date=end_date.strftime("%Y-%m-%d")
         )
         logger.info(f"Searching for articles with query: {query}")
-        return self.fetch_articles(query)
+        return self.fetch_articles(query, max_results)
 
     def save_to_neo4j(self, urls: List[str]) -> None:
         """

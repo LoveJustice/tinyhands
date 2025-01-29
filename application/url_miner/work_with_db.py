@@ -3,31 +3,13 @@ import os
 import sqlite3
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import List, Optional, Dict, Any, Union
+from typing import List, Dict, Any, Union
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from dataclasses import dataclass, field
 from typing import Optional
 from models import (
-    Age,
-    ArticleMetaData,
-    CaseNotesResponse,
-    CountryResponse,
-    ConfirmResponse,
-    CrimeDateResponse,
-    CrimeResponse,
-    Gender,
-    IncidentResponse,
-    LocationResponse,
-    PersonResponse,
-    PlacenameResponse,
-    PublishedDateResponse,
     SuspectFormResponse,
-    SuspectOriginResponse,
-    SuspectResponse,
-    VictimDestinationResponse,
-    VictimOriginResponse,
-    VictimResponse,
 )
 
 
@@ -176,7 +158,7 @@ class URLDatabase:
                     """
                     CREATE TABLE IF NOT EXISTS incidents (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        url_id INTEGER UNIQUE NOT NULL,
+                        url_id INTEGER NOT NULL,
                         incident TEXT NOT NULL,
                         FOREIGN KEY (url_id) REFERENCES urls (id) ON DELETE CASCADE ON UPDATE CASCADE
                     )
@@ -330,20 +312,22 @@ class URLDatabase:
                 domain_name=record["domain_name"],
                 source=record["source"],
                 extracted_date=datetime.now().isoformat(),
+                actual_incident=record["actual_incident"]
             )
 
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
                     """
                     INSERT OR IGNORE INTO urls
-                    (url, domain_name, source, extracted_date)
-                    VALUES (?, ?, ?, ?)
+                    (url, domain_name, source, extracted_date, actual_incident)
+                    VALUES (?, ?, ?, ?, ?)
                 """,
                     (
                         url_record.url,
                         url_record.domain_name,
                         url_record.source,
                         url_record.extracted_date,
+                        url_record.actual_incident
                     ),
                 )
                 conn.commit()

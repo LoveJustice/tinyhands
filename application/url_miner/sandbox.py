@@ -1,4 +1,4 @@
-from libraries.work_with_db import URLDatabase, DatabaseError
+from work_with_db import URLDatabase, DatabaseError
 import pandas as pd
 from typing import List, Optional, Any
 from selenium import webdriver
@@ -12,7 +12,7 @@ from llama_index.core import Document, VectorStoreIndex
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.llms.openai import OpenAI
 # from google_miner import logger
-from libraries.models import (
+from models import (
     IncidentResponse,
 )
 llm = OpenAI(temperature=0, model="gpt-4o-mini", request_timeout=120.0)
