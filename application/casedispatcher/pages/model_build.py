@@ -19,7 +19,12 @@ from datetime import datetime
 import os
 from oauth2client.client import OAuth2Credentials
 from libraries.case_dispatcher_model import get_cls_pipe
+import altair_saver
+import altair_saver
+import vl_convert
 
+print("altair_saver version:", altair_saver.__version__)
+print("vl_convert version:", vl_convert.__version__)
 # from .case_dispatcher_logging import setup_logger
 import pickle
 from pathlib import Path
@@ -124,7 +129,7 @@ def train_test_val_split(sub_df, te_size=0.2, val_size=0.1):
             "irf_number",
             "operating_country_id",
             "country",
-            "gender",
+            # "gender",
             "case_id",
         ]
     )
@@ -206,7 +211,6 @@ def make_new_predictions(X, soc_model):
 
     return soc_model.predict_proba(X)[:, 1]
 
-
 def plot_roc_curve_altair(y_true, model_predictions, model_names):
     """
     Plots the ROC curve for multiple models using Altair and calculates the AUC.
@@ -216,7 +220,6 @@ def plot_roc_curve_altair(y_true, model_predictions, model_names):
     model_predictions (list of arrays): A list containing the prediction probabilities from each model.
     model_names (list of str): Names of the models corresponding to the predictions.
     """
-
     # Prepare data for Altair
     roc_data = pd.DataFrame()
 
@@ -263,10 +266,21 @@ def plot_roc_curve_altair(y_true, model_predictions, model_names):
         .encode(x="x", y="y")
     )
 
+    # Save the plot to the plots/ directory
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    plot_filename = f"plots/roc_curve_{timestamp}.svg"
+    # final_chart.save(plot_filename)
+    # altair_saver.save(final_chart, plot_filename, method='vega_cli')
+    try:
+        altair_saver.save(final_chart, plot_filename, method='vlc')
+        print(f"Chart saved successfully to {plot_filename}")
+    except Exception as e:
+        print(f"Error saving chart: {e}")
+
+
     return (final_chart + baseline).properties(
         width=600, height=400, title="Receiver Operating Characteristic"
     )
-
 
 # Example usage:
 # y_true = [actual binary labels]
@@ -313,6 +327,12 @@ def get_sorted_feature_importances(model, feature_names):
 
 
 def create_feature_importance_chart(importance_df):
+    """
+    Creates a feature importance chart and saves it to the plots/ directory.
+
+    Parameters:
+    importance_df (pd.DataFrame): DataFrame containing feature importances.
+    """
     chart_height = 20 * len(importance_df) + 100
     chart = (
         alt.Chart(importance_df)
@@ -324,6 +344,19 @@ def create_feature_importance_chart(importance_df):
         )
         .properties(height=chart_height)
     )
+
+    # Save the plot to the plots/ directory
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # plot_filename = f"plots/feature_importance_{timestamp}.png"
+
+    plot_filename = f"plots/feature_importance_{timestamp}.svg"
+    # chart.save(plot_filename)
+    try:
+        altair_saver.save(chart, plot_filename, method='vlc')
+        print(f"Chart saved successfully to {plot_filename}")
+    except Exception as e:
+        print(f"Error saving chart: {e}")
+
     return chart
 
 

@@ -19,6 +19,20 @@ import pickle
 import os
 from libraries.google_lib import DB_Conn
 from pages.irf_evaluation import case_dispatcher_soc_df
+case_dispatcher = st.secrets["case_dispatcher"]
+access_token = case_dispatcher["access_token"]
+toml_config_dict = attrdict_to_dict(access_token)
+creds_json = json.dumps(toml_config_dict)
+credentials = OAuth2Credentials.from_json(creds_json)
+drive_service = build("drive", "v3", credentials=credentials)
+
+case_dispatcher_soc_file_name = f"case_dispatcher_soc_df.pkl"
+case_dispatcher_soc_file_id = get_file_id(
+    case_dispatcher_soc_file_name, drive_service
+)
+
+model_data = load_from_cloud(drive_service, case_dispatcher_soc_file_id)
+list(model_data)
 
 os.getcwd()
 country="Uganda"
