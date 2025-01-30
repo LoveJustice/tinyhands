@@ -19,12 +19,13 @@ from models import (
     SuspectResponse,
 )
 import requests
-
-import os
-import logging
 import math
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from selenium.common.exceptions import TimeoutException, WebDriverException
+import time
+import random
+
 llm = OpenAI(temperature=0, model="gpt-4o", request_timeout=120.0)
 memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
 
@@ -65,8 +66,8 @@ SHORT_PROMPTS = {
     ),
     "suspect_prompt": (
         "Assistant, please indicate if there is mention of suspect(s) of a crime related to human trafficking in this article. "
-        "Suspects has to be natural persons that is, the NAME (firstname and/or secondname of suspect) of a person, not organizations or any other entities. Exclude cases involving allegations and cases involving \
-         politicians or celebrities or ANY other sensational reports or reporting"
+        "Suspects has to be natural persons that is, the NAME (firstname and/or secondname of suspect) of a person, not organizations or any other entities. Exclude cases involving allegations and cases involving "
+        "politicians or celebrities or ANY other sensational reports or reporting."
         "If yes, provide the suspects(s) by name. EXCLUDE ALL other detail and ONLY provide the GIVEN NAME of the suspect(s)."
         "Return your answer in the following RAW JSON format ONLY and NO back ticks and with no code blocks:\n"
         "{\n"
@@ -74,12 +75,11 @@ SHORT_PROMPTS = {
         '  "evidence": ["firstname and/or secondname of suspect1", '
         '"firstname and/or secondname of suspect2", "firstname and/or secondname of suspect3", ...] or null\n'
         "}"
-
     ),
     "victim_prompt": (
         "Assistant, the following is a list of named suspects in the accompanying article.  Please indicate if there is mention of victim(s) of a crime related to human trafficking in this article. "
-        "Victims have to be natural persons that is, the NAME (firstname and/or secondname of suspect) of a person, not organizations or any other entities. Exclude cases involving allegations and cases involving \
-         politicians or celebrities or ANY other sensational reports or reporting"
+        "Victims have to be natural persons that is, the NAME (firstname and/or secondname of suspect) of a person, not organizations or any other entities. Exclude cases involving allegations and cases involving "
+        "politicians or celebrities or ANY other sensational reports or reporting."
         "If yes, provide the victim(s) by name. EXCLUDE ALL other detail and ONLY provide the GIVEN NAME of the victim(s)."
         "Return your answer in the following RAW JSON format ONLY and NO back ticks and with no code blocks:\n"
         "{\n"
@@ -87,10 +87,8 @@ SHORT_PROMPTS = {
         '  "evidence": ["firstname and/or secondname of victim1", '
         '"firstname and/or secondname of victim2", "firstname and/or secondname of victim2", ...] or null\n'
         "}"
-
     ),
 }
-
 
 def google_search(query, api_key, cse_id, start, num=10):
     """
@@ -148,11 +146,9 @@ def fetch_all_results(query, api_key, cse_id, max_results=30):
             logger.warning(f"No results returned for start={start}. Ending search.")
             break
         results.extend(page_results)
-        # Respect rate limits by adding a delay if necessary
-        # time.sleep(1)  # Uncomment if you encounter rate limit issues
+        time.sleep(1)  # Delay to respect rate limits
 
     return results[:max_results]  # Ensure not to exceed max_results
-
 
 def initialize_selenium() -> Optional[webdriver.Chrome]:
     """
@@ -183,6 +179,7 @@ def initialize_selenium() -> Optional[webdriver.Chrome]:
             options=chrome_options,
         )
         logger.info("Selenium WebDriver initialized successfully.")
+        driver.set_page_load_timeout(30)  # Set a 30-second timeout
         return driver
 
     except Exception as e:
@@ -228,7 +225,6 @@ def get_validated_response(
         return None
     except Exception as e:
         logger.error(f"Failed to parse response for '{prompt_key}': {e}")
-
         return None
 
 def verify_incident(url: str, chat_engine):
@@ -281,7 +277,6 @@ def verify_incident(url: str, chat_engine):
         logger.error(f"Error processing URL {url}: {e}")
         return result, incidents
 
-
 def confirm_natural_name(name):
     """
     Confirm if the provided name is a natural person's name.
@@ -291,9 +286,8 @@ def confirm_natural_name(name):
         chat_engine:
     """
     try:
-
-        prompt_text = (f"Assistant, is '{name}' the GIVEN name natural person? \
-        Return your ANSWER in the following RAW JSON format ONLY and WITHOUT backticks:\n\""
+        prompt_text = (f"Assistant, is '{name}' the GIVEN name of a natural person? "
+                       "Return your ANSWER in the following RAW JSON format ONLY and WITHOUT backticks:\n"
                        "{\"answer\": \"yes\" or \"no\"}")
         resp = llm.complete(prompt_text)
 
@@ -309,7 +303,7 @@ def confirm_natural_name(name):
 
 def upload_suspects(url: str, chat_engine):
     """
-    Uploads suspects to sqlite.
+    Uploads suspects to the database.
 
     Args:
         url (str): The URL of the analyzed article.
@@ -344,8 +338,6 @@ def upload_suspects(url: str, chat_engine):
                         populate_suspect_forms_table(url, suspect, chat_engine)
                     except Exception as e:
                         logger.error(f"Failed to populate suspect form for suspect {suspect}: {e}")
-
-
         else:
             parameters = {"url": url, "suspect": "false"}
             logger.info(f"No suspect found: {parameters}")
@@ -353,7 +345,6 @@ def upload_suspects(url: str, chat_engine):
     except Exception as e:
         logger.error(f"Failed to upload suspects: {e}")
     return suspects
-
 
 def populate_suspect_forms_table(url: str, suspect: str, chat_engine) -> None:
     """
@@ -369,49 +360,49 @@ def populate_suspect_forms_table(url: str, suspect: str, chat_engine) -> None:
     try:
         # Generate the suspect form prompt
         suspect_form_prompt = (
-        f"Assistant, carefully extract the following detail for {suspect} from the text: "
-        "1. Gender,"
-        "2. Date of Birth,"
-        "3. Age,"
-        "4. Address Notes (any address/city/location associated with them would be stored here just as text)"
-        "5. Phone number,"
-        "6. Nationality,"
-        "7. Occupation,"
-        "8. Role: Recruiter, Transporter, Master, Facilitator, Boss Trafficker, Host, Other [other role must still be their role in trafficking, not general job posting]"
-        "9. Suspect Appearance,"
-        "10. Suspect Vehicle Description,"
-        "11. Vehicle Plate #,"
-        "12. What is evident of the suspect from the article:Definitely trafficked many people, Has trafficked some people, Suspect s/he's a trafficker, Don't believe s/he's a trafficker"
-        "13. Arrested status? Yes - in police custody, Yes - but has been released (not on bail), Yes - but released on bail, No"
-        "14. Arrest Date,"
-        "15. Crime(s) Person Charged With,"
-        "16. Yes, willing (list PV names): A list of any PVs that seem willing to testify against the suspect"
-        "17. Suspect in police custody,"
-        "18. Suspect's current location,"
-        "19. Suspect's last known location (location text),"
-        "20. Suspect's last known location date (date)"
-        " Please return your answer in the following RAW JSON format ONLY and NO back ticks and NO code blocks, e.g.:\n"
-        '{"gender": "male", "female" or null,\n'
-        '  "date_of_birth": "YYYY-MM-DD" or null,\n'
-        '  "age": "integer" or null,\n'
-        '  "address_notes": "text" or null,\n'
-        '  "phone_number": "text" or null,\n'
-        '  "nationality": "text" or null,\n'
-        '  "occupation": "text" or null,\n'
-        '  "role": "text" or null,\n'
-        '  "appearance": "text" or null,\n'
-        '  "vehicle_description": "text" or null,\n'
-        '  "vehicle_plate_number": "text" or null,\n'
-        '  "evidence": "text" or null,\n'
-        '  "arrested_status": "text" or null,\n'
-        '  "arrest_date": "YYYY-MM-DD" or null,\n'
-        '  "crimes_person_charged_with": "text" or null,\n'
-        '  "willing_pv_names": "text" or null,\n'
-        '  "suspect_in_police_custody": "text" or null,\n'
-        '  "suspect_current_location": "text" or null,\n'
-        '  "suspect_last_known_location": "text" or null,\n'
-        '  "suspect_last_known_location_date": "YYYY-MM-DD" or null\n'
-        "}"
+            f"Assistant, carefully extract the following details for {suspect} from the text: "
+            "1. Gender,"
+            "2. Date of Birth,"
+            "3. Age,"
+            "4. Address Notes (any address/city/location associated with them would be stored here just as text), "
+            "5. Phone number,"
+            "6. Nationality,"
+            "7. Occupation,"
+            "8. Role: Recruiter, Transporter, Master, Facilitator, Boss Trafficker, Host, Other [other role must still be their role in trafficking, not general job posting], "
+            "9. Suspect Appearance,"
+            "10. Suspect Vehicle Description,"
+            "11. Vehicle Plate #,"
+            "12. What is evident of the suspect from the article: Definitely trafficked many people, Has trafficked some people, Suspect s/he's a trafficker, Don't believe s/he's a trafficker, "
+            "13. Arrested status? Yes - in police custody, Yes - but has been released (not on bail), Yes - but released on bail, No, "
+            "14. Arrest Date,"
+            "15. Crime(s) Person Charged With,"
+            "16. Yes, willing (list PV names): A list of any PVs that seem willing to testify against the suspect, "
+            "17. Suspect in police custody,"
+            "18. Suspect's current location,"
+            "19. Suspect's last known location (location text), "
+            "20. Suspect's last known location date (date). "
+            "Please return your answer in the following RAW JSON format ONLY and NO backticks and NO code blocks, e.g.:\n"
+            '{"gender": "male" or "female" or null,\n'
+            '  "date_of_birth": "YYYY-MM-DD" or null,\n'
+            '  "age": "integer" or null,\n'
+            '  "address_notes": "text" or null,\n'
+            '  "phone_number": "text" or null,\n'
+            '  "nationality": "text" or null,\n'
+            '  "occupation": "text" or null,\n'
+            '  "role": "text" or null,\n'
+            '  "appearance": "text" or null,\n'
+            '  "vehicle_description": "text" or null,\n'
+            '  "vehicle_plate_number": "text" or null,\n'
+            '  "evidence": "text" or null,\n'
+            '  "arrested_status": "text" or null,\n'
+            '  "arrest_date": "YYYY-MM-DD" or null,\n'
+            '  "crimes_person_charged_with": "text" or null,\n'
+            '  "willing_pv_names": "text" or null,\n'
+            '  "suspect_in_police_custody": "text" or null,\n'
+            '  "suspect_current_location": "text" or null,\n'
+            '  "suspect_last_known_location": "text" or null,\n'
+            '  "suspect_last_known_location_date": "YYYY-MM-DD" or null\n'
+            "}"
         )
 
         # Send the prompt to the chat engine
@@ -441,6 +432,21 @@ def populate_suspect_forms_table(url: str, suspect: str, chat_engine) -> None:
     except Exception as e:
         logger.error(f"Failed to populate suspect_forms table for suspect '{suspect}' from URL '{url}': {e}")
 
+def fetch_url_with_retries(driver, url, max_retries=3, retry_delay=5):
+    for attempt in range(1, max_retries + 1):
+        try:
+            logger.info(f"Attempt {attempt} to load URL: {url}")
+            driver.get(url)
+            logger.info(f"Successfully loaded URL: {url}")
+            return True
+        except TimeoutException:
+            logger.warning(f"Attempt {attempt} timed out for URL: {url}")
+        except WebDriverException as e:
+            logger.error(f"WebDriverException on attempt {attempt} for URL {url}: {e}")
+            break  # Break on WebDriver exceptions other than Timeout
+        time.sleep(retry_delay)
+    logger.error(f"Failed to load URL after {max_retries} attempts: {url}")
+    return False
 
 def main():
     # Initialize Database
@@ -451,10 +457,11 @@ def main():
 
     # Initialize Selenium WebDriver
     driver = initialize_selenium()
-    # if driver is None:
-    #     logger.critical("Selenium WebDriver initialization failed. Exiting.")
-    #     return
+    if driver is None:
+        logger.critical("Selenium WebDriver initialization failed. Exiting.")
+        exit(1)
 
+    # Define search parameters
     search_terms = [
         '"human trafficking"',
         '"cyber trafficking"',
@@ -467,11 +474,9 @@ def main():
     # Define domains to exclude
     excluded_domains = [
         'wikipedia.org',
-        '.gov',  # This will exclude all .gov domains
-        '.ngo',
-        '.org'
-        # 'example.com',
-        # 'anotherdomain.org',
+        '.gov',
+        'ngo',
+        # Add other specific domains as needed
     ]
 
     # Build the exclusion part of the query
@@ -483,7 +488,6 @@ def main():
     logger.info(f"Constructed search query: {query}")
 
     # Perform Google Search
-    # search_results = google_search(query, API_KEY, SEARCH_ENGINE_ID, num_results=MAX_SEARCH_RESULTS)
     search_results = fetch_all_results(query, API_KEY, SEARCH_ENGINE_ID, max_results=30)
     logger.info(f"Retrieved {len(search_results)} search results.")
 
@@ -493,12 +497,21 @@ def main():
         if not is_url_accessible(url):
             logger.warning(f"URL not accessible: {url}")
             continue
-        logger.info(f"Found article: {url}")
+        logger.info(f"Processing URL: {url}")
         extracted = tldextract.extract(url)
         domain_name = extracted.domain
-        driver.get(url)
-        driver.implicitly_wait(10)  # seconds
+
+        # Attempt to load the URL with retries
+        success = fetch_url_with_retries(driver, url)
+        if not success:
+            continue
+
+        # Extract Main Text
         text = extract_main_text_selenium(driver, url)
+        # Alternatively, use requests and BeautifulSoup or newspaper3k
+        # text = extract_main_text_requests(url)
+        # text = extract_main_text_newspaper(url)
+
         result = {"url": url, "domain_name": domain_name, "source": "google_search", "content": text}
         if text:
             try:
@@ -517,17 +530,22 @@ def main():
                 incident_type, incidents = verify_incident(url, chat_engine)
                 result.update(incident_type)
                 db.insert_url(result)
-                if result["actual_incident"] == 1:
+                if result.get("actual_incident") == 1:
                     for incident in incidents:
                         db.insert_incident(url, incident)
                         logger.info(f"Inserted incident: {incident}")
                     suspects = upload_suspects(url, chat_engine)
-
             except Exception as e:
                 logger.error(f"Error processing URL {url}: {e}")
-    else:
-        logger.warning(f"No text extracted from URL: {url}")
+        else:
+            logger.warning(f"No text extracted from URL: {url}")
 
+        # Optional: Add a short delay to respect target servers
+        time.sleep(random.uniform(1, 3))  # Sleep between 1 to 3 seconds
+
+    # Clean Up
+    driver.quit()
+    logger.info("Google Miner service completed successfully.")
 
 if __name__ == "__main__":
     main()
