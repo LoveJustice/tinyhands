@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-"""
-Module for targeted news article search and filtering related to trafficking incidents.
-
-Refactored to exclude async usage and concurrency references.
-
-Usage:
-    python google_miner.py --days_back 7
-"""
 import pandas as pd
 import logging
 from typing import List, Optional, Any
@@ -28,9 +19,32 @@ from models import (
     SuspectResponse,
 )
 import requests
-# ------------------------------
-# Configuration Loading & Logger Setup
-# ------------------------------
+
+import os
+import logging
+import math
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+llm = OpenAI(temperature=0, model="gpt-4o", request_timeout=120.0)
+memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
+
+# Configure Logging
+logging.basicConfig(
+    filename="google_search.log",
+    filemode="a",
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+)
+logger = logging.getLogger(__name__)
+
+# Load API credentials from environment variables
+API_KEY = os.getenv('GOOGLE_API_KEY')
+SEARCH_ENGINE_ID = os.getenv('GOOGLE_CSE_ID')
+
+if not API_KEY or not SEARCH_ENGINE_ID:
+    logger.critical("API_KEY and SEARCH_ENGINE_ID must be set as environment variables.")
+    exit(1)
+
 SHORT_PROMPTS = {
     "incident_prompt": (
         "Assistant, please indicate if it can be said with certainty that this article is a factual report of an "
@@ -60,85 +74,85 @@ SHORT_PROMPTS = {
         '  "evidence": ["firstname and/or secondname of suspect1", '
         '"firstname and/or secondname of suspect2", "firstname and/or secondname of suspect3", ...] or null\n'
         "}"
+
+    ),
+    "victim_prompt": (
+        "Assistant, the following is a list of named suspects in the accompanying article.  Please indicate if there is mention of victim(s) of a crime related to human trafficking in this article. "
+        "Victims have to be natural persons that is, the NAME (firstname and/or secondname of suspect) of a person, not organizations or any other entities. Exclude cases involving allegations and cases involving \
+         politicians or celebrities or ANY other sensational reports or reporting"
+        "If yes, provide the victim(s) by name. EXCLUDE ALL other detail and ONLY provide the GIVEN NAME of the victim(s)."
+        "Return your answer in the following RAW JSON format ONLY and NO back ticks and with no code blocks:\n"
+        "{\n"
+        '  "answer": "yes" or "no",\n'
+        '  "evidence": ["firstname and/or secondname of victim1", '
+        '"firstname and/or secondname of victim2", "firstname and/or secondname of victim2", ...] or null\n'
+        "}"
+
     ),
 }
-llm = OpenAI(temperature=0, model="gpt-4o", request_timeout=120.0)
-memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
-
-logging.basicConfig(
-    filename="google_miner.log",
-    filemode="a",
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
-logger = logging.getLogger(__name__)
-logger.info("Google Mine`r service started (refactored, sync version).")
 
 
-
-def is_url_accessible(url):
-    try:
-        response = requests.head(url, timeout=10)
-        return response.status_code == 200
-    except requests.RequestException as e:
-        logger.error(f"Request exception for URL {url}: {e}")
-        return False
-
-
-    # Proceed with Selenium
-
-def spoof_articles(path) -> List[str]:
+def google_search(query, api_key, cse_id, start, num=10):
     """
-    Fetch articles synchronously using google search.
-    """
-    articles = []
-    try:
-        df = pd.read_csv(path)
-        urls = df['url'].tolist()
-        return urls
-    except Exception as e:
-        logger.error(f"Error fetching articles: {e}")
-        return []
-
-def load_config(config_path: str) -> dict:
-    """
-    Load configuration from a JSON file.
+    Performs a Google Custom Search and returns the search results.
 
     Args:
-        config_path: Name of or path to the configuration file
+        query (str): The search query.
+        api_key (str): Your Google API key.
+        cse_id (str): Your Custom Search Engine ID.
+        start (int): The index of the first result to return.
+        num (int, optional): Number of results to return. Defaults to 10.
 
     Returns:
-        dict: Loaded configuration
-
-    Raises:
-        FileNotFoundError: If config file doesn't exist
-        json.JSONDecodeError: If config file isn't valid JSON
+        list: A list of search result items.
     """
-    # Look for config in current directory
-    current_dir = os.getcwd()
-    full_path = os.path.join(current_dir, config_path)
-
-    if not os.path.exists(full_path):
-        raise FileNotFoundError(f"Configuration file not found: {full_path}")
-
+    service = build("customsearch", "v1", developerKey=api_key)
     try:
-        with open(full_path, "r") as f:
-            return json.load(f)
-    except json.JSONDecodeError as e:
-        raise json.JSONDecodeError(f"Invalid JSON in config file: {str(e)}", e.doc, e.pos)
+        res = service.cse().list(
+            q=query,
+            cx=cse_id,
+            num=num,
+            start=start
+        ).execute()
+        return res.get('items', [])
+    except HttpError as e:
+        error_content = e.content.decode('utf-8')
+        logger.error(f"HTTP Error {e.resp.status}: {error_content}")
+        return []
+    except Exception as e:
+        logger.error(f"Unexpected error during Google Search API call: {e}")
+        return []
 
+def fetch_all_results(query, api_key, cse_id, max_results=30):
+    """
+    Fetches all search results up to the specified maximum.
 
+    Args:
+        query (str): The search query.
+        api_key (str): Your Google API key.
+        cse_id (str): Your Custom Search Engine ID.
+        max_results (int, optional): Maximum number of results to fetch. Defaults to 30.
 
-config = load_config("search_config.json")
+    Returns:
+        list: A list of all fetched search result items.
+    """
+    results = []
+    num_per_page = 10
+    total_pages = math.ceil(max_results / num_per_page)
 
-logging.basicConfig(
-    filename="google_miner.log",
-    filemode="a",
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
-logger = logging.getLogger(__name__)
-logger.info("Google Miner service started (refactored, sync version).")
+    for page in range(total_pages):
+        start = 1 + page * num_per_page
+        logger.info(f"Fetching page {page + 1} with start={start}")
+        page_results = google_search(query, api_key, cse_id, start, num=num_per_page)
+        if not page_results:
+            logger.warning(f"No results returned for start={start}. Ending search.")
+            break
+        results.extend(page_results)
+        # Respect rate limits by adding a delay if necessary
+        # time.sleep(1)  # Uncomment if you encounter rate limit issues
+
+    return results[:max_results]  # Ensure not to exceed max_results
+
 
 def initialize_selenium() -> Optional[webdriver.Chrome]:
     """
@@ -175,24 +189,13 @@ def initialize_selenium() -> Optional[webdriver.Chrome]:
         logger.error(f"Failed to initialize Selenium WebDriver: {e}")
         return None
 
-def save_to_db(urls: List[str]) -> None:
-    """
-    Save filtered articles to a SQLite database.
-    """
-    db = URLDatabase()
-    driver = initialize_selenium()
-
-    for url in urls:
-        extracted = tldextract.extract(url)
-        domain_name = extracted.domain
-        driver.get(url)
-        driver.implicitly_wait(10)  # seconds
-        text = extract_main_text_selenium(driver, url)
-        try:
-            db.insert_url({"url": url, "domain_name": domain_name, "source": "google_miner", "content": text})
-            logger.info(f"Saved URL to database: {url}")
-        except DatabaseError as e:
-            logger.error(f"Error saving URL to database: {e}")
+def is_url_accessible(url):
+    try:
+        response = requests.head(url, timeout=10)
+        return response.status_code == 200
+    except requests.RequestException as e:
+        logger.error(f"Request exception for URL {url}: {e}")
+        return False
 
 def get_validated_response(
     prompt_key: str, prompt_text: str, model_class: Any, chat_engine
@@ -278,6 +281,78 @@ def verify_incident(url: str, chat_engine):
         logger.error(f"Error processing URL {url}: {e}")
         return result, incidents
 
+
+def confirm_natural_name(name):
+    """
+    Confirm if the provided name is a natural person's name.
+
+    Args:
+        name (str): The name to confirm.
+        chat_engine:
+    """
+    try:
+
+        prompt_text = (f"Assistant, is '{name}' the GIVEN name natural person? \
+        Return your ANSWER in the following RAW JSON format ONLY and WITHOUT backticks:\n\""
+                       "{\"answer\": \"yes\" or \"no\"}")
+        resp = llm.complete(prompt_text)
+
+        response_data = ConfirmResponse.model_validate_json(
+            resp.text
+        )
+        if response_data is None:
+            return False
+        return response_data.answer.lower() == "yes"
+    except Exception as e:
+        logger.error(f"Failed to confirm natural name: {e}")
+    return False
+
+def upload_suspects(url: str, chat_engine):
+    """
+    Uploads suspects to sqlite.
+
+    Args:
+        url (str): The URL of the analyzed article.
+        chat_engine:
+    """
+    suspects = []
+    db = URLDatabase()
+    try:
+        # Send prompt to chat engine
+        prompt_key = "suspect_prompt"
+
+        prompt_text = SHORT_PROMPTS[prompt_key]
+        response_data = get_validated_response(
+            prompt_key, prompt_text, SuspectResponse, chat_engine
+        )
+        if response_data is None:
+            return
+        if response_data.answer.lower() == "yes":
+            url_id = db.get_url_id(url)
+            suspects = response_data.evidence or []
+            for suspect in suspects:
+                natural_name = confirm_natural_name(suspect)
+                if natural_name:
+                    try:
+                        db.insert_suspect(url_id=url_id, suspect=suspect)
+                        logger.info(f"Suspect inserted with natural name: {suspect}")
+                    except DatabaseError as e:
+                        logger.warning(f"Failed to insert suspect {suspect} for URL ID {url_id}: {e}")
+
+                    # Attempt to populate suspect forms regardless of insertion success
+                    try:
+                        populate_suspect_forms_table(url, suspect, chat_engine)
+                    except Exception as e:
+                        logger.error(f"Failed to populate suspect form for suspect {suspect}: {e}")
+
+
+        else:
+            parameters = {"url": url, "suspect": "false"}
+            logger.info(f"No suspect found: {parameters}")
+
+    except Exception as e:
+        logger.error(f"Failed to upload suspects: {e}")
+    return suspects
 
 
 def populate_suspect_forms_table(url: str, suspect: str, chat_engine) -> None:
@@ -367,143 +442,91 @@ def populate_suspect_forms_table(url: str, suspect: str, chat_engine) -> None:
         logger.error(f"Failed to populate suspect_forms table for suspect '{suspect}' from URL '{url}': {e}")
 
 
-def confirm_natural_name(name):
-    """
-    Confirm if the provided name is a natural person's name.
-
-    Args:
-        name (str): The name to confirm.
-        chat_engine:
-    """
-    try:
-
-        prompt_text = (f"Assistant, is '{name}' the GIVEN name natural person? \
-        Return your ANSWER in the following RAW JSON format ONLY and WITHOUT backticks:\n\""
-                       "{\"answer\": \"yes\" or \"no\"}")
-        resp = llm.complete(prompt_text)
-
-        response_data = ConfirmResponse.model_validate_json(
-            resp.text
-        )
-        if response_data is None:
-            return False
-        return response_data.answer.lower() == "yes"
-    except Exception as e:
-        logger.error(f"Failed to confirm natural name: {e}")
-    return False
-
-
-def upload_suspects(url: str, chat_engine):
-    """
-    Uploads suspects to sqlite.
-
-    Args:
-        url (str): The URL of the analyzed article.
-        chat_engine:
-    """
-    suspects = []
-    db = URLDatabase()
-    try:
-        # Send prompt to chat engine
-        prompt_key = "suspect_prompt"
-
-        prompt_text = SHORT_PROMPTS[prompt_key]
-        response_data = get_validated_response(
-            prompt_key, prompt_text, SuspectResponse, chat_engine
-        )
-        if response_data is None:
-            return
-        if response_data.answer.lower() == "yes":
-            url_id = db.get_url_id(url)
-            suspects = response_data.evidence or []
-            for suspect in suspects:
-                natural_name = confirm_natural_name(suspect)
-                if natural_name:
-                    try:
-                        db.insert_suspect(url_id=url_id, suspect=suspect)
-                        logger.info(f"Suspect inserted with natural name: {suspect}")
-                    except DatabaseError as e:
-                        logger.warning(f"Failed to insert suspect {suspect} for URL ID {url_id}: {e}")
-
-                    # Attempt to populate suspect forms regardless of insertion success
-                    try:
-                        populate_suspect_forms_table(url, suspect, chat_engine)
-                    except Exception as e:
-                        logger.error(f"Failed to populate suspect form for suspect {suspect}: {e}")
-
-
-        else:
-            parameters = {"url": url, "suspect": "false"}
-            logger.info(f"No suspect found: {parameters}")
-
-    except Exception as e:
-        logger.error(f"Failed to upload suspects: {e}")
-    return suspects
-# ------------------------------
-# Main Entry Point (Synchronous)
-# ------------------------------
-def main() -> None:
-
-    # Override days_back from command-line if provided.
+def main():
+    # Initialize Database
     db = URLDatabase()
     db.create_suspect_table()
     db.create_suspect_forms_table()
     db.create_incidents_table()
 
+    # Initialize Selenium WebDriver
     driver = initialize_selenium()
-    for search_config in config.get('run_configs', []):
-        search_config['days_back'] = 3 #args.days_back
+    # if driver is None:
+    #     logger.critical("Selenium WebDriver initialization failed. Exiting.")
+    #     return
 
-        searcher = TraffickingNewsSearch(search_config)
-        urls = searcher.get_recent_articles()
-        # urls = spoof_articles('../../../url_miner/output/saved_urls_generic_search_20250128_080112.csv')
-        logger.info(f"Retrieved {len(urls)} articles in the past {search_config['days_back']} day(s).")
-        if not urls:
-            logger.info("No articles found for this configuration.")
+    search_terms = [
+        '"human trafficking"',
+        '"cyber trafficking"',
+        '"child trafficking"'
+    ]
+
+    # Define the location filter
+    location_filter = '"South Africa"'
+
+    # Define domains to exclude
+    excluded_domains = [
+        'wikipedia.org',
+        '.gov',  # This will exclude all .gov domains
+        '.ngo',
+        '.org'
+        # 'example.com',
+        # 'anotherdomain.org',
+    ]
+
+    # Build the exclusion part of the query
+    exclusion_query = ' '.join([f'-site:{domain}' for domain in excluded_domains])
+
+    # Construct the final search query
+    query = ' OR '.join(search_terms) + f' AND {location_filter} {exclusion_query}'
+
+    logger.info(f"Constructed search query: {query}")
+
+    # Perform Google Search
+    # search_results = google_search(query, API_KEY, SEARCH_ENGINE_ID, num_results=MAX_SEARCH_RESULTS)
+    search_results = fetch_all_results(query, API_KEY, SEARCH_ENGINE_ID, max_results=30)
+    logger.info(f"Retrieved {len(search_results)} search results.")
+
+    urls = [item.get('link') for item in search_results if item.get('link')]
+
+    for url in urls:
+        if not is_url_accessible(url):
+            logger.warning(f"URL not accessible: {url}")
             continue
-
-        for url in urls:
-            if not is_url_accessible(url):
-                logger.warning(f"URL not accessible: {url}")
-                continue
-            logger.info(f"Found article: {url}")
-            extracted = tldextract.extract(url)
-            domain_name = extracted.domain
-            driver.get(url)
-            driver.implicitly_wait(10)  # seconds
-            text = extract_main_text_selenium(driver, url)
-            result = {"url": url, "domain_name": domain_name, "source": "google_miner", "content": text}
-            if text:
-                try:
-                    documents = [Document(text=text)]
-                    index = VectorStoreIndex.from_documents(documents)
-                    memory.reset()
-                    chat_engine = index.as_chat_engine(
-                        chat_mode="context",
-                        llm=llm,
-                        memory=memory,
-                        system_prompt=(
-                            "You are a career forensic analyst with deep insight into crime and criminal activity, especially human trafficking. "
-                            "Your express goal is to investigate online reports and extract pertinent factual detail."
-                        )
+        logger.info(f"Found article: {url}")
+        extracted = tldextract.extract(url)
+        domain_name = extracted.domain
+        driver.get(url)
+        driver.implicitly_wait(10)  # seconds
+        text = extract_main_text_selenium(driver, url)
+        result = {"url": url, "domain_name": domain_name, "source": "google_search", "content": text}
+        if text:
+            try:
+                documents = [Document(text=text)]
+                index = VectorStoreIndex.from_documents(documents)
+                memory.reset()
+                chat_engine = index.as_chat_engine(
+                    chat_mode="context",
+                    llm=llm,
+                    memory=memory,
+                    system_prompt=(
+                        "You are a career forensic analyst with deep insight into crime and criminal activity, especially human trafficking. "
+                        "Your express goal is to investigate online reports and extract pertinent factual detail."
                     )
-                    incident_type, incidents = verify_incident(url, chat_engine)
-                    result.update(incident_type)
-                    db.insert_url(result)
-                    if result["actual_incident"] == 1:
-                        for incident in incidents:
-                            db.insert_incident(url, incident)
-                            logger.info(f"Inserted incident: {incident}")
-                        suspects = upload_suspects(url, chat_engine)
+                )
+                incident_type, incidents = verify_incident(url, chat_engine)
+                result.update(incident_type)
+                db.insert_url(result)
+                if result["actual_incident"] == 1:
+                    for incident in incidents:
+                        db.insert_incident(url, incident)
+                        logger.info(f"Inserted incident: {incident}")
+                    suspects = upload_suspects(url, chat_engine)
 
-                except Exception as e:
-                    logger.error(f"Error processing URL {url}: {e}")
-        else:
-            logger.warning(f"No text extracted from URL: {url}")
-
-
-
-
+            except Exception as e:
+                logger.error(f"Error processing URL {url}: {e}")
+    else:
+        logger.warning(f"No text extracted from URL: {url}")
 
 
 if __name__ == "__main__":

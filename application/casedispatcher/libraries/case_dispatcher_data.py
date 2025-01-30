@@ -65,7 +65,6 @@ def get_suspects(country=None):
                             ,borderstation.station_name AS station_name \
                             ,borderstation.id AS borderstation_id \
                             ,suspect.sf_number AS sf_number \
-                            ,suspectlegal.pv_attempt AS pv_attempt \
                             ,suspectlegal.arrest_date AS arrest_date \
                             ,suspectlegal.arrested AS suspect_arrested \
                             FROM public.dataentry_person person \
@@ -80,7 +79,7 @@ def get_suspects(country=None):
         suspects = dbc.ex_query(sql_query, parameters)
 
     return suspects
-
+#                             # ,suspectlegal.pv_attempt AS pv_attempt \
 
 def get_irf(country=None):
     parameters = {}
