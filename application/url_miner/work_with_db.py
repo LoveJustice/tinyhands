@@ -230,6 +230,7 @@ class URLDatabase:
                         vehicle_plate_number TEXT,
                         evidence TEXT,
                         destination TEXT,
+                        job_offered TEXT,
                         FOREIGN KEY (url_id) REFERENCES urls (id) ON DELETE CASCADE ON UPDATE CASCADE
                     )
                     """
@@ -712,7 +713,7 @@ class URLDatabase:
                         "vehicle_description": victim_data.vehicle_description,
                         "vehicle_plate_number": victim_data.vehicle_plate_number,
                         "destination": victim_data.destination,
-                        "job_offered": victim_data.evidence,
+                        "job_offered": victim_data.job_offered,
                     },
                 )
                 conn.commit()

@@ -28,6 +28,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 import time
 import random
 from newspaper import Article
+from get_urls_from_csvs import get_unique_urls_from_csvs
 
 llm = OpenAI(temperature=0, model="gpt-4o", request_timeout=120.0)
 memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
@@ -588,11 +589,7 @@ def main():
     db.create_victim_table()
     db.create_victim_forms_table()
 
-    # Initialize Selenium WebDriver
-    driver = initialize_selenium()
-    if driver is None:
-        logger.critical("Selenium WebDriver initialization failed. Exiting.")
-        exit(1)
+
 
     # Define search parameters
     search_terms = [
@@ -604,7 +601,7 @@ def main():
     ]
 
     # Define the location filter
-    location_filter = '"India"'
+
 
     # Define domains to exclude
     excluded_domains = [
@@ -617,69 +614,77 @@ def main():
 
     # Build the exclusion part of the query
     exclusion_query = ' '.join([f'-site:{domain}' for domain in excluded_domains])
+    for location_filter in ["Nigeria", "Ghana", "Kenya", "South Africa", "Uganda", "Tanzania", "Nepal", "India", "Bangladesh", "Pakistan", "Sri Lanka", "Philippines", "Indonesia", "Malaysia", "Thailand", "Vietnam", "Cambodia", "Myanmar", "Laos", "China", "Mongolia", "North Korea", "South Korea", "Japan", "Taiwan", "Hong Kong", "Macau", "Singapore", "Brunei", "Timor-Leste"]:
 
-    # Construct the final search query
-    query = ' OR '.join(search_terms) + f' AND {location_filter} {exclusion_query}'
+        # Initialize Selenium WebDriver
+        driver = initialize_selenium()
+        if driver is None:
+            logger.critical("Selenium WebDriver initialization failed. Exiting.")
+            exit(1)
 
-    logger.info(f"Constructed search query: {query}")
+        # Construct the final search query
+        query = ' OR '.join(search_terms) + f' AND {location_filter} {exclusion_query}'
 
-    # Perform Google Search
-    search_results = fetch_all_results(query, API_KEY, SEARCH_ENGINE_ID, max_results=30)
-    logger.info(f"Retrieved {len(search_results)} search results.")
+        logger.info(f"Constructed search query: {query}")
 
-    urls = [item.get('link') for item in search_results if item.get('link')]
+        # Perform Google Search
+        search_results = fetch_all_results(query, API_KEY, SEARCH_ENGINE_ID, max_results=30)
+        logger.info(f"Retrieved {len(search_results)} search results.")
 
-    for url in urls:
-        if not is_url_accessible(url):
-            logger.warning(f"URL not accessible: {url}")
-            continue
-        logger.info(f"Processing URL: {url}")
-        extracted = tldextract.extract(url)
-        domain_name = extracted.domain
+        urls = [item.get('link') for item in search_results if item.get('link')]
+        # urls = get_unique_urls_from_csvs('csv', 'url', 4, 1000)
 
-        # Attempt to load the URL with retries
-        success = fetch_url_with_retries(driver, url)
-        if not success:
-            continue
+        for url in urls:
+            if not is_url_accessible(url):
+                logger.warning(f"URL not accessible: {url}")
+                continue
+            logger.info(f"Processing URL: {url}")
+            extracted = tldextract.extract(url)
+            domain_name = extracted.domain
 
-        # Extract Main Text
-        # text = extract_main_text_selenium(driver, url)
-        text = extract_main_text_newspaper(url)
-        # Alternatively, use requests and BeautifulSoup or newspaper3k
-        # text = extract_main_text_requests(url)
-        # text = extract_main_text_newspaper(url)
+            # Attempt to load the URL with retries
+            success = fetch_url_with_retries(driver, url)
+            if not success:
+                continue
 
-        result = {"url": url, "domain_name": domain_name, "source": "google_search", "content": text}
-        if text:
-            try:
-                documents = [Document(text=text)]
-                index = VectorStoreIndex.from_documents(documents)
-                memory.reset()
-                chat_engine = index.as_chat_engine(
-                    chat_mode="context",
-                    llm=llm,
-                    memory=memory,
-                    system_prompt=(
-                        "You are a career forensic analyst with deep insight into crime and criminal activity, especially human trafficking. "
-                        "Your express goal is to investigate online reports and extract pertinent factual detail."
+            # Extract Main Text
+            # text = extract_main_text_selenium(driver, url)
+            text = extract_main_text_newspaper(url)
+            # Alternatively, use requests and BeautifulSoup or newspaper3k
+            # text = extract_main_text_requests(url)
+            # text = extract_main_text_newspaper(url)
+
+            result = {"url": url, "domain_name": domain_name, "source": "google_search", "content": text}
+            if text:
+                try:
+                    documents = [Document(text=text)]
+                    index = VectorStoreIndex.from_documents(documents)
+                    memory.reset()
+                    chat_engine = index.as_chat_engine(
+                        chat_mode="context",
+                        llm=llm,
+                        memory=memory,
+                        system_prompt=(
+                            "You are a career forensic analyst with deep insight into crime and criminal activity, especially human trafficking. "
+                            "Your express goal is to investigate online reports and extract pertinent factual detail."
+                        )
                     )
-                )
-                incident_type, incidents = verify_incident(url, chat_engine)
-                result.update(incident_type)
-                db.insert_url(result)
-                if result.get("actual_incident") == 1:
-                    for incident in incidents:
-                        db.insert_incident(url, incident)
-                        logger.info(f"Inserted incident: {incident}")
-                    suspects = upload_suspects(url, chat_engine)
-                    victims = upload_victims(url, chat_engine)
-            except Exception as e:
-                logger.error(f"Error processing URL {url}: {e}")
-        else:
-            logger.warning(f"No text extracted from URL: {url}")
+                    incident_type, incidents = verify_incident(url, chat_engine)
+                    result.update(incident_type)
+                    db.insert_url(result)
+                    if result.get("actual_incident") == 1:
+                        for incident in incidents:
+                            db.insert_incident(url, incident)
+                            logger.info(f"Inserted incident: {incident}")
+                        suspects = upload_suspects(url, chat_engine)
+                        victims = upload_victims(url, chat_engine)
+                except Exception as e:
+                    logger.error(f"Error processing URL {url}: {e}")
+            else:
+                logger.warning(f"No text extracted from URL: {url}")
 
-        # Optional: Add a short delay to respect target servers
-        time.sleep(random.uniform(1, 3))  # Sleep between 1 to 3 seconds
+            # Optional: Add a short delay to respect target servers
+            time.sleep(random.uniform(1, 3))  # Sleep between 1 to 3 seconds
 
     # Clean Up
     driver.quit()

@@ -15,6 +15,9 @@ from llama_index.llms.openai import OpenAI
 from models import (
     IncidentResponse,
 )
+from get_urls_from_csvs import get_unique_urls_from_csvs
+urls = get_unique_urls_from_csvs('csv','url',4,1000)
+
 llm = OpenAI(temperature=0, model="gpt-4o-mini", request_timeout=120.0)
 memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
 from newspaper import Article
