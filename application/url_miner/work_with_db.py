@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from dataclasses import dataclass, field
 from typing import Optional
 from models import (
-    SuspectFormResponse,
+    SuspectFormResponse, VictimFormResponse,
 )
 
 
@@ -114,6 +114,36 @@ class URLDatabase:
             self.logger.error(error_msg)
             raise DatabaseError(error_msg)
 
+    def create_victim_table(self) -> None:
+        """
+        Create the 'suspects' table if it doesn't exist.
+
+        The table maintains a relationship with the 'urls' table via the 'url_id' field.
+
+        Raises:
+            DatabaseError: If table creation fails.
+        """
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS victims (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        url_id INTEGER NOT NULL,
+                        victim TEXT NOT NULL,
+                        UNIQUE (url_id, victim),  -- Ensures unique combination of url_id and victim
+                        FOREIGN KEY (url_id) REFERENCES urls (id) ON DELETE CASCADE ON UPDATE CASCADE
+                    )
+                    """
+                )
+                conn.commit()
+                self.logger.info("Database table 'victims' created or verified successfully.")
+        except sqlite3.Error as e:
+            error_msg = f"Failed to create 'victims' table: {str(e)}"
+            self.logger.error(error_msg)
+            raise DatabaseError(error_msg)
+
+
     def create_suspect_table(self) -> None:
         """
         Create the 'suspects' table if it doesn't exist.
@@ -170,6 +200,45 @@ class URLDatabase:
             error_msg = f"Failed to create 'incidents' table: {str(e)}"
             self.logger.error(error_msg)
             raise DatabaseError(error_msg)
+
+    def create_victim_forms_table(self) -> None:
+        """
+        Create the 'suspect_forms' table if it doesn't exist.
+
+        The table maintains a relationship with the 'urls' table via the 'url_id' field.
+
+        Raises:
+            DatabaseError: If table creation fails.
+        """
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS victim_forms (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        url_id INTEGER NOT NULL,
+                        name TEXT NOT NULL, -- The name of the victim
+                        gender TEXT CHECK(gender IN ('male', 'female', NULL)),
+                        date_of_birth TEXT, -- Format: YYYY-MM-DD
+                        age INTEGER,
+                        address_notes TEXT,
+                        phone_number TEXT,
+                        nationality TEXT,
+                        occupation TEXT,
+                        appearance TEXT,
+                        vehicle_description TEXT,
+                        vehicle_plate_number TEXT,
+                        evidence TEXT,
+                        destination TEXT,
+                        FOREIGN KEY (url_id) REFERENCES urls (id) ON DELETE CASCADE ON UPDATE CASCADE
+                    )
+                    """
+                )
+                conn.commit()
+                self.logger.info("Database table 'suspect_forms' created or verified successfully.")
+        except sqlite3.Error as e:
+            error_msg = f"Failed to create 'suspect_forms' table: {str(e)}"
+
 
     def create_suspect_forms_table(self) -> None:
         """
@@ -573,9 +642,85 @@ class URLDatabase:
                 )
                 conn.commit()
         except sqlite3.Error as e:
-            error_msg = f"Failed to insert incident for URL ID {url_id}: {str(e)}"
+            error_msg = f"Failed to insert suspect for URL ID {url_id}: {str(e)}"
             self.logger.error(error_msg)
             raise DatabaseError(error_msg)
+
+    def insert_victim(self, url_id: int, victim: str) -> None:
+        """
+        Insert a suspect into the suspects table.
+
+        Args:
+            url_id: The ID of the URL the suspect relates to.
+            suspect: The name(s) of the suspect.
+
+        Raises:
+            DatabaseError: If the insertion fails.
+        """
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute(
+                    """
+                    INSERT INTO victims (url_id, victim)
+                    VALUES (?, ?)
+                    """,
+                    (url_id, victim),
+                )
+                conn.commit()
+        except sqlite3.Error as e:
+            error_msg = f"Failed to insert victim for URL ID {url_id}: {str(e)}"
+            self.logger.error(error_msg)
+            raise DatabaseError(error_msg)
+
+    def insert_victim_form(self, url_id: int, victim_data: VictimFormResponse) -> None:
+        """
+        Insert a suspect form into the suspect_forms table.
+
+        Args:
+            url_id (int): The ID of the URL to which the suspect form relates.
+            victim_data (VictimFormResponse): The data extracted from the suspect form prompt.
+
+        Raises:
+            DatabaseError: If the insertion fails.
+        """
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute(
+                    """
+                    INSERT INTO victim_forms (
+                        url_id, name, gender, date_of_birth, age, address_notes, phone_number,
+                        nationality, occupation, appearance, vehicle_description,
+                        vehicle_plate_number, destination, job_offered
+                    )
+                    VALUES (
+                        :url_id, :name, :gender, :date_of_birth, :age, :address_notes, :phone_number,
+                        :nationality, :occupation, :appearance, :vehicle_description,
+                        :vehicle_plate_number, :destination, :job_offered
+                    )
+                    """,
+                    {
+                        "url_id": url_id,
+                        "name": victim_data.name,
+                        "gender": victim_data.gender,
+                        "date_of_birth": victim_data.date_of_birth,
+                        "age": victim_data.age,
+                        "address_notes": victim_data.address_notes,
+                        "phone_number": victim_data.phone_number,
+                        "nationality": victim_data.nationality,
+                        "occupation": victim_data.occupation,
+                        "appearance": victim_data.appearance,
+                        "vehicle_description": victim_data.vehicle_description,
+                        "vehicle_plate_number": victim_data.vehicle_plate_number,
+                        "destination": victim_data.destination,
+                        "job_offered": victim_data.evidence,
+                    },
+                )
+                conn.commit()
+        except sqlite3.Error as e:
+            error_msg = f"Failed to insert suspect form for URL ID {url_id}: {str(e)}"
+            self.logger.error(error_msg)
+            raise DatabaseError(error_msg)
+
 
     def insert_suspect_form(self, url_id: int, suspect_data: SuspectFormResponse) -> None:
         """

@@ -17,6 +17,8 @@ from models import (
     IncidentResponse,
     SuspectFormResponse,
     SuspectResponse,
+    VictimResponse,
+    VictimFormResponse
 )
 import requests
 import math
@@ -25,6 +27,7 @@ from googleapiclient.errors import HttpError
 from selenium.common.exceptions import TimeoutException, WebDriverException
 import time
 import random
+from newspaper import Article
 
 llm = OpenAI(temperature=0, model="gpt-4o", request_timeout=120.0)
 memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
@@ -78,10 +81,10 @@ SHORT_PROMPTS = {
     ),
     "victim_prompt": (
         "Assistant, the following is a list of named suspects in the accompanying article.  Please indicate if there is mention of victim(s) of a crime related to human trafficking in this article. "
-        "Victims have to be natural persons that is, the NAME (firstname and/or secondname of suspect) of a person, not organizations or any other entities. Exclude cases involving allegations and cases involving "
+        "Victims have to be natural persons that is, the NAME (firstname and/or secondname of victim) of a person, not organizations or any other entities. Exclude cases involving allegations and cases involving "
         "politicians or celebrities or ANY other sensational reports or reporting."
         "If yes, provide the victim(s) by name. EXCLUDE ALL other detail and ONLY provide the GIVEN NAME of the victim(s)."
-        "Return your answer in the following RAW JSON format ONLY and NO back ticks and with no code blocks:\n"
+        "Return your answer in the following RAW JSON format ONLY with NO back ticks and with NO code blocks:\n"
         "{\n"
         '  "answer": "yes" or "no",\n'
         '  "evidence": ["firstname and/or secondname of victim1", '
@@ -120,6 +123,16 @@ def google_search(query, api_key, cse_id, start, num=10):
     except Exception as e:
         logger.error(f"Unexpected error during Google Search API call: {e}")
         return []
+
+def extract_main_text_newspaper(url: str) -> str:
+    try:
+        article = Article(url)
+        article.download()
+        article.parse()
+        return article.text
+    except Exception as e:
+        logger.error(f"Error extracting text with newspaper from {url}: {e}")
+        return ""
 
 def fetch_all_results(query, api_key, cse_id, max_results=30):
     """
@@ -346,6 +359,124 @@ def upload_suspects(url: str, chat_engine):
         logger.error(f"Failed to upload suspects: {e}")
     return suspects
 
+def upload_victims(url: str, chat_engine):
+    """
+    Uploads victims to the database.
+
+    Args:
+        url (str): The URL of the analyzed article.
+        chat_engine:
+    """
+    victims = []
+    db = URLDatabase()
+    try:
+        # Send prompt to chat engine
+        prompt_key = "victim_prompt"
+
+        prompt_text = SHORT_PROMPTS[prompt_key]
+        response_data = get_validated_response(
+            prompt_key, prompt_text, VictimResponse, chat_engine
+        )
+        if response_data is None:
+            return
+        if response_data.answer.lower() == "yes":
+            url_id = db.get_url_id(url)
+            victims = response_data.evidence or []
+            for victim in victims:
+                natural_name = confirm_natural_name(victim)
+                if natural_name:
+                    try:
+                        db.insert_victim(url_id=url_id, victim=victim)
+                        logger.info(f"Victim inserted with natural name: {victim}")
+                    except DatabaseError as e:
+                        logger.warning(f"Failed to insert victim {victim} for URL ID {url_id}: {e}")
+
+                    # Attempt to populate victim forms regardless of insertion success
+                    try:
+                        populate_victim_forms_table(url, victim, chat_engine)
+                    except Exception as e:
+                        logger.error(f"Failed to populate victim form for victim {victim}: {e}")
+        else:
+            parameters = {"url": url, "victim": "false"}
+            logger.info(f"No victim found: {parameters}")
+
+    except Exception as e:
+        logger.error(f"Failed to upload victims: {e}")
+    return victims
+
+
+def populate_victim_forms_table(url: str, victim: str, chat_engine) -> None:
+    """
+    Populate the victim_forms table with data extracted from the victim_forms_prompt.
+
+    Args:
+        url (str): The URL of the article being analyzed.
+        victim (str): The name of the victim.
+        chat_engine: The chat engine instance for processing the prompt.
+    """
+    db = URLDatabase()
+
+    try:
+        # Generate the suspect form prompt
+        victim_form_prompt = (
+            f"Assistant, carefully extract the following details for {victim} from the text: "
+            "1. Gender,"
+            "2. Date of Birth,"
+            "3. Age,"
+            "4. Address Notes (any address/city/district associated with them would be stored here as text), "
+            "5. Phone number,"
+            "6. Nationality,"
+            "7. Occupation,"
+            "8. Victim Appearance,"
+            "9. Victim Vehicle Description,"
+            "10. Vehicle Plate #,"
+            "11. Where is the victim been trafficked to?"
+            "12. What job has the victim been offered?"
+            
+            
+            "Please return your answer in the following RAW JSON format ONLY and NO backticks and NO code blocks, e.g.:\n"
+            '{"gender": "male" or "female" or null,\n'
+            '  "date_of_birth": "YYYY-MM-DD" or null,\n'
+            '  "age": "integer" or null,\n'
+            '  "address_notes": "text" or null,\n'
+            '  "phone_number": "text" or null,\n'
+            '  "nationality": "text" or null,\n'
+            '  "occupation": "text" or null,\n'
+            '  "appearance": "text" or null,\n'
+            '  "vehicle_description": "text" or null,\n'
+            '  "vehicle_plate_number": "text" or null,\n'
+            '  "destination": "text" or null,\n'
+            '  "job_offered": "text" or null\n'
+            "}"
+        )
+
+        # Send the prompt to the chat engine
+        response_text = chat_engine.chat(victim_form_prompt)
+
+        # Add the suspect name to the response data dictionary
+        response_json = json.loads(response_text.response)  # Convert response to dictionary
+        response_json["name"] = victim  # Inject the suspect name
+
+        # Validate the enriched response
+        response_data = VictimFormResponse.model_validate(response_json)
+
+        logger.info(f"Extracted victim form data: {response_data}")
+
+        if response_data:
+            # Retrieve the URL ID from the database
+            url_id = db.get_url_id(url)
+            if url_id is None:
+                logger.error(f"URL not found in database: {url}")
+                return
+
+            # Insert the data into the suspect_forms table
+            db.insert_victim_form(url_id, response_data)
+
+            logger.info(f"Successfully inserted victim form for victim: {victim}")
+
+    except Exception as e:
+        logger.error(f"Failed to populate victim_forms table for victim '{victim}' from URL '{url}': {e}")
+
 def populate_suspect_forms_table(url: str, suspect: str, chat_engine) -> None:
     """
     Populate the suspect_forms table with data extracted from the suspect_form_prompt.
@@ -454,6 +585,8 @@ def main():
     db.create_suspect_table()
     db.create_suspect_forms_table()
     db.create_incidents_table()
+    db.create_victim_table()
+    db.create_victim_forms_table()
 
     # Initialize Selenium WebDriver
     driver = initialize_selenium()
@@ -465,17 +598,20 @@ def main():
     search_terms = [
         '"human trafficking"',
         '"cyber trafficking"',
-        '"child trafficking"'
+        '"child trafficking"',
+        '"organ trafficking"',
+        '"sex trafficking"'
     ]
 
     # Define the location filter
-    location_filter = '"South Africa"'
+    location_filter = '"India"'
 
     # Define domains to exclude
     excluded_domains = [
-        'wikipedia.org',
-        '.gov',
-        'ngo',
+        'wikipedia',
+        'ssrn',
+        'cambridge',
+        'merriam-webster'
         # Add other specific domains as needed
     ]
 
@@ -507,7 +643,8 @@ def main():
             continue
 
         # Extract Main Text
-        text = extract_main_text_selenium(driver, url)
+        # text = extract_main_text_selenium(driver, url)
+        text = extract_main_text_newspaper(url)
         # Alternatively, use requests and BeautifulSoup or newspaper3k
         # text = extract_main_text_requests(url)
         # text = extract_main_text_newspaper(url)
@@ -535,6 +672,7 @@ def main():
                         db.insert_incident(url, incident)
                         logger.info(f"Inserted incident: {incident}")
                     suspects = upload_suspects(url, chat_engine)
+                    victims = upload_victims(url, chat_engine)
             except Exception as e:
                 logger.error(f"Error processing URL {url}: {e}")
         else:

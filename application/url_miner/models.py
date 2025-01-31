@@ -113,3 +113,18 @@ class SuspectFormResponse(BaseModel):
     suspect_last_known_location: Optional[str] = None
     suspect_last_known_location_date: Optional[str] = None  # "YYYY-MM-DD" or null
 
+class VictimFormResponse(BaseModel):
+    name: str  # The suspect's name
+    gender: Optional[str] = None
+    date_of_birth: Optional[str] = None  # "YYYY-MM-DD" or null
+    age: Optional[int] = None
+    address_notes: Optional[str] = None
+    phone_number: Optional[str] = None
+    nationality: Optional[str] = None
+    occupation: Optional[str] = None
+    appearance: Optional[str] = None
+    vehicle_description: Optional[str] = None
+    vehicle_plate_number: Optional[str] = None
+    destination: Optional[str] = None
+    job_offered: Optional[str] = None
+

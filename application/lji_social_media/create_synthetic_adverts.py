@@ -38,7 +38,7 @@ class AdvertAnalysisConfig:
     temperature: float = 0
     request_timeout: float = 120.0
     output_path: Path = Path("results/synthetic_adverts.csv")
-    sample_size: int = 5
+    sample_size: int = 10
 
 
 class AdvertAnalyzer:
@@ -179,11 +179,10 @@ class AdvertAnalyzer:
         """
         return (
             f"Assistant, carefully consider this recruitment advert:{advert}. "
-            f"I want you to insert the necessary word OR sentence so that the following prompt will be CLEARLY and unambiguously TRUE: "
+            f"I want you to change any or every detail of this advert so that the following prompt will be CLEARLY and unambiguously TRUE: "
             f"'{cp.CLAUDE_PROMPTS[prompt_name]}'. "
-            "Be be original and be creative, but do not change ANY of the "
-            "OTHER factual detail. Please mimic the grammar, style and tone of "
-            "the provided adverts."
+            "Please mimic the grammar, style and tone of "
+            "the provided text."
         )
 
 
@@ -220,7 +219,13 @@ def main():
         "recruit_students_prompt",
         "requires_references",
     ]
-
+    sparse_flags = [
+        "dance_bar_prompt",
+        "drop_off_at_secure_location_prompt",
+        "massage_or_spa_prompt",
+        "no_education_skilled_prompt",
+        "soccer_trial_prompt",
+    ]
     config = AdvertAnalysisConfig()
     analyzer = AdvertAnalyzer(config)
 

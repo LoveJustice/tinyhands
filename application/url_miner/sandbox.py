@@ -17,7 +17,18 @@ from models import (
 )
 llm = OpenAI(temperature=0, model="gpt-4o-mini", request_timeout=120.0)
 memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
-
+from newspaper import Article
+url='https://www.ijm.ca/news/over-a-decade-of-partnership-with-the-philippines-history-of-ijm-canada-philippines-relationship'
+def extract_main_text_newspaper(url: str) -> str:
+    try:
+        article = Article(url)
+        article.download()
+        article.parse()
+        return article.text
+    except Exception as e:
+        logger.error(f"Error extracting text with newspaper from {url}: {e}")
+        return ""
+text = extract_main_text_newspaper(url)
 logging.basicConfig(
     filename="google_miner.log",
     filemode="a",
