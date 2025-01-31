@@ -92,6 +92,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfNepal",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -104,6 +106,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfIndia",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -116,6 +120,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfIndiaNetwork",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -128,6 +134,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfGhana",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -140,6 +148,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfKenya",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -152,6 +162,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfSouthAfrica",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -164,6 +176,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfNamibia",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -176,6 +190,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfLiberia",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -188,6 +204,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfEthiopia",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -200,6 +218,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfBenin",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -212,6 +232,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfMalawi",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -224,6 +246,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfBurkinaFaso",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -236,6 +260,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfBurundi",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -248,6 +274,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfIndonesia",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -260,6 +288,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfLesotho",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -272,6 +302,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfMozambique",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -284,6 +316,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfUganda",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -296,6 +330,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfZambia",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -308,6 +344,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfEcuador",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -320,6 +358,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfArgentina",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -332,6 +372,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfZimbabwe",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -344,6 +386,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfSierraLeone",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -356,6 +400,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfRwanda",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -368,6 +414,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfTanzania",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -380,6 +428,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfBangladesh",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -392,6 +442,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfCambodia",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -404,6 +456,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfUSA",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -416,6 +470,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfOpenSource",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -428,6 +484,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfPhilippines",
       "version": "V2022.6",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -440,6 +498,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfCommon202409",
       "version": "V2024.9",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -3597,8 +3657,8 @@
    "fields": {
       "question": "sfComplianceDateComplete",
       "category": "sfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3606,8 +3666,8 @@
    "fields": {
       "question": "sfComplianceDateReceived",
       "category": "sfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3615,8 +3675,8 @@
    "fields": {
       "question": "sfComplianceDateSubmitted",
       "category": "sfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3624,8 +3684,8 @@
    "fields": {
       "question": "sfComplianceIncomplete",
       "category": "sfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3633,8 +3693,8 @@
    "fields": {
       "question": "sfComplianceIncompleteSections",
       "category": "sfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3642,8 +3702,8 @@
    "fields": {
       "question": "sfComplianceNotes",
       "category": "sfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3651,8 +3711,8 @@
    "fields": {
       "question": "sfInformationSourceType",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3660,8 +3720,8 @@
    "fields": {
       "question": "sfInformationSourceTitle",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3669,8 +3729,8 @@
    "fields": {
       "question": "sfInformationPerson",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3678,8 +3738,8 @@
    "fields": {
       "question": "sfInformationVehicle",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3687,8 +3747,8 @@
    "fields": {
       "question": "sfInformationPlateNumber",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3696,8 +3756,8 @@
    "fields": {
       "question": "sfInformationIncident",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3705,8 +3765,8 @@
    "fields": {
       "question": "sfAssociationIncident",
       "category": "sfAssociation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3714,8 +3774,8 @@
    "fields": {
       "question": "sfAssociationPvs",
       "category": "sfAssociation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3723,8 +3783,8 @@
    "fields": {
       "question": "sfAssociationSuspects",
       "category": "sfAssociation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3732,8 +3792,8 @@
    "fields": {
       "question": "sfAssociationLocations",
       "category": "sfAssociation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3741,8 +3801,8 @@
    "fields": {
       "question": "sfAssociationNarrative",
       "category": "sfAssociation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3750,8 +3810,8 @@
    "fields": {
       "question": "sfEvaluationIncident",
       "category": "sfEvaluation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3759,8 +3819,8 @@
    "fields": {
       "question": "sfEvaluationEvaluatorType",
       "category": "sfEvaluation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3768,8 +3828,8 @@
    "fields": {
       "question": "sfEvaluationEvaluatorName",
       "category": "sfEvaluation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3777,8 +3837,8 @@
    "fields": {
       "question": "sfEvaluationEvaluation",
       "category": "sfEvaluation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3786,8 +3846,8 @@
    "fields": {
       "question": "sfLegalIncident",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3795,8 +3855,8 @@
    "fields": {
       "question": "sfLegalArrested",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3804,8 +3864,8 @@
    "fields": {
       "question": "sfLegalArrestDate",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3813,8 +3873,8 @@
    "fields": {
       "question": "sfLegalPoliceCase",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3822,8 +3882,8 @@
    "fields": {
       "question": "sfLegalChargeSheetDate",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3831,8 +3891,8 @@
    "fields": {
       "question": "sfLegalCrimesCharged",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3840,8 +3900,8 @@
    "fields": {
       "question": "sfLegalPvAttempt",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3849,8 +3909,8 @@
    "fields": {
       "question": "sfLegalPvUnable",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3858,8 +3918,8 @@
    "fields": {
       "question": "sfLegalLocationAttempt",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3867,8 +3927,8 @@
    "fields": {
       "question": "sfLegalLocationUnable",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3876,8 +3936,8 @@
    "fields": {
       "question": "sfLegalLocationLastAddress",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3885,8 +3945,8 @@
    "fields": {
       "question": "sfLegalLocationLastLatitude",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3894,8 +3954,8 @@
    "fields": {
       "question": "sfLegalLocationLastLongitude",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3903,8 +3963,8 @@
    "fields": {
       "question": "sfLegalLocationLastNotes",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3912,8 +3972,8 @@
    "fields": {
       "question": "sfLegalLocationLastDate",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3921,8 +3981,8 @@
    "fields": {
       "question": "sfLegalPoliceAttempt",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3930,8 +3990,8 @@
    "fields": {
       "question": "sfLegalPoliceUnable",
       "category": "sfLegal",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3939,10 +3999,10 @@
    "fields": {
       "question": "sfAttachmentNumber",
       "category": "sfAttachment",
-      "weight": 0,
       "form_config": {
          "IndexQuestion": "sfAttachmentNumber"
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -3950,8 +4010,8 @@
    "fields": {
       "question": "sfAttachmentDescription",
       "category": "sfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3959,8 +4019,8 @@
    "fields": {
       "question": "sfAttachmentAttachment",
       "category": "sfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3968,8 +4028,8 @@
    "fields": {
       "question": "sfAttachmentPrivate",
       "category": "sfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3977,8 +4037,8 @@
    "fields": {
       "question": "sfAttachmentOption",
       "category": "sfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3986,8 +4046,8 @@
    "fields": {
       "question": "sfInformationInterviewerName",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3995,8 +4055,8 @@
    "fields": {
       "question": "sfInformationInterviewDate",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4004,8 +4064,8 @@
    "fields": {
       "question": "sfTopSfNumber",
       "category": "sfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4013,8 +4073,8 @@
    "fields": {
       "question": "sfInformationInterviewLocation",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4022,8 +4082,8 @@
    "fields": {
       "question": "sfTopMergedPerson",
       "category": "sfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4031,8 +4091,8 @@
    "fields": {
       "question": "sfTopMergedVehicle",
       "category": "sfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4040,8 +4100,8 @@
    "fields": {
       "question": "sfTopMergedPlateNumber",
       "category": "sfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4049,8 +4109,8 @@
    "fields": {
       "question": "sfTopMergedWhereSpendTime",
       "category": "sfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4058,8 +4118,8 @@
    "fields": {
       "question": "sfAssociationIncident",
       "category": "sfNarrative",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4067,8 +4127,8 @@
    "fields": {
       "question": "sfAssociationPvs",
       "category": "sfNarrative",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4076,8 +4136,8 @@
    "fields": {
       "question": "sfAssociationSuspects",
       "category": "sfNarrative",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4085,8 +4145,8 @@
    "fields": {
       "question": "sfAssociationNarrative",
       "category": "sfNarrative",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4094,8 +4154,8 @@
    "fields": {
       "question": "sfLegalPvIncident",
       "category": "sfLegalPv",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4103,8 +4163,8 @@
    "fields": {
       "question": "sfLegalPvName",
       "category": "sfLegalPv",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4112,8 +4172,8 @@
    "fields": {
       "question": "sfLegalPvWillingToFile",
       "category": "sfLegalPv",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4121,8 +4181,8 @@
    "fields": {
       "question": "sfLegalPvHesitationConcern",
       "category": "sfLegalPv",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4130,8 +4190,8 @@
    "fields": {
       "question": "sfAssociationPreviousLegalAction",
       "category": "sfNarrative",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4139,8 +4199,8 @@
    "fields": {
       "question": "sfLegalIncident",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4148,8 +4208,8 @@
    "fields": {
       "question": "sfLegalArrested",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4157,8 +4217,8 @@
    "fields": {
       "question": "sfLegalArrestDate",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4166,8 +4226,8 @@
    "fields": {
       "question": "sfLegalPoliceCase",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4175,8 +4235,8 @@
    "fields": {
       "question": "sfLegalChargeSheetDate",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4184,8 +4244,8 @@
    "fields": {
       "question": "sfLegalCrimesCharged",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4193,8 +4253,8 @@
    "fields": {
       "question": "sfLegalLocationAttempt",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4202,8 +4262,8 @@
    "fields": {
       "question": "sfLegalLocationLastAddress",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4211,8 +4271,8 @@
    "fields": {
       "question": "sfLegalLocationLastLatitude",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4220,8 +4280,8 @@
    "fields": {
       "question": "sfLegalLocationLastLongitude",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4229,8 +4289,8 @@
    "fields": {
       "question": "sfLegalLocationLastNotes",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4238,8 +4298,8 @@
    "fields": {
       "question": "sfLegalLocationLastDate",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4247,8 +4307,8 @@
    "fields": {
       "question": "sfLegalPoliceAttemptChar",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4256,8 +4316,8 @@
    "fields": {
       "question": "sfInformationSourceContact",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4265,8 +4325,8 @@
    "fields": {
       "question": "sfInformationWhereSpendTime",
       "category": "sfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4274,8 +4334,8 @@
    "fields": {
       "question": "SfLegalCausePvsFile",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4283,8 +4343,8 @@
    "fields": {
       "question": "sfLegalPoliceContact",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4292,8 +4352,8 @@
    "fields": {
       "question": "sfLegalWhatNeededForArrest",
       "category": "sfLegal202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
