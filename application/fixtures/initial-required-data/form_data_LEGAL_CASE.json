@@ -92,6 +92,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "legalCaseCommon",
       "version": null,
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -959,8 +961,8 @@
    "fields": {
       "question": "lcIncident",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -968,7 +970,6 @@
    "fields": {
       "question": "lcSource",
       "category": "legalCharge",
-      "weight": 0,
       "form_config": {
          "RadioItems": {
             "lcSource": [
@@ -978,7 +979,8 @@
                "NGO referral"
             ]
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -986,8 +988,8 @@
    "fields": {
       "question": "lcLocation",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -995,8 +997,8 @@
    "fields": {
       "question": "lcChargeSheetDate",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1004,8 +1006,8 @@
    "fields": {
       "question": "lcPoliceCase",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1013,8 +1015,8 @@
    "fields": {
       "question": "lcHumanTrafficking",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1022,8 +1024,8 @@
    "fields": {
       "question": "lcCaseSummary",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1031,8 +1033,8 @@
    "fields": {
       "question": "lcDateLastContacted",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1040,8 +1042,8 @@
    "fields": {
       "question": "lcMissingDataCount",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1049,8 +1051,8 @@
    "fields": {
       "question": "lcCourtCaseSequence",
       "category": "lfCourtCase",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1058,8 +1060,8 @@
    "fields": {
       "question": "lcCourtCaseCourtCase",
       "category": "lfCourtCase",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1067,8 +1069,8 @@
    "fields": {
       "question": "lcCourtCaseStatus",
       "category": "lfCourtCase",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1076,8 +1078,8 @@
    "fields": {
       "question": "lcCourtCaseCharges",
       "category": "lfCourtCase",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1085,8 +1087,8 @@
    "fields": {
       "question": "lcCourtCaseSpecific",
       "category": "lfCourtCase",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1094,8 +1096,8 @@
    "fields": {
       "question": "lcSuspectSuspect",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1103,8 +1105,8 @@
    "fields": {
       "question": "lcSuspectArrestStatus",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1112,8 +1114,8 @@
    "fields": {
       "question": "lcSuspectNamedOnChargeSheet",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1121,8 +1123,8 @@
    "fields": {
       "question": "lcSuspectArrestDate",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1130,8 +1132,8 @@
    "fields": {
       "question": "lcSuspectArrestSubmittedDate",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1139,8 +1141,8 @@
    "fields": {
       "question": "lcSuspectCourtCases",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1148,8 +1150,8 @@
    "fields": {
       "question": "lcSuspectChargeSuspect",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1157,8 +1159,8 @@
    "fields": {
       "question": "lcSuspectChargeSequence",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1166,8 +1168,8 @@
    "fields": {
       "question": "lcSuspectChargeCharge",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1175,8 +1177,8 @@
    "fields": {
       "question": "lcSuspectChargeVerdict",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1184,8 +1186,8 @@
    "fields": {
       "question": "lcSuspectChargeSentenceAttached",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1193,8 +1195,8 @@
    "fields": {
       "question": "lcSuspectChargeVerdictDate",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1202,8 +1204,8 @@
    "fields": {
       "question": "lcSuspectChargeVerdictSubmittedDate",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1211,8 +1213,8 @@
    "fields": {
       "question": "lcSuspectChargeImprisonmentYears",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1220,8 +1222,8 @@
    "fields": {
       "question": "lcSuspectChargeImprisonmentDays",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1229,8 +1231,8 @@
    "fields": {
       "question": "lcSuspectChargeImprisonmentTotal",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1238,8 +1240,8 @@
    "fields": {
       "question": "lcSuspectChargeFineAmount",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1247,8 +1249,8 @@
    "fields": {
       "question": "lcSuspectChargeFineCurrency",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1256,8 +1258,8 @@
    "fields": {
       "question": "lcVictimPvf",
       "category": "legalVictim",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1265,8 +1267,8 @@
    "fields": {
       "question": "lcVictimAlternatePhone",
       "category": "legalVictim",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1274,8 +1276,8 @@
    "fields": {
       "question": "lcVictimLastContactDate",
       "category": "legalVictim",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1283,8 +1285,8 @@
    "fields": {
       "question": "lcVictimLastAttemptedContactDate",
       "category": "legalVictim",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1292,8 +1294,8 @@
    "fields": {
       "question": "lcVictimStatus",
       "category": "legalVictim",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1301,8 +1303,8 @@
    "fields": {
       "question": "lcVictimCourtCases",
       "category": "legalVictim",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1310,8 +1312,8 @@
    "fields": {
       "question": "lcTimelineCommentDate",
       "category": "legalTimeline",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1319,8 +1321,8 @@
    "fields": {
       "question": "lcTimelineComment",
       "category": "legalTimeline",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1328,8 +1330,8 @@
    "fields": {
       "question": "lcTimelineAddedBy",
       "category": "legalTimeline",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1337,8 +1339,8 @@
    "fields": {
       "question": "lcTimelineDateAdded",
       "category": "legalTimeline",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1346,8 +1348,8 @@
    "fields": {
       "question": "lcTimelineDateRemoved",
       "category": "legalTimeline",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1355,10 +1357,10 @@
    "fields": {
       "question": "lcAttachmentNumber",
       "category": "legalAttachment",
-      "weight": 0,
       "form_config": {
          "IndexQuestion": "lcAttachmentNumber"
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -1366,8 +1368,8 @@
    "fields": {
       "question": "lcAttachmentDescription",
       "category": "legalAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1375,8 +1377,8 @@
    "fields": {
       "question": "lcAttachmentAttachment",
       "category": "legalAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1384,8 +1386,8 @@
    "fields": {
       "question": "lcAttachmentPrivate",
       "category": "legalAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1393,8 +1395,8 @@
    "fields": {
       "question": "lcAttachmentOption",
       "category": "legalAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1402,8 +1404,8 @@
    "fields": {
       "question": "lcSuspectVerifiedAttachment",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1411,8 +1413,8 @@
    "fields": {
       "question": "lcSuspectTakenIntoCustody",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1420,8 +1422,8 @@
    "fields": {
       "question": "lcSuspectChargedWithCrime",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1429,8 +1431,8 @@
    "fields": {
       "question": "lcStatus",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1438,8 +1440,8 @@
    "fields": {
       "question": "lcNumber",
       "category": "legalCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1447,8 +1449,8 @@
    "fields": {
       "question": "lcSuspectArrested",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1456,8 +1458,8 @@
    "fields": {
       "question": "lcSuspectChargeLegalStatus",
       "category": "lfSuspectCharge",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1465,8 +1467,8 @@
    "fields": {
       "question": "lcTimelineCourtCaseSequence",
       "category": "legalTimeline",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1474,8 +1476,8 @@
    "fields": {
       "question": "lcCourtCaseDistrictCourt",
       "category": "lfCourtCase",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1483,8 +1485,8 @@
    "fields": {
       "question": "lcSuspectHowKnow",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1492,8 +1494,8 @@
    "fields": {
       "question": "lcSuspectVerifiedDate",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -1501,8 +1503,8 @@
    "fields": {
       "question": "lcSuspectVerifiedBy",
       "category": "legalSuspect",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
