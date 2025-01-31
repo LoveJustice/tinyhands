@@ -580,6 +580,22 @@ def fetch_url_with_retries(driver, url, max_retries=3, retry_delay=5):
     logger.error(f"Failed to load URL after {max_retries} attempts: {url}")
     return False
 
+def get_new_urls(new_urls: List[str]) -> List[str]:
+    """
+    Get URLs that are not already in the database.
+
+    Args:
+        new_urls (List[str]): List of new URLs to check
+        db_urls (List[str]): List of URLs already in the database
+
+    Returns:
+        List[str]: URLs that are not already in the database
+    """
+    db = URLDatabase()
+    df = pd.DataFrame(db.search_urls(limit=1000000))
+    db_urls = df['url'].tolist()
+    return list(set(new_urls) - set(db_urls))
+
 def main():
     # Initialize Database
     db = URLDatabase()
@@ -631,7 +647,9 @@ def main():
         search_results = fetch_all_results(query, API_KEY, SEARCH_ENGINE_ID, max_results=30)
         logger.info(f"Retrieved {len(search_results)} search results.")
 
-        urls = [item.get('link') for item in search_results if item.get('link')]
+        new_urls = [item.get('link') for item in search_results if item.get('link')]
+        urls = get_new_urls(new_urls)
+        logger.info(f"Found {len(new_urls)} new URLs, {len(new_urls)-len(urls)} already in db, processing {len(urls)} urls.")
         # urls = get_unique_urls_from_csvs('csv', 'url', 4, 1000)
 
         for url in urls:

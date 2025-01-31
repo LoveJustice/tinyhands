@@ -16,6 +16,30 @@ from models import (
     IncidentResponse,
 )
 from get_urls_from_csvs import get_unique_urls_from_csvs
+from work_with_db import URLDatabase, DatabaseError
+import pandas as pd
+db=URLDatabase()
+df=pd.DataFrame(db.search_urls(limit=1000000))
+df['url'].tolist()
+saved_urls_generic_search_20250131_110058 = pd.read_csv('csv/saved_urls_generic_search_20250131_110058.csv')
+def get_new_urls(new_urls: List[str]) -> List[str]:
+    """
+    Get URLs that are not already in the database.
+
+    Args:
+        new_urls (List[str]): List of new URLs to check
+        db_urls (List[str]): List of URLs already in the database
+
+    Returns:
+        List[str]: URLs that are not already in the database
+    """
+    db = URLDatabase()
+    df = pd.DataFrame(db.search_urls(limit=1000000))
+    db_urls = df['url'].tolist()
+    return list(set(new_urls) - set(db_urls))
+len(get_new_urls(saved_urls_generic_search_20250131_110058['url'].tolist()))
+l=db.search_urls()
+
 urls = get_unique_urls_from_csvs('csv','url',4,1000)
 
 llm = OpenAI(temperature=0, model="gpt-4o-mini", request_timeout=120.0)
