@@ -292,6 +292,7 @@ def main():
     EntityGroup.move_other_closed(suspects_entity, police_entity, victims_entity)
 
     vics_willing = data_prep.get_vics_willing_to_testify(victims_entity.active)
+    weighting_sheet = vics_willing["case_id", "willing_to_testify", "count"].copy()
 
     police_entity.active = data_prep.add_vic_names(police_entity.active, vics_willing)
     suspects_entity.active = data_prep.add_vic_names(
@@ -356,11 +357,16 @@ def main():
         suspects_entity_active = data_prep.calc_vics_willing_scores(
             suspects=suspects_entity_active, vics_willing=vics_willing_subset
         )
+
+        weighting_sheet = weighting_sheet.merge(suspects_entity_active[["sf_number", "case_id", "v_mult", "count"]], on="case_id", how="right")
+
+
         logger.info("Completed calc_vics_willing_scores.")
 
         # 2. Calculate arrest scores
         suspects_entity_active = data_prep.calc_arrest_scores(suspects_entity_active, soc_df, pol)
         logger.info("Completed calc_arrest_scores.")
+        suspects_entity_active[["willing_to_arrest", "case_id"]]
 
         # 3. Calculate recency scores
         suspects_entity_active = data_prep.calc_recency_scores(suspects_entity_active, soc_df, weights)

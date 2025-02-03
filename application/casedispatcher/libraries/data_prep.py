@@ -938,6 +938,7 @@ def add_vic_names(
 
             # Drop intermediary columns as they are no longer needed
             columns_to_drop = ["willing_to_testify", "count"]
+
             target_sheet.drop(columns=columns_to_drop, inplace=True)
             logger.debug(f"Dropped columns: {columns_to_drop}")
         else:
@@ -1226,7 +1227,6 @@ def calc_vics_willing_scores(
 
             # Map counts to multipliers
             suspects["v_mult"] = suspects["count"].map(v_mult).fillna(0.0).astype(float)
-            suspects[["sf_number", "case_id", "v_mult", "count"]]
 
             # Drop unnecessary columns if they exist
             columns_to_drop = ["willing_to_testify", "count"]
