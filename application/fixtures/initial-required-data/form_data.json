@@ -22698,19 +22698,6 @@
 },
 {
    "model": "dataentry.question",
-   "pk": 1087,
-   "fields": {
-      "form_tag": "mdfProjectId",
-      "prompt": "MDF Project",
-      "description": null,
-      "answer_type": 2,
-      "params": null,
-      "export_name": "MDF Project",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
    "pk": 1088,
    "fields": {
       "form_tag": "verificationType",
@@ -38858,15 +38845,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 1087,
-      "category": 196,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 1088,
       "category": 232,
       "weight": 0,
@@ -45221,13 +45199,6 @@
    "fields": {
       "question": 1086,
       "field_name": "control_under_16_recruited_for_work"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1087,
-      "field_name": "mdf_project_id"
    }
 },
 {
