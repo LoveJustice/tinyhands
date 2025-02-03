@@ -160,9 +160,7 @@
       "name": "Location",
       "order": 5,
       "form_category_question_config": null,
-      "storage": 196
-      #
-      "borderStationDetail"
+      "storage": "Location"
     }
   },
   {
