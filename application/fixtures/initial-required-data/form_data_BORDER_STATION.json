@@ -114,7 +114,7 @@
   {
     "model": "dataentry.category",
     "fields": {
-      "form_tag": "borderStationAttachments",
+      "form_tag": "borderStationAttachment",
       "category_type": 2,
       "description": "Attachments for Border Station"
     }
@@ -138,7 +138,7 @@
       "name": "Commitee Members",
       "order": 2,
       "form_category_question_config": null,
-      "storage": 194
+      "storage": "CommitteeMember"
     }
   },
   {
@@ -149,7 +149,7 @@
       "name": "Staff",
       "order": 3,
       "form_category_question_config": null,
-      "storage": "BorderStation"
+      "storage": "Staff"
     }
   },
   {
@@ -178,7 +178,7 @@
     "model": "dataentry.formcategory",
     "fields": {
       "form": "borderStation",
-      "category": "borderStationAttachments",
+      "category": "borderStationAttachment",
       "name": "Attachments",
       "order": 4,
       "form_category_question_config": null,
@@ -827,7 +827,7 @@
     "model": "dataentry.questionlayout",
     "fields": {
       "question": "borderStationAttachmentAttachment",
-      "category": "borderStationAttachments",
+      "category": "borderStationAttachment",
       "weight": 0,
       "form_config": null
     }
@@ -836,7 +836,7 @@
     "model": "dataentry.questionlayout",
     "fields": {
       "question": "borderStationAttachmentNumber",
-      "category": "borderStationAttachments",
+      "category": "borderStationAttachment",
       "weight": 0,
       "form_config": {
         "IndexQuestion": "borderStationAttachmentNumber"
@@ -847,7 +847,7 @@
     "model": "dataentry.questionlayout",
     "fields": {
       "question": "borderStationAttachmentOption",
-      "category": "borderStationAttachments",
+      "category": "borderStationAttachment",
       "weight": 0
     }
   },
