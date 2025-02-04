@@ -1153,6 +1153,77 @@ def add_sus_located(
         raise RuntimeError(error_msg) from e
 
 
+
+def calc_vics_willing_multiplier(vics_willing: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate victim willingness multipliers from a victim willingness DataFrame.
+
+    This function computes a multiplier based on the number of victims willing to testify for each case.
+    The multiplier reflects the strength of a case; higher numbers of willing victims yield higher multipliers.
+    The mapping is as follows:
+
+        count | v_mult
+        ------|-------
+          0   | 0.0
+          1   | 0.5
+          2   | 0.75
+          3   | 0.875
+          4   | 0.9375
+          5   | 0.96875
+          6   | 0.984375
+          7+  | 1.0
+
+    Parameters:
+        vics_willing (pd.DataFrame):
+            DataFrame containing victim willingness data. It must include:
+                - 'case_id': Identifier for the case.
+                - 'count': Integer representing the number of victims willing to testify.
+
+    Returns:
+        pd.DataFrame:
+            A DataFrame with two columns:
+                - 'case_id': The case identifier.
+                - 'v_mult': The calculated victim willingness multiplier.
+            If `vics_willing` is empty, an empty DataFrame with these columns is returned.
+
+    Raises:
+        RuntimeError:
+            If required columns are missing or if an error occurs during calculation.
+    """
+    # Define the mapping for victim multipliers.
+    v_mult: Dict[int, float] = {0: 0.0, 1: 0.5, 7: 1.0}
+    for i in range(2, 7):
+        v_mult[i] = v_mult[i - 1] + (1 - v_mult[i - 1]) * 0.5
+
+    try:
+        # If the input DataFrame is empty, return an empty DataFrame with the expected columns.
+        if vics_willing.empty:
+            return pd.DataFrame(columns=["case_id", "v_mult"])
+
+        # Check for required columns in vics_willing.
+        required_vics_cols = {"case_id", "count"}
+        missing_vics_cols = required_vics_cols - set(vics_willing.columns)
+        if missing_vics_cols:
+            raise ValueError(f"Missing columns in vics_willing DataFrame: {missing_vics_cols}")
+
+        # Work on a copy and ensure 'count' is numeric.
+        vics_willing = vics_willing.copy()
+        vics_willing["count"] = pd.to_numeric(vics_willing["count"].fillna(0), errors='coerce').astype(int)
+
+        # Calculate the victim multiplier.
+        vics_willing["v_mult"] = vics_willing["count"].map(v_mult).fillna(0.0).astype(float)
+
+        # Return only the columns needed for merging.
+        return vics_willing[["case_id", "v_mult", "count"]].copy()
+
+    except KeyError as ke:
+        raise RuntimeError(f"Key error during victim multiplier calculation: {ke}") from ke
+    except ValueError as ve:
+        raise RuntimeError(f"Value error during victim multiplier calculation: {ve}") from ve
+    except Exception as e:
+        raise RuntimeError(f"An unexpected error occurred during victim multiplier calculation: {e}") from e
+
+
 def calc_vics_willing_scores(
     suspects: pd.DataFrame, vics_willing: pd.DataFrame
 ) -> pd.DataFrame:
@@ -1238,6 +1309,7 @@ def calc_vics_willing_scores(
         else:
             # If vics_willing is empty, set v_mult to 0.0 for all suspects
             suspects["v_mult"] = 0.0
+        logger.info(f"calc_vics_willing_scores - suspects.columns: {suspects.columns}")
 
     except pd.errors.MergeError as me:
         raise RuntimeError(f"DataFrame merge failed: {me}") from me
@@ -1299,9 +1371,9 @@ def calc_arrest_scores(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFr
         )
 
         # Define required columns for each DataFrame
-        required_suspects_cols = {"case_id", "case_status"}
+        required_suspects_cols = {"case_id", "case_status", "sf_number"}
         required_states_cols = {"arrested", "case_id"}
-        required_police_cols = {"case_id", "case_status"}
+        required_police_cols = {"case_id", "case_status", "sf_number"}
 
         # Validate required columns in suspects DataFrame
         missing_suspects_cols = required_suspects_cols - set(suspects.columns)
@@ -1369,8 +1441,9 @@ def calc_arrest_scores(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFr
             raise ValueError(error_msg)
 
         logger.info("Merging 'willing_to_arrest' into suspects DataFrame.")
+        logger.info(f"Suspect Columns: {suspects.columns} \n Police Columns: {police.columns}")
         suspects = suspects.merge(
-            police[["case_id", "willing_to_arrest"]], on="case_id", how="left"
+            police[["sf_number", "willing_to_arrest"]], on="sf_number", how="left"
         )
         suspects["willing_to_arrest"] = (
             suspects["willing_to_arrest"].fillna(0).astype(int)
@@ -1575,7 +1648,7 @@ def weight_pv_believes(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFr
 
         # 3. Clean up and finalize the data
         logger.info("Preparing 'pvb' DataFrame for merging.")
-        pvb = pvb[["sf_number", "pv_believes"]].copy()
+        # pvb = pvb[["sf_number", "pv_believes"]].copy()
         pvb["pv_believes"] = pvb["pv_believes"].astype(float)
         logger.debug(f"pv_believes DataFrame after cleanup:\n{pvb.head()}")
         pvb.drop_duplicates(subset="sf_number", inplace=True)
@@ -1585,7 +1658,7 @@ def weight_pv_believes(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFr
         logger.info("Merging 'pv_believes' scores into suspects DataFrame.")
         suspects = suspects.merge(pvb, on="sf_number", how="left")
         suspects["pv_believes"] = suspects["pv_believes"].fillna(0.0).astype(float)
-        suspects[["sf_number"]+belief_indicators].to_csv("data_trace/pv_believes.csv", index=False)
+        # suspects[["sf_number"]+belief_indicators].to_csv("data_trace/pv_believes.csv", index=False)
         logger.info("'pv_believes' scores merged successfully.")
 
     except RuntimeError as re:
@@ -1687,7 +1760,7 @@ def get_exp_score(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, 
         # 1. Extract relevant columns and data
         logger.info("Extracting relevant exploitation columns from states_of_charges.")
         exp_cols = [
-            col for col in case_dispatcher_soc_df.columns if "exploitation" in col
+            col for col in case_dispatcher_soc_df.columns if "exploit" in col
         ] + ["sf_number"]
         exp_df = case_dispatcher_soc_df[exp_cols].copy()
         exp_df["exp"] = 0.0  # Initialize exploitation score
@@ -1708,24 +1781,24 @@ def get_exp_score(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, 
 
         # 3. Process the Case ID
         logger.info("Deriving 'case_id' from 'sf_number'.")
-        exp_df["case_id"] = (
-            exp_df["sf_number"].str.rstrip(".").str.replace(".", "", regex=True)
-        )
+        # exp_df["sf_number"].app
+        exp_df["case_id"]=exp_df["sf_number"].apply(extract_case_id)
+
         logger.info("'case_id' derived successfully.")
 
         # 4. Clean up and finalize the data
         logger.info("Preparing 'exp_df' DataFrame for merging.")
         logger.debug(f"<<< Before converting 'exp' to float:\n{exp_df['exp'].head()}")
-        exp_df = exp_df[["case_id", "exp"]].copy()
+
         exp_df["exp"] = exp_df["exp"].astype(float)
         logger.debug(f">>> After converting 'exp' to float:\n{exp_df['exp'].head()}")
 
-        exp_df.drop_duplicates(subset="case_id", inplace=True)
-        logger.info("Removed duplicate 'case_id' entries from 'exp_df'.")
+        exp_df.drop_duplicates(subset="sf_number", inplace=True)
+        logger.info("Removed duplicate 'extract_case_id' entries from 'exp_df'.")
 
         # 5. Merge suspect data with the exploitation score data
         logger.info("Merging 'exp' scores into suspects DataFrame.")
-        suspects = suspects.merge(exp_df, on="case_id", how="left")
+        suspects = suspects.merge(exp_df, on=["sf_number","case_id"], how="left")
         suspects["exp"] = suspects["exp"].fillna(0.0).astype(float)
         logger.info("'exp' scores merged successfully into suspects DataFrame.")
 
@@ -1831,7 +1904,7 @@ def calc_recency_scores(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataF
         # 1. Calculate days since interview
         logger.info("Calculating days since interview.")
         today = pd.Timestamp.now().normalize()
-        cif_dates = case_dispatcher_soc_df[["case_id", "interview_date"]].copy()
+        cif_dates = case_dispatcher_soc_df[["case_id", "interview_date", "sf_number"]].copy()
 
         # Convert 'interview_date' to datetime; coerce errors to NaT
         cif_dates["interview_date"] = pd.to_datetime(
@@ -1854,23 +1927,23 @@ def calc_recency_scores(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataF
         logger.info("Calculated 'days_old' successfully.")
 
         # Derive 'case_id' from 'sf_number'
-        logger.info("Deriving 'case_id' from 'sf_number'.")
+        # logger.info("Deriving 'case_id' from 'sf_number'.")
         cif_dates["case_id"] = (
             cif_dates["case_id"]
             .astype(str)
             .str.rstrip(".")
             .str.replace(".", "", regex=False)
         )
-        logger.debug("Derived 'case_id' successfully.")
+        logger.debug("Converted 'case_id' successfully.")
 
         # 2. Merge suspects data with days since interview
         logger.info("Merging 'days_old' into suspects DataFrame.")
-        cif_unique = cif_dates[["case_id", "days_old"]].drop_duplicates(
-            subset="case_id"
+        cif_unique = cif_dates[["case_id", "days_old", "sf_number"]].drop_duplicates(
+            subset="sf_number"
         )
         suspects = suspects.merge(
             cif_unique,
-            on="case_id",
+            on=["sf_number", "case_id"],
             how="left",
             validate="many_to_one",  # Assuming each case_id in suspects is unique
         )
@@ -2381,6 +2454,85 @@ def calc_solvability(suspects: pd.DataFrame, weights: Dict[str, Any]) -> pd.Data
     return suspects
 
 
+
+def calc_priority_detailed(new_suspects: pd.DataFrame, weights: Dict[str, float]) -> pd.DataFrame:
+    """
+    Calculate a weighted priority score for each suspect and expose the intermediate computations.
+
+    This function computes:
+      - Weighted scores for each factor.
+      - The total weighted score.
+      - The normalized priority score.
+
+    It returns a DataFrame with additional columns that show:
+      - The original values for each factor.
+      - The weighted contributions (e.g. 'weighted_solvability').
+      - The 'total_weighted_score' and final 'priority' columns.
+
+    Parameters:
+        new_suspects (pd.DataFrame):
+            Must include the columns:
+                - 'sf_number': Unique identifier for each suspect.
+                - 'solvability': Solvability score.
+                - 'strength_of_case': Strength of the case score.
+                - 'em2': Eminence score.
+
+        weights (Dict[str, float]):
+            Dictionary with keys:
+                - 'solvability'
+                - 'strength_of_case'
+                - 'eminence'
+            Each value is the weight to apply for that factor.
+
+    Returns:
+        pd.DataFrame: A DataFrame with intermediate calculations and final priority.
+
+    Raises:
+        RuntimeError: If required columns are missing or if the total weight is zero.
+    """
+
+    # Required columns check
+    required_columns = {"sf_number", "solvability", "strength_of_case", "em2"}
+    missing_cols = required_columns - set(new_suspects.columns)
+    if missing_cols:
+        raise RuntimeError(f"new_suspects DataFrame is missing required columns: {missing_cols}")
+
+    # Make a working copy and ensure numeric values (filling NaN with 0)
+    df = new_suspects.copy()
+    df["solvability"] = pd.to_numeric(df["solvability"].fillna(0), errors='coerce')
+    df["strength_of_case"] = pd.to_numeric(df["strength_of_case"].fillna(0), errors='coerce')
+    df["em2"] = pd.to_numeric(df["em2"].fillna(0), errors='coerce')
+
+    # Compute each factor's weighted score
+    # Use weights.get(key, 0) in case a key is missing (could also raise an error)
+    df["weighted_solvability"] = df["solvability"] * weights.get("solvability", 0)
+    df["weighted_strength_of_case"] = df["strength_of_case"] * weights.get("strength_of_case", 0)
+    df["weighted_eminence"] = df["em2"] * weights.get("eminence", 0)
+
+    # Sum of the weighted scores
+    df["total_weighted_score"] = (
+            df["weighted_solvability"] +
+            df["weighted_strength_of_case"] +
+            df["weighted_eminence"]
+    )
+
+    # Calculate the sum of weights (make sure it's non-zero to avoid division by zero)
+    total_weight = sum(weights.get(key, 0) for key in ["solvability", "strength_of_case", "eminence"])
+    if total_weight == 0:
+        raise RuntimeError("The sum of all weight values is zero. Cannot compute priority score.")
+
+    # Compute the normalized priority score
+    df["priority"] = df["total_weighted_score"] / total_weight
+
+    # Sort by priority descending for easier analysis
+    df.sort_values("priority", ascending=False, inplace=True)
+
+    # Optionally reset index for a cleaner view
+    df.reset_index(drop=True, inplace=True)
+
+    return df
+
+
 def calc_priority(
     new_suspects: pd.DataFrame, weights: Dict[str, Any], existing_suspects: pd.DataFrame
 ) -> pd.DataFrame:
@@ -2683,7 +2835,8 @@ def calc_all_sus_scores(suspects_entity_active: pd.DataFrame, vics_willing: pd.D
 
         # Create a subset of vics_willing with only the required columns
         vics_willing_subset = vics_willing[list(required_vics_columns)].copy()
-
+        original_columns = suspects_entity_active.columns
+        logger.info(f"Original columns: {original_columns}")
         # 1. Calculate victim willingness scores
         suspects_entity_active = calc_vics_willing_scores(
             suspects=suspects_entity_active, vics_willing=vics_willing_subset
@@ -2694,30 +2847,37 @@ def calc_all_sus_scores(suspects_entity_active: pd.DataFrame, vics_willing: pd.D
         suspects_entity_active = calc_arrest_scores(suspects_entity_active, case_dispatcher_soc_df,
                                                     police_entity_active)
         logger.info("Completed calc_arrest_scores.")
+        logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # 3. Calculate recency scores
         suspects_entity_active = calc_recency_scores(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed calc_recency_scores.")
+        logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # 4. Weight belief scores
         suspects_entity_active = weight_pv_believes(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed weight_pv_believes.")
+        logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # 5. Calculate exploitation scores
         suspects_entity_active = get_exp_score(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed get_exp_score.")
+        logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # 6. Merge and round Strength of Case (SOC) scores
         suspects_entity_active = get_new_soc_score(suspects_entity_active, case_dispatcher_soc_df)
         logger.info("Completed get_new_soc_score.")
+        logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # 7. Assign and adjust eminence scores
         suspects_entity_active = get_eminence_score(suspects_entity_active)
         logger.info("Completed get_eminence_score.")
+        logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # 8. Calculate solvability scores
         suspects_entity_active = calc_solvability(suspects_entity_active, weights)
         logger.info("Completed calc_solvability.")
+        logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # Log the number of suspects before priority calculation
         logger.info(
@@ -2729,6 +2889,7 @@ def calc_all_sus_scores(suspects_entity_active: pd.DataFrame, vics_willing: pd.D
             suspects_entity_active, weights, google_sheets_suspects
         )
         logger.info("Completed calc_priority.")
+        logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # Log the number of suspects after priority calculation
         logger.info(

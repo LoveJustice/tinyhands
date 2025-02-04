@@ -213,8 +213,7 @@ def main():
 
     url = links[country]
 
-    sheets, file_url, file_id = get_gsheets(credentials, spreadsheet_name, sheet_names)
-    dfs = get_dfs(sheets)
+
 
     db_vics = load_data(drive_service, "new_victims.pkl")
     db_vics = db_vics[db_vics["operating_country_id"] == operating_country_id].drop(
@@ -247,6 +246,9 @@ def main():
 
     new_victims = db_vics.copy()
 
+
+    sheets, file_url, file_id = get_gsheets(credentials, spreadsheet_name, sheet_names)
+    dfs = get_dfs(sheets)
     EntityGroup.sheets = []
     victims_entity = EntityGroup(
         "victim_id", new_victims, "victims", "closed_victims", dfs
@@ -327,22 +329,23 @@ def main():
     # sus = suspects_entity.active.copy()
 
     # -------------------------------------------------------------------------------------
-    suspects_entity_active = suspects_entity.active
+    suspects_entity_active = suspects_entity.active.copy()
     soc_df = case_dispatcher_soc_df
-    pol = police_entity.active
+    police_entity_active = police_entity.active.copy()
     google_sheets_suspects = dfs["suspects"]
     case_dispatcher_soc_df.loc[case_dispatcher_soc_df["days"]<120, ['case_id', 'sf_number', 'arrested', 'interview_date', 'pv_believes_definitely_trafficked_many', 'pv_believes_not_a_trafficker', 'pv_believes_trafficked_some', 'pv_believes_suspect_trafficker', 'exploit_debt_bondage', 'exploit_forced_labor', 'exploit_physical_abuse', 'exploit_prostitution', 'exploit_sexual_abuse']].to_csv("data/case_dispatcher_soc_df.csv", index=False)
     try:
-        # Log the initial state of the DataFrames
+          # Log the initial state of the DataFrames
         logger.info(
             f"Starting calc_all_sus_scores with the following DataFrame columns:\n"
             f"suspects_entity_active.columns = {list(suspects_entity.active.columns)},\n"
             f"vics_willing.columns = {list(vics_willing.columns)},\n"
-            f"pol.columns = {list(police_entity.active.columns)},\n"
+            f"police_entity_active.columns = {list(police_entity_active.columns)},\n"
             f"soc_df.columns = {list(case_dispatcher_soc_df.columns)},\n"
             f"google_sheets_suspects.columns = {list(dfs['suspects'].columns)}"
         )
 
+        # 1. Calculate victim willingness scores
         # Select only required columns for calc_vics_willing_scores
         required_vics_columns = {"case_id", "count", "willing_to_testify"}
         if not required_vics_columns.issubset(vics_willing.columns):
@@ -354,48 +357,74 @@ def main():
         # Create a subset of vics_willing with only the required columns
         vics_willing_subset = vics_willing[list(required_vics_columns)].copy()
 
-        # 1. Calculate victim willingness scores
-        suspects_entity_active = data_prep.calc_vics_willing_scores(
-            suspects=suspects_entity_active, vics_willing=vics_willing_subset[[ "case_id", "count", "willing_to_testify"]]
-        )
+        # Calculate the victim willingness multipliers.
+        vics_multiplier_df = data_prep.calc_vics_willing_multiplier(vics_willing)
 
-        weighting_sheet = weighting_sheet.merge(suspects_entity_active[["sf_number", "case_id", "v_mult"]], on="case_id", how="right")
+        # Merge the multipliers onto the suspects DataFrame on 'case_id'.
+        suspects_entity_active = suspects_entity_active.merge(vics_multiplier_df, how="left", on="case_id")
 
+        # Ensure that any suspects without a matching record have a multiplier of 0.0.
+        suspects_entity_active["v_mult"] = suspects_entity_active["v_mult"].fillna(0.0)
+        multipliers = suspects_entity_active[["sf_number", "case_id", "v_mult", "count"]]
 
         logger.info("Completed calc_vics_willing_scores.")
 
         # 2. Calculate arrest scores
-        suspects_entity_active = data_prep.calc_arrest_scores(suspects_entity_active, soc_df, pol)
+        suspects_entity_active = data_prep.calc_arrest_scores(suspects_entity_active, soc_df, police_entity_active)
+
         logger.info("Completed calc_arrest_scores.")
-        weighting_sheet = weighting_sheet.merge(suspects_entity_active[["sf_number","bio_known","others_arrested","willing_to_arrest"]], on="sf_number", how="inner")
+        multipliers = multipliers[["sf_number", "case_id", "v_mult", "count"]].merge(suspects_entity_active[["sf_number","bio_known","others_arrested","willing_to_arrest"]], on="sf_number", how="inner")
 
         # 3. Calculate recency scores
         suspects_entity_active = data_prep.calc_recency_scores(suspects_entity_active, soc_df, weights)
+        multipliers = multipliers[["sf_number", "case_id", "v_mult", "count"]].merge(suspects_entity_active[["sf_number", "bio_known", "others_arrested", "willing_to_arrest"]],
+                                                                                     on="sf_number", how="inner")
+        multipliers_cols = multipliers.columns
+
+        multipliers = multipliers[multipliers_cols].merge(suspects_entity_active[["sf_number", "recency_score", "days_old"]], on="sf_number", how="inner")
         logger.info("Completed calc_recency_scores.")
+        multipliers_cols = multipliers.columns
 
         # ------------------------------------------------------
         # 4. Weight belief scores
         suspects_entity_active = data_prep.weight_pv_believes(suspects_entity_active, case_dispatcher_soc_df, weights)
+        suspects_entity_active[['sf_number','pv_believes_definitely_trafficked_many', 'pv_believes_trafficked_some',
+        'pv_believes_suspect_trafficker', 'pv_believes_not_a_trafficker',
+        'pv_believes']]
+        multipliers = multipliers[multipliers_cols].merge(suspects_entity_active[['sf_number','pv_believes_definitely_trafficked_many', 'pv_believes_trafficked_some',
+        'pv_believes_suspect_trafficker', 'pv_believes_not_a_trafficker','pv_believes']], on="sf_number", how="inner")
+        multipliers_cols = multipliers.columns
         logger.info("Completed weight_pv_believes.")
 
         # 5. Calculate exploitation scores
 
         suspects_entity_active = data_prep.get_exp_score(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed get_exp_score.")
+        multipliers=multipliers[multipliers_cols].merge(suspects_entity_active[['sf_number','exploit_debt_bondage',
+       'exploit_forced_labor', 'exploit_physical_abuse',
+       'exploit_prostitution', 'exploit_sexual_abuse', 'exp']], on="sf_number", how="inner")
+        multipliers_cols = multipliers.columns
 
         # 6. Merge and round Strength of Case (SOC) scores
         suspects_entity_active = data_prep.get_new_soc_score(suspects_entity_active, case_dispatcher_soc_df)
         logger.info("Completed get_new_soc_score.")
+        multipliers = multipliers[multipliers_cols].merge(suspects_entity_active[['sf_number', 'strength_of_case']], on="sf_number", how="inner")
+        multipliers_cols = multipliers.columns
 
         # 7. Assign and adjust eminence scores
         suspects_entity_active = data_prep.get_eminence_score(suspects_entity_active)
         logger.info("Completed get_eminence_score.")
+        multipliers = multipliers[multipliers_cols].merge(suspects_entity_active[['sf_number', 'em2']],
+                                                        on="sf_number", how="inner")
+        multipliers_cols = multipliers.columns
 
         # 8. Calculate solvability scores
+
         suspects_entity_active = data_prep.calc_solvability(
             suspects_entity_active, weights
         )
         logger.info("Completed calc_solvability.")
+
 
         # Log the number of suspects before priority calculation
         logger.info(
@@ -403,6 +432,7 @@ def main():
         )
 
         # 9. Calculate priority scores
+        test_df=data_prep.calc_priority_detailed(suspects_entity_active, weights)
         suspects_entity_active = data_prep.calc_priority(
             suspects_entity_active, weights, dfs["suspects"]
         )
@@ -434,7 +464,8 @@ def main():
 
     suspects_entity.active = data_prep.calc_all_sus_scores(suspects_entity.active, vics_willing, police_entity.active,
                                                            weights, case_dispatcher_soc_df, dfs["suspects"])
-
+    df = data_prep.calc_all_sus_scores(suspects_entity.active.copy(), vics_willing, police_entity.active.copy(),
+                                                           weights, case_dispatcher_soc_df.copy(), dfs["suspects"].copy())
     victims_entity.active = data_prep.add_priority_to_others(
         suspects_entity.active,
         victims_entity.active,
