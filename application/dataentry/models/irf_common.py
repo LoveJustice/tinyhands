@@ -224,6 +224,27 @@ class IrfCommon(BaseForm):
     logbook_second_verification_name = models.CharField(max_length=127, blank=True)
     
     logbook_champion_verification = models.BooleanField('Champion verification', default=False)
+
+    # Added 2024.8
+    age_0_5 = models.BooleanField(default=False)
+    age_6_9 = models.BooleanField(default=False)
+    age_10_14 = models.BooleanField(default=False)
+    age_15_17 = models.BooleanField(default=False)
+    age_18_22 = models.BooleanField(default=False)
+    age_23_29 = models.BooleanField(default=False)
+    age_30_35 = models.BooleanField(default=False)
+    female = models.BooleanField(default=False)
+    seductive_appearance = models.BooleanField(default=False)
+    adult_unemployed = models.BooleanField(default=False)
+    moving_from_poor_area = models.BooleanField(default=False)
+    recently_enslaved = models.BooleanField(default=False)
+    runaway = models.BooleanField(default=False)
+    not_in_school = models.BooleanField(default=False)
+
+    vulnerable_monitor_total = models.PositiveIntegerField(default=0)
+    vulnerable_computed_total = models.PositiveIntegerField(default=0)
+    overall_monitor_total = models.PositiveIntegerField(default=0)
+    overall_computed_total = models.PositiveIntegerField(default=0)
     
     def get_key(self):
         return self.irf_number
@@ -266,6 +287,8 @@ class IntercepteeCommon(BaseCard):
     not_physically_present = models.CharField(max_length=127, blank=True)
     consent_to_use_photo = models.CharField(max_length=255, null=True)
     consent_to_use_information = models.CharField(max_length=255, null=True)
+    family_contacted = models.CharField(max_length=255, null=True)   # Yes/No
+    family_contacted_detail = models.CharField(max_length=255, null=True)
 
     def address1_as_string(self):
         rtn = ''

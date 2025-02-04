@@ -1,4 +1,5 @@
 from __future__ import annotations  # Needed for recursive types
+import json
 from typing import List, TypedDict
 from django.db.models import Q
 from django.db import transaction
@@ -44,22 +45,25 @@ def generate_question_json(question: QuestionSpec):
     }
     if question["span"] is not None:
         result["span"] = question["span"]
-    if question["total"] is not None:
-        result["refFlagTotalField"] = question["total"]["tag"]
+    if question["total_question"] is not None:
+        result["flagTotalQuestions"] = []
+        for total_question in question["total_question"]:
+            result["flagTotalQuestions"].append(total_question['tag'])
+
     if question["points"] is not None:
-        result["refFlagPoints"] = question["points"]
+        result["flagPoints"] = question["points"]
     if question["options"] is not None:
         result["options"] = []
         for option in question["options"]:
             entry = {
                 "value": option["value"],
-                "redFlagPoints": option["points"],
+                "flagPoints": option["points"],
             }
             result["options"].append(entry)
         if question["other_option"] is not None:
             result["otherOption"] = {
                 "value": question["other_option"]["value"],
-                "redFlagPoints": question["other_option"]["points"],
+                "flagPoints": question["other_option"]["points"],
             }
 
     return result
@@ -204,7 +208,12 @@ def update_category(section: SectionSpec, tracking: FormSpecTracking):
                 "export_params": question["base_question"]['export_params'],
             })
             if question['points'] is not None or question['options'] is not None or question['other_option'] is not None:
+                if question["total_question"] is not None:
+                    flagTotalQuestions = []
+                    for total_question in question["total_question"]:
+                        flagTotalQuestions.append(total_question['tag'])
                 flag_points = {
+                    'flagTotalQuestions': flagTotalQuestions,
                     'points': question['points'],
                     'options': question['options'],
                     'other_option': question['other_option'],
@@ -221,10 +230,10 @@ def update_category(section: SectionSpec, tracking: FormSpecTracking):
             if category_storage is None:
                 if question['base_question']['tag'] not in tracking['main_tags']:
                     tracking['main_tags'].append(question['base_question']['tag'])
-                else:
-                    if section['category']['tag'] not in tracking['card_tags']:
-                        tracking['card_tags'][section['category']['tag']] = []
-                    tracking['card_tags'][section['category']['tag']].append(question['base_question']['tag'])
+            else:
+                if section['category']['tag'] not in tracking['card_tags']:
+                    tracking['card_tags'][section['category']['tag']] = []
+                tracking['card_tags'][section['category']['tag']].append(question['base_question']['tag'])
 
     return category
 
@@ -269,6 +278,7 @@ def generate_form_spec(spec: FormsOfTypeSpec):
             form_type = FormType.objects.get(name=tracking['form_type'])
             for form_spec in spec['form_specs']:
                 client_json = generate_form_json(form_spec)
+                print(json.dumps(client_json, indent=4))
                 storage = storage_model(form_spec['storage'], tracking)
                 if storage is None:
                     continue

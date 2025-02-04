@@ -1,6 +1,6 @@
 from __future__ import annotations  # Needed for recursive types
 
-from typing import List, TypedDict
+from typing import List, Literal, TypedDict
 
 
 class StorageSpec(TypedDict):
@@ -11,18 +11,26 @@ class StorageSpec(TypedDict):
     parent_field: str | None
 
 
+AnswerType = Literal[
+    "String", "Integer", "Float", "RadioButton", "Dropdown", "Checkbox", "Address", "Phone", "Date", "DateTime",
+    "ArcGisAddress", "Image", "PromptOnly", "Person", "MultiReference"]
+
+
 class BaseQuestionSpec(TypedDict):
     tag: str
-    answer_type: str
+    answer_type: AnswerType
     field_name: str
     export_name: str
     params: str | None
     export_params: str | None
 
 
+CategoryType = Literal["grid", "card"]
+
+
 class CategorySpec(TypedDict):
     tag: str
-    category_type: str
+    category_type: CategoryType
     description: str
     storage: StorageSpec | None
 
@@ -32,12 +40,15 @@ class OptionsAndPointsSpec(TypedDict):
     points: int
 
 
+EntryType = Literal["text", "number", "checkbox", "sum"]
+
+
 class QuestionSpec(TypedDict):
     base_question: BaseQuestionSpec
     label: str
-    entry_type: str
+    entry_type: EntryType
     span: int | None
-    total: BaseQuestionSpec | None
+    total_question: List[BaseQuestionSpec] | None
     points: int | None
     options: List[OptionsAndPointsSpec] | None
     other_option: OptionsAndPointsSpec | None
@@ -108,4 +119,3 @@ class FormsOfTypeSpec(TypedDict):
     form_type: str
     version: str
     form_specs: List[FormSpec]
-
