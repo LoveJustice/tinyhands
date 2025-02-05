@@ -419,7 +419,7 @@ base_question: dict[str, BaseQuestionSpec] = {
     'irfVerifier': {
         'tag': 'irfVerifier',
         'answer_type': 'Integer',
-        'field_name': 'verifier',
+        'field_name': 'verifier_id',
         'export_name': 'Verifier',
         'params': None,
         'export_params': None,
@@ -1052,8 +1052,66 @@ irf_core: FormSpec = {
             ]
         },
     ],
-    'validations': [],
-    'export': None
+    'validations': [
+        {
+            'tag': 'irfLocationEntered',
+            'level': 'warning',
+            'validation_type': 'not_blank_or_null',
+            'message': 'Location should be entered',
+            'questions': [base_question['irfLocation']],
+            'trigger': None,
+            'trigger_value': None,
+            'params': None,
+            'on_retrieve': False,
+            'on_update': True
+        }
+    ],
+    'export': {
+        'tag': 'irfCore',
+        'module_name': 'export_import.irf_google_sheet',
+        'class_name': 'IrfGoogleSheet',
+        'spreadsheet_name': 'irfCore202408',
+        'sheet_name': 'irf',
+        'key_field_name': 'IRF Number',
+        'cards': [
+            {
+                'category': category['irfPeopleCategory'],
+                'prefix': 'Victim',
+                'max_instances': 1,
+                'index_field_name': None
+            },
+            {
+                'category': category['irfPeopleCategory'],
+                'prefix': 'Trafficker %d',
+                'max_instances': 5,
+                'index_field_name': None
+            }
+        ],
+        'fields': [
+            {
+                'field_name': 'station',
+                'answer_type': 'String',
+                'export_name': 'Station',
+                'card': None,
+                'argument_json': '{"part": "station_name"}'
+            },
+            {
+                'field_name': 'date_time_entered_into_system',
+                'answer_type': 'DateTime',
+                'export_name': 'Date/Time Entered into System',
+                'card': None,
+                'argument_json': None
+            },
+            {
+                'field_name': 'status',
+                'answer_type': 'String',
+                'export_name': 'Status',
+                'card': None,
+                'argument_json': None
+            },
+        ],
+        'suppress_warnings': True,
+    }
 }
 
 irf_202408: FormsOfTypeSpec = {

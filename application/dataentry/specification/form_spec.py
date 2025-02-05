@@ -84,7 +84,7 @@ class GoogleExportCardSpec(TypedDict):
     category: CategorySpec
     prefix: str
     max_instances: int
-    index_field_name: str
+    index_field_name: str | None
 
 
 class GoogleExportFieldSpec(TypedDict):

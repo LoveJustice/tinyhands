@@ -11,11 +11,13 @@ from dataentry.models import AnswerType, Category, CategoryType, ExportImport, E
 from dataentry.models import FormCategory, FormType, FormValidation, FormValidationLevel, FormValidationQuestion
 from dataentry.models import FormValidationType, GoogleSheetConfig, Storage, Question, QuestionLayout, QuestionStorage
 
+
 class FormSpecTracking(TypedDict):
     form_type: str
     version: str
     form: object
-    main_storage: object | None
+    main_storage_model: object | None
+    main_storage_object: object
     card_name: str | None
     card_storage: object | None
     main_tags: List[str]
@@ -125,7 +127,7 @@ def update_google_export(google: GoogleExportSpec, tracking):
         'implement_class_name': google['class_name'],
         'form_id': tracking['form'].id,
     })
-    upsert(GoogleSheetConfig, {'export_import_id': export_import.id},{
+    upsert(GoogleSheetConfig, {'export_import_id': export_import.id}, {
         'export_or_import': 'export',
         'spreadsheet_name': google['spreadsheet_name'],
         'sheet_name': google['sheet_name'],
@@ -133,26 +135,27 @@ def update_google_export(google: GoogleExportSpec, tracking):
         'suppress_column_warnings': google['suppress_warnings'],
     })
     for card in google['cards']:
-        category = Category.objects.get(form_tag=card['category']['tag'])
-        upsert(ExportImportCard, {'export_import_id': export_import.id, 'category_id': category.id}, {
-            'prefix': card['prefix'],
-            'max_instances': card['max_instances'],
-            'index_field_name': card['index_field_name'],
-        })
+        category = Category.objects.get(form_tag=version_tag(card['category']['tag'], tracking))
+        upsert(ExportImportCard,
+               {'export_import_id': export_import.id, 'category_id': category.id, 'prefix': card['prefix']}, {
+                   'max_instances': card['max_instances'],
+                   'index_field_name': card['index_field_name'],
+               })
     for field in google['fields']:
         if field['card'] is not None:
             category = Category.objects.get(form_tag=field['card']['tag'])
             field_card = ExportImportCard.objects.get(export_import=export_import, card_id=category.id)
         else:
             field_card = None
+        answer_type = AnswerType.objects.get(name=field['answer_type'])
         upsert(ExportImportField, {
             'export_import_id': export_import.id,
             'card': field_card,
             'field_name': field['field_name']}, {
-            'answer_type': field['answer_type'],
-            'export_name': field['export_name'],
-            'arguments_json': field['argument_json'],
-        })
+                   'answer_type': answer_type,
+                   'export_name': field['export_name'],
+                   'arguments_json': field['argument_json'],
+               })
 
 
 def update_validation(validation: ValidationSpec, tracking: FormSpecTracking):
@@ -162,35 +165,33 @@ def update_validation(validation: ValidationSpec, tracking: FormSpecTracking):
         trigger = Question.objects.get(form_tag=version_tag(validation['trigger']['tag'], tracking))
     else:
         trigger = None
-    validation = upsert(FormValidation, {'form_tag': version_tag(validation['tag'], tracking),},{
+    validation_object = upsert(FormValidation, {'form_tag': version_tag(validation['tag'], tracking), }, {
         'level': level,
         'validation_type': validation_type,
+        'error_warning_message': validation['message'],
         'trigger': trigger,
         'trigger_value': validation['trigger_value'],
         'params': validation['params'],
         'retrieve': validation['on_retrieve'],
         'update': validation['on_update'],
-                            })
-    for question_tag in validation['questions']:
-        question = Question.objects.get(form_tag=version_tag(question_tag, tracking))
-        upsert(FormValidationQuestion, {'formvalidation_id': validation.id, 'question_id': question.id}, {})
-    validation.forms.add(tracking['form'])
+    })
+    for base_quest in validation['questions']:
+        question = Question.objects.get(form_tag=version_tag(base_quest['tag'], tracking))
+        upsert(FormValidationQuestion, {'validation': validation_object, 'question': question}, {})
+    validation_object.forms.add(tracking['form'])
     return validation
 
 
 def update_category(section: SectionSpec, tracking: FormSpecTracking):
     category_tag = version_tag(section['category']['tag'], tracking)
     if section['category']['storage'] is not None:
-        category_storage = storage_model(section['category']['storage'], tracking)
-        check_model = category_storage
+        check_model = storage_model(section['category']['storage'], tracking)
     else:
-        category_storage = None
-        check_model = tracking['main_storage']
+        check_model = tracking['main_storage_model']
     category_type = CategoryType.objects.get(name=section['category']['category_type'])
     category = upsert(Category, {'form_tag': category_tag}, {
         'category_type': category_type,
         'description': section['category']['description'],
-        'storage': category_storage,
     })
     for subsection in section['subsections']:
         for question in subsection['questions']:
@@ -207,13 +208,14 @@ def update_category(section: SectionSpec, tracking: FormSpecTracking):
                 "export_name": question["base_question"]['export_params'],
                 "export_params": question["base_question"]['export_params'],
             })
-            if question['points'] is not None or question['options'] is not None or question['other_option'] is not None:
+            if question['points'] is not None or question['options'] is not None or question[
+                'other_option'] is not None:
+                flag_total_questions = []
                 if question["total_question"] is not None:
-                    flagTotalQuestions = []
                     for total_question in question["total_question"]:
-                        flagTotalQuestions.append(total_question['tag'])
+                        flag_total_questions.append(total_question['tag'])
                 flag_points = {
-                    'flagTotalQuestions': flagTotalQuestions,
+                    'flag_total_questions': flag_total_questions,
                     'points': question['points'],
                     'options': question['options'],
                     'other_option': question['other_option'],
@@ -221,13 +223,13 @@ def update_category(section: SectionSpec, tracking: FormSpecTracking):
             else:
                 flag_points = None
             upsert(QuestionStorage, {
-                'question_id': question_obj.id,},
+                'question_id': question_obj.id, },
                    {'field_name': question['base_question']['field_name'],
-            })
+                    })
             upsert(QuestionLayout, {'category_id': category.id, 'question_id': question_obj.id}, {
                 'flag_points': flag_points,
             })
-            if category_storage is None:
+            if section['category']['storage'] is None:
                 if question['base_question']['tag'] not in tracking['main_tags']:
                     tracking['main_tags'].append(question['base_question']['tag'])
             else:
@@ -238,19 +240,18 @@ def update_category(section: SectionSpec, tracking: FormSpecTracking):
     return category
 
 
-def clean_model (model, version):
+def clean_model(model, version):
     end_match = '.' + version
     remove_qs = model.objects.filter(form_tag__endswith=end_match)
     for to_remove in remove_qs:
         to_remove.delete()
 
 
-def clean_version (version: str):
+def clean_version(version: str):
     clean_model(FormValidation, version)
     clean_model(ExportImport, version)
     clean_model(Question, version)
     clean_model(Category, version)
-    clean_model(Storage, version)
 
 
 class GenerateErrors(Exception):
@@ -264,7 +265,8 @@ def generate_form_spec(spec: FormsOfTypeSpec):
         'form_type': spec['form_type'],
         'version': spec['version'],
         'form': None,
-        'main_storage': None,
+        'main_storage_model': None,
+        'main_storage_object': None,
         'card_name': None,
         'card_storage': None,
         'main_tags': [],
@@ -278,21 +280,21 @@ def generate_form_spec(spec: FormsOfTypeSpec):
             form_type = FormType.objects.get(name=tracking['form_type'])
             for form_spec in spec['form_specs']:
                 client_json = generate_form_json(form_spec)
-                print(json.dumps(client_json, indent=4))
                 storage = storage_model(form_spec['storage'], tracking)
                 if storage is None:
                     continue
                 else:
-                    tracking['main_storage'] = storage
+                    tracking['main_storage_model'] = storage
                 storage_tag = version_tag(form_spec['storage']['tag'], tracking)
                 storage_object = upsert(Storage, {'form_tag': storage_tag}, {
                     'module_name': form_spec['storage']['module_name'],
                     'form_model_name': form_spec['storage']['model_name'],
                 })
+                tracking['main_storage_object'] = storage_object
                 form = upsert(Form, {'form_name': form_spec['name']},
                               {'form_type': form_type,
                                'storage': storage_object,
-                               'start_date': '',
+                               'start_date': '2025-01-01',
                                'end_date': '2118-12-31',
                                'version': spec['version'],
                                'client_json': client_json,
@@ -302,11 +304,22 @@ def generate_form_spec(spec: FormsOfTypeSpec):
                 category_index = 1
                 for section in form_spec['sections']:
                     category = update_category(section, tracking)
+                    if section['category']['storage'] is not None:
+                        storage_tag = version_tag(section['category']['storage']['tag'], tracking)
+                        category_storage = upsert(Storage, {'form_tag': storage_tag}, {
+                            'module_name': section['category']['storage']['module_name'],
+                            'form_model_name': section['category']['storage']['model_name'],
+                            'parent_storage': tracking['main_storage_object'],
+                            'foreign_key_field_parent': section['category']['storage']['parent_field'],
+                        })
+                    else:
+                        category_storage = None
                     upsert(FormCategory, {
                         "form": form,
                         "category": category,
                         "order": category_index,
-                    }, {"name": "tbd"})
+                        "storage": category_storage,
+                    }, {"name": section["name"]})
                 for validation in form_spec['validations']:
                     update_validation(validation, tracking)
                 if form_spec['export'] is not None:

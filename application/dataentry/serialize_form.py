@@ -876,7 +876,12 @@ class QuestionResponseSerializer(serializers.Serializer):
         
         answer = form_data.get_answer(instance)
         ret['question_id']  = serializers.IntegerField().to_representation(instance.id)
-        ret['question_tag']  = serializers.CharField().to_representation(instance.form_tag)
+        dot_index = instance.form_tag.find('.')
+        if dot_index == -1:
+            form_tag = instance.form_tag
+        else:
+            form_tag = instance.form_tag[:dot_index]
+        ret['question_tag']  = serializers.CharField().to_representation(form_tag)
         if form_data.get_answer_storage(instance) is not None:
             ret['storage_id'] = serializers.IntegerField().to_representation(form_data.get_answer_storage(instance))
         if answer is not None:
@@ -893,6 +898,9 @@ class QuestionResponseSerializer(serializers.Serializer):
         question_id = data.get('question_id')
         if question_id is None:
             question_tag = data.get('question_tag')
+            form_data = self.context['form_data']
+            if form_data.form.use_tag_suffix:
+                question_tag = question_tag + '.' + form_data.form.version
             question = Question.objects.get(form_tag=question_tag)
         else:
             question = Question.objects.get(id=int(question_id))
