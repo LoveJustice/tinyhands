@@ -387,7 +387,7 @@ def main():
 
         # ------------------------------------------------------
         # 4. Weight belief scores
-        suspects_entity_active = data_prep.weight_pv_believes(suspects_entity_active, case_dispatcher_soc_df, weights)
+        suspects_entity_active = data_prep.calc_pv_belief_score(suspects_entity_active, case_dispatcher_soc_df, weights)
         suspects_entity_active[['sf_number','pv_believes_definitely_trafficked_many', 'pv_believes_trafficked_some',
         'pv_believes_suspect_trafficker', 'pv_believes_not_a_trafficker',
         'pv_believes']]
@@ -398,7 +398,7 @@ def main():
 
         # 5. Calculate exploitation scores
 
-        suspects_entity_active = data_prep.get_exp_score(suspects_entity_active, case_dispatcher_soc_df, weights)
+        suspects_entity_active = data_prep.calc_exploitation_score(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed get_exp_score.")
         multipliers=multipliers[multipliers_cols].merge(suspects_entity_active[['sf_number','exploit_debt_bondage',
        'exploit_forced_labor', 'exploit_physical_abuse',
@@ -406,8 +406,8 @@ def main():
         multipliers_cols = multipliers.columns
 
         # 6. Merge and round Strength of Case (SOC) scores
-        suspects_entity_active = data_prep.get_new_soc_score(suspects_entity_active, case_dispatcher_soc_df)
-        logger.info("Completed get_new_soc_score.")
+        suspects_entity_active = data_prep.calc_strength_of_case_score(suspects_entity_active, case_dispatcher_soc_df)
+        logger.info("Completed calc_strength_of_case_score.")
         multipliers = multipliers[multipliers_cols].merge(suspects_entity_active[['sf_number', 'strength_of_case']], on="sf_number", how="inner")
         multipliers_cols = multipliers.columns
 
@@ -462,8 +462,10 @@ def main():
 
     # ----------------------------------------------------------------------------------------
 
-    suspects_entity.active = data_prep.calc_all_sus_scores(suspects_entity.active, vics_willing, police_entity.active,
+    all_sus_scores = data_prep.calc_all_sus_scores(suspects_entity.active, vics_willing, police_entity.active,
                                                            weights, case_dispatcher_soc_df, dfs["suspects"])
+    all_sus_scores.to_csv('data/all_sus_scores.csv', index=False)
+    suspects_entity.active=data_prep.align_columns(all_sus_scores, dfs["suspects"])
     df = data_prep.calc_all_sus_scores(suspects_entity.active.copy(), vics_willing, police_entity.active.copy(),
                                                            weights, case_dispatcher_soc_df.copy(), dfs["suspects"].copy())
     victims_entity.active = data_prep.add_priority_to_others(

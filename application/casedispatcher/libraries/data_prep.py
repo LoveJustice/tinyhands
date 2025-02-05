@@ -1300,7 +1300,7 @@ def calc_vics_willing_scores(
             suspects["v_mult"] = suspects["count"].map(v_mult).fillna(0.0).astype(float)
 
             # Drop unnecessary columns if they exist
-            columns_to_drop = ["willing_to_testify", "count"]
+            columns_to_drop = ["willing_to_testify"]
 
             existing_columns_to_drop = [
                 col for col in columns_to_drop if col in suspects.columns
@@ -1481,7 +1481,7 @@ def get_total_arrests(case_dispatcher_soc_df):
     return arrests
 
 
-def weight_pv_believes(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, weights: Dict[str, Any]) -> pd.DataFrame:
+def calc_pv_belief_score(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, weights: Dict[str, Any]) -> pd.DataFrame:
     """
     Weight beliefs about suspects' involvement in trafficking.
 
@@ -1677,7 +1677,7 @@ def weight_pv_believes(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFr
     return suspects
 
 
-def get_exp_score(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, weights: Dict[str, float]) -> pd.DataFrame:
+def calc_exploitation_score(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame, weights: Dict[str, float]) -> pd.DataFrame:
     """
     Calculate exploitation score based on parameters and reported exploitation.
 
@@ -2168,7 +2168,7 @@ def get_sus_located_in(sus, location):
     return sus
 
 
-def get_new_soc_score(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame) -> pd.DataFrame:
+def calc_strength_of_case_score(suspects: pd.DataFrame, case_dispatcher_soc_df: pd.DataFrame) -> pd.DataFrame:
     """
     Merge newly calculated Strength of Case (SOC) scores into the suspects DataFrame.
 
@@ -2532,54 +2532,88 @@ def calc_priority_detailed(new_suspects: pd.DataFrame, weights: Dict[str, float]
 
     return df
 
+def align_columns(target_df: pd.DataFrame, reference_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Align the columns of target_df with those of reference_df without dropping any columns.
+
+    The resulting DataFrame will have:
+      - All columns originally in target_df.
+      - Columns that exist in both DataFrames will appear in the same order as in reference_df.
+      - Any additional columns in target_df (that are not in reference_df) will be appended at the end.
+      - If target_df is missing columns that exist in reference_df, those columns will be added with empty strings.
+
+    Parameters:
+        target_df (pd.DataFrame):
+            The DataFrame whose columns will be aligned.
+        reference_df (pd.DataFrame):
+            The reference DataFrame providing the desired order for the overlapping columns.
+
+    Returns:
+        pd.DataFrame:
+            A new DataFrame with columns aligned according to the reference.
+    """
+    aligned_df = target_df.copy()
+
+    # Add any missing columns from the reference with empty strings.
+    for col in reference_df.columns:
+        if col not in aligned_df.columns:
+            aligned_df[col] = ""
+
+    # Determine the common columns (ordered as in reference) and any extra columns.
+    common_columns = [col for col in reference_df.columns if col in aligned_df.columns]
+    extra_columns = [col for col in aligned_df.columns if col not in reference_df.columns]
+    new_order = common_columns + extra_columns
+
+    return aligned_df[new_order]
+
+
 
 def calc_priority(
-    new_suspects: pd.DataFrame, weights: Dict[str, Any], existing_suspects: pd.DataFrame
+        new_suspects: pd.DataFrame, weights: Dict[str, Any], existing_suspects: pd.DataFrame
 ) -> pd.DataFrame:
     """
-    Calculate a weighted priority score for each active suspect and update the suspects DataFrame accordingly.
+    Calculate a weighted priority score for each suspect without modifying the original set of columns.
 
-    The priority score is a composite metric derived from multiple factors such as solvability, strength of case,
-    and eminence. Each factor is weighted according to predefined coefficients to reflect its importance in
-    determining the overall priority of the suspect.
+    This function computes a composite priority score based on factors such as solvability,
+    strength of case, and eminence. Each factor is multiplied by its corresponding weight, and
+    the weighted scores are aggregated and normalized to form the final priority score.
 
     The function performs the following operations:
-        1. Validates the presence of required columns in the input DataFrames.
-        2. Computes weighted scores for each factor based on the provided weights.
-        3. Aggregates the weighted scores to compute the final priority score.
-        4. Handles any missing values and ensures data consistency.
-        5. Sorts the suspects based on the priority score in descending order.
-        6. Aligns the columns of the updated suspects DataFrame with the existing suspects DataFrame.
-        7. Removes duplicate entries based on 'sf_number'.
+      1. Validates that the required columns exist in new_suspects and that weights include the necessary keys.
+      2. Computes weighted scores for each factor and aggregates them into a 'priority' score.
+      3. Handles missing values and sorts the suspects in descending order by priority.
+      4. Removes duplicate entries based on 'sf_number'.
+
+    Note:
+        This function does not align (i.e. reorder or add missing columns) the output to match
+        the schema of existing_suspects. To perform column alignment, call the separate
+        `align_columns` function after invoking calc_priority.
 
     Parameters:
         new_suspects (pd.DataFrame):
             DataFrame containing updated suspect information. Must include:
-                - `sf_number`: Unique identifier for each suspect.
-                - `solvability`: Solvability score of the case.
-                - `strength_of_case`: Strength of the case score.
-                - `em2`: Eminence score.
-
+              - 'sf_number': Unique identifier for each suspect.
+              - 'solvability': Solvability score.
+              - 'strength_of_case': Strength of the case score.
+              - 'em2': Eminence score.
         weights (Dict[str, Any]):
-            Dictionary containing weight parameters for each factor. Must include:
-                - `solvability`: Weight for the `solvability` factor.
-                - `strength_of_case`: Weight for the `strength_of_case` factor.
-                - `eminence`: Weight for the `em2` (eminence) factor.
-
+            Dictionary containing weight parameters. Must include the keys:
+              - 'solvability': Weight for the solvability factor.
+              - 'strength_of_case': Weight for the strength_of_case factor.
+              - 'eminence': Weight for the em2 (eminence) factor.
         existing_suspects (pd.DataFrame):
-            DataFrame containing the original suspect information. Used to align columns in the updated suspects DataFrame.
+            DataFrame containing the original suspect information. It is used as a reference
+            for column ordering only; no columns are dropped from new_suspects.
 
     Returns:
         pd.DataFrame:
-            The updated suspects DataFrame with an additional `priority` column representing the weighted priority score,
-            sorted in descending order of priority.
+            The new_suspects DataFrame updated with an additional 'priority' column (and sorted
+            in descending order by priority). All original columns from new_suspects are preserved.
 
     Raises:
-        RuntimeError:
-            If any step in the calculation process fails due to missing columns or other issues.
+        RuntimeError: If required columns or weight keys are missing or if the sum of weights is zero.
     """
     try:
-        # Log the initial state of the DataFrames and weights
         logger.info(
             "Starting calc_priority with the following DataFrame columns:\n"
             f"existing_suspects.columns = {list(existing_suspects.columns)},\n"
@@ -2587,119 +2621,72 @@ def calc_priority(
             f"weights keys = {list(weights.keys())}"
         )
 
-        # Define the factors and their corresponding weight keys
+        # Define the mapping for factors to weight keys.
         factors: List[Tuple[str, str]] = [
             ("solvability", "solvability"),
             ("strength_of_case", "strength_of_case"),
             ("em2", "eminence"),
         ]
 
-        # Extract factor names and weight keys
-        # factor_columns: List[str] = [factor for factor, _ in factors]
-        weight_keys: List[str] = [weight_key for _, weight_key in factors]
-        weight_keys = ["solvability", "strength_of_case", "eminence"]
-        # # Validate required columns in new_suspects DataFrame
-        # required_new_suspects_cols = set(factor_columns).union({"sf_number"})
-
-        required_new_suspects_cols = {
-            "solvability",
-            "strength_of_case",
-            "em2",
-            "sf_number",
-        }
-
-        missing_new_suspects_cols = required_new_suspects_cols - set(
-            new_suspects.columns
-        )
+        # Validate that new_suspects contains all required columns.
+        required_new_suspects_cols = {"solvability", "strength_of_case", "em2", "sf_number"}
+        missing_new_suspects_cols = required_new_suspects_cols - set(new_suspects.columns)
         if missing_new_suspects_cols:
             error_msg = f"new_suspects DataFrame is missing required columns: {missing_new_suspects_cols}"
             logger.error(error_msg)
             raise RuntimeError(error_msg)
-        logger.debug("All required columns are present in new_suspects DataFrame.")
+        logger.debug("All required columns are present in new_suspects.")
 
-        # Validate required keys in weights dictionary
+        # Validate that weights contains all required keys.
+        weight_keys = ["solvability", "strength_of_case", "eminence"]
         missing_weights_keys = set(weight_keys) - set(weights.keys())
         if missing_weights_keys:
-            error_msg = (
-                f"weights dictionary is missing required keys: {missing_weights_keys}"
-            )
+            error_msg = f"weights dictionary is missing required keys: {missing_weights_keys}"
             logger.error(error_msg)
             raise RuntimeError(error_msg)
-        logger.debug("All required keys are present in weights dictionary.")
+        logger.debug("All required keys are present in weights.")
 
-        # Ensure all weight values are numeric
+        # Ensure all weight values are numeric.
         logger.info("Validating that all weight values are numeric.")
-        for weight_key in weight_keys:
-            if not isinstance(weights[weight_key], (int, float)):
-                error_msg = f"Weight value for '{weight_key}' must be numeric."
+        for key in weight_keys:
+            if not isinstance(weights[key], (int, float)):
+                error_msg = f"Weight value for '{key}' must be numeric."
                 logger.error(error_msg)
                 raise RuntimeError(error_msg)
         logger.info("All weight values are numeric.")
 
-        # 1. Compute weighted scores for each factor
+        # Compute the weighted scores for each factor.
         logger.info("Calculating weighted scores for each factor.")
-        weighted_scores: List[pd.Series] = []
-        total_weight: float = sum(weights[weight_key] for weight_key in weight_keys)
-
+        weighted_scores = []
+        total_weight = sum(weights[key] for key in weight_keys)
         if total_weight == 0:
-            error_msg = (
-                "The sum of all weight values is zero. Cannot compute priority score."
-            )
+            error_msg = "The sum of all weight values is zero. Cannot compute priority score."
             logger.error(error_msg)
             raise RuntimeError(error_msg)
 
         for factor, weight_key in factors:
-            logger.debug(
-                f"Processing factor '{factor}' with weight key '{weight_key}'."
-            )
-            # Fill NaN values with 0 for computation
+            logger.debug(f"Processing factor '{factor}' with weight key '{weight_key}'.")
             factor_series = new_suspects[factor].fillna(0).astype(float)
-            weight = weights[weight_key]
-            weighted_score = factor_series * weight
+            weighted_score = factor_series * weights[weight_key]
             weighted_scores.append(weighted_score)
             logger.debug(f"Weighted score for '{factor}':\n{weighted_score.head()}")
 
-        # 2. Aggregate the weighted scores to compute the priority score
+        # Aggregate the weighted scores to compute the priority score.
         logger.info("Aggregating weighted scores to compute 'priority' score.")
         total_weighted_score = sum(weighted_scores)
-        new_suspects["priority"] = total_weighted_score / total_weight
+        new_suspects["priority"] = (total_weighted_score / total_weight).fillna(0.0).astype(float)
         logger.debug(f"Computed 'priority' scores:\n{new_suspects['priority'].head()}")
 
-        # 3. Handle any potential NaN values resulting from division
-        new_suspects["priority"] = new_suspects["priority"].fillna(0.0).astype(float)
-        logger.info("'priority' scores calculated and NaN values handled.")
-
-        # 4. Sort suspects by priority in descending order
+        # Sort by descending priority.
         logger.info("Sorting suspects by 'priority' in descending order.")
         new_suspects.sort_values("priority", ascending=False, inplace=True)
         logger.debug(f"Sorted 'priority' scores:\n{new_suspects['priority'].head()}")
 
-        # 5. Align the columns of new_suspects with existing_suspects
-        logger.info("Aligning columns of new_suspects with existing_suspects.")
-        expected_columns = list(existing_suspects.columns)
-        current_columns = list(new_suspects.columns)
-        if len(current_columns) < len(expected_columns):
-            # If new_suspects has fewer columns, pad with empty strings
-            for col in expected_columns[len(current_columns) :]:
-                new_suspects[col] = ""
-            logger.debug("Added missing columns to align with existing_suspects.")
-        elif len(current_columns) > len(expected_columns):
-            # If new_suspects has more columns, truncate to match
-            new_suspects = new_suspects.iloc[:, : len(expected_columns)]
-            logger.debug("Truncated extra columns to align with existing_suspects.")
-        else:
-            # Reorder columns to match existing_suspects
-            new_suspects = new_suspects[expected_columns]
-            logger.debug("Reordered columns to align with existing_suspects.")
-
-        logger.debug(f"Aligned columns: {list(new_suspects.columns)}")
-
-        # 6. Remove duplicate entries based on 'suspect_id'
+        # Remove duplicate entries based on 'sf_number'.
         logger.info("Removing duplicate suspects based on 'sf_number'.")
-        before_dropping = len(new_suspects)
+        before = len(new_suspects)
         new_suspects = new_suspects.drop_duplicates(subset="sf_number")
-        after_dropping = len(new_suspects)
-        logger.info(f"Removed {before_dropping - after_dropping} duplicate suspects.")
+        logger.info(f"Removed {before - len(new_suspects)} duplicate suspects.")
 
     except RuntimeError as re:
         logger.error(f"Runtime error in calc_priority: {re}")
@@ -2855,17 +2842,17 @@ def calc_all_sus_scores(suspects_entity_active: pd.DataFrame, vics_willing: pd.D
         logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # 4. Weight belief scores
-        suspects_entity_active = weight_pv_believes(suspects_entity_active, case_dispatcher_soc_df, weights)
+        suspects_entity_active = calc_pv_belief_score(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed weight_pv_believes.")
         logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # 5. Calculate exploitation scores
-        suspects_entity_active = get_exp_score(suspects_entity_active, case_dispatcher_soc_df, weights)
+        suspects_entity_active = calc_exploitation_score(suspects_entity_active, case_dispatcher_soc_df, weights)
         logger.info("Completed get_exp_score.")
         logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
         # 6. Merge and round Strength of Case (SOC) scores
-        suspects_entity_active = get_new_soc_score(suspects_entity_active, case_dispatcher_soc_df)
+        suspects_entity_active = calc_strength_of_case_score(suspects_entity_active, case_dispatcher_soc_df)
         logger.info("Completed get_new_soc_score.")
         logger.info(f"New columns: {set(suspects_entity_active.columns) - set(original_columns)}")
 
