@@ -14,7 +14,7 @@ from .master_person import MasterPerson, PersonAddress, PersonPhone, PersonSocia
 from .match_history import MatchAction, MatchHistory
 from .red_flags import RedFlags
 from .interception_alert import InterceptionAlert
-from .permission import Permission
+from .permission import Permission, PermissionGroup
 from .user_location_permission import UserLocationPermission
 from .form import *
 from .irf_common import IrfCommon, IntercepteeCommon, IrfAttachmentCommon, IrfVerification
@@ -35,7 +35,7 @@ from .client_diagnostic import ClientDiagnostic
 from .empowerment import Empowerment
 from .gospel import Gospel
 from .incident import Incident
-from .suspect import Suspect, SuspectInformation, SuspectAssociation, SuspectEvaluation, SuspectLegal, SuspectAttachment
+from .suspect import Suspect, SuspectInformation, SuspectAssociation, SuspectEvaluation, SuspectLegal, SuspectLegalPv, SuspectAttachment
 from .location import LocationForm, LocationInformation, LocationAssociation, LocationEvaluation, LocationAttachment
 from .holiday import Holiday
 from .form_log import FormLog
