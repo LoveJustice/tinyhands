@@ -19,6 +19,21 @@ import pickle
 import os
 from libraries.google_lib import DB_Conn
 from pages.irf_evaluation import case_dispatcher_soc_df
+
+from libraries.case_dispatcher_data import get_suspect_evaluations,get_vdf
+
+suspect_evaluations = get_suspect_evaluations(country="Uganda")
+vdf = get_vdf(country="Uganda")
+vdf["case_id"] = vdf["vdf_number"].apply(extract_case_id)
+suspect_evaluations["case_id"] = suspect_evaluations["sf_number"].apply(extract_case_id)
+list(vdf)
+all_sus_scores = pd.read_csv('data/all_sus_scores.csv')
+list(all_sus_scores)
+df=vdf[vdf['case_id'].isin(all_sus_scores['case_id'])]
+df.to_csv('data/vdf.csv',index=False)
+
+
+
 case_dispatcher = st.secrets["case_dispatcher"]
 access_token = case_dispatcher["access_token"]
 toml_config_dict = attrdict_to_dict(access_token)

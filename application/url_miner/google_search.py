@@ -30,7 +30,7 @@ import random
 from newspaper import Article
 from get_urls_from_csvs import get_unique_urls_from_csvs
 
-llm = OpenAI(temperature=0, model="gpt-4o", request_timeout=120.0)
+llm = OpenAI(temperature=0, model="o3-mini", request_timeout=120.0)
 memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
 
 # Configure Logging
@@ -93,6 +93,20 @@ SHORT_PROMPTS = {
         "}"
     ),
 }
+
+
+def spoof_articles(path) -> List[str]:
+    """
+    Fetch articles synchronously using google search.
+    """
+    articles = []
+    try:
+        df = pd.read_csv(path)
+        urls = df['url'].tolist()
+        return urls
+    except Exception as e:
+        logger.error(f"Error fetching articles: {e}")
+        return []
 
 def google_search(query, api_key, cse_id, start, num=10):
     """
@@ -466,12 +480,13 @@ def populate_victim_forms_table(url: str, victim: str, chat_engine) -> None:
         if response_data:
             # Retrieve the URL ID from the database
             url_id = db.get_url_id(url)
+            victim_id = db.get_victim_id(url_id, victim)
             if url_id is None:
                 logger.error(f"URL not found in database: {url}")
                 return
 
             # Insert the data into the suspect_forms table
-            db.insert_victim_form(url_id, response_data)
+            db.insert_victim_form(url_id, response_data, victim_id)
 
             logger.info(f"Successfully inserted victim form for victim: {victim}")
 
@@ -552,12 +567,13 @@ def populate_suspect_forms_table(url: str, suspect: str, chat_engine) -> None:
         if response_data:
             # Retrieve the URL ID from the database
             url_id = db.get_url_id(url)
+            suspect_id = db.get_suspect_id(url_id, suspect)
             if url_id is None:
                 logger.error(f"URL not found in database: {url}")
                 return
 
             # Insert the data into the suspect_forms table
-            db.insert_suspect_form(url_id, response_data)
+            db.insert_suspect_form(url_id, response_data, suspect_id)
 
             logger.info(f"Successfully inserted suspect form for suspect: {suspect}")
 
@@ -599,13 +615,6 @@ def get_new_urls(new_urls: List[str]) -> List[str]:
 def main():
     # Initialize Database
     db = URLDatabase()
-    db.create_suspect_table()
-    db.create_suspect_forms_table()
-    db.create_incidents_table()
-    db.create_victim_table()
-    db.create_victim_forms_table()
-
-
 
     # Define search parameters
     search_terms = [
@@ -630,32 +639,51 @@ def main():
 
     # Build the exclusion part of the query
     exclusion_query = ' '.join([f'-site:{domain}' for domain in excluded_domains])
-    for location_filter in ["Nigeria", "Ghana", "Kenya", "South Africa", "Uganda", "Tanzania", "Nepal", "India", "Bangladesh", "Pakistan", "Sri Lanka", "Philippines", "Indonesia", "Malaysia", "Thailand", "Vietnam", "Cambodia", "Myanmar", "Laos", "China", "Mongolia", "North Korea", "South Korea", "Japan", "Taiwan", "Hong Kong", "Macau", "Singapore", "Brunei", "Timor-Leste"]:
+    country_list = ["Nigeria", "Ghana", "Kenya", "South Africa", "Uganda", "Tanzania", "Nepal", "India", "Bangladesh", "Pakistan",
+     "Sri Lanka", "Philippines", "Indonesia", "Malaysia", "Thailand", "Vietnam", "Cambodia", "Myanmar", "Laos", "China",
+     "Mongolia", "North Korea", "South Korea", "Japan", "Taiwan", "Hong Kong", "Macau", "Singapore", "Brunei",
+     "Timor-Leste"]
+    for location_filter in ["India"]:
 
         # Initialize Selenium WebDriver
         driver = initialize_selenium()
-        if driver is None:
-            logger.critical("Selenium WebDriver initialization failed. Exiting.")
-            exit(1)
-
-        # Construct the final search query
-        query = ' OR '.join(search_terms) + f' AND {location_filter} {exclusion_query}'
-
-        logger.info(f"Constructed search query: {query}")
-
-        # Perform Google Search
-        search_results = fetch_all_results(query, API_KEY, SEARCH_ENGINE_ID, max_results=30)
-        logger.info(f"Retrieved {len(search_results)} search results.")
-
-        new_urls = [item.get('link') for item in search_results if item.get('link')]
-        urls = get_new_urls(new_urls)
-        logger.info(f"Found {len(new_urls)} new URLs, {len(new_urls)-len(urls)} already in db, processing {len(urls)} urls.")
-        # urls = get_unique_urls_from_csvs('csv', 'url', 4, 1000)
-
+        # if driver is None:
+        #     logger.critical("Selenium WebDriver initialization failed. Exiting.")
+        #     exit(1)
+        #
+        # # Construct the final search query
+        # query = ' OR '.join(search_terms) + f' AND {location_filter} {exclusion_query}'
+        #
+        # logger.info(f"Constructed search query: {query}")
+        #
+        # # Perform Google Search
+        # search_results = fetch_all_results(query, API_KEY, SEARCH_ENGINE_ID, max_results=30)
+        # logger.info(f"Retrieved {len(search_results)} search results.")
+        #
+        # new_urls = [item.get('link') for item in search_results if item.get('link')]
+        # urls = new_urls
+        # urls = get_new_urls(new_urls)
+        # logger.info(f"Found {len(new_urls)} new URLs, {len(new_urls)-len(urls)} already in db, processing {len(urls)} urls.")
+        urls_from_files = get_unique_urls_from_csvs('csv', 'url', 4, 1000)
+        urls_from_db = pd.DataFrame(db.search_urls(limit=1000000))['url'].tolist()
+        urls= list(set(urls_from_files) - set(urls_from_db))
         for url in urls:
+            # Check accessibility before processing
             if not is_url_accessible(url):
                 logger.warning(f"URL not accessible: {url}")
+                # Record the URL in the database as inaccessible.
+                # Set accessible to 0 and leave content empty.
+                result = {
+                    "url": url,
+                    "domain_name": tldextract.extract(url).domain,
+                    "source": "google_search",
+                    "content": "",  # No content because URL is inaccessible
+                    "actual_incident": -1,  # Use a default status (or -2) indicating not processed
+                    "accessible": 0
+                }
+                db.insert_url(result)
                 continue
+
             logger.info(f"Processing URL: {url}")
             extracted = tldextract.extract(url)
             domain_name = extracted.domain
@@ -663,16 +691,30 @@ def main():
             # Attempt to load the URL with retries
             success = fetch_url_with_retries(driver, url)
             if not success:
+                # Even if retries failed, record the URL as inaccessible
+                result = {
+                    "url": url,
+                    "domain_name": domain_name,
+                    "source": "google_search",
+                    "content": "",
+                    "actual_incident": -1,
+                    "accessible": 0
+                }
+                db.insert_url(result)
                 continue
 
             # Extract Main Text
-            # text = extract_main_text_selenium(driver, url)
             text = extract_main_text_newspaper(url)
-            # Alternatively, use requests and BeautifulSoup or newspaper3k
-            # text = extract_main_text_requests(url)
-            # text = extract_main_text_newspaper(url)
 
-            result = {"url": url, "domain_name": domain_name, "source": "google_search", "content": text}
+            # Build the record dictionary. Note that 'accessible' is 1 if text was successfully extracted.
+            result = {
+                "url": url,
+                "domain_name": domain_name,
+                "source": "google_search",
+                "content": text,
+                "actual_incident": -1,  # default value until verified
+                "accessible": 1  # accessible if we reached this point
+            }
             if text:
                 try:
                     documents = [Document(text=text)]
@@ -690,9 +732,10 @@ def main():
                     incident_type, incidents = verify_incident(url, chat_engine)
                     result.update(incident_type)
                     db.insert_url(result)
+                    url_id = db.get_url_id(url)
                     if result.get("actual_incident") == 1:
                         for incident in incidents:
-                            db.insert_incident(url, incident)
+                            db.insert_incident(url_id, incident)
                             logger.info(f"Inserted incident: {incident}")
                         suspects = upload_suspects(url, chat_engine)
                         victims = upload_victims(url, chat_engine)
@@ -700,13 +743,15 @@ def main():
                     logger.error(f"Error processing URL {url}: {e}")
             else:
                 logger.warning(f"No text extracted from URL: {url}")
+                # Even if text extraction fails, record the URL as inaccessible.
+                result["accessible"] = 0
+                db.insert_url(result)
 
-            # Optional: Add a short delay to respect target servers
-            time.sleep(random.uniform(1, 3))  # Sleep between 1 to 3 seconds
+            time.sleep(random.uniform(1, 3))
 
-    # Clean Up
-    driver.quit()
-    logger.info("Google Miner service completed successfully.")
+        # Clean Up
+        driver.quit()
+        logger.info("Google Miner service completed successfully.")
 
 if __name__ == "__main__":
     main()

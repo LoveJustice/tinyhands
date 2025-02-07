@@ -21,6 +21,12 @@ import pandas as pd
 db=URLDatabase()
 df=pd.DataFrame(db.search_urls(limit=1000000))
 df['url'].tolist()
+import sqlite3
+db_path = os.getenv("HTDB_PATH")
+
+
+
+
 saved_urls_generic_search_20250131_110058 = pd.read_csv('csv/saved_urls_generic_search_20250131_110058.csv')
 def get_new_urls(new_urls: List[str]) -> List[str]:
     """
@@ -68,7 +74,7 @@ logger.info("Google Miner service started (refactored, sync version).")
 
 
 db=URLDatabase()
-db.create_database()
+db.create_urls_table()
 db.get_column_names('urls')
 SHORT_PROMPTS = {
     "incident_prompt": (
