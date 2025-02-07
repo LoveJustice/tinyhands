@@ -4,13 +4,13 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('static_border_stations', '0009_staff_photo'),
     ]
 
     def migrate_id_expiration(apps, schema_editor):
-        countries_to_migrate = ['Uganda', 'Mozambique'];
+        countries_to_migrate = ['Kenya', 'Lesotho', 'Liberia', 'Mozambique', 'Namibia', 'Rwanda', 'Sierra Leone',
+                                'Zambia']
 
         misc_type_class = apps.get_model(app_label='static_border_stations', model_name='StaffMiscellaneousTypes')
         id_expiration_type = misc_type_class()
