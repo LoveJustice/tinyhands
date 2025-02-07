@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import JSONField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
@@ -240,9 +241,38 @@ class IrfCommon(BaseForm):
     recently_enslaved = models.BooleanField(default=False)
     runaway = models.BooleanField(default=False)
     not_in_school = models.BooleanField(default=False)
-
     vulnerable_monitor_total = models.PositiveIntegerField(default=0)
     vulnerable_computed_total = models.PositiveIntegerField(default=0)
+
+    destination = address = JSONField(null=True)
+    destination_latitude = models.FloatField(null=True)
+    destination_longitude = models.FloatField(null=True)
+    city_or_country_known_for_trafficking = models.CharField(max_length=127, null=True, blank=True)
+    area_known_for_trafficking = models.CharField(max_length=127, null=True, blank=True)
+    travel_different_country = models.BooleanField(default=False)
+    travel_new_area_first_time = models.BooleanField(default=False)
+    kafala_country = models.BooleanField(default=False)
+    remote_without_transportation = models.BooleanField(default=False)
+    stationed_on_boat_or_ship = models.BooleanField(default=False)
+    domestic_work = models.BooleanField(default=False)
+    massage = models.BooleanField(default=False)
+    dance_bar = models.BooleanField(default=False)
+    other_industry = models.CharField(max_length=127, null=True, blank=True)
+    minor_moving_to_streets = models.BooleanField(default=False)
+    monitors_suspect_pv_not_told_truth = models.BooleanField(default=False)
+    thing_pv_told = models.CharField(max_length=127, null=True, blank=True)
+    thing_monitors_suspect = models.CharField(max_length=127, null=True, blank=True)
+    destination_purpose_monitor_total = models.PositiveIntegerField(default=0)
+    destination_purpose_moving_computed_total = models.PositiveIntegerField(default=0)
+
+    no_documentation_for_travel_purpose = models.BooleanField(default=False)
+    over_18_family_doesnt_want_them_to_go = models.BooleanField(default=False)
+    pv_doesnt_know_basic_info = models.BooleanField(default=False)
+    hormone_injections = models.BooleanField(default=False)
+    trafficking_establishment = models.BooleanField(default=False)
+    control_monitor_total = models.PositiveIntegerField(default=0)
+    control_computed_total = models.PositiveIntegerField(default=0)
+
     overall_monitor_total = models.PositiveIntegerField(default=0)
     overall_computed_total = models.PositiveIntegerField(default=0)
     
