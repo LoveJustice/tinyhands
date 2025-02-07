@@ -30,7 +30,10 @@ class StaffProjectSerializer(serializers.ModelSerializer):
         return obj.border_station.operating_country.id
     
     def get_project_category (self, obj):
-        return obj.border_station.project_category.name
+        if obj.border_station.project_category is None:
+            return None
+        else:
+            return obj.border_station.project_category.name
 
 class StaffReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -187,6 +190,8 @@ class BaseStaffSerializer(serializers.ModelSerializer):
             return None
     
     def to_internal_value(self, data):
+        if 'country' in data and data['country'] is not None:
+            data['country_id'] = data['country']
         if 'staffproject_set' in data:
             staff_project = data['staffproject_set']
             data['staffproject_set'] = []

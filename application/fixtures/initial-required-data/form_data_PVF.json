@@ -5107,7 +5107,7 @@
       "form_tag": "pvfAwarenessLocalChurch",
       "prompt": "Connected PV to a local church in their area",
       "description": null,
-      "answer_type": 6,
+      "answer_type": 1,
       "params": null,
       "export_name": "Connected PV to a local church in their area",
       "export_params": null
