@@ -1502,6 +1502,19 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "pk": 237,
+   "fields": {
+      "form_type": 1,
+      "storage": 181,
+      "start_date": "2018-04-01T00:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "irfSfeKenya",
+      "version": "V2023.1",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "pk": 1,
    "fields": {
@@ -2588,6 +2601,15 @@
       "form_tag": "irfControlEthiopia",
       "category_type": 1,
       "description": "Control for IRF Ethiopia"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 408,
+   "fields": {
+      "form_tag": "irfSfeResourcesKenya",
+      "category_type": 1,
+      "description": "Resources for IRF SFE Kenya"
    }
 },
 {
@@ -15885,6 +15907,149 @@
    }
 },
 {
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 338,
+      "name": "Top Box",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 339,
+      "name": "Area",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 340,
+      "name": "Industry",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 408,
+      "name": "Resources",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 342,
+      "name": "Control",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 343,
+      "name": "Narrative",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 344,
+      "name": "People Main",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 286,
+      "name": "People",
+      "order": 8,
+      "form_category_question_config": null,
+      "storage": 182
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 345,
+      "name": "Result",
+      "order": 9,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 58,
+      "name": "Attachments",
+      "order": 10,
+      "form_category_question_config": null,
+      "storage": 183
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 214,
+      "name": "Compliance",
+      "order": 11,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 232,
+      "name": "Verification",
+      "order": 12,
+      "form_category_question_config": null,
+      "storage": 204
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 237,
+      "category": 233,
+      "name": "Verification Main",
+      "order": 13,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
    "model": "dataentry.question",
    "pk": 1,
    "fields": {
@@ -23857,6 +24022,45 @@
       "answer_type": 4,
       "params": null,
       "export_name": "Agent suspect",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2375,
+   "fields": {
+      "form_tag": "vulnerabilityUnregisteredAgent",
+      "prompt": "Using an unregistered agent",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Using an unregistered agent",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2376,
+   "fields": {
+      "form_tag": "vulnerabilityUnregisteredAgency",
+      "prompt": "Using an unregistered recruitment agency",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Using an unregistered recruitment agency",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2377,
+   "fields": {
+      "form_tag": "agreementContractElementsAgainstLaw",
+      "prompt": "Elements of contract are against the law",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Elements of contract are against the law",
       "export_params": null
    }
 },
@@ -42450,6 +42654,105 @@
    }
 },
 {
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1807,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 974,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1808,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 78,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 942,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1810,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1814,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1817,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2375,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2376,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2377,
+      "category": 408,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 1,
@@ -46542,6 +46845,27 @@
    "fields": {
       "question": 976,
       "field_name": "consent_to_use_information"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2375,
+      "field_name": "vulnerability_unregistered_agent"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2376,
+      "field_name": "vulnerability_unregistered_agency"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2377,
+      "field_name": "vulnerability_contract_against_law"
    }
 },
 {
