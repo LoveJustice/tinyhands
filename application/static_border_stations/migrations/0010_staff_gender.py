@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     def migrate_id_expiration(apps, schema_editor):
         countries_to_migrate = ['Kenya', 'Lesotho', 'Liberia', 'Mozambique', 'Namibia', 'Rwanda', 'Sierra Leone',
-                                'Zambia']
+                                'Zambia', 'Bangladesh']
 
         misc_type_class = apps.get_model(app_label='static_border_stations', model_name='StaffMiscellaneousTypes')
         id_expiration_type = misc_type_class()
