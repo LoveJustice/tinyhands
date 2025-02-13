@@ -74,7 +74,8 @@ The sanitized database has two accounts preconfigured for testing both of which 
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run -d --rm web ./manage.py backupAttachmentsToCloud -d 2024-10-01
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run --rm web bash
 - ./manage.py backupAttachmentsToCloud -d 2024-10-01 -p /data/media
-- docker exec -it web ./manage.py indicatorHistory --start 202405
+- `docker exec -it web ./manage.py indicatorHistory --start 202405` - Removes all indicatorHistory since May 2024 and recalculates 
+- `docker exec -it web ./manage.py indicatorHistory` - Calculates any missing months of indicatorHistory
 
 ## Some useful :commands on local
 - python ./manage.py formLatest --settings dreamsuite.settings.local
