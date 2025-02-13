@@ -686,7 +686,7 @@ def set_suspect_id(
     # Check required columns
     require_columns(
         new_suspects,
-        {"person_id", "full_name", "phone_contact", "address_notes", "social_media"},
+        {"sf_number","person_id", "full_name", "phone_contact", "address_notes", "social_media"},
         "new_suspects",
     )
     require_columns(
@@ -695,6 +695,7 @@ def set_suspect_id(
 
     # Select columns and rename in one go
     new_cols = [
+        "sf_number",
         "person_id",
         "full_name",
         "phone_contact",
@@ -710,11 +711,9 @@ def set_suspect_id(
     merged = pd.merge(
         filtered_new,
         filtered_db,
-        how="outer",
-        on="person_id",
+        how="inner",
+        on="sf_number",
         sort=True,
-        suffixes=("x", "y"),
-        validate="many_to_one",
     )
 
     column_rename = {

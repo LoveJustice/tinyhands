@@ -21,7 +21,7 @@ import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-DATA_COLUMNS = cp.RED_FLAGS
+DATA_COLUMNS = list(cp.CLAUDE_PROMPTS.keys())
 
 # Add these imports at the top
 
@@ -546,7 +546,7 @@ def main():
         raise ValueError("Original data must contain 'IDn' column")
 
     # Load the same splits as ensemble model
-    splits_timestamp = "20250103_151354"
+    splits_timestamp = "20250213_112445"
     splits, split_info = load_splits(splits_timestamp)
 
     # Generate unique model identifier

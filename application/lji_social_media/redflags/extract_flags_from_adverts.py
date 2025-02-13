@@ -260,6 +260,22 @@ flag_query = """MATCH p=(group:Group)-[]-(posting:RecruitmentAdvert)-[r:HAS_ANAL
 WHERE r.type IN $red_flags
 RETURN posting.text AS advert, ID(group) AS group_id, ID(posting) AS IDn, posting.monitor_score AS monitor_score, r.type as flag, analysis.result as result """
 
+flag_query = """
+MATCH p=(group:Group)-[]-(posting)-[r:HAS_ANALYSIS]->(analysis:Analysis)
+WHERE (posting:RecruitmentAdvert OR posting:SyntheticAdvert)
+  AND r.type IN $red_flags
+RETURN posting.text AS advert,
+       ID(group) AS group_id,
+       ID(posting) AS IDn,
+       posting.monitor_score AS monitor_score,
+       r.type AS flag,
+       analysis.result AS result,
+       CASE 
+         WHEN 'SyntheticAdvert' IN labels(posting) THEN 'SyntheticAdvert'
+         ELSE 'RecruitmentAdvert'
+       END AS advert_type
+"""
+
 # flags = execute_neo4j_query(flag_query, parameters={})
 
 df = pd.DataFrame(
@@ -277,28 +293,28 @@ list(duplicate_rows["flag"].unique())
 print("Duplicate rows:")
 print(duplicate_rows)
 # Perform the pivot operation with multiple index columns
-flags = df.pivot(
-    index=["advert", "group_id", "IDn", "monitor_score"],
-    columns="flag",
-    values="result",
-).reset_index()
+# flags = df.pivot(
+#     index=["advert", "group_id", "IDn", "monitor_score"],
+#     columns="flag",
+#     values="result",
+# ).reset_index()
 
 flags = df.pivot_table(
-    index=["advert", "group_id", "IDn", "monitor_score"],
+    index=["advert", "group_id", "IDn", "monitor_score", "advert_type"],
     columns="flag",
     values="result",
     aggfunc="first",
 ).reset_index()
 
 # If you want to ensure 'group_id' and 'post_id' are the first two columns
-column_order = ["advert", "group_id", "IDn", "monitor_score"] + [
+column_order = ["advert", "group_id", "IDn", "monitor_score", "advert_type"] + [
     col
     for col in flags.columns
-    if col not in ["advert", "group_id", "IDn", "monitor_score"]
+    if col not in ["advert", "group_id", "IDn", "monitor_score", "advert_type"]
 ]
 flags = flags[column_order]
 
-flags[["advert", "group_id", "IDn", "monitor_score"] + red_flags].to_csv(
+flags[["advert", "group_id", "IDn", "monitor_score", "advert_type"] + red_flags].to_csv(
     "results/advert_flags.csv", index=False
 )
 
@@ -325,17 +341,23 @@ model_data.to_csv("results/advert_flags.csv", index=False)
 # --------------------------------------------------------------------------------
 flags_query = """MATCH p=(posting:RecruitmentAdvert)-[r:HAS_ANALYSIS]->(analysis:Analysis)
 WHERE r.type IN $red_flags
-RETURN ID(posting) AS id, posting.text as advert, r.type as flag, analysis.result as result """
+RETURN ID(posting) AS id, posting.text as advert, r.type as flag, analysis.result as result,
+       CASE 
+         WHEN 'SyntheticAdvert' IN labels(posting) THEN 'SyntheticAdvert'
+         ELSE 'RecruitmentAdvert'
+       END AS advert_type"""
 
 flags = (
     pd.DataFrame(
         nl.execute_neo4j_query(flags_query, parameters={"red_flags": red_flags})
     )
-    .pivot(index=["id", "advert"], columns="flag", values="result")
+    .pivot(index=["id", "advert", "advert_type"], columns="flag", values="result")
     .reset_index()
 )
 
-flags[["id", "advert"] + red_flags].to_csv("results/all_advert_flags.csv", index=False)
+flags[["id", "advert", "advert_type"] + red_flags].to_csv(
+    "results/all_advert_flags.csv", index=False
+)
 
 # --------------------------------------------------------------------------------
 confidence_query = """MATCH p=(posting:RecruitmentAdvert)-[r:HAS_ANALYSIS]->(analysis:Analysis)

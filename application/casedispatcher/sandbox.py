@@ -17,7 +17,7 @@ from libraries.google_lib import (
 )
 import pickle
 import os
-from libraries.google_lib import DB_Conn
+from libraries.google_lib import DBConn
 from pages.irf_evaluation import case_dispatcher_soc_df
 
 from libraries.case_dispatcher_data import get_suspect_evaluations,get_vdf
@@ -90,7 +90,7 @@ parameters={}
 country='Uganda'
 sql_query += " AND country.name = %(country)s"
 parameters["country"] = country
-with DB_Conn() as dbc:
+with DBConn() as dbc:
     result = dbc.ex_query(sql_query, parameters)
 result["case_id"] = result["vdf_number"].apply(extract_case_id)
 df = case_dispatcher_soc_df[case_dispatcher_soc_df["case_id"].isin(result["case_id"])]
@@ -118,7 +118,7 @@ parameters={}
 country='Uganda'
 sql_query += " AND country.name = %(country)s"
 parameters["country"] = country
-with DB_Conn() as dbc:
+with DBConn() as dbc:
     result = dbc.ex_query(sql_query, parameters)
 result["case_id"] = result["sf_number"].apply(extract_case_id)
 
@@ -188,7 +188,7 @@ def get_suspects(country=None):
     if country:
         sql_query += " WHERE country.name = %(country)s"
         parameters["country"] = country
-    with DB_Conn() as dbc:
+    with DBConn() as dbc:
         suspects = dbc.ex_query(sql_query, parameters)
 
     return suspects

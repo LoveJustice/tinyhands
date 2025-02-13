@@ -8,7 +8,7 @@ from work_with_db import URLDatabase, DatabaseError
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
-from llama_index.core import Document, VectorStoreIndex
+from llama_index.core import Document as liDocument, VectorStoreIndex
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.llms.openai import OpenAI
 from trafficking_news import TraffickingNewsSearch, extract_main_text_selenium
@@ -20,15 +20,29 @@ from models import (
     VictimResponse,
     VictimFormResponse
 )
-import requests
 import math
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from selenium.common.exceptions import TimeoutException, WebDriverException
 import time
 import random
-from newspaper import Article
 from get_urls_from_csvs import get_unique_urls_from_csvs
+import logging
+import requests
+from newspaper import Article
+from readability import Document
+from bs4 import BeautifulSoup
+
+# Optional: Only import Selenium if needed.
+try:
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+except ImportError:
+    webdriver = None
+
+
+
+
 
 llm = OpenAI(temperature=0, model="o3-mini", request_timeout=120.0)
 memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
@@ -45,7 +59,7 @@ logger = logging.getLogger(__name__)
 # Load API credentials from environment variables
 API_KEY = os.getenv('GOOGLE_API_KEY')
 SEARCH_ENGINE_ID = os.getenv('GOOGLE_CSE_ID')
-
+MIN_TEXT_LENGTH = 100  # adjust as necessary
 if not API_KEY or not SEARCH_ENGINE_ID:
     logger.critical("API_KEY and SEARCH_ENGINE_ID must be set as environment variables.")
     exit(1)
@@ -93,6 +107,112 @@ SHORT_PROMPTS = {
         "}"
     ),
 }
+
+
+def extract_with_newspaper(url: str) -> str:
+    """Try to extract the article text using newspaper3k."""
+    try:
+        article = Article(url)
+        article.download()
+        article.parse()
+        text = article.text.strip()
+        if len(text) >= MIN_TEXT_LENGTH:
+            logger.info("Article extracted successfully using newspaper3k.")
+            return text
+        else:
+            logger.warning("Newspaper3k extraction returned insufficient text.")
+    except Exception as e:
+        logger.error(f"Error using newspaper3k for {url}: {e}")
+    return ""
+
+
+def extract_with_readability(url: str) -> str:
+    """Fetch the page with requests and extract text using readability-lxml."""
+    try:
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/90.0.4430.85 Safari/537.36"
+            )
+        }
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            logger.error(f"Requests returned status code {response.status_code} for {url}")
+            return ""
+        doc = Document(response.text)
+        # The summary() method returns the main content as HTML.
+        summary_html = doc.summary()
+        soup = BeautifulSoup(summary_html, "html.parser")
+        text = soup.get_text(separator="\n").strip()
+        if len(text) >= MIN_TEXT_LENGTH:
+            logger.info("Article extracted successfully using readability-lxml.")
+            return text
+        else:
+            logger.warning("Readability extraction returned insufficient text.")
+    except Exception as e:
+        logger.error(f"Error using readability for {url}: {e}")
+    return ""
+
+
+def extract_with_selenium(url: str) -> str:
+    """Render the page with Selenium and extract the main content."""
+    if webdriver is None:
+        logger.error("Selenium is not installed; cannot use Selenium fallback.")
+        return ""
+    try:
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument(
+            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/90.0.4430.85 Safari/537.36"
+        )
+        # Adjust or specify the path to chromedriver if needed.
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get(url)
+        # Allow time for dynamic content to load
+        time.sleep(3)
+        html = driver.page_source
+        driver.quit()
+        doc = Document(html)
+        summary_html = doc.summary()
+        soup = BeautifulSoup(summary_html, "html.parser")
+        text = soup.get_text(separator="\n").strip()
+        if len(text) >= MIN_TEXT_LENGTH:
+            logger.info("Article extracted successfully using Selenium with readability.")
+            return text
+        else:
+            logger.warning("Selenium extraction returned insufficient text.")
+    except Exception as e:
+        logger.error(f"Error using Selenium for {url}: {e}")
+    return ""
+
+
+def extract_main_text(url: str) -> str:
+    """
+    Extracts the main text from an article URL using multiple fallback methods.
+
+    1. Try newspaper3k.
+    2. Fall back to requests + readability-lxml.
+    3. Finally, if needed, use Selenium to render JavaScript.
+    """
+    logger.info(f"Attempting to extract article text from {url}")
+
+    # First attempt: newspaper3k
+    text = extract_with_newspaper(url)
+    if text:
+        return text
+
+    # Second attempt: requests + readability-lxml
+    text = extract_with_readability(url)
+    if text:
+        return text
+
+    # Third attempt: Selenium (if available)
+    text = extract_with_selenium(url)
+    return text
 
 
 def spoof_articles(path) -> List[str]:
@@ -214,46 +334,69 @@ def initialize_selenium() -> Optional[webdriver.Chrome]:
         logger.error(f"Failed to initialize Selenium WebDriver: {e}")
         return None
 
+
 def is_url_accessible(url):
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                "Chrome/90.0.4430.85 Safari/537.36")
     try:
-        response = requests.head(url, timeout=10)
-        return response.status_code == 200
-    except requests.RequestException as e:
-        logger.error(f"Request exception for URL {url}: {e}")
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get(url)
+        # You may want to wait for certain elements if needed
+        status = driver.title != ""  # simple check: did the page load?
+        driver.quit()
+        return status
+    except Exception as e:
+        logger.error(f"Exception for URL {url}: {e}")
         return False
 
-def get_validated_response(
-    prompt_key: str, prompt_text: str, model_class: Any, chat_engine
-) -> Optional[Any]:
+
+def get_validated_response(prompt_key: str, prompt_text: str, model_class: Any, chat_engine) -> Optional[Any]:
     """
-    Sends a prompt to the chat engine and returns a validated Pydantic model instance.
+    Sends a prompt to the chat engine and returns a validated Pydantic model instance with exponential backoff.
 
     Args:
         prompt_key (str): The key identifying the prompt and model.
         prompt_text (str): The prompt text to send.
         model_class (BaseModel): The Pydantic model to validate the response.
+        chat_engine: The chat engine instance for processing the prompt.
 
     Returns:
         Optional[Any]: An instance of the Pydantic model or None if validation fails.
-        :param chat_engine:
     """
-    try:
-        response = chat_engine.chat(
-            prompt_text
-        )  # Assuming this returns a response object
-        logger.info(
-            f"Prompt '{prompt_key}' processed successfully with {response} and {response.response}"
-        )
-        response_text = response.response  # Adjust based on actual response structure
-        response_data = model_class.model_validate_json(response_text)
-        logger.info(f"Prompt '{prompt_key}' processed successfully.")
-        return response_data
-    except json.JSONDecodeError as e:
-        logger.error(f"JSON decoding failed for '{prompt_key}': {e}")
-        return None
-    except Exception as e:
-        logger.error(f"Failed to parse response for '{prompt_key}': {e}")
-        return None
+    max_retries = 5
+    base_delay = 5  # Initial delay in seconds
+
+    for attempt in range(max_retries):
+        try:
+            response = chat_engine.chat(prompt_text)
+            logger.info(f"Prompt '{prompt_key}' processed successfully.")
+
+            response_text = response.response
+            response_data = model_class.model_validate_json(response_text)
+
+            return response_data
+
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON decoding failed for '{prompt_key}': {e}")
+            return None
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request error for '{prompt_key}': {e}")
+
+        except Exception as e:
+            if "429 Too Many Requests" in str(e):
+                delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                logger.warning(f"Rate limit hit. Retrying in {delay:.2f} seconds...")
+                time.sleep(delay)
+            else:
+                logger.error(f"Failed to parse response for '{prompt_key}': {e}")
+                return None
+
+    logger.error(f"Max retries reached for '{prompt_key}'. Skipping...")
+    return None
 
 def verify_incident(url: str, chat_engine):
     """
@@ -314,9 +457,19 @@ def confirm_natural_name(name):
         chat_engine:
     """
     try:
-        prompt_text = (f"Assistant, is '{name}' the GIVEN name of a natural person? "
-                       "Return your ANSWER in the following RAW JSON format ONLY and WITHOUT backticks:\n"
-                       "{\"answer\": \"yes\" or \"no\"}")
+        prompt_text = (
+            f"Assistant, please evaluate the following string: '{name}'. "
+            "Determine whether this string is used to identify a natural person. "
+            "The string may represent a first name only, a family name only, or a combination of first and family names. "
+            "A valid name is one that can reasonably serve to identify an individual human being (for example, 'John', 'Doe', or 'John Doe'). "
+            "It should not be interpreted as a title, organization, or any non-person identifier. "
+            "Try to consider all cultures, languages and naming conventions. Try not to guess!"
+            "Keep in mind that naming conventions vary around the world—names that may be unfamiliar in one culture can be common in another. "
+            "If you are confident that the string qualifies as a natural person's identifying name, answer 'yes'; otherwise, answer 'no'. "
+            "Return your answer in the following RAW JSON format ONLY and WITHOUT any backticks or additional commentary:\n"
+            "{\"answer\": \"yes\" or \"no\"}"
+        )
+
         resp = llm.complete(prompt_text)
 
         response_data = ConfirmResponse.model_validate_json(
@@ -329,29 +482,31 @@ def confirm_natural_name(name):
         logger.error(f"Failed to confirm natural name: {e}")
     return False
 
+
 def upload_suspects(url: str, chat_engine):
     """
-    Uploads suspects to the database.
+    Uploads suspects to the database with delays to reduce API rate-limiting.
 
     Args:
         url (str): The URL of the analyzed article.
-        chat_engine:
+        chat_engine: The chat engine instance used for processing.
     """
     suspects = []
     db = URLDatabase()
     try:
-        # Send prompt to chat engine
         prompt_key = "suspect_prompt"
-
         prompt_text = SHORT_PROMPTS[prompt_key]
-        response_data = get_validated_response(
-            prompt_key, prompt_text, SuspectResponse, chat_engine
-        )
+        response_data = get_validated_response(prompt_key, prompt_text, SuspectResponse, chat_engine)
+
         if response_data is None:
             return
+
         if response_data.answer.lower() == "yes":
             url_id = db.get_url_id(url)
             suspects = response_data.evidence or []
+            if not suspects:
+                logger.info(f"No suspects found for URL: {url}")
+                return suspects
             for suspect in suspects:
                 natural_name = confirm_natural_name(suspect)
                 if natural_name:
@@ -361,17 +516,19 @@ def upload_suspects(url: str, chat_engine):
                     except DatabaseError as e:
                         logger.warning(f"Failed to insert suspect {suspect} for URL ID {url_id}: {e}")
 
-                    # Attempt to populate suspect forms regardless of insertion success
                     try:
                         populate_suspect_forms_table(url, suspect, chat_engine)
                     except Exception as e:
                         logger.error(f"Failed to populate suspect form for suspect {suspect}: {e}")
-        else:
-            parameters = {"url": url, "suspect": "false"}
-            logger.info(f"No suspect found: {parameters}")
+                else:
+                    logger.info(f"Skipping suspect {suspect} as it is not a natural person's name.")
+
+                # **Add Random Delay to Reduce API Load**
+                time.sleep(random.uniform(1, 3))
 
     except Exception as e:
         logger.error(f"Failed to upload suspects: {e}")
+
     return suspects
 
 def upload_victims(url: str, chat_engine):
@@ -397,6 +554,9 @@ def upload_victims(url: str, chat_engine):
         if response_data.answer.lower() == "yes":
             url_id = db.get_url_id(url)
             victims = response_data.evidence or []
+            if not victims:
+                logger.info(f"No victims found for URL: {url}")
+                return victims
             for victim in victims:
                 natural_name = confirm_natural_name(victim)
                 if natural_name:
@@ -411,6 +571,8 @@ def upload_victims(url: str, chat_engine):
                         populate_victim_forms_table(url, victim, chat_engine)
                     except Exception as e:
                         logger.error(f"Failed to populate victim form for victim {victim}: {e}")
+                else:
+                    logger.info(f"Skipping victim {victim} as it is not a natural person's name.")
         else:
             parameters = {"url": url, "victim": "false"}
             logger.info(f"No victim found: {parameters}")
@@ -434,7 +596,7 @@ def populate_victim_forms_table(url: str, victim: str, chat_engine) -> None:
     try:
         # Generate the suspect form prompt
         victim_form_prompt = (
-            f"Assistant, carefully extract the following details for {victim} from the text: "
+            f"Assistant, carefully extract the following details for the victim named {victim} from the text: "
             "1. Gender,"
             "2. Date of Birth,"
             "3. Age,"
@@ -667,6 +829,7 @@ def main():
         urls_from_files = get_unique_urls_from_csvs('csv', 'url', 4, 1000)
         urls_from_db = pd.DataFrame(db.search_urls(limit=1000000))['url'].tolist()
         urls= list(set(urls_from_files) - set(urls_from_db))
+        # Comment out the following:
         for url in urls:
             # Check accessibility before processing
             if not is_url_accessible(url):
@@ -705,6 +868,7 @@ def main():
 
             # Extract Main Text
             text = extract_main_text_newspaper(url)
+            text = extract_main_text(url)
 
             # Build the record dictionary. Note that 'accessible' is 1 if text was successfully extracted.
             result = {
@@ -717,7 +881,7 @@ def main():
             }
             if text:
                 try:
-                    documents = [Document(text=text)]
+                    documents = [liDocument(text=text)]
                     index = VectorStoreIndex.from_documents(documents)
                     memory.reset()
                     chat_engine = index.as_chat_engine(

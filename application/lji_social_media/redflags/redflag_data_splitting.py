@@ -7,7 +7,7 @@ import os
 import json
 import libraries.claude_prompts as cp
 
-DATA_COLUMNS = cp.RED_FLAGS
+DATA_COLUMNS = list(cp.CLAUDE_PROMPTS.keys())
 
 
 def load_and_preprocess_data(file_path):
@@ -116,7 +116,7 @@ def main():
     """
     Create initial data splits to be used across all model comparisons.
     """
-    file_path = "results/new_presence.csv"
+    file_path = "results/advert_flags.csv"
     timestamp = create_data_splits(file_path)
     print("\nTo use these splits in your modeling scripts, load them using:")
     print(f"splits, split_info = load_data_splits('{timestamp}')")

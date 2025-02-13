@@ -1,31 +1,18 @@
-# update_casedispatcher_sheets.py
+# filename: update_casedispatcher_sheets.py
 # author: christo strydom
+# date: 2023-01-07
 
 import os
 
 import streamlit as st
 import json
 import pandas as pd
-import numpy as np
-from datetime import date
 from googleapiclient.discovery import build
 from copy import deepcopy
 from oauth2client.client import OAuth2Credentials
 import libraries.data_prep as data_prep
-import pickle
-from libraries.case_dispatcher_model import (
-    check_grid_search_cv,
-    save_results,
-    make_new_predictions,
-)
-from libraries.data_prep import remove_non_numeric, process_columns
 from libraries.entity_model import EntityGroup
-from libraries.case_dispatcher_model import TypeSelector
 from libraries.case_dispatcher_data import (
-    get_vdf,
-    get_suspects,
-    get_irf,
-    get_suspect_evaluations,
     get_countries,
 )
 from libraries.google_lib import (
@@ -549,9 +536,9 @@ def main():
             # -------------------------------------------------------------------------------------
             st.write(f"Calculate all suspect scores")
             st.dataframe(suspects_entity.active)
-            suspects_entity.active = data_prep.calc_all_sus_scores(suspects_entity.active, vics_willing,
-                                                                   police_entity.active, weights,
-                                                                   case_dispatcher_soc_df, dfs["suspects"])
+            all_sus_scores = data_prep.calc_all_sus_scores(suspects_entity.active, vics_willing, police_entity.active,
+                                                           weights, case_dispatcher_soc_df, dfs["suspects"])
+            suspects_entity.active = data_prep.align_columns(all_sus_scores, dfs["suspects"])
             st.dataframe(suspects_entity.active)
             st.write(
                 """At data_prep.calc_all_sus_scores(

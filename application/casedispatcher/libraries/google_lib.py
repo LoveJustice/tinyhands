@@ -1,22 +1,24 @@
+import io
+import pickle
 import re
+from typing import Any, Dict, List, Optional, Tuple
+
 import pandas as pd
 import psycopg2
-from oauth2client.service_account import ServiceAccountCredentials
-import gspread
-from oauth2client.client import OAuth2WebServerFlow, Storage
 import streamlit as st
+import gspread
+from gspread.worksheet import Worksheet
+from oauth2client.client import OAuth2Credentials, OAuth2WebServerFlow, Storage
+from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from .case_dispatcher_logging import setup_logger
-import pickle
-import io
 from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
-from typing import Dict, List, Any
-from oauth2client.client import OAuth2Credentials
-from gspread.worksheet import Worksheet
+
+from .case_dispatcher_logging import setup_logger
 
 
+# Global constants and logger
 logger = setup_logger("google_logging", "cloud")
 DB_CREDENTIALS = st.secrets["postgresql"]
 CREDS_DICT = st.secrets["gs_cred"]
@@ -31,44 +33,63 @@ def get_weights(weights_sheet: Worksheet, range_name: str) -> Dict[str, float]:
     Extract weights from a specific named range in a worksheet.
 
     Args:
-        weights_sheet: Worksheet containing weight configurations
-        range_name: Name of the range to extract weights from
+        weights_sheet: Worksheet containing weight configurations.
+        range_name: Name of the range to extract weights from.
 
     Returns:
-        Dictionary mapping weight names to their float values
+        Dictionary mapping weight names to their float values.
+
+    Raises:
+        ValueError: If the data format in the range is invalid.
     """
     result = weights_sheet.get_values(range_name)
     if not result or len(result) < 2:
         raise ValueError(f"Invalid data format in range {range_name}")
 
+    # Assumes that the first row contains keys and the second row contains numeric values.
     return {result[0][i]: float(result[1][i]) for i in range(1, len(result[0]))}
 
 
 def get_all_weights(
     credentials: OAuth2Credentials, workbook_name: str, range_names: List[str]
-) -> Dict[str, Dict[str, float]]:
+) -> Dict[str, float]:
     """
-    Get all weight configurations from specified ranges.
+    Get all weight configurations from specified named ranges.
 
     Args:
-        credentials: OAuth credentials for Google Sheets
-        workbook_name: Name of the workbook containing weights
-        range_names: List of named ranges to extract weights from
+        credentials: OAuth credentials for Google Sheets.
+        workbook_name: Name of the workbook containing weights.
+        range_names: List of named ranges to extract weights from.
 
     Returns:
-        Nested dictionary mapping range names to their weight configurations
+        Dictionary mapping weight names to their float values.
     """
     gc = gspread.authorize(credentials)
     workbook = gc.open(workbook_name)
     weights_sheet = workbook.worksheet("weights")
     weights = {name: get_weights(weights_sheet, name) for name in range_names}
+    # Flatten the nested dictionaries into one.
     return {k: v for d in weights.values() for k, v in d.items()}
 
 
-def load_model_and_columns(drive_service, model_name, cols_name, data_name):
+def load_model_and_columns(
+    drive_service: Any, model_name: str, cols_name: str, data_name: str
+) -> Tuple[Any, Any, Any]:
+    """
+    Load model, columns, and data from Google Drive given file names.
+
+    Args:
+        drive_service: Authenticated Google Drive service instance.
+        model_name: Name of the model file.
+        cols_name: Name of the columns file.
+        data_name: Name of the data file.
+
+    Returns:
+        Tuple containing (model, columns, data).
+    """
     model_file_id = get_file_id(model_name, drive_service)
     model = load_from_cloud(drive_service, model_file_id)
-    st.write(f"Fetch {model_name} with file_id: {model_file_id}")
+    logger.info(f"Fetched {model_name} with file_id: {model_file_id}")
 
     cols_file_id = get_file_id(cols_name, drive_service)
     cols = load_from_cloud(drive_service, cols_file_id)
@@ -79,366 +100,469 @@ def load_model_and_columns(drive_service, model_name, cols_name, data_name):
     return model, cols, data
 
 
-def create_chart_metadata(chart_name, parent_id=None):
+def create_chart_metadata(chart_name: str, parent_id: Optional[str] = None) -> Dict[str, Any]:
     """
     Create file metadata for a chart image to be uploaded to Google Drive.
 
     Args:
-        chart_name (str): The name of the chart file (e.g., "sales_chart.png").
-        parent_id (str, optional): The ID of the folder to save the file in.
+        chart_name: The name of the chart file (e.g., "sales_chart.png").
+        parent_id: Optional ID of the folder to save the file in.
 
     Returns:
-        dict: File metadata for the chart.
+        File metadata dictionary.
     """
     file_metadata = {
         "name": chart_name,
         "mimeType": "image/png",  # MIME type for PNG images
     }
-
     if parent_id:
         file_metadata["parents"] = [parent_id]
-
     return file_metadata
 
 
-# Assuming other necessary Google Drive API setup is done elsewhere
-
-
-def save_chart_to_cloud(chart, drive_service, file_metadata, chart_format="png"):
+def save_chart_to_cloud(
+    chart: Any, drive_service: Any, file_metadata: Dict[str, Any], chart_format: str = "png"
+) -> Optional[str]:
     """
     Save a matplotlib chart to Google Drive.
 
     Args:
-        chart (matplotlib.figure.Figure): The chart to save.
+        chart: The matplotlib figure to save.
         drive_service: Authenticated Google Drive service instance.
-        file_metadata (dict): Metadata for the file, including 'name'.
-        chart_format (str): Format of the chart ('png', 'pdf', etc.).
+        file_metadata: Metadata for the file, including 'name'.
+        chart_format: Format of the chart (e.g., 'png', 'pdf').
 
     Returns:
-        The ID of the file on Google Drive.
+        The file ID of the uploaded chart.
     """
-    # Serialize the chart to a bytes-like object
+    # Serialize the chart into a bytes buffer.
     buffer = io.BytesIO()
     chart.savefig(buffer, format=chart_format)
-    buffer.seek(0)  # Rewind the buffer to the beginning
+    buffer.seek(0)
 
-    # Set the correct MIME type
     mime_type = f"image/{chart_format}"
-
-    # Upload logic as in the original save_to_cloud function
     file_name = file_metadata["name"]
-    file_id = get_file_id(file_name, drive_service)  # Ensure this function is defined
+    file_id = get_file_id(file_name, drive_service)
     media = MediaIoBaseUpload(buffer, mimetype=mime_type, resumable=True)
 
     if file_id:
-        file = (
-            drive_service.files()
-            .update(fileId=file_id, body=file_metadata, media_body=media, fields="id")
-            .execute()
-        )
-        print(f"Updated file: {file_name} (ID: {file_id})")
+        file = drive_service.files().update(
+            fileId=file_id, body=file_metadata, media_body=media, fields="id"
+        ).execute()
+        logger.info(f"Updated file: {file_name} (ID: {file_id})")
     else:
-        file = (
-            drive_service.files()
-            .create(body=file_metadata, media_body=media, fields="id")
-            .execute()
-        )
-        print(f"Created file: {file_name} (ID: {file.get('id')})")
+        file = drive_service.files().create(
+            body=file_metadata, media_body=media, fields="id"
+        ).execute()
+        logger.info(f"Created file: {file_name} (ID: {file.get('id')})")
 
     return file.get("id")
 
 
-def get_matching_spreadsheets(credentials, country):
-    """Return a list of Google Spreadsheet names that start with 'Case Dispatcher'
-    and include the specified country in their name."""
+def get_matching_spreadsheets(credentials: Any, country: str) -> List[Any]:
+    """
+    Return a list of Google Spreadsheet objects whose titles start with 'Case Dispatcher'
+    and include the specified country.
 
+    Args:
+        credentials: OAuth credentials for Google Sheets.
+        country: Country string to filter spreadsheet titles.
+
+    Returns:
+        List of matching spreadsheet objects.
+    """
     gc = gspread.authorize(credentials)
-    all_spreadsheets = gc.openall()  # List all spreadsheets
-
-    # Filter spreadsheets based on naming criteria
+    all_spreadsheets = gc.openall()
     matching_spreadsheets = [
         sheet
         for sheet in all_spreadsheets
         if sheet.title.startswith("Case Dispatcher") and country in sheet.title
     ]
-
     return matching_spreadsheets
 
 
-def make_file_bytes(model_to_save):
+def make_file_bytes(model_to_save: Any) -> io.BytesIO:
+    """
+    Serialize an object to a BytesIO stream using pickle.
+
+    Args:
+        model_to_save: The model or object to serialize.
+
+    Returns:
+        A BytesIO stream containing the serialized object.
+    """
     model_bytes = io.BytesIO()
     pickle.dump(model_to_save, model_bytes)
     model_bytes.seek(0)
-    return model_bytes  # Reset the position to the start of the stream
+    return model_bytes
 
 
-def get_file_id(file_name, drive_service):
+def get_file_id(file_name: str, drive_service: Any) -> Optional[str]:
+    """
+    Retrieve the file ID for a given file name from Google Drive.
+
+    Args:
+        file_name: The name of the file to search for.
+        drive_service: Authenticated Google Drive service.
+
+    Returns:
+        The file ID if found, otherwise None.
+    """
     query = f"name='{file_name}'"
     results = drive_service.files().list(q=query, fields="files(id, name)").execute()
     items = results.get("files", [])
 
     if not items:
-        print("No files found.")
+        logger.info("No files found.")
         return None
     elif len(items) > 1:
-        print(f"There are {len(items)} files with the name '{file_name}'.")
+        logger.info(f"There are {len(items)} files with the name '{file_name}'. Using the first one.")
 
-    # If multiple files have the same name, this will take the first one
     file_id = items[0]["id"]
-    print(f"Found file: {items[0]['name']} (ID: {file_id})")
+    logger.info(f"Found file: {items[0]['name']} (ID: {file_id})")
     return file_id
 
 
-def load_from_cloud(drive_service, file_id):
+def load_from_cloud(drive_service: Any, file_id: str) -> Any:
+    """
+    Download and deserialize a file from Google Drive.
+
+    Args:
+        drive_service: Authenticated Google Drive service.
+        file_id: ID of the file to download.
+
+    Returns:
+        The deserialized object.
+    """
     request = drive_service.files().get_media(fileId=file_id)
     downloaded_bytes = io.BytesIO()
     downloader = MediaIoBaseDownload(downloaded_bytes, request)
     done = False
 
-    while done is False:
+    while not done:
         status, done = downloader.next_chunk()
-        print("Download progress: {}%".format(int(status.progress() * 100)))
+        logger.info("Download progress: {}%".format(int(status.progress() * 100)))
 
-    downloaded_bytes.seek(0)  # Reset the position to the start of the stream
+    downloaded_bytes.seek(0)
     return pickle.load(downloaded_bytes)
 
 
-def load_data(drive_service, filename):
+def load_data(drive_service: Any, filename: str) -> Any:
+    """
+    Load data from Google Drive given a filename.
+
+    Args:
+        drive_service: Authenticated Google Drive service.
+        filename: Name of the file to load.
+
+    Returns:
+        The loaded data.
+    """
     file_id = get_file_id(filename, drive_service)
-    data = load_from_cloud(drive_service, file_id)
-    return data
+    return load_from_cloud(drive_service, file_id)
 
 
-def save_to_cloud(model_bytes, drive_service, file_metadata):
-    # Serialize the model to a bytes-like object
+def save_to_cloud(
+    model_bytes: io.BytesIO, drive_service: Any, file_metadata: Dict[str, Any]
+) -> Optional[str]:
+    """
+    Save a serialized model to Google Drive.
 
-    # file_metadata = {'name': f'CD4_rf_{country}.pkl'}
+    Args:
+        model_bytes: BytesIO stream containing the serialized model.
+        drive_service: Authenticated Google Drive service.
+        file_metadata: Metadata for the file.
+
+    Returns:
+        The file ID of the uploaded file.
+    """
     file_name = file_metadata["name"]
     file_id = get_file_id(file_name, drive_service)
-    media = MediaIoBaseUpload(
-        model_bytes, mimetype="application/octet-stream", resumable=True
-    )
+    media = MediaIoBaseUpload(model_bytes, mimetype="application/octet-stream", resumable=True)
     if file_id:
-        file = (
-            drive_service.files()
-            .update(fileId=file_id, body=file_metadata, media_body=media, fields="id")
-            .execute()
-        )
-        print(f"Updated file: {file_name} (ID: {file_id})")
+        file = drive_service.files().update(
+            fileId=file_id, body=file_metadata, media_body=media, fields="id"
+        ).execute()
+        logger.info(f"Updated file: {file_name} (ID: {file_id})")
     else:
-        file = (
-            drive_service.files()
-            .create(body=file_metadata, media_body=media, fields="id")
-            .execute()
-        )
-        print(f"Created file: {file_name} (ID: {file.get('id')})")
-    # print('File ID:', file.get('id'))
+        file = drive_service.files().create(
+            body=file_metadata, media_body=media, fields="id"
+        ).execute()
+        logger.info(f"Created file: {file_name} (ID: {file.get('id')})")
     return file.get("id")
 
 
-def attrdict_to_dict(attrdict):
-    dict_ = {}
+def attrdict_to_dict(attrdict: Any) -> Dict[Any, Any]:
+    """
+    Recursively convert an object with an items() method to a standard dictionary.
+
+    Args:
+        attrdict: The object to convert.
+
+    Returns:
+        A dictionary with the same keys and values.
+    """
+    result = {}
     for key, value in attrdict.items():
-        if isinstance(value, attrdict.__class__):
-            dict_[key] = attrdict_to_dict(value)
+        if hasattr(value, "items"):
+            result[key] = attrdict_to_dict(value)
         else:
-            dict_[key] = value
-    return dict_
+            result[key] = value
+    return result
 
 
-def get_gsheets(credentials, workbook_name, sheet_names):
-    """Return a list of Google worksheets along with the workbook's link and file ID."""
+def get_gsheets(
+    credentials: Any, workbook_name: str, sheet_names: List[str]
+) -> Tuple[List[Worksheet], str, str]:
+    """
+    Retrieve specified worksheets from a Google workbook along with its URL and file ID.
+
+    Args:
+        credentials: OAuth credentials for Google Sheets.
+        workbook_name: Name of the workbook.
+        sheet_names: List of worksheet names to retrieve.
+
+    Returns:
+        A tuple containing:
+          - List of worksheets.
+          - The workbook URL.
+          - The workbook file ID.
+    """
     gc = gspread.authorize(credentials)
-
-    # Open the workbook
     workbook = gc.open(workbook_name)
-
-    # Get the file ID and URL from the workbook
     file_id = workbook.id
     file_url = workbook.url
-
-    # Get the worksheets
-    gsheets = []
-    for name in sheet_names:
-        sht = workbook.worksheet(name)
-        gsheets.append(sht)
-
+    gsheets = [workbook.worksheet(name) for name in sheet_names]
     return gsheets, file_url, file_id
 
 
-def get_auth_uri():
+def get_auth_uri() -> OAuth2WebServerFlow:
+    """
+    Initialize the OAuth2WebServerFlow for Google authentication.
+
+    Returns:
+        An OAuth2WebServerFlow instance.
+    """
     flow = OAuth2WebServerFlow(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         scope=SCOPE,
         redirect_uri=REDIRECT_URI,
     )
-    # flow.step1_get_authorize_url()
     return flow
 
 
-def get_google_credentials(flow, auth_code):
-    credentials = flow.step2_exchange(auth_code)
+def get_google_credentials(flow: OAuth2WebServerFlow, auth_code: str) -> OAuth2Credentials:
+    """
+    Exchange an auth code for Google credentials and save them locally.
 
-    # Save the credentials for future use
+    Args:
+        flow: OAuth2WebServerFlow instance.
+        auth_code: Authorization code obtained from the OAuth flow.
+
+    Returns:
+        OAuth2Credentials instance.
+    """
+    credentials = flow.step2_exchange(auth_code)
     with open("token.json", "w") as token_file:
         token_file.write(credentials.to_json())
     return credentials
 
 
-def get_google_sheets_access(flow, auth_code):
-    credentials = flow.step2_exchange(auth_code)
+def get_google_sheets_access(flow: OAuth2WebServerFlow, auth_code: str) -> gspread.Client:
+    """
+    Obtain a gspread client using Google credentials exchanged from an auth code.
 
-    # Save the credentials for future use
+    Args:
+        flow: OAuth2WebServerFlow instance.
+        auth_code: Authorization code obtained from the OAuth flow.
+
+    Returns:
+        gspread Client instance.
+    """
+    credentials = flow.step2_exchange(auth_code)
     with open("token.json", "w") as token_file:
         token_file.write(credentials.to_json())
-
-    # Authorize gspread with these credentials
-    client = gspread.authorize(credentials)
-    return client
+    return gspread.authorize(credentials)
 
 
-def get_or_create_spreadsheet(client, spreadsheet_name):
-    """Gets a Google Spreadsheet if it exists, otherwise creates one."""
+def get_or_create_spreadsheet(client: gspread.Client, spreadsheet_name: str) -> gspread.Spreadsheet:
+    """
+    Retrieve a spreadsheet by name if it exists, otherwise create a new one.
 
-    # Get list of all spreadsheets
+    Args:
+        client: gspread Client instance.
+        spreadsheet_name: Name of the spreadsheet.
+
+    Returns:
+        gspread Spreadsheet object.
+    """
     spreadsheets = client.list_spreadsheet_files()
-
-    # Check if spreadsheet exists
     for s in spreadsheets:
         if s["name"] == spreadsheet_name:
             logger.info(f"Spreadsheet '{spreadsheet_name}' already exists.")
             return client.open(spreadsheet_name)
-
-    # If spreadsheet doesn't exist, create one
     logger.info(f"Spreadsheet '{spreadsheet_name}' not found. Creating a new one.")
-    new_spreadsheet = client.create(spreadsheet_name)
-
-    return new_spreadsheet
+    return client.create(spreadsheet_name)
 
 
-def get_or_create_worksheet(spreadsheet, worksheet_title):
-    """Gets a Google Worksheet if it exists in the given spreadsheet, otherwise creates one."""
+def get_or_create_worksheet(spreadsheet: gspread.Spreadsheet, worksheet_title: str) -> gspread.Worksheet:
+    """
+    Retrieve a worksheet by title from a spreadsheet, or create it if it doesn't exist.
 
-    # Try to get the worksheet
+    Args:
+        spreadsheet: gspread Spreadsheet object.
+        worksheet_title: Title of the worksheet.
+
+    Returns:
+        gspread Worksheet object.
+    """
     try:
         worksheet = spreadsheet.worksheet(worksheet_title)
         logger.info(f"Worksheet '{worksheet_title}' already exists.")
     except gspread.exceptions.WorksheetNotFound:
-        # If worksheet does not exist, create a new one
         logger.error(f"Worksheet '{worksheet_title}' not found. Creating a new one.")
-        worksheet = spreadsheet.add_worksheet(
-            title=worksheet_title, rows="100", cols="26"
-        )
-
+        worksheet = spreadsheet.add_worksheet(title=worksheet_title, rows="100", cols="26")
     return worksheet
 
 
-"""## Generate Narrative"""
-
-
 class GSheet:
-    """This is a class for Google Worksheets."""
+    """
+    Wrapper for a Google Worksheet to facilitate conversion to a pandas DataFrame.
+    """
 
-    def __init__(self, wrksht):
+    def __init__(self, wrksht: Worksheet) -> None:
         self.wrksht = wrksht
+        # Extract name using regex; note that this may be fragile.
         self.name = re.findall(r"'(.*?)'", str(wrksht))[0]
-        df = pd.DataFrame(self.wrksht.get_all_values())
-
-        # Check if the dataframe is empty
-        if not df.empty:
-            df.columns = df.iloc[0]
-            df.drop(0, inplace=True)
-
-        self.df = df
+        values = self.wrksht.get_all_values()
+        self.df = pd.DataFrame(values)
+        if not self.df.empty:
+            self.df.columns = self.df.iloc[0]
+            self.df = self.df[1:].reset_index(drop=True)
 
 
-def get_dfs(cdws):
-    """Completes conversion of Google Sheets to Dataframes."""
-    all_sheets = []
-    for i in range(len(cdws)):
-        sheet = GSheet(cdws[i])
-        all_sheets.append(sheet)
-    dfs = {sheet.name: sheet.df for sheet in all_sheets}
-    return dfs
+def get_dfs(cdws: List[Worksheet]) -> Dict[str, pd.DataFrame]:
+    """
+    Convert a list of Google Worksheets to a dictionary of DataFrames.
+
+    Args:
+        cdws: List of gspread Worksheet objects.
+
+    Returns:
+        Dictionary mapping worksheet names to pandas DataFrames.
+    """
+    sheets = [GSheet(sheet) for sheet in cdws]
+    return {sheet.name: sheet.df for sheet in sheets}
 
 
-def get_sheet_id_by_name(sheet_id, sheet_name, credentials):
+def get_sheet_id_by_name(
+    spreadsheet_id: str, sheet_name: str, credentials: Credentials
+) -> Optional[int]:
+    """
+    Retrieve the internal sheet ID for a given worksheet name in a Google Sheet.
+
+    Args:
+        spreadsheet_id: The spreadsheet ID.
+        sheet_name: The title of the worksheet.
+        credentials: Google credentials.
+
+    Returns:
+        The sheet ID as an integer if found, otherwise None.
+    """
     try:
         service = build("sheets", "v4", credentials=credentials)
-        response = service.spreadsheets().get(spreadsheetId=sheet_id).execute()
-        for sheet in response["sheets"]:
+        response = service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+        for sheet in response.get("sheets", []):
             if sheet["properties"]["title"] == sheet_name:
                 return sheet["properties"]["sheetId"]
-        logger.info(f"Sheet '{sheet_name}' not found in the Google Sheet '{sheet_id}'")
+        logger.info(f"Sheet '{sheet_name}' not found in spreadsheet '{spreadsheet_id}'")
         return None
     except HttpError as error:
         logger.error(f"An error occurred: {error}")
         return None
 
 
-def get_spreadsheet_id_by_name(name, creds=None):
+def get_spreadsheet_id_by_name(name: str, creds: Optional[Credentials] = None) -> Optional[str]:
+    """
+    Retrieve the spreadsheet ID from Google Drive by its name.
+
+    Args:
+        name: Name of the spreadsheet.
+        creds: Google credentials (optional).
+
+    Returns:
+        Spreadsheet ID if found, otherwise None.
+    """
     drive_service = build("drive", "v3", credentials=creds)
-    results = (
-        drive_service.files()
-        .list(
-            q=f"name='{name}' and mimeType='application/vnd.google-apps.spreadsheet'",
-            fields="files(id, name)",
-            supportsAllDrives=True,  # to search across all drives
-            includeItemsFromAllDrives=True,  # to include files from all drives
-        )
-        .execute()
-    )
+    results = drive_service.files().list(
+        q=f"name='{name}' and mimeType='application/vnd.google-apps.spreadsheet'",
+        fields="files(id, name)",
+        supportsAllDrives=True,
+        includeItemsFromAllDrives=True,
+    ).execute()
     files = results.get("files", [])
     if files:
-        # If the file is found, return the first match's ID
         return files[0]["id"]
-    else:
-        logger.info(f"No spreadsheet found with name: {name}")
-        return None
+    logger.info(f"No spreadsheet found with name: {name}")
+    return None
 
 
-def share_sheet_with_user(sheet_id, email, role="writer", creds=None):
+def share_sheet_with_user(
+    sheet_id: str, email: str, role: str = "writer", creds: Optional[Credentials] = None
+) -> None:
+    """
+    Share a Google Sheet with a specific user.
+
+    Args:
+        sheet_id: The ID of the spreadsheet to share.
+        email: The email address of the user.
+        role: The permission role to assign (e.g., 'writer').
+        creds: Google credentials (optional).
+    """
     try:
         drive_service = build("drive", "v3", credentials=creds)
-        file = (
-            drive_service.files().get(fileId=sheet_id, fields="permissions").execute()
-        )
         user_permission = {"type": "user", "role": role, "emailAddress": email}
-        command = drive_service.permissions().create(
+        drive_service.permissions().create(
             fileId=sheet_id, body=user_permission, fields="id"
-        )
-        command.execute()
+        ).execute()
         logger.info(f"Sheet shared with {email} as a {role}.")
     except HttpError as error:
-        logger.error(f"An error occurred: {error}")
-        return None
+        logger.error(f"An error occurred while sharing sheet: {error}")
 
 
-def delete_worksheet(service, worksheet_name):
-    results = (
-        service.files()
-        .list(pageSize=10, fields="nextPageToken, files(id, name)")
-        .execute()
-    )
+def delete_worksheet(service: Any, worksheet_name: str) -> None:
+    """
+    Delete a worksheet (or file) from Google Drive by its name.
+
+    Note: This function currently searches among Drive files and deletes the first matching file.
+    If you intend to delete a worksheet within a spreadsheet, consider using the Sheets API.
+
+    Args:
+        service: Authenticated Google Drive service.
+        worksheet_name: Name of the worksheet (or file) to delete.
+    """
+    results = service.files().list(pageSize=10, fields="nextPageToken, files(id, name)").execute()
     items = results.get("files", [])
-
-    # Look for the file that matches our target spreadsheet
     for item in items:
         if item["name"] == worksheet_name:
             try:
                 service.files().delete(fileId=item["id"]).execute()
                 logger.info("Spreadsheet deleted.")
             except HttpError as error:
-                logger.error(f"An error occurred: {error}")
+                logger.error(f"An error occurred while deleting worksheet: {error}")
             break
 
 
-def get_drive_service():
-    credentials = Credentials.from_service_account_info(
-        st.secrets["gs_cred"], scopes=SCOPE
-    )
+def get_drive_service() -> Optional[Any]:
+    """
+    Initialize and return the Google Drive service.
+
+    Returns:
+        Google Drive service instance, or None if authentication fails.
+    """
     try:
+        credentials = Credentials.from_service_account_info(st.secrets["gs_cred"], scopes=SCOPE)
         service = build("drive", "v3", credentials=credentials)
         return service
     except Exception as e:
@@ -446,40 +570,51 @@ def get_drive_service():
         return None
 
 
-def get_service_account():
+def get_service_account() -> Optional[gspread.Client]:
     """
-    Authenticate using the JSON key file and return the gspread client.
+    Authenticate using the service account key and return a gspread client.
+
+    Returns:
+        gspread Client instance, or None if authentication fails.
     """
     try:
-        credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-            st.secrets["gs_cred"], SCOPE
-        )
+        credentials = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gs_cred"], SCOPE)
         return gspread.authorize(credentials)
     except Exception as e:
         logger.error("Failed to authenticate with Google Sheets: " + str(e))
         return None
 
 
-class DB_Conn(object):
-    """A class for establishing a connection with the database."""
+class DBConn:
+    """
+    Context manager for a PostgreSQL database connection.
+    """
 
-    def __init__(self):
-        """Initialize the connection with the database."""
+    def __init__(self) -> None:
         self._initialize_db_connection()
 
-    def _initialize_db_connection(self):
+    def _initialize_db_connection(self) -> None:
         db_cred = st.secrets["postgresql"]
         self.conn = psycopg2.connect(**db_cred)
         self.cur = self.conn.cursor()
 
-    def __enter__(self):
+    def __enter__(self) -> "DBConn":
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
         self.close_conn()
 
-    def ex_query(self, select_query, parameters=None):
-        """Execute query with parameters and return dataframe."""
+    def ex_query(self, select_query: str, parameters: Optional[tuple] = None) -> Optional[pd.DataFrame]:
+        """
+        Execute a SELECT query with optional parameters and return the results as a DataFrame.
+
+        Args:
+            select_query: SQL SELECT query.
+            parameters: Optional tuple of query parameters.
+
+        Returns:
+            DataFrame containing the query results, or None if no results.
+        """
         if parameters:
             self.cur.execute(select_query, parameters)
         else:
@@ -489,18 +624,23 @@ class DB_Conn(object):
             colnames = [desc[0] for desc in self.cur.description]
             rows = self.cur.fetchall()
             return pd.DataFrame(rows, columns=colnames)
-        else:
-            return None
+        return None
 
-    def insert_query(self, insert_query, parameters=None):
-        """Execute insert query with parameters."""
+    def insert_query(self, insert_query: str, parameters: Optional[tuple] = None) -> None:
+        """
+        Execute an INSERT query with optional parameters.
+
+        Args:
+            insert_query: SQL INSERT query.
+            parameters: Optional tuple of query parameters.
+        """
         if parameters:
             self.cur.execute(insert_query, parameters)
         else:
             self.cur.execute(insert_query)
         self.conn.commit()
 
-    def close_conn(self):
-        """Close the cursor and the connection."""
+    def close_conn(self) -> None:
+        """Close the database connection."""
         self.cur.close()
         self.conn.close()
