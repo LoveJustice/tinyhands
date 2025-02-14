@@ -28,19 +28,45 @@ fi
 git clone --no-checkout git@github.com:LoveJustice/tinyhands.git
 cd tinyhands
 git sparse-checkout init --cone
-git sparse-checkout set tinyhands/application/casedispatcher_sl/
-git checkout main  # Or another branch if necessary
+git sparse-checkout set application/casedispatcher_sl/
+git checkout jira_de_53  # Or another branch if necessary
+cd application/casedispatcher_sl/
 
-# --- Proceed with Installing Your Project ---
-# (Uncomment and update the following commands as needed.)
+# Check if uv is installed
+if ! command -v uv &> /dev/null; then
+    echo "uv is not installed. Installing now..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    echo "uv has been installed successfully"
+else
+    echo "uv is already installed"
+    uv --version
+fi
 
-# Example: Clone the repository that contains your project
-# Replace <repository-url> with the actual URL of your Git repository.
-# git clone <repository-url> casedispatcher
-# cd casedispatcher
+uv venv
+source .venv/bin/activate
+uv pip install .
 
-# Make the project script executable and run it.
-# chmod +x casedispatcher.sh
-# ./casedispatcher.sh
+# Check for .streamlit directory and secrets.toml
+if [ ! -d ".streamlit" ]; then
+    echo ".streamlit directory is missing"
+    exit 1
+elif [ ! -f ".streamlit/secrets.toml" ]; then
+    echo ".streamlit/secrets.toml is missing"
+    exit 1
+else
+    echo "✓ .streamlit/secrets.toml found"
+fi
+
+# Check for .env in root
+if [ ! -f ".env" ]; then
+    echo ".env file is missing in root directory"
+    exit 1
+else
+    echo "✓ .env found"
+fi
+
+echo "All required configuration files are present"
+
+
 
 echo "Installation steps completed."
