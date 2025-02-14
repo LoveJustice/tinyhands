@@ -41,6 +41,7 @@ creds_json = json.dumps(toml_config_dict)
 credentials = OAuth2Credentials.from_json(creds_json)
 drive_service = build("drive", "v3", credentials=credentials)
 
+case_dispatcher_soc_df = load_data(drive_service, 'case_dispatcher_soc_df.pkl')
 case_dispatcher_soc_file_name = f"case_dispatcher_soc_df.pkl"
 case_dispatcher_soc_file_id = get_file_id(
     case_dispatcher_soc_file_name, drive_service
