@@ -166,7 +166,11 @@ class FormViewSet(viewsets.ModelViewSet):
         if self.identifier_type == 'tag':    
             config['tagMap'] = self.tag_map
         
-        return Response(config, status=status.HTTP_200_OK)       
+        return Response(config, status=status.HTTP_200_OK)
+
+    def form_client_json(self, request, form_name):
+        form = Form.objects.get(form_name=form_name)
+        return Response(form.client_json, status=status.HTTP_200_OK)
     
     def set_forms(self, request, station_id):
         try:

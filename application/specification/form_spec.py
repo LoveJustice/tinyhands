@@ -75,7 +75,7 @@ class ValidationSpec(TypedDict):
     questions: List[BaseQuestionSpec]
     trigger: BaseQuestionSpec | None
     trigger_value: str | None
-    params: str | None
+    params: dict[str, any] | None
     on_retrieve: bool
     on_update: bool
 

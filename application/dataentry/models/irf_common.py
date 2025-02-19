@@ -171,6 +171,7 @@ class IrfCommon(BaseForm):
     talked_to_family_member = models.CharField(max_length=127, blank=True)
     which_contact = models.CharField(max_length=127, blank=True)
     who_noticed = models.CharField(max_length=127, null=True)
+    contact_is_hvc = models.CharField('Contact is HVC', null=True, blank=True)
     
     #Reason
     call_subcommittee = models.BooleanField('Call Subcommittee Chairperson/Vice-Chairperson/Secretary', default=False)
@@ -244,9 +245,8 @@ class IrfCommon(BaseForm):
     vulnerable_monitor_total = models.PositiveIntegerField(default=0)
     vulnerable_computed_total = models.PositiveIntegerField(default=0)
 
-    destination = address = JSONField(null=True)
-    destination_latitude = models.FloatField(null=True)
-    destination_longitude = models.FloatField(null=True)
+    destination_address = JSONField(null=True)
+    destination_notes = models.CharField(max_length=127, null=True, blank=True)
     city_or_country_known_for_trafficking = models.CharField(max_length=127, null=True, blank=True)
     area_known_for_trafficking = models.CharField(max_length=127, null=True, blank=True)
     travel_different_country = models.BooleanField(default=False)
@@ -265,16 +265,17 @@ class IrfCommon(BaseForm):
     destination_purpose_monitor_total = models.PositiveIntegerField(default=0)
     destination_purpose_moving_computed_total = models.PositiveIntegerField(default=0)
 
-    no_documentation_for_travel_purpose = models.BooleanField(default=False)
-    over_18_family_doesnt_want_them_to_go = models.BooleanField(default=False)
-    pv_doesnt_know_basic_info = models.BooleanField(default=False)
-    hormone_injections = models.BooleanField(default=False)
-    trafficking_establishment = models.BooleanField(default=False)
+    no_documentation_for_purpose = models.BooleanField(default=False)
+    over_18_family_doesnt_know_going = models.BooleanField(default=False)
+    pv_led_to_other_country_without_knowledge = models.BooleanField(default=False)
+    pv_does_not_know_destination = models.BooleanField(default=False)
+    given_hormone_injections = models.BooleanField(default=False)
+    location_suspected_for_trafficking = models.BooleanField(default=False)
     control_monitor_total = models.PositiveIntegerField(default=0)
     control_computed_total = models.PositiveIntegerField(default=0)
 
-    overall_monitor_total = models.PositiveIntegerField(default=0)
-    overall_computed_total = models.PositiveIntegerField(default=0)
+    monitor_total = models.PositiveIntegerField(default=0)
+    computed_total = models.PositiveIntegerField(default=0)
     
     def get_key(self):
         return self.irf_number

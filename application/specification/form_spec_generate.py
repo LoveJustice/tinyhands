@@ -1,12 +1,13 @@
 from __future__ import annotations  # Needed for recursive types
 import json
+import datetime
 from typing import List, TypedDict
 from django.db.models import Q
 from django.db import transaction
 from django.core.exceptions import FieldDoesNotExist
 
-from dataentry.specification.form_spec import FormsOfTypeSpec, FormSpec, GoogleExportSpec, QuestionSpec, SectionSpec
-from dataentry.specification.form_spec import StorageSpec, SubSectionSpec, ValidationSpec
+from specification.form_spec import BaseQuestionSpec, FormsOfTypeSpec, FormSpec, GoogleExportSpec, QuestionSpec
+from specification.form_spec import SectionSpec, StorageSpec, SubSectionSpec, ValidationSpec
 from dataentry.models import AnswerType, Category, CategoryType, ExportImport, ExportImportCard, ExportImportField, Form
 from dataentry.models import FormCategory, FormType, FormValidation, FormValidationLevel, FormValidationQuestion
 from dataentry.models import FormValidationType, GoogleSheetConfig, Storage, Question, QuestionLayout, QuestionStorage
@@ -18,10 +19,9 @@ class FormSpecTracking(TypedDict):
     form: object
     main_storage_model: object | None
     main_storage_object: object
-    card_name: str | None
-    card_storage: object | None
     main_tags: List[str]
     card_tags: dict[str, List[str]]
+    client_json: dict[str, str]
     errors: List[str]
 
 
@@ -85,7 +85,10 @@ def generate_subsection_json(sub: SubSectionSpec):
 
 
 def generate_form_json(spec: FormSpec):
-    result = {"sections": []}
+    result = {
+        "name": spec['name'],
+        "sections": []
+    }
     for section in spec['sections']:
         sect = {
             "name": section['name'],
@@ -106,7 +109,7 @@ def upsert(model, keys, values):
         query &= Q(**{field: value})
     matched = model.objects.filter(query)
     if len(matched) > 1:
-        return  # error
+        raise GenerateErrors('More than one row for model ' + str(model) + ' key ' + str(keys))
     elif len(matched) == 1:
         entry = matched[0]
     else:
@@ -135,7 +138,10 @@ def update_google_export(google: GoogleExportSpec, tracking):
         'suppress_column_warnings': google['suppress_warnings'],
     })
     for card in google['cards']:
-        category = Category.objects.get(form_tag=version_tag(card['category']['tag'], tracking))
+        try:
+            category = Category.objects.get(form_tag=version_tag(card['category']['tag'], tracking))
+        except Category.DoesNotExist:
+            raise GenerateErrors('Category for export not found for category tag ' + card['category']['tag'])
         upsert(ExportImportCard,
                {'export_import_id': export_import.id, 'category_id': category.id, 'prefix': card['prefix']}, {
                    'max_instances': card['max_instances'],
@@ -143,11 +149,17 @@ def update_google_export(google: GoogleExportSpec, tracking):
                })
     for field in google['fields']:
         if field['card'] is not None:
-            category = Category.objects.get(form_tag=field['card']['tag'])
+            try:
+                category = Category.objects.get(form_tag=field['card']['tag'])
+            except Category.DoesNotExist:
+                raise GenerateErrors('Category not found for card ' + field['card']['tag'])
             field_card = ExportImportCard.objects.get(export_import=export_import, card_id=category.id)
         else:
             field_card = None
-        answer_type = AnswerType.objects.get(name=field['answer_type'])
+        try:
+            answer_type = AnswerType.objects.get(name=field['answer_type'])
+        except AnswerType.DoesNotExist:
+            raise GenerateErrors('Answer type ' + field['answer_type'] + ' not found for field ' + field['card']['tag'])
         upsert(ExportImportField, {
             'export_import_id': export_import.id,
             'card': field_card,
@@ -158,25 +170,55 @@ def update_google_export(google: GoogleExportSpec, tracking):
                })
 
 
+def param_version_traverse(nested_list, tracking: FormSpecTracking):
+    for key, value in nested_list.items():
+        if isinstance(value, dict):
+            param_version_traverse(value, tracking)
+        else:
+            if key == 'question_tag' or key == 'count_question_tag':
+                nested_list[key] = version_tag(value, tracking)
+    return nested_list
+
+
 def update_validation(validation: ValidationSpec, tracking: FormSpecTracking):
-    level = FormValidationLevel.objects.get(name=validation['level'])
-    validation_type = FormValidationType.objects.get(name=validation['validation_type'])
+    try:
+        level = FormValidationLevel.objects.get(name=validation['level'])
+    except FormValidationLevel.DoesNotExist:
+        raise GenerateErrors('Level ' + validation['level'] + ' not found for validation ' + validation['tag'])
+    try:
+        validation_type = FormValidationType.objects.get(name=validation['validation_type'])
+    except FormValidationType.DoesNotExist:
+        raise GenerateErrors(
+            'Validation type ' + validation['validation_type'] + ' not found for validation ' + validation['tag'])
     if validation['trigger'] is not None:
-        trigger = Question.objects.get(form_tag=version_tag(validation['trigger']['tag'], tracking))
+        question: BaseQuestionSpec = validation['trigger']
+        try:
+            trigger = Question.objects.get(form_tag=version_tag(question['tag'], tracking))
+        except Question.DoesNotExist:
+            raise GenerateErrors(
+                'Trigger question ' + question['tag'] + ' not found for validation ' + validation['tag'])
     else:
         trigger = None
+    if validation['params'] is not None:
+        # find question tags and make them version tags
+        params = param_version_traverse(validation['params'], tracking)
+    else:
+        params = None
     validation_object = upsert(FormValidation, {'form_tag': version_tag(validation['tag'], tracking), }, {
         'level': level,
         'validation_type': validation_type,
         'error_warning_message': validation['message'],
         'trigger': trigger,
         'trigger_value': validation['trigger_value'],
-        'params': validation['params'],
+        'params': params,
         'retrieve': validation['on_retrieve'],
         'update': validation['on_update'],
     })
     for base_quest in validation['questions']:
-        question = Question.objects.get(form_tag=version_tag(base_quest['tag'], tracking))
+        try:
+            question = Question.objects.get(form_tag=version_tag(base_quest['tag'], tracking))
+        except Question.DoesNotExist:
+            raise GenerateErrors('Question ' + base_quest['tag'] + ' not found for validation ' + validation['tag'])
         upsert(FormValidationQuestion, {'validation': validation_object, 'question': question}, {})
     validation_object.forms.add(tracking['form'])
     return validation
@@ -188,7 +230,11 @@ def update_category(section: SectionSpec, tracking: FormSpecTracking):
         check_model = storage_model(section['category']['storage'], tracking)
     else:
         check_model = tracking['main_storage_model']
-    category_type = CategoryType.objects.get(name=section['category']['category_type'])
+    try:
+        category_type = CategoryType.objects.get(name=section['category']['category_type'])
+    except CategoryType.DoesNotExist:
+        raise GenerateErrors(
+            'Category type ' + section['category']['category_type'] + ' not found for category tag ' + category_tag)
     category = upsert(Category, {'form_tag': category_tag}, {
         'category_type': category_type,
         'description': section['category']['description'],
@@ -201,11 +247,16 @@ def update_category(section: SectionSpec, tracking: FormSpecTracking):
                 tracking['errors'].append('Question storage field ' + question['base_question']['field_name'] +
                                           ' is not found for question ' + question['base_question']['tag'])
                 continue
-            answer_type = AnswerType.objects.get(name=question['base_question']['answer_type'])
+            try:
+                answer_type = AnswerType.objects.get(name=question['base_question']['answer_type'])
+            except AnswerType.DoesNotExist:
+                raise GenerateErrors(
+                    'Answer type ' + question['base_question']['answer_type'] + ' not found for question ' +
+                    question['base_question']['tag'])
             question_obj = upsert(Question, {'form_tag': version_tag(question['base_question']['tag'], tracking)}, {
                 "answer_type": answer_type,
                 "params": question["base_question"]['params'],
-                "export_name": question["base_question"]['export_params'],
+                "export_name": question["base_question"]['export_name'],
                 "export_params": question["base_question"]['export_params'],
             })
             if question['points'] is not None or question['options'] is not None or question[
@@ -267,19 +318,22 @@ def generate_form_spec(spec: FormsOfTypeSpec):
         'form': None,
         'main_storage_model': None,
         'main_storage_object': None,
-        'card_name': None,
-        'card_storage': None,
         'main_tags': [],
         'card_tags': {},
+        'client_json': {},
         'errors': [],
     }
 
     try:
         with transaction.atomic():
             clean_version(spec['version'])
-            form_type = FormType.objects.get(name=tracking['form_type'])
+            try:
+                form_type = FormType.objects.get(name=tracking['form_type'])
+            except FormType.DoesNotExist:
+                raise GenerateErrors('Form type ' + spec['form_type'] + ' not found')
             for form_spec in spec['form_specs']:
                 client_json = generate_form_json(form_spec)
+                tracking['client_json'][form_spec['name']] = json.dumps(client_json, indent=4)
                 storage = storage_model(form_spec['storage'], tracking)
                 if storage is None:
                     continue
@@ -291,11 +345,13 @@ def generate_form_spec(spec: FormsOfTypeSpec):
                     'form_model_name': form_spec['storage']['model_name'],
                 })
                 tracking['main_storage_object'] = storage_object
+                start_time = datetime.datetime(2025,1,1, 0, 0, 0, 0, tzinfo=datetime.timezone.utc)
+                end_time = datetime.datetime(2118,12,31, 0, 0, 0, 0, tzinfo=datetime.timezone.utc)
                 form = upsert(Form, {'form_name': form_spec['name']},
                               {'form_type': form_type,
                                'storage': storage_object,
-                               'start_date': '2025-01-01',
-                               'end_date': '2118-12-31',
+                               'start_date': start_time,
+                               'end_date': end_time,
                                'version': spec['version'],
                                'client_json': client_json,
                                'use_tag_suffix': True,

@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'static_border_stations',
     'rest_api',
     'rest_framework',
+    'specification',
     'django_extensions',
     'rest_framework.authtoken',
     'django_filters',

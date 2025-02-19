@@ -899,7 +899,7 @@ class QuestionResponseSerializer(serializers.Serializer):
         if question_id is None:
             question_tag = data.get('question_tag')
             form_data = self.context['form_data']
-            if form_data.form.use_tag_suffix:
+            if self.context['form'].use_tag_suffix:
                 question_tag = question_tag + '.' + form_data.form.version
             question = Question.objects.get(form_tag=question_tag)
         else:
@@ -1252,6 +1252,7 @@ class FormDataSerializer(serializers.Serializer):
         
         form_type = self.context.get('form_type')
         form = Form.current_form(form_type.name, station_id)
+        self.context['form'] = form
         if self.instance is None:
             form_class = form.find_form_class()
             form_object = form_class()

@@ -123,6 +123,7 @@ urlpatterns = [
         re_path(r'^forms/countries/(?P<form_id>\d+)/$', FormViewSet.as_view({'get':'get_form_countries'}), name='formCountries'),
         re_path(r'^forms/versions/(?P<form_id>\d+)/(?P<country_id>\d+)/$', FormViewSet.as_view({'get':'get_form_versions'}), name='formVersions'),
         re_path(r'^forms/csv/$', FormExportCsv.as_view({'get':'export_csv'}), name='formCsv'),
+        re_path(r'^forms/client_json/(?P<form_name>\w+)/$', FormViewSet.as_view({'get':'form_client_json'}), name='formClientJson'),
         
         
         re_path(r'^cif/$', CifFormViewSet.as_view(list), name='cif'),
