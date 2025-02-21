@@ -1,3 +1,10 @@
+
+import asyncio
+import concurrent.futures
+import random
+import tldextract
+import pandas as pd
+
 import pandas as pd
 import logging
 from typing import List, Optional, Any
@@ -49,7 +56,7 @@ memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
 
 # Configure Logging
 logging.basicConfig(
-    filename="google_search.log",
+    filename="google_search_asyncio.log",
     filemode="a",
     format="%(asctime)s - %(levelname)s - %(message)s",
     level=logging.INFO,
@@ -774,148 +781,134 @@ def get_new_urls(new_urls: List[str]) -> List[str]:
     db_urls = df['url'].tolist()
     return list(set(new_urls) - set(db_urls))
 
-def main():
-    # Initialize Database
-    db = URLDatabase()
+async def process_url(url: str, db: URLDatabase, driver, semaphore: asyncio.Semaphore, loop: asyncio.AbstractEventLoop):
+    async with semaphore:
+        # Wrap blocking calls in the executor.
+        accessible = await loop.run_in_executor(None, is_url_accessible, url)
+        if not accessible:
+            logger.warning(f"URL not accessible: {url}")
+            result = {
+                "url": url,
+                "domain_name": tldextract.extract(url).domain,
+                "source": "google_search",
+                "content": "",
+                "actual_incident": -1,
+                "accessible": 0
+            }
+            await loop.run_in_executor(None, db.insert_url, result)
+            return
 
-    # Define search parameters
-    search_terms = [
-        '"human trafficking"',
-        '"cyber trafficking"',
-        '"child trafficking"',
-        '"organ trafficking"',
-        '"sex trafficking"'
-    ]
+        logger.info(f"Processing URL: {url}")
+        extracted = tldextract.extract(url)
+        domain_name = extracted.domain
 
-    # Define the location filter
-
-
-    # Define domains to exclude
-    excluded_domains = [
-        'wikipedia',
-        'ssrn',
-        'cambridge',
-        'merriam-webster'
-        # Add other specific domains as needed
-    ]
-
-    # Build the exclusion part of the query
-    exclusion_query = ' '.join([f'-site:{domain}' for domain in excluded_domains])
-    country_list = ["Nigeria", "Ghana", "Kenya", "South Africa", "Uganda", "Tanzania", "Nepal", "India", "Bangladesh", "Pakistan",
-     "Sri Lanka", "Philippines", "Indonesia", "Malaysia", "Thailand", "Vietnam", "Cambodia", "Myanmar", "Laos", "China",
-     "Mongolia", "North Korea", "South Korea", "Japan", "Taiwan", "Hong Kong", "Macau", "Singapore", "Brunei",
-     "Timor-Leste"]
-    for location_filter in ["India"]:
-
-        # Initialize Selenium WebDriver
-        driver = initialize_selenium()
-        # if driver is None:
-        #     logger.critical("Selenium WebDriver initialization failed. Exiting.")
-        #     exit(1)
-        #
-        # # Construct the final search query
-        # query = ' OR '.join(search_terms) + f' AND {location_filter} {exclusion_query}'
-        #
-        # logger.info(f"Constructed search query: {query}")
-        #
-        # # Perform Google Search
-        # search_results = fetch_all_results(query, API_KEY, SEARCH_ENGINE_ID, max_results=30)
-        # logger.info(f"Retrieved {len(search_results)} search results.")
-        #
-        # new_urls = [item.get('link') for item in search_results if item.get('link')]
-        # urls = new_urls
-        # urls = get_new_urls(new_urls)
-        # logger.info(f"Found {len(new_urls)} new URLs, {len(new_urls)-len(urls)} already in db, processing {len(urls)} urls.")
-        urls_from_files = get_unique_urls_from_csvs('csv', 'url', 4, 1000)
-        urls_from_db = pd.DataFrame(db.search_urls(limit=1000000))['url'].tolist()
-        urls= list(set(urls_from_files) - set(urls_from_db))
-        # Comment out the following:
-        for url in urls:
-            # Check accessibility before processing
-            if not is_url_accessible(url):
-                logger.warning(f"URL not accessible: {url}")
-                # Record the URL in the database as inaccessible.
-                # Set accessible to 0 and leave content empty.
-                result = {
-                    "url": url,
-                    "domain_name": tldextract.extract(url).domain,
-                    "source": "google_search",
-                    "content": "",  # No content because URL is inaccessible
-                    "actual_incident": -1,  # Use a default status (or -2) indicating not processed
-                    "accessible": 0
-                }
-                db.insert_url(result)
-                continue
-
-            logger.info(f"Processing URL: {url}")
-            extracted = tldextract.extract(url)
-            domain_name = extracted.domain
-
-            # Attempt to load the URL with retries
-            success = fetch_url_with_retries(driver, url)
-            if not success:
-                # Even if retries failed, record the URL as inaccessible
-                result = {
-                    "url": url,
-                    "domain_name": domain_name,
-                    "source": "google_search",
-                    "content": "",
-                    "actual_incident": -1,
-                    "accessible": 0
-                }
-                db.insert_url(result)
-                continue
-
-            # Extract Main Text
-            text = extract_main_text_newspaper(url)
-            text = extract_main_text(url)
-
-            # Build the record dictionary. Note that 'accessible' is 1 if text was successfully extracted.
+        # Attempt to load the URL with retries.
+        success = await loop.run_in_executor(None, fetch_url_with_retries, driver, url)
+        if not success:
             result = {
                 "url": url,
                 "domain_name": domain_name,
                 "source": "google_search",
-                "content": text,
-                "actual_incident": -1,  # default value until verified
-                "accessible": 1  # accessible if we reached this point
+                "content": "",
+                "actual_incident": -1,
+                "accessible": 0
             }
-            if text:
-                try:
-                    documents = [liDocument(text=text)]
-                    index = VectorStoreIndex.from_documents(documents)
-                    memory.reset()
-                    chat_engine = index.as_chat_engine(
-                        chat_mode="context",
-                        llm=llm,
-                        memory=memory,
-                        system_prompt=(
-                            "You are a career forensic analyst with deep insight into crime and criminal activity, especially human trafficking. "
-                            "Your express goal is to investigate online reports and extract pertinent factual detail."
-                        )
+            await loop.run_in_executor(None, db.insert_url, result)
+            return
+
+        # Extract main text (using your preferred extraction method).
+        text = await loop.run_in_executor(None, extract_main_text, url)
+        if not text:
+            logger.warning(f"No text extracted from URL: {url}")
+            result = {
+                "url": url,
+                "domain_name": domain_name,
+                "source": "google_search",
+                "content": "",
+                "actual_incident": -1,
+                "accessible": 0
+            }
+            await loop.run_in_executor(None, db.insert_url, result)
+            return
+
+        # Build the record and further process (for example, verify incident, upload suspects/victims, etc.)
+        result = {
+            "url": url,
+            "domain_name": domain_name,
+            "source": "google_search",
+            "content": text,
+            "actual_incident": -1,  # default value until verified
+            "accessible": 1
+        }
+
+        # Wrap your further processing (which is synchronous) in the executor.
+        try:
+            def process_sync():
+                # Initialize your Llama Index chat engine, verify incident, etc.
+                documents = [liDocument(text=text)]
+                index = VectorStoreIndex.from_documents(documents)
+                memory.reset()
+                chat_engine = index.as_chat_engine(
+                    chat_mode="context",
+                    llm=llm,
+                    memory=memory,
+                    system_prompt=(
+                        "You are a career forensic analyst with deep insight into crime and criminal activity, especially human trafficking. "
+                        "Your express goal is to investigate online reports and extract pertinent factual detail."
                     )
-                    incident_type, incidents = verify_incident(url, chat_engine)
-                    result.update(incident_type)
-                    db.insert_url(result)
-                    url_id = db.get_url_id(url)
-                    if result.get("actual_incident") == 1:
-                        for incident in incidents:
-                            db.insert_incident(url_id, incident)
-                            logger.info(f"Inserted incident: {incident}")
-                        suspects = upload_suspects(url, chat_engine)
-                        victims = upload_victims(url, chat_engine)
-                except Exception as e:
-                    logger.error(f"Error processing URL {url}: {e}")
-            else:
-                logger.warning(f"No text extracted from URL: {url}")
-                # Even if text extraction fails, record the URL as inaccessible.
-                result["accessible"] = 0
+                )
+                incident_type, incidents = verify_incident(url, chat_engine)
+                result.update(incident_type)
                 db.insert_url(result)
+                url_id = db.get_url_id(url)
+                if result.get("actual_incident") == 1:
+                    for incident in incidents:
+                        db.insert_incident(url_id, incident)
+                        logger.info(f"Inserted incident: {incident}")
+                    upload_suspects(url, chat_engine)
+                    upload_victims(url, chat_engine)
+            await loop.run_in_executor(None, process_sync)
+        except Exception as e:
+            logger.error(f"Error processing URL {url}: {e}")
 
-            time.sleep(random.uniform(1, 3))
+        # Replace time.sleep with asyncio.sleep
+        await asyncio.sleep(random.uniform(1, 3))
 
-        # Clean Up
-        driver.quit()
-        logger.info("Google Miner service completed successfully.")
 
-if __name__ == "__main__":
-    main()
+async def async_main():
+    # Initialize Database
+    db = URLDatabase()
+
+    # Retrieve URLs (for example, from CSVs and filtering with DB)
+    urls_from_files = get_unique_urls_from_csvs('csv', 'url', 4, 1000)
+    urls_from_db = pd.DataFrame(db.search_urls(limit=1000000))['url'].tolist()
+    urls = list(set(urls_from_files) - set(urls_from_db))
+    logger.info(f"Found {len(urls)} new URLs to process.")
+
+    loop = asyncio.get_running_loop()
+
+    # Initialize Selenium WebDriver in the executor (since it is blocking)
+    driver = await loop.run_in_executor(None, initialize_selenium)
+    if driver is None:
+        logger.critical("Selenium WebDriver initialization failed. Exiting.")
+        return
+
+    # Limit concurrent URL processing (e.g., 5 at a time)
+    semaphore = asyncio.Semaphore(5)
+
+    # Create a task for each URL
+    tasks = [
+        process_url(url, db, driver, semaphore, loop)
+        for url in urls
+    ]
+
+    # Wait for all tasks to complete
+    await asyncio.gather(*tasks)
+
+    # Clean up Selenium WebDriver
+    await loop.run_in_executor(None, driver.quit)
+    logger.info("Google Miner service completed successfully.")
+
+
+if __name__ == '__main__':
+    asyncio.run(async_main())

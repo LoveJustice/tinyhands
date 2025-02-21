@@ -437,9 +437,7 @@ def main():
                 case_dispatcher_soc_df.loc[:, case_dispatcher_model_cols].copy(),
             )
             case_dispatcher_soc_df.loc[:, "soc"] = soc
-            case_dispatcher_soc_df.to_csv(
-                "data_trace/case_dispatcher_soc_df.csv", index=False
-            )
+
             # st.dataframe()
             # ===========================================================================================================
             st.write(f"Create the victims_entity from db_vics")
@@ -494,6 +492,8 @@ def main():
             EntityGroup.add_irf_notes(irf_case_notes[["irf_number", "case_notes"]])
             st.write(f"Move closed cases")
             # logger.info(f"Move closed cases: {uid}")
+            st.dataframe(suspects_entity.active)
+            st.dataframe(case_dispatcher_soc_df.head())
             EntityGroup.move_closed(case_dispatcher_soc_df)
             EntityGroup.move_other_closed(
                 suspects_entity, police_entity, victims_entity
@@ -536,9 +536,19 @@ def main():
             # -------------------------------------------------------------------------------------
             st.write(f"Calculate all suspect scores")
             st.dataframe(suspects_entity.active)
+            suspect_cols = ['case_id', 'case_name', 'sf_number', 'strength_of_case', 'solvability', 'eminence',
+                            'priority', 'case_status', 'date', 'legal_status', 'name', 'address', 'phone_numbers',
+                            'social_media_id', 'phone_#_failure', 'victims_willing_to_testify', 'relationships',
+                            'date_relationships_updated', 'confirm_photo', 'photo_confirmation_status', 'narrative',
+                            'irf_case_notes', 'updates', 'victim_interview', 'suspect_interview', 'social_media',
+                            'phone_records', 'legal_info', 'fb_line_up', 'border_station', 'informants',
+                            'community_groups', 'advertising', 'surveillance', 'uc_operation', 'supervisor_review',
+                            'boom_button', 'date_closed', ]
+
             all_sus_scores = data_prep.calc_all_sus_scores(suspects_entity.active, vics_willing, police_entity.active,
                                                            weights, case_dispatcher_soc_df, dfs["suspects"])
-            suspects_entity.active = data_prep.align_columns(all_sus_scores, dfs["suspects"])
+            suspects_entity.active = data_prep.align_columns(all_sus_scores[suspect_cols], dfs["suspects"])
+
             st.dataframe(suspects_entity.active)
             st.write(
                 """At data_prep.calc_all_sus_scores(
@@ -580,7 +590,7 @@ def main():
                 active_cases["priority"] - active_cases["priority"].min()
             ) / (active_cases["priority"].max() - active_cases["priority"].min())
             st.write("---active_cases before merge:")
-            st.dataframe(active_cases)
+
 
             active_cases = filter_on_days(irf_case_notes, active_cases)
 
@@ -598,6 +608,7 @@ def main():
             victims_entity.active = filter_on_days(
                 irf_case_notes, victims_entity.active
             )
+            # st.dataframe(victims_entity.active)
             suspects_entity.active = filter_on_days(
                 irf_case_notes, suspects_entity.active
             )

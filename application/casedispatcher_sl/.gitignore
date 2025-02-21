@@ -4,6 +4,7 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 # Node artifact files
+Case\ Dispatcher\ 3.0/
 node_modules/
 dist/
 output/
@@ -12,25 +13,24 @@ SL_Access/
 Road_Graphs/
 results/
 data_sources/
-attachments/
-docs/
-qdrant_adverts/
+chromadb/
+tensorboard_logs/
 
 poc-knowledge-graph-venv/bin/
 poc-knowledge-graph-venv/etc/
 poc-knowledge-graph-venv/include/
 poc-knowledge-graph-venv/share/
 
-errors
-*.env
-*.json
+*.log
+*.txt
+*.sav
+*.set
 *.toml
 *.graphml
-*.ipynb
 # Compiled Java class files
-__init__.py
-
 *.class
+*.json
+*.ipynb
 
 # Compiled Python bytecode
 *.py[cod]

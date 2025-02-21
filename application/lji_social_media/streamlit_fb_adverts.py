@@ -466,14 +466,6 @@ def save_page_usernames(driver, file_path):
     return df
 
 
-# Example usage (You need to initialize the WebDriver in your environment)
-# service = Service(executable_path)
-# options = webdriver.ChromeOptions()
-# driver = webdriver.Chrome(service=service, options=options)
-# driver.maximize_window()
-# driver.implicitly_wait(10)
-
-
 def kill_all_chromedriver_instances():
     """
     Kills all instances of Chrome WebDriver (chromedriver) on macOS and logs the number of instances closed.
