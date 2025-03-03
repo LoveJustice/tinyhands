@@ -733,8 +733,12 @@ class ResponsePersonSerializer(serializers.Serializer):
             person.address = None
         else:
             person.address = self.address_serializer.get_or_create()
-        if self.validated_data.get('photo') is not None:
-            person.photo = self.validated_data.get('photo')
+        updated_photo = self.validated_data.get('photo')
+        if updated_photo is not None:
+            had_photo_before_update = person.photo
+            person.photo = updated_photo
+            if not had_photo_before_update and updated_photo:
+                person.photo_added_date_time = datetime.now()
         if self.validated_data.get('phone') is not None:
             person.phone_contact = self.validated_data.get('phone')
         
