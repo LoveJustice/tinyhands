@@ -10712,14 +10712,14 @@
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 900,
-      "field_name": "description"
+      "field_name": "option"
    }
 },
 {
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 611,
-      "field_name": "option"
+      "field_name": "description"
    }
 },
 {
