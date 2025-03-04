@@ -115,7 +115,7 @@ and instead manually refreshing the certificate every 90 days.
 
 To do this:
     - https://punchsalad.com/ssl-certificate-generator/, fill out and download file
-        - Domain: searchlightdata.org,www.searchlightdata.org
+        - Domain: searchlightdata.org,www.searchlightdata.org (or staging.searchlightdata.org,www.staging.searchlightdata.org)
         - Email: support@lovejustice.ngo
         - DNS
     - Go to Constellix at https://dns.constellix.com/domain/941779 (u: support) 
