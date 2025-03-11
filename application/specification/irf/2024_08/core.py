@@ -215,7 +215,7 @@ base_question: dict[str, BaseQuestionSpec] = {
         'export_params': None,
     },
     'irfFirstTimeTravelingAbroad': {
-        'tag': 'irfReturningFromBeingEnslaved',
+        'tag': 'irfFirstTimeTravelingAbroad',
         'answer_type': 'Checkbox',
         'field_name': 'vulnerability_first_time_traveling_abroad',
         'export_name': 'First time traveling abroad',
