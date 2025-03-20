@@ -149,7 +149,11 @@ CONVERT_INDUSTRY = [
     },
     {
         'pattern': 'Cleaner',
-        'value': 'Cleaning',
+        'value': 'Domestic work',
+    },
+    {
+        'pattern': 'Cleaning',
+        'value': 'Domestic work',
     },
     {
         'pattern': 'Hotel',
