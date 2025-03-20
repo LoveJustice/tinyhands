@@ -540,10 +540,14 @@ class Command(BaseCommand):
                 elif interceptee.person.birthdate is not None:
                     if irf.date_of_interception > interceptee.person.birthdate:
                         age = irf.date_of_interception.year - interceptee.person.birthdate.year
+                        day_with_fixed_leap_year = interceptee.person.birthdate.day
+                        month = interceptee.person.birthdate.month
+                        if month == 2 and day_with_fixed_leap_year == 29:
+                            day_with_fixed_leap_year = 28
                         birthdate_year_of_interception = date(
                             irf.date_of_interception.year,
-                            interceptee.person.birthdate.month,
-                            interceptee.person.birthdate.day
+                            month,
+                            day_with_fixed_leap_year
                         )
                         if irf.date_of_interception < birthdate_year_of_interception:
                             age -= 1
