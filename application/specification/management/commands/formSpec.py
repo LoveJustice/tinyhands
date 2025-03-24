@@ -27,15 +27,16 @@ class Command(BaseCommand):
 
         outfile = directory + 'tags.ts'
         with open(outfile, 'w') as f:
-            tag_string = 'type tags_' + results['form_type'] + '_' + version
-            sep = '="'
+            tag_string_base = 'type Tags' + results['form_type'].title() + version
+            tag_string = tag_string_base
+            sep = ' = "'
             for tag in results['main_tags']:
                 tag_string += sep + tag
                 sep = '"\n\t| "'
             tag_string += '";'
             print(tag_string, file=f)
             for card_name in results['card_tags'].keys():
-                tag_string = 'type tags_' + results['form_type'] + '_' + version + '_' + card_name
+                tag_string = tag_string_base + card_name
                 sep = '="'
                 for tag in results['card_tags'][card_name]:
                     tag_string += sep + tag
