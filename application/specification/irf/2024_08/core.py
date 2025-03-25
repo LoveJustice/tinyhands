@@ -362,7 +362,7 @@ base_question: dict[str, BaseQuestionSpec] = {
     },
     'irfPurpose': {
         'tag': 'irfPurpose',
-        'answer_type': 'Checkbox',
+        'answer_type': 'String',
         'field_name': 'industry',
         'export_name': 'Purpose',
         'params': None,
@@ -922,40 +922,40 @@ base_question: dict[str, BaseQuestionSpec] = {
     },
 
     # Attachment Card
-    'irfAttachmentNumber': {
-        'tag': 'irfAttachmentNumber',
+    'attachmentNumber': {
+        'tag': 'attachmentNumber',
         'answer_type': 'Integer',
         'field_name': 'attachment_number',
         'export_name': 'Attachment Number',
         'params': None,
         'export_params': None,
     },
-    'irfAttachmentDescription': {
-        'tag': 'irfAttachmentDescription',
+    'description': {
+        'tag': 'description',
         'answer_type': 'String',
         'field_name': 'description',
         'export_name': 'Attachment Description',
         'params': None,
         'export_params': None,
     },
-    'irfAttachmentFile': {
-        'tag': 'irfAttachmentFile',
+    'attachment': {
+        'tag': 'attachment',
         'answer_type': 'Image',
         'field_name': 'attachment',
         'export_name': 'Attachment File',
         'params': None,
         'export_params': None,
     },
-    'irfAttachmentPrivate': {
-        'tag': 'irfAttachmentPrivate',
+    'privateCard': {
+        'tag': 'privateCard',
         'answer_type': 'Checkbox',
         'field_name': 'private_card',
         'export_name': 'Attachment Private',
         'params': None,
         'export_params': None,
     },
-    'irfAttachmentOption': {
-        'tag': 'irfAttachmentOption',
+    'option': {
+        'tag': 'option',
         'answer_type': 'String',
         'field_name': 'option',
         'export_name': 'Attachment Option',
@@ -964,32 +964,48 @@ base_question: dict[str, BaseQuestionSpec] = {
     },
 
     # Compliance
-    'irfDateReceived': {
-        'tag': 'irfAttachmentOption',
+    'logbookReceived': {
+        'tag': 'logbookReceived',
         'answer_type': 'Date',
         'field_name': 'logbook_received',
         'export_name': 'Date received',
         'params': None,
         'export_params': None,
     },
-    'irfMissingFields': {
-        'tag': 'irfMissingFields',
+    'logbookIncompleteQuestions': {
+        'tag': 'logbookIncompleteQuestions',
         'answer_type': 'String',
         'field_name': 'logbook_incomplete_questions',
         'export_name': 'Missing fields',
         'params': None,
         'export_params': None,
     },
-    'irfChangesMade': {
-        'tag': 'irfChangesMade',
+    'logbookIncompleteSections': {
+        'tag': 'logbookIncompleteSections',
+        'answer_type': 'String',
+        'field_name': 'logbook_incomplete_sections',
+        'export_name': 'Missing sections',
+        'params': None,
+        'export_params': None,
+    },
+    'logbookInformationComplete': {
+        'tag': 'logbookInformationComplete',
+        'answer_type': 'Date',
+        'field_name': 'logbook_information_complete',
+        'export_name': 'Information Complete',
+        'params': None,
+        'export_params': None,
+    },
+    'logbookNotes': {
+        'tag': 'logbookNotes',
         'answer_type': 'String',
         'field_name': 'logbook_notes',
         'export_name': 'Changes made',
         'params': None,
         'export_params': None,
     },
-    'irfDateSubmitted': {
-        'tag': 'irfDateSubmitted',
+    'logbookSubmitted': {
+        'tag': 'logbookSubmitted',
         'answer_type': 'Date',
         'field_name': 'logbook_submitted',
         'export_name': 'Date submitted',
@@ -998,56 +1014,56 @@ base_question: dict[str, BaseQuestionSpec] = {
     },
 
     # Verification Card
-    'irfVerificationType': {
-        'tag': 'irfVerificationType',
+    'verificationType': {
+        'tag': 'verificationType',
         'answer_type': 'Integer',
         'field_name': 'verification_type',
         'export_name': 'Verification Type',
         'params': None,
         'export_params': None,
     },
-    'irfFollowUpCall': {
-        'tag': 'irfFollowUpCall',
+    'followupCall': {
+        'tag': 'followupCall',
         'answer_type': 'String',
         'field_name': 'followup_call',
         'export_name': 'Followup Call',
         'params': None,
         'export_params': None,
     },
-    'irfFollowUpDetails': {
-        'tag': 'irfFollowUpDetails',
+    'followupDetails': {
+        'tag': 'followupDetails',
         'answer_type': 'String',
         'field_name': 'followup_details',
         'export_name': 'Followup Details',
         'params': None,
         'export_params': None,
     },
-    'irfVerificationEvidenceCategorization': {
-        'tag': 'irfVerificationEvidenceCategorization',
+    'evidenceCategorizationCard': {
+        'tag': 'evidenceCategorizationCard',
         'answer_type': 'String',
         'field_name': 'evidence_categorization',
         'export_name': 'Evidence Categorization',
         'params': None,
         'export_params': None,
     },
-    'irfVerificationReason': {
-        'tag': 'irfVerificationReason',
+    'reason': {
+        'tag': 'reason',
         'answer_type': 'String',
         'field_name': 'reason',
         'export_name': 'Verification Reason',
         'params': None,
         'export_params': None,
     },
-    'irfVerificationDate': {
-        'tag': 'irfVerificationDate',
+    'verifiedDateCard': {
+        'tag': 'verifiedDateCard',
         'answer_type': 'Date',
         'field_name': 'verified_date',
         'export_name': 'Verification Date',
         'params': None,
         'export_params': None,
     },
-    'irfVerifier': {
-        'tag': 'irfVerifier',
+    'verifierId': {
+        'tag': 'verifierId',
         'answer_type': 'Integer',
         'field_name': 'verifier_id',
         'export_name': 'Verifier',
@@ -1102,8 +1118,8 @@ category: dict[str, CategorySpec] = {
         'description': 'IRF Staff Procedure Tab',
         'storage': None,
     },
-    'irfAttachmentCategory': {
-        'tag': 'irfAttachmentCategory',
+    'irfAttachment': {
+        'tag': 'irfAttachment',
         'category_type': 'card',
         'description': 'IRF Attachments Tab',
         'storage': attachment_storage,
@@ -1114,8 +1130,8 @@ category: dict[str, CategorySpec] = {
         'description': 'IRF Compliance Tab',
         'storage': None,
     },
-    'irfVerificationCategory': {
-        'tag': 'irfVerificationCategory',
+    'irfBlindVerificationCard': {
+        'tag': 'irfBlindVerificationCard',
         'category_type': 'card',
         'description': 'IRF Verification Tab',
         'storage': verification_storage,
@@ -1517,7 +1533,7 @@ irf_core: FormSpec = {
                         {
                             'base_question': base_question['irfDestinationNotes'],
                             'label': 'Destination notes',
-                            'entry_type': 'address',
+                            'entry_type': 'text',
                             'span': 24,
                             'total_question': [],
                             'points': None,
@@ -1527,7 +1543,7 @@ irf_core: FormSpec = {
                         {
                             'base_question': base_question['irfCityOrCountryKnownForTrafficking'],
                             'label': 'City or country known for trafficking',
-                            'entry_type': 'checkboxOther',
+                            'entry_type': 'checkbox',
                             'span': 24,
                             'total_question': [base_question['irfDestinationPurposeComputedTotal'],
                                                base_question['irfComputedTotal']],
@@ -1538,7 +1554,7 @@ irf_core: FormSpec = {
                         {
                             'base_question': base_question['irfAreaKnownForTrafficking'],
                             'label': 'Specific area known for trafficking',
-                            'entry_type': 'checkboxOther',
+                            'entry_type': 'checkbox',
                             'span': 24,
                             'total_question': [base_question['irfDestinationPurposeComputedTotal'],
                                                base_question['irfComputedTotal']],
@@ -1708,7 +1724,7 @@ irf_core: FormSpec = {
                         },
                         {
                             'base_question': base_question['irfSuspectPvNotToldTruth'],
-                            'label': 'PV was told one thing but monitors suspect something else',
+                            'label': 'PV was told one thing but monitors suspect something',
                             'entry_type': 'checkbox',
                             'span': 24,
                             'total_question': [base_question['irfDestinationPurposeComputedTotal'],
@@ -1719,7 +1735,7 @@ irf_core: FormSpec = {
                         },
                         {
                             'base_question': base_question['irfThingPvTold'],
-                            'label': 'Thing told',
+                            'label': 'else -> Thing told',
                             'entry_type': 'text',
                             'span': 24,
                             'total_question': [],
@@ -2460,7 +2476,7 @@ irf_core: FormSpec = {
 
         {
             'name': 'Attachments',
-            'category': category['irfAttachmentCategory'],
+            'category': category['irfAttachment'],
             'subsections': [
                 {
                     'title': '',
@@ -2468,7 +2484,7 @@ irf_core: FormSpec = {
                     'side': 'full',
                     'questions': [
                         {
-                            'base_question': base_question['irfAttachmentNumber'],
+                            'base_question': base_question['attachmentNumber'],
                             'label': '',
                             'entry_type': 'number',
                             'span': None,
@@ -2478,7 +2494,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfAttachmentDescription'],
+                            'base_question': base_question['description'],
                             'label': '',
                             'entry_type': 'text',
                             'span': None,
@@ -2488,7 +2504,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfAttachmentFile'],
+                            'base_question': base_question['attachment'],
                             'label': '',
                             'entry_type': 'file',
                             'span': None,
@@ -2498,7 +2514,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfAttachmentPrivate'],
+                            'base_question': base_question['privateCard'],
                             'label': '',
                             'entry_type': 'checkbox',
                             'span': None,
@@ -2508,7 +2524,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfAttachmentOption'],
+                            'base_question': base_question['option'],
                             'label': '',
                             'entry_type': 'text',
                             'span': None,
@@ -2532,7 +2548,7 @@ irf_core: FormSpec = {
                     'side': 'full',
                     'questions': [
                         {
-                            'base_question': base_question['irfDateReceived'],
+                            'base_question': base_question['logbookReceived'],
                             'label': 'Date Received',
                             'entry_type': 'date',
                             'span': None,
@@ -2542,7 +2558,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfMissingFields'],
+                            'base_question': base_question['logbookIncompleteQuestions'],
                             'label': 'Were there any missing required fields on the original form?',
                             'entry_type': 'radio',
                             'span': None,
@@ -2552,7 +2568,28 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfChangesMade'],
+                            'base_question': base_question['logbookIncompleteSections'],
+                            'label': 'Please list missing required fields',
+                            'entry_type': 'text',
+                            'span': None,
+                            'total_question': None,
+                            'points': None,
+                            'options': None,
+                            'other_option': None,
+                        },
+                        {
+                            'base_question': base_question['logbookInformationComplete'],
+                            'label': 'Date Complete Information was Received',
+                            'entry_type': 'date',
+                            'span': None,
+                            'total_question': None,
+                            'points': None,
+                            'options': None,
+                            'other_option': None,
+                        },
+
+                        {
+                            'base_question': base_question['logbookNotes'],
                             'label': 'List any changes made to the form when entering into SL',
                             'entry_type': 'text',
                             'span': None,
@@ -2562,7 +2599,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfDateSubmitted'],
+                            'base_question': base_question['logbookSubmitted'],
                             'label': 'Date Submitted',
                             'entry_type': 'date',
                             'span': None,
@@ -2578,7 +2615,7 @@ irf_core: FormSpec = {
 
         {
             'name': 'Verification',
-            'category': category['irfVerificationCategory'],
+            'category': category['irfBlindVerificationCard'],
             'subsections': [
                 {
                     'title': '',
@@ -2586,7 +2623,7 @@ irf_core: FormSpec = {
                     'side': 'full',
                     'questions': [
                         {
-                            'base_question': base_question['irfVerificationType'],
+                            'base_question': base_question['verificationType'],
                             'label': '',
                             'entry_type': 'number',
                             'span': None,
@@ -2596,7 +2633,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfFollowUpCall'],
+                            'base_question': base_question['followupCall'],
                             'label': '',
                             'entry_type': 'text',
                             'span': None,
@@ -2606,7 +2643,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfFollowUpDetails'],
+                            'base_question': base_question['followupDetails'],
                             'label': '',
                             'entry_type': 'text',
                             'span': None,
@@ -2616,7 +2653,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfVerificationEvidenceCategorization'],
+                            'base_question': base_question['evidenceCategorizationCard'],
                             'label': '',
                             'entry_type': 'text',
                             'span': None,
@@ -2626,7 +2663,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfVerificationReason'],
+                            'base_question': base_question['reason'],
                             'label': '',
                             'entry_type': 'text',
                             'span': None,
@@ -2636,7 +2673,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfVerificationDate'],
+                            'base_question': base_question['verifiedDateCard'],
                             'label': '',
                             'entry_type': 'text',
                             'span': None,
@@ -2646,7 +2683,7 @@ irf_core: FormSpec = {
                             'other_option': None,
                         },
                         {
-                            'base_question': base_question['irfVerifier'],
+                            'base_question': base_question['verifierId'],
                             'label': '',
                             'entry_type': 'number',
                             'span': None,
@@ -2784,11 +2821,11 @@ irf_core: FormSpec = {
             'on_update': True
         },
         {
-            'tag': 'irfDateReceivedEntered',
+            'tag': 'logbookReceivedEntered',
             'level': 'submit_error',
             'validation_type': 'not_blank_or_null',
             'message': 'Date IRF received must be entered',
-            'questions': [base_question['irfDateReceived']],
+            'questions': [base_question['logbookReceived']],
             'trigger': None,
             'trigger_value': None,
             'params': None,
@@ -2812,7 +2849,7 @@ irf_core: FormSpec = {
             'level': 'submit_error',
             'validation_type': 'prevent_future_date',
             'message': 'Must be current or prior date',
-            'questions': [base_question['irfDateOfIntercept'], base_question['irfDateReceived']],
+            'questions': [base_question['irfDateOfIntercept'], base_question['logbookReceived']],
             'trigger': None,
             'trigger_value': None,
             'params': None,
@@ -2836,10 +2873,10 @@ irf_core: FormSpec = {
             'level': 'warning',
             'validation_type': 'card_count',
             'message': 'Should have attachment with option "Original Form"',
-            'questions': [base_question['irfAttachmentOption']],
+            'questions': [base_question['option']],
             'trigger': None,
             'trigger_value': None,
-            'params': {"filter": {"value": "Original Form", "operation": "=", "question_tag": "irfAttachmentOption"},
+            'params': {"filter": {"value": "Original Form", "operation": "=", "question_tag": "option"},
                        "min_count": 1,
                        "category_name": "Attachments"},
             'on_retrieve': False,
