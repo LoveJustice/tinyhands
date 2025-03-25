@@ -902,9 +902,8 @@ class QuestionResponseSerializer(serializers.Serializer):
         question_id = data.get('question_id')
         if question_id is None:
             question_tag = data.get('question_tag')
-            form_data = self.context['form_data']
-            if self.context['form'].use_tag_suffix:
-                question_tag = question_tag + '.' + form_data.form.version
+            form_version = self.context['form_version']
+            question_tag = question_tag + form_version
             question = Question.objects.get(form_tag=question_tag)
         else:
             question = Question.objects.get(id=int(question_id))
@@ -1239,6 +1238,14 @@ class FormDataSerializer(serializers.Serializer):
             station = None
         form_date_holder = {'creation_date':self.context['creation_date'], 'form_date':None, 'card_date':None}
         self.context['form_date_holder'] = form_date_holder
+
+        form_type = self.context.get('form_type')
+        form = Form.current_form(form_type.name, station_id)
+        self.context['form'] = form
+        if form.use_tag_suffix:
+            self.context['form_version'] = '.' + form.version
+        else:
+            self.context['form_version'] = ''
         
         responses = data.get('responses')
         self.form_serializers = []
@@ -1254,9 +1261,8 @@ class FormDataSerializer(serializers.Serializer):
             serializer.is_valid()
             self.card_serializers.append(serializer)
         
-        form_type = self.context.get('form_type')
-        form = Form.current_form(form_type.name, station_id)
-        self.context['form'] = form
+
+
         if self.instance is None:
             form_class = form.find_form_class()
             form_object = form_class()

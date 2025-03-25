@@ -17,98 +17,98 @@ from dataentry.models import Country, Form, IrfCommon, LocationForm, Suspect, Su
 # Note: assumes variable age has been set to none or the PVs age
 BASE_VULNERABLE_RULES = [
     {
-        'question_tag': 'irfAge0to5.2024.8',
+        'question_tag': 'irfAge0to5.2024.08',
         'conflict_tags': [],
         'logic': 'age is not None and age <= 5'
     },
     {
-        'question_tag': 'irfAge6to9.2024.8',
+        'question_tag': 'irfAge6to9.2024.08',
         'conflict_tags': [],
         'logic': 'age is not None and age >= 6 and age <= 9'
     },
     {
-        'question_tag': 'irfAge10to14.2024.8',
+        'question_tag': 'irfAge10to14.2024.08',
         'conflict_tags': [],
         'logic': 'age is not None and age >= 10 and age <= 14'
     },
     {
-        'question_tag': 'irfAge15to17.2024.8',
+        'question_tag': 'irfAge15to17.2024.08',
         'conflict_tags': [],
         'logic': 'age is not None and age >= 15 and age <= 17'
     },
     {
-        'question_tag': 'irfAge18to22.2024.8',
+        'question_tag': 'irfAge18to22.2024.08',
         'conflict_tags': [],
         'logic': 'age is not None and age >= 18 and age <= 22'
     },
     {
-        'question_tag': 'irfAge23to29.2024.8',
+        'question_tag': 'irfAge23to29.2024.08',
         'conflict_tags': [],
         'logic': 'age is not None and age >= 23 and age <= 29'
     },
     {
-        'question_tag': 'irfAge30to35.2024.8',
+        'question_tag': 'irfAge30to35.2024.08',
         'conflict_tags': [],
         'logic': 'age is not None and age >= 30 and age <= 35'
     },
     {
-        'question_tag': 'irfFemale.2024.8',
+        'question_tag': 'irfFemale.2024.08',
         'conflict_tags': [],
         'logic': 'interceptee.person.gender=="F"'
     },
     {
-        'question_tag': 'irfMinorNoGuardian.2024.8',
-        'conflict_tags': ['irfAge18to22.2024.8', 'irfAge23to29.2024.8', 'irfAge30to35.2024.8'],
+        'question_tag': 'irfMinorNoGuardian.2024.08',
+        'conflict_tags': ['irfAge18to22.2024.08', 'irfAge23to29.2024.08', 'irfAge30to35.2024.08'],
         'logic': 'irf.vulnerability_minor_without_guardian == True'
     },
     {
-        'question_tag': 'irfSeductive.2024.8',
+        'question_tag': 'irfSeductive.2024.08',
         'conflict_tags': [],
         'logic': '"wearing revealing clothing" in irf.profile.lower()'
     },
     {
-        'question_tag': 'irfUnemployed.2024.8',
-        'conflict_tags': ['irfAge0to5.2024.8', 'irfAge6to9.2024.8', 'irfAge10to14.2024.8',
-                          'irfAge15to17.2024.8', 'irfMinorNoGuardian.2024.8'],
+        'question_tag': 'irfUnemployed.2024.08',
+        'conflict_tags': ['irfAge0to5.2024.08', 'irfAge6to9.2024.08', 'irfAge10to14.2024.08',
+                          'irfAge15to17.2024.08', 'irfMinorNoGuardian.2024.08'],
         'logic': '"unemployed" in irf.profile.lower()'
     },
     {
-        'question_tag': 'irfInsufficientResources.2024.8',
+        'question_tag': 'irfInsufficientResources.2024.08',
         'conflict_tags': [],
         'logic': 'irf.vulnerability_insufficient_resource == True'
     },
     {
-        'question_tag': 'irfNoPhone.2024.8',
+        'question_tag': 'irfNoPhone.2024.08',
         'conflict_tags': [],
         'logic': 'irf.vulnerability_no_mobile_phone == True'
     },
     {
-        'question_tag': 'irfRecentlyEnslaved.2024.8',
+        'question_tag': 'irfRecentlyEnslaved.2024.08',
         'conflict_tags': [],
         'logic': '"recently enslaved" in irf.profile.lower()'
     },
     {
-        'question_tag': 'irfFirstTimeTravelingAbroad.2024.8',
+        'question_tag': 'irfFirstTimeTravelingAbroad.2024.08',
         'conflict_tags': [],
         'logic': 'irf.vulnerability_first_time_traveling_abroad == True'
     },
     {
-        'question_tag': 'irfRunaway.2024.8',
+        'question_tag': 'irfRunaway.2024.08',
         'conflict_tags': [],
         'logic': '"runaway" in irf.profile.lower()'
     },
     {
-        'question_tag': 'irfFirstTimeTravelingToCity.2024.8',
+        'question_tag': 'irfFirstTimeTravelingToCity.2024.08',
         'conflict_tags': [],
         'logic': 'irf.vulnerability_first_time_traveling_to_city == True'
     },
     {
-        'question_tag': 'irfTravelingWithSomeoneRecentlyMet.2024.8',
+        'question_tag': 'irfTravelingWithSomeoneRecentlyMet.2024.08',
         'conflict_tags': [],
         'logic': 'irf.vulnerability_travel_met_recently == True'
     },
     {
-        'question_tag': 'irfStrandedAbandoned.2024.8',
+        'question_tag': 'irfStrandedAbandoned.2024.08',
         'conflict_tags': [],
         'logic': 'irf.vulnerability_stranded_or_abandoned == True'
     },
@@ -120,23 +120,23 @@ BASE_VULNERABLE_RULES = [
 # Note: assumes industry field has by split and individual value is in the variable industry_part
 BASE_INDUSTRY_RULES = [
     {
-        'question_tag': 'irfDomesticWork.2024.8',
+        'question_tag': 'irfDomesticWork.2024.08',
         'logic': "'domestic work' in industry_part.lower()"
     },
     {
-        'question_tag': 'irfMassage.2024.8',
+        'question_tag': 'irfMassage.2024.08',
         'logic': "'spa/massage' in industry_part.lower()"
     },
     {
-        'question_tag': 'irfMassage.2024.8',
+        'question_tag': 'irfMassage.2024.08',
         'logic': "'spa/massage' in industry_part.lower()"
     },
     {
-        'question_tag': 'irfMassage.2024.8',
+        'question_tag': 'irfMassage.2024.08',
         'logic': "'massage parlor' in industry_part.lower()"
     },
     {
-        'question_tag': 'irfDanceBar.2024.8',
+        'question_tag': 'irfDanceBar.2024.08',
         'logic': "'dance' in industry_part.lower()"
     },
 ]

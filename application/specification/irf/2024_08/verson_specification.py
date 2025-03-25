@@ -30,7 +30,7 @@ from .zimbabwe import irf_zimbabwe
 
 version_specification: FormsOfTypeSpec = {
     'form_type': 'IRF',
-    'version': '2024.8',
+    'version': '2024.08',
     'form_specs': [
         irf_argentina,
         irf_bangladesh,

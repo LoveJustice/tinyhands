@@ -754,7 +754,7 @@ base_question: dict[str, BaseQuestionSpec] = {
         'export_params': None,
     },
     'irfControlMonitorTotal': {
-        'tag': 'irfMonitorTotal',
+        'tag': 'irfControlMonitorTotal',
         'answer_type': 'Integer',
         'field_name': 'control_monitor_total',
         'export_name': 'Overall Monitor Total',
@@ -762,7 +762,7 @@ base_question: dict[str, BaseQuestionSpec] = {
         'export_params': None,
     },
     'irfControlComputedTotal': {
-        'tag': 'irfComputedTotal',
+        'tag': 'irfControlComputedTotal',
         'answer_type': 'Integer',
         'field_name': 'control_computed_total',
         'export_name': 'Overall Computed Total',
@@ -1468,7 +1468,7 @@ irf_core: FormSpec = {
                 {
                     'title': '',
                     'key': 'total',
-                    'side': 'center',
+                    'side': 'full',
                     'questions': [
                         {
                             'base_question': base_question['irfMonitorVulnerableTotal'],
