@@ -3593,6 +3593,18 @@
    }
 },
 {
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalWhatCausedWilling",
+      "prompt": "If willing, what caused them? ",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "If willing, what caused them? ",
+      "export_params": null
+   }
+},
+{
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfComplianceDateComplete",
@@ -4297,6 +4309,15 @@
    }
 },
 {
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalWhatCausedWilling",
+      "category": "sfLegal202409",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
    "model": "dataentry.questionstorage",
    "fields": {
       "question": "sfComplianceDateReceived",
@@ -4728,6 +4749,13 @@
    "fields": {
       "question": "sfLegalWhatNeededForArrest",
       "field_name": "what_needed_for_arrest"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalWhatCausedWilling",
+      "field_name": "what_caused_pvs_to_be_willing"
    }
 },
 {

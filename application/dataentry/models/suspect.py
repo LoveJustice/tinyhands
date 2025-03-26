@@ -141,6 +141,7 @@ class SuspectLegal(BaseCard):
     police_unable = models.CharField(max_length=126, null=True)
     # Fields added for 2024_09
     anything_cause_pvs_to_file = models.TextField(null=True)
+    what_caused_pvs_to_be_willing = models.TextField(null=True)
     police_contact = models.CharField(max_length=126, null=True)
     what_needed_for_arrest = models.TextField(null=True)
     
