@@ -1386,7 +1386,7 @@ irf_core: FormSpec = {
                         },
                         {
                             'base_question': base_question['irfNoPhone'],
-                            'label': 'No Phone',
+                            'label': 'No PVs have phones',
                             'entry_type': 'checkbox',
                             'span': 24,
                             'total_question': [base_question['irfComputedVulnerableTotal'],

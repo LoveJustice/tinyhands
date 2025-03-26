@@ -904,7 +904,10 @@ class QuestionResponseSerializer(serializers.Serializer):
             question_tag = data.get('question_tag')
             form_version = self.context['form_version']
             question_tag = question_tag + form_version
-            question = Question.objects.get(form_tag=question_tag)
+            try:
+                question = Question.objects.get(form_tag=question_tag)
+            except Question.DoesNotExist:
+                raise NameError('Question with tag ' + question_tag + ' does not exist');
         else:
             question = Question.objects.get(id=int(question_id))
         storage_id = data.get('storage_id')
