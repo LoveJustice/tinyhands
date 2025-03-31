@@ -87,7 +87,8 @@ def generate_subsection_json(sub: SubSectionSpec):
 def generate_form_json(spec: FormSpec):
     result = {
         "name": spec['name'],
-        "sections": []
+        "sections": [],
+        "formSpecificConf": {}
     }
     for section in spec['sections']:
         sect = {
@@ -99,6 +100,8 @@ def generate_form_json(spec: FormSpec):
             sub = generate_subsection_json(subsection)
             sect['subsections'].append(sub)
         result["sections"].append(sect)
+
+    result['formSpecificConfig'] = spec['form_specific_config']
 
     return result
 

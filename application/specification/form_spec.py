@@ -113,6 +113,7 @@ class FormSpec(TypedDict):
     sections: List[SectionSpec]
     validations: List[ValidationSpec]
     export: GoogleExportSpec | None
+    form_specific_config: dict[str, any] | None
 
 
 class FormsOfTypeSpec(TypedDict):
