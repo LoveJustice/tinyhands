@@ -1,8 +1,55 @@
-set -a
-source ./staging.env
-set +a
+# THIS IS RUN BY A CRONTAB!!
 
-set -e
+# Assumes remote has bash... https://unix.stackexchange.com/a/129401
+while getopts ":e::k:" opt; do
+  case $opt in
+    e) env="$OPTARG"
+    ;;
+    k) api_key="$OPTARG"
+    ;;
+    \?) echo "Invalid option -$OPTARG" >&2
+    exit 1
+    ;;
+  esac
+
+  case $OPTARG in
+    -*) echo "Option $opt needs a valid argument"
+    exit 1
+    ;;
+  esac
+done
+
+if [ "$env" = "prod" ];
+then
+  SOURCE_FILE="production.env"
+else
+  SOURCE_FILE="staging.env"
+fi
+
+if [ -e $SOURCE_FILE ]
+  then
+  echo "Found $SOURCE_FILE"
+else
+  echo "Could not find $SOURCE_FILE, sending error email"
+  mailtext="Could not find environment to back up files on ${env}"
+  bodyHTML="<p> $mailtext </p>"
+  maildata='{
+      "api_key": "'${api_key}'",
+      "to": ["Brad Wells <brad@lovejustice.ngo>"],
+      "sender": "Searchlight '${env}' Cron Alerts <system+'${env}'@lovejustice.ngo>",
+      "subject": "[Searchlight -'${env}'] clone file backups cron failed",
+      "html_body": "'${bodyHTML}'"
+  }'
+  curl --request POST \
+   --url https://api.smtp2go.com/v3/email/send \
+   --header 'Content-Type: application/json' \
+   --data "$maildata"
+   exit 1
+fi
+
+set -a
+source $SOURCE_FILE
+set +a
 
 # https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-authorize-azure-active-directory
 export AZCOPY_AUTO_LOGIN_TYPE="SPN"
@@ -16,3 +63,23 @@ FILE_SOURCE_URL=https://$AZURE_STORAGE_ACCOUNT_NAME.blob.core.windows.net/$AZURE
 # Last modified timestamps are replaced with the current time in the copy process
 azcopy copy $FILE_SOURCE_URL $FILE_BACKUP_URL --recursive
 # If you are testing in staging, please delete the backups that you made (probably 'staging-cloud-media' in 'searchlightdev')
+
+AZ_COPY_STATUS=$?
+if [ $AZ_COPY_STATUS -ne 0 ]
+  then
+  echo "Could not clone file backups, sending error email"
+  mailtext="Could not clone file backups on ${env}"
+  bodyHTML="<p> $mailtext </p>"
+  maildata='{
+      "api_key": "'${api_key}'",
+      "to": ["Brad Wells <brad@lovejustice.ngo>"],
+      "sender": "Searchlight '${env}' Cron Alerts <system+'${env}'@lovejustice.ngo>",
+      "subject": "[Searchlight -'${env}'] clone file backups cron failed",
+      "html_body": "'${bodyHTML}'"
+  }'
+  curl --request POST \
+   --url https://api.smtp2go.com/v3/email/send \
+   --header 'Content-Type: application/json' \
+   --data "$maildata"
+  exit 1
+fi
