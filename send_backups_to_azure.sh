@@ -20,14 +20,11 @@ while getopts ":e::k:" opt; do
   esac
 done
 
-if [ "$env" = "prod" ];
+if [ -z "$env" ] || [ -z "$api_key" ]
 then
-  SOURCE_FILE="production.env"
-else
-  SOURCE_FILE="staging.env"
+  echo "Please send env with -e and api key with -k"
+  exit 1
 fi
-
-
 
 if [ "$env" = "prod" ];
 then
@@ -90,7 +87,7 @@ if [ $LOCAL_COPY_STATUS -ne 0 ] || [ $AZ_COPY_STATUS -ne 0 ] || [ $RM_STATUS -ne
       "api_key": "'${api_key}'",
       "to": ["Brad Wells <brad@lovejustice.ngo>"],
       "sender": "Searchlight '${env}' Cron Alerts <system+'${env}'@lovejustice.ngo>",
-      "subject": "[Searchlight -'${env}'] send DB backups cron failed",
+      "subject": "[Searchlight - '${env}'] send DB backups cron failed",
       "html_body": "'${bodyHTML}'"
   }'
   curl --request POST \
