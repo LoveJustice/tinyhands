@@ -2,5 +2,5 @@
 0 0 * * * /home/thi/tinyhands/bin/db_backup.sh
 0 17 * * * /home/thi/tinyhands/bin/daily.sh
 0 16 1 * * /home/thi/tinyhands/bin/monthly_data_indicators.sh
-0 2 * * * /home/thi/tinyhands/send_backups_to_azure.sh
-0 2 * * * /home/thi/tinyhands/clone_file_backups_to_azure.sh
+0 2 * * * /home/thi/tinyhands/send_backups_to_azure.sh -e prod -k <SMTP2GO api key>
+0 2 * * * /home/thi/tinyhands/clone_file_backups_to_azure.sh -e prod -k <SMTP2GO api key>
