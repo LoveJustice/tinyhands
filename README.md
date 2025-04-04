@@ -74,7 +74,8 @@ The sanitized database has two accounts preconfigured for testing both of which 
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run -d --rm web ./manage.py backupAttachmentsToCloud -d 2024-10-01
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run --rm web bash
 - ./manage.py backupAttachmentsToCloud -d 2024-10-01 -p /data/media
-- docker exec -it web ./manage.py indicatorHistory --start 202405
+- docker exec -it web ./manage.py indicatorHistory
+- docker-compose run --rm web python ./manage.py migrateFormVersion Malawi pvfMalawi pvfCommon202408
 
 ## Some useful :commands on local
 - python ./manage.py formLatest --settings dreamsuite.settings.local
@@ -114,18 +115,16 @@ and instead manually refreshing the certificate every 90 days.
 
 To do this:
     - https://punchsalad.com/ssl-certificate-generator/, fill out and download file
-    - put file with same name on server in tinyhands/data/certbot/www/.well-known/acme-challenge
-    - verify that the link works, if it doesn't:
-
-        docker restart nginx
-        (wait for 'nginx' to appear in terminal)
-        docker exec -it nginx /bin/bash
-        cd /var/www/certbot/.well-known/acme-challenge
-        (verify that file is in that folder)
-        (test url on website provided)
+        - Domain: searchlightdata.org,www.searchlightdata.org (or staging.searchlightdata.org,www.staging.searchlightdata.org)
+        - Email: support@lovejustice.ngo
+        - DNS
+    - Go to Constellix at https://dns.constellix.com/domain/941779 (u: support) 
+        - Paste strings into the TXT Record
+    - Go back to Punch Salad and copy and paste the public key/CRT and the private key into the right files
 
 After that:
+    - sudo -u thi -i
     - cd tinyhands/certs/
-    - vim fullchain.pem and replace it with top (text above CRT + CA bundle button)
-    - vim privkey.pem and replace it with bottom (text above private key button)
+    - vim fullchain.pem and replace it with top (text above CRT + CA bundle button), delete the last newline
+    - vim privkey.pem and replace it with bottom (text above private key button), delete the last newline
     - docker restart nginx
