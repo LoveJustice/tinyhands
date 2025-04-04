@@ -346,58 +346,6 @@
 },
 {
    "model": "dataentry.storage",
-   "pk": 193,
-   "fields": {
-      "form_tag": "BorderStation",
-      "module_name": "dataentry.models.border_station",
-      "form_model_name": "BorderStation",
-      "response_model_name": null,
-      "parent_storage": null,
-      "foreign_key_field_parent": null,
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
-   "pk": 194,
-   "fields": {
-      "form_tag": "CommitteeMember",
-      "module_name": "static_border_stations.models",
-      "form_model_name": "CommitteeMember",
-      "response_model_name": null,
-      "parent_storage": 193,
-      "foreign_key_field_parent": "border_station",
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
-   "pk": 195,
-   "fields": {
-      "form_tag": "Staff",
-      "module_name": "static_border_stations.models",
-      "form_model_name": "Staff",
-      "response_model_name": null,
-      "parent_storage": 193,
-      "foreign_key_field_parent": "border_station",
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
-   "pk": 196,
-   "fields": {
-      "form_tag": "Location",
-      "module_name": "static_border_stations.models",
-      "form_model_name": "Location",
-      "response_model_name": null,
-      "parent_storage": 193,
-      "foreign_key_field_parent": "border_station",
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
    "pk": 201,
    "fields": {
       "form_tag": "GospelVerification",
@@ -457,19 +405,6 @@
       "start_date": "2019-12-04T05:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "monthlyReportBangladesh",
-      "version": null,
-      "stations": []
-   }
-},
-{
-   "model": "dataentry.form",
-   "pk": 52,
-   "fields": {
-      "form_type": 5,
-      "storage": 193,
-      "start_date": "2020-03-25T04:00:00Z",
-      "end_date": "2118-12-31T00:00:00Z",
-      "form_name": "borderStation",
       "version": null,
       "stations": []
    }
@@ -7634,6 +7569,9 @@
       "params": null,
       "export_name": "Auto Number",
       "export_params": null
+   }
+},
+{
    "model": "dataentry.question",
    "pk": 996,
    "fields": {
