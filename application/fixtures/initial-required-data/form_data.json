@@ -7560,32 +7560,6 @@
 },
 {
    "model": "dataentry.question",
-   "pk": 1024,
-   "fields": {
-      "form_tag": "autoNumber",
-      "prompt": "Auto Number",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Auto Number",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 996,
-   "fields": {
-      "form_tag": "evadeSignsFakeDocumentation",
-      "prompt": "Fake documentation",
-      "description": null,
-      "answer_type": 6,
-      "params": null,
-      "export_name": "Fake documentation",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
    "pk": 1033,
    "fields": {
       "form_tag": "dateOfFollowup",
