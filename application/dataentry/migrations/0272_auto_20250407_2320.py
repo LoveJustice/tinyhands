@@ -6,6 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
     dependencies = [
         ('dataentry', '0271_suspectlegal_what_caused_pvs_to_be_willing'),
+        ('legal', '0004_remove_legalchargesuspect_police_case_or_court_case_and_more')
     ]
 
     def version_number_migration(apps, schema_editor):

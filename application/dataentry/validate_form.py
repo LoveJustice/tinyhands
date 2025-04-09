@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__);
 class ValidateForm:
     # Format and add a message to the error or warning lists
     def add_error_or_warning(self, category_name, category_index, validation, data_string=''):
-        if 'override_category' in validation.params:
+        if validation.params is not None and 'override_category' in validation.params:
             category_name = validation.params['override_category']
         if category_index is not None:
             msg = category_name + ' ' + str(category_index) + ': ' + validation.error_warning_message + ' ' + data_string
