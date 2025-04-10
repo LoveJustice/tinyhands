@@ -2142,7 +2142,7 @@
 {
    "model": "dataentry.formvalidation",
    "fields": {
-      "form_tag": "lcSuspectArrestDate",
+      "form_tag": "s",
       "level": 3,
       "trigger": "lcSuspectArrestStatus",
       "trigger_value": "Yes*",
@@ -2356,7 +2356,7 @@
 {
    "model": "dataentry.formvalidationquestion",
    "fields": {
-      "validation": "lcSuspectArrestDate",
+      "validation": "s",
       "question": "lcSuspectArrestDate"
    }
 },

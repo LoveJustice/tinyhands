@@ -334,7 +334,7 @@ class Command(BaseCommand):
         for pvf in pvfs:
             modified = False
             if pvf.share_gospel_film or pvf.share_gospel_tract or pvf.share_gospel_oral or pvf.share_gospel_other:
-                pvf.share_gospel_resouce = True
+                pvf.share_gospel_resource = True
                 modified = True
 
             if pvf.how_pv_released == 'Someone came to pick the PV up from the station/shelter':
