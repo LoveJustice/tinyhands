@@ -5107,7 +5107,7 @@
       "form_tag": "pvfAwarenessLocalChurch",
       "prompt": "Connected PV to a local church in their area",
       "description": null,
-      "answer_type": 1,
+      "answer_type": 6,
       "params": null,
       "export_name": "Connected PV to a local church in their area",
       "export_params": null
@@ -5352,6 +5352,18 @@
       "answer_type": 6,
       "params": null,
       "export_name": "Shared gospel resource",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "pvfAwarenessLocalChurchString",
+      "prompt": "Connected PV to a local church in their area",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Connected PV to a local church in their area",
       "export_params": null
    }
 },
@@ -7272,7 +7284,7 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "pvfAwarenessLocalChurch",
+      "question": "pvfAwarenessLocalChurchString",
       "category": "pvfAwareness202408",
       "weight": 0,
       "form_config": null
@@ -8341,6 +8353,13 @@
    }
 },
 {
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "pvfAwarenessLocalChurchString",
+      "field_name": "share_gospel_connect_to_local_church"
+   }
+},
+{
    "model": "dataentry.formvalidation",
    "fields": {
       "form_tag": "pvfDateRecived",
@@ -8355,6 +8374,8 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         "pvfPhilippines",
+         "pvfCommon202408",
          "pvfNepal",
          "pvfIndia",
          "pvfIndiaNetwork",
@@ -8382,9 +8403,7 @@
          "pvfBangladesh",
          "pvfCambodia",
          "pvfUSA",
-         "pvfOpenSource",
-         "pvfPhilippines",
-         "pvfCommon202408"
+         "pvfOpenSource"
       ]
    }
 },
