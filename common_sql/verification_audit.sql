@@ -31,8 +31,8 @@ from all_irfs_for_country_in_range
 where (all_irfs_for_country_in_range.computed_total_red_flags = 0
     OR (all_irfs_for_country_in_range.computed_total_red_flags IS NULL and
         all_irfs_for_country_in_range.control_reported_total_red_flags = 0))
-    AND all_irfs_for_country_in_range.how_sure_was_trafficking >= 1
-    AND all_irfs_for_country_in_range.how_sure_was_trafficking <= 3
+    OR (all_irfs_for_country_in_range.how_sure_was_trafficking >= 1 and
+        all_irfs_for_country_in_range.how_sure_was_trafficking <= 3)
 UNION
 select '2 - Low Flag Evidence' as reason_for_picking,
        all_irfs_for_country_in_range.*
