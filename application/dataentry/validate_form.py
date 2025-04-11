@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__);
 class ValidateForm:
     # Format and add a message to the error or warning lists
     def add_error_or_warning(self, category_name, category_index, validation, data_string=''):
+        if validation.params is not None and 'override_category' in validation.params:
+            category_name = validation.params['override_category']
         if category_index is not None:
             msg = category_name + ' ' + str(category_index) + ': ' + validation.error_warning_message + ' ' + data_string
         else:
@@ -73,6 +75,15 @@ class ValidateForm:
                         if submission_date and submission_date < start_date:
                             print('do not check')
                             should_do = False
+
+            version = getattr(form_data.form_object, 'form_version')
+            if validation.params is not None and 'starting_version' in validation.params:
+                if version is None or version < validation.params['starting_version']:
+                    should_do = False
+            if validation.params is not None and 'ending_version' in validation.params:
+                if version is not None and version >= validation.params['ending_version']:
+                    should_do = False
+
         except:
             pass
         
@@ -84,14 +95,13 @@ class ValidateForm:
             question = validation_question.question
             full_answer = form_data.get_answer(question)
             answer = self.get_answer_part(full_answer, validation, 'part')
-                
-            if self.should_do_validation(form_data, validation):  
-                if answer is None or isinstance(answer, str) and answer.strip() == '':
-                    if general:
-                        category_name = ''
-                    else:
-                        category_name = self.question_map[question.id]
-                    self.add_error_or_warning(category_name, category_index, validation)
+
+            if answer is None or isinstance(answer, str) and answer.strip() == '':
+                if general:
+                    category_name = ''
+                else:
+                    category_name = self.question_map[question.id]
+                self.add_error_or_warning(category_name, category_index, validation)
             
     
     def at_least_one_true(self, form_data, validation, validation_questions, category_index, general):
@@ -656,7 +666,8 @@ class ValidateForm:
         if self.main_form in self.validation_set:
             for validation in self.validation_set[self.main_form]:
                 if validation.validation_type.name in self.validations:
-                    self.perform_validation(validation, self.form_data)
+                    if self.should_do_validation(self.form_data, validation):
+                        self.perform_validation(validation, self.form_data)
                 else:
                     logger.error("validation #" + validation.id + " specifies an unimplemented validation:" + validation.validation_type.name)
                     self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -672,9 +683,13 @@ class ValidateForm:
                 if category_id in self.validation_set:
                     for validation in self.validation_set[category_id]:
                         if validation.validation_type.name in self.validations:
-                            self.perform_validation(validation, card, category_index=category_count)
+                            if self.should_do_validation(self.form_data, validation):
+                                self.perform_validation(validation, card, category_index=category_count)
                         else:
                             logger.error("validation #" + str(validation.id) + " specifies an unimplemented validation:" + validation.validation_type.name)
                             self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+        self.errors.sort()
+        self.warnings.sort()
             
                 
