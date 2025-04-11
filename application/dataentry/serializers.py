@@ -896,20 +896,34 @@ class AuditSerializer(serializers.ModelSerializer):
     author_name = serializers.SerializerMethodField(read_only=True)
     
     def get_form_by_name(self, obj):
-        form = Form.objects.get(form_name=obj.form_name)
+        try:
+            form = Form.objects.get(form_name=obj.form_name)
+        except Form.DoesNotExist:
+            # cifBangladesh, vdfBangladesh, etc were removed from the form_data, so this blows up otherwise
+            form = None
         return form
     
     def get_form(self, obj):
-        return self.get_form_by_name(obj).id
+        found_form = self.get_form_by_name(obj)
+        if found_form:
+            return found_form.id
+        else:
+            # cifBangladesh, vdfBangladesh, etc were removed from the form_data, so this blows up otherwise
+            return None
     
     def get_form_type_name(self, obj):
-        return self.get_form_by_name(obj).form_type.name;
+        found_form = self.get_form_by_name(obj)
+        if found_form:
+            return found_form.form_type.name
+        else:
+            # cifBangladesh, vdfBangladesh, etc were removed from the form_data, so this blows up otherwise
+            return None
     
     def get_country_name(self, obj):
         return obj.country.name
     
     def get_total_samples(self, obj):
-        return AuditSample.objects.filter(audit=obj).count();
+        return AuditSample.objects.filter(audit=obj).count()
     
     def get_samples_complete(self, obj):
         return AuditSample.objects.filter(audit=obj).exclude(completion_date__isnull=True).count()

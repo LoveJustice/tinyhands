@@ -74,11 +74,11 @@ The sanitized database has two accounts preconfigured for testing both of which 
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run -d --rm web ./manage.py backupAttachmentsToCloud -d 2024-10-01
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run --rm web bash
 - ./manage.py backupAttachmentsToCloud -d 2024-10-01 -p /data/media
-- docker exec -it web ./manage.py indicatorHistory --start 202405 
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run --rm web ./manage.py migrateFormVersion Malawi pvfMalawi pvfCommon202408
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run --rm web ./manage.py migrateFormVersion Malawi lfMalawi lfCommon202409
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run --rm web ./manage.py migrateFormVersion Malawi sfMalawi sfCommon202409
 - sudo DREAMSUITE_TAG=$DREAMSUITE_TAG docker-compose run --rm web ./manage.py migrateFormVersion Malawi irfMalawi irfMalawi2024_08
+- docker exec -it web ./manage.py indicatorHistory
 
 ## Some useful :commands on local
 - python ./manage.py formLatest --settings dreamsuite.settings.local
