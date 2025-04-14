@@ -345,6 +345,12 @@ class IntercepteeCommon(BaseCard):
     def set_parent(self, the_parent):
         self.interception_record = the_parent
 
+    def validate_label(self):
+        label = '<blank name>'
+        if self.person is not None and self.person.full_name is not None:
+            label = self.person.full_name
+        return label
+
 class IrfAttachmentCommon(BaseCard):
     interception_record = models.ForeignKey(IrfCommon, on_delete=models.CASCADE)
     attachment_number = models.PositiveIntegerField(null=True, blank=True)
