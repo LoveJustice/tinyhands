@@ -52,7 +52,8 @@ dependencies = [
     "scikit-learn==1.4.1.post1",
     "toml==0.10.2",
     "Unipath==1.1",
-    "z3c.rml==4.4.0"
+    "z3c.rml==4.4.0",
+    "python-dotenv"
 ]
 
 [project.scripts]

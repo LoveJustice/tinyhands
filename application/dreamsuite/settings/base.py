@@ -5,6 +5,18 @@ import sys
 import logging.config
 import datetime
 from azure.identity import DefaultAzureCredential
+from dotenv import load_dotenv
+
+# Load environment variables from a .env file if it exists
+BASE_DIR = Path(__file__).ancestor(4)  # Reference the project root
+common_env_path = BASE_DIR.child('common.env')
+local_env_path = BASE_DIR.child('local.env')
+
+if os.path.exists(common_env_path):
+    load_dotenv(common_env_path) and print(f"Loaded common.env from {common_env_path}")
+
+if os.path.exists(local_env_path):
+    load_dotenv(local_env_path, override=True) and print(f"Loaded local.env from {local_env_path}")
 
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
