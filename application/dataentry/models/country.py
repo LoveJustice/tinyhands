@@ -9,6 +9,7 @@ class Country(models.Model):
     longitude = models.FloatField()
     zoom_level = models.IntegerField(null=True, blank=True)
     currency = models.CharField(max_length=127, blank=True)
+    currency_symbol = models.CharField(max_length=127, blank=True)
     mdf_sender_email = models.CharField(max_length=127)
     verification_start_year = models.PositiveIntegerField(null=True)
     verification_start_month = models.PositiveIntegerField(null=True)
