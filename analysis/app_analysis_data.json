@@ -1,0 +1,3313 @@
+{
+  "accounts": {
+    "app_name": "accounts",
+    "files": [
+      {
+        "path": "accounts/tests/test_api.py",
+        "lines": 549,
+        "type": "py"
+      },
+      {
+        "path": "accounts/models.py",
+        "lines": 232,
+        "type": "py"
+      },
+      {
+        "path": "accounts/views.py",
+        "lines": 207,
+        "type": "py"
+      },
+      {
+        "path": "accounts/tests/factories.py",
+        "lines": 174,
+        "type": "py"
+      },
+      {
+        "path": "accounts/migrations/0001_initial.py",
+        "lines": 119,
+        "type": "py"
+      },
+      {
+        "path": "accounts/tests/tests.py",
+        "lines": 67,
+        "type": "py"
+      },
+      {
+        "path": "accounts/serializers.py",
+        "lines": 55,
+        "type": "py"
+      },
+      {
+        "path": "accounts/tests/test_models.py",
+        "lines": 47,
+        "type": "py"
+      },
+      {
+        "path": "accounts/tests/test_serializers.py",
+        "lines": 46,
+        "type": "py"
+      },
+      {
+        "path": "accounts/tests/test_password_reset.py",
+        "lines": 35,
+        "type": "py"
+      },
+      {
+        "path": "accounts/migrations/0013_expiringtoken.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "accounts/migrations/0014_auto_20230302_1512.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "accounts/expiring_token_authentication.py",
+        "lines": 24,
+        "type": "py"
+      },
+      {
+        "path": "accounts/urls.py",
+        "lines": 24,
+        "type": "py"
+      },
+      {
+        "path": "accounts/migrations/0012_auto_20180126_1548.py",
+        "lines": 21,
+        "type": "py"
+      },
+      {
+        "path": "accounts/migrations/0014_account_auth0_id.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "accounts/management/commands/create_users_with_password_hashes_in_auth0.py",
+        "lines": 17,
+        "type": "py"
+      },
+      {
+        "path": "accounts/mixins.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "accounts/management/commands/create_user_tokens.py",
+        "lines": 12,
+        "type": "py"
+      },
+      {
+        "path": "accounts/admin.py",
+        "lines": 6,
+        "type": "py"
+      },
+      {
+        "path": "accounts/management/__init__.py",
+        "lines": 1,
+        "type": "py"
+      },
+      {
+        "path": "accounts/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "accounts/migrations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "accounts/tests/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "accounts/management/commands/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 1723,
+    "file_count": 25,
+    "file_types": {
+      "py": 25
+    },
+    "has_tests": true,
+    "has_models": true,
+    "has_views": true,
+    "has_forms": false,
+    "has_urls": true,
+    "has_serializers": true,
+    "dependencies": [
+      "util",
+      "rest_api"
+    ]
+  },
+  "budget": {
+    "app_name": "budget",
+    "files": [
+      {
+        "path": "budget/models.py",
+        "lines": 794,
+        "type": "py"
+      },
+      {
+        "path": "budget/views/monthly_distribution_form_views.py",
+        "lines": 680,
+        "type": "py"
+      },
+      {
+        "path": "budget/helpers_pr.py",
+        "lines": 423,
+        "type": "py"
+      },
+      {
+        "path": "budget/tests/tests.py",
+        "lines": 410,
+        "type": "py"
+      },
+      {
+        "path": "budget/views/project_request.py",
+        "lines": 395,
+        "type": "py"
+      },
+      {
+        "path": "budget/helpers.py",
+        "lines": 391,
+        "type": "py"
+      },
+      {
+        "path": "budget/serializers.py",
+        "lines": 323,
+        "type": "py"
+      },
+      {
+        "path": "budget/views/budget_views.py",
+        "lines": 263,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0004_auto_20210120_1903.py",
+        "lines": 171,
+        "type": "py"
+      },
+      {
+        "path": "budget/views/money_distribution_views.py",
+        "lines": 171,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0014_auto_20230628_1454.py",
+        "lines": 153,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0010_auto_20220324_1941.py",
+        "lines": 145,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0001_initial.py",
+        "lines": 112,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0008_auto_20210722_1922.py",
+        "lines": 105,
+        "type": "py"
+      },
+      {
+        "path": "budget/tests/test_helpers.py",
+        "lines": 87,
+        "type": "py"
+      },
+      {
+        "path": "budget/pdfexports/mdf_exports.py",
+        "lines": 86,
+        "type": "py"
+      },
+      {
+        "path": "budget/tests/factories.py",
+        "lines": 84,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0003_auto_20210120_1632.py",
+        "lines": 77,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0017_monthlydistributionform_money_not_spent_reviewed_and_more.py",
+        "lines": 72,
+        "type": "py"
+      },
+      {
+        "path": "budget/helpers_base.py",
+        "lines": 68,
+        "type": "py"
+      },
+      {
+        "path": "budget/urls.py",
+        "lines": 68,
+        "type": "py"
+      },
+      {
+        "path": "budget/tests/test_budget.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "budget/mdf_constants.py",
+        "lines": 48,
+        "type": "py"
+      },
+      {
+        "path": "budget/management/commands/pbsExport.py",
+        "lines": 45,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0006_auto_20210615_1743.py",
+        "lines": 33,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0007_auto_20210617_1612.py",
+        "lines": 31,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0009_auto_20220209_1927.py",
+        "lines": 30,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0011_auto_20220406_1216.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "budget/pdfexports/pdf_creator.py",
+        "lines": 24,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0016_mdfitem_approved_by.py",
+        "lines": 23,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0019_alter_mdfitem_associated_section_and_more.py",
+        "lines": 23,
+        "type": "py"
+      },
+      {
+        "path": "budget/admin.py",
+        "lines": 22,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0002_borderstationbudgetcalculation_notes.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0013_borderstationbudgetcalculation_past_sent_approved.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0005_auto_20210518_1730.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0015_mdfitem_reason_not_deduct.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0018_stationary_to_stationery.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0012_borderstationbudgetcalculation_date_finalized.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0021_monthlydistributionform_notes.py",
+        "lines": 18,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/0020_monthlydistributionform_signed_pbs.py",
+        "lines": 18,
+        "type": "py"
+      },
+      {
+        "path": "budget/views/__init__.py",
+        "lines": 4,
+        "type": "py"
+      },
+      {
+        "path": "budget/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "budget/migrations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "budget/tests/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "budget/management/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "budget/management/commands/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "budget/pdfexports/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 5604,
+    "file_count": 47,
+    "file_types": {
+      "py": 47
+    },
+    "has_tests": true,
+    "has_models": true,
+    "has_views": false,
+    "has_forms": false,
+    "has_urls": true,
+    "has_serializers": true,
+    "dependencies": [
+      "rest_api",
+      "dataentry",
+      "static_border_stations",
+      "export_import",
+      "accounts"
+    ]
+  },
+  "dataentry": {
+    "app_name": "dataentry",
+    "files": [
+      {
+        "path": "dataentry/migrations/0001_squashed_0115_auto_20190919_1611.py",
+        "lines": 7356,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/victiminterview_form.html",
+        "lines": 1865,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/migrations/0131_auto_20200207_1758.py",
+        "lines": 1851,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/serialize_form.py",
+        "lines": 1335,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0177_auto_20210406_1733.py",
+        "lines": 1277,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0101_auto_20190610_1307.py",
+        "lines": 1219,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/indicators.py",
+        "lines": 1184,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/serializers.py",
+        "lines": 1179,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/forms.py",
+        "lines": 992,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/interceptionrecord_form.html",
+        "lines": 988,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/migrations/0107_auto_20190812_1456.py",
+        "lines": 915,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0130_auto_20200205_1344.py",
+        "lines": 824,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0001_initial.py",
+        "lines": 703,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/validate_form.py",
+        "lines": 695,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0113_auto_20190909_2211.py",
+        "lines": 675,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0127_auto_20200108_1541.py",
+        "lines": 663,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0129_auto_20200129_1619.py",
+        "lines": 642,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/master_person.py",
+        "lines": 624,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0111_auto_20190827_1813.py",
+        "lines": 616,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/form.py",
+        "lines": 600,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/convertPvfSfLf.py",
+        "lines": 575,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/statistics_dashboard.py",
+        "lines": 564,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/irf_form.py",
+        "lines": 559,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0102_auto_20190611_2057.py",
+        "lines": 555,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0048_auto_20180427_1933.py",
+        "lines": 551,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/victim_interview.py",
+        "lines": 521,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0106_auto_20190801_1559.py",
+        "lines": 519,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0115_auto_20190919_1611.py",
+        "lines": 506,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/importStationStatistics.py",
+        "lines": 493,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/all_views.py",
+        "lines": 483,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/indicator_history.py",
+        "lines": 476,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/alert_checkers.py",
+        "lines": 439,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0122_auto_20191112_1458.py",
+        "lines": 438,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0260_alter_answer_params_alter_audit_template_and_more.py",
+        "lines": 431,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/base_form.py",
+        "lines": 430,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/sanitizePrivate.py",
+        "lines": 396,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0234_auto_20220810_1732.py",
+        "lines": 383,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/forms.py",
+        "lines": 380,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/form_data.py",
+        "lines": 379,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/person.py",
+        "lines": 376,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/irf_common.py",
+        "lines": 335,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0117_auto_20191024_1219.py",
+        "lines": 330,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0093_auto_20190507_1241.py",
+        "lines": 317,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/cif_common.py",
+        "lines": 317,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0090_auto_20190424_1653.py",
+        "lines": 316,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0109_auto_20190826_1424.py",
+        "lines": 315,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0087_auto_20190416_1802.py",
+        "lines": 314,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/importLegal.py",
+        "lines": 308,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0151_auto_20200903_1730.py",
+        "lines": 304,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_addresses_api_views.py",
+        "lines": 293,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0068_cifnepal_locationboxnepal_personboxnepal_potentialvictimnepal_transporationnepal_vehicleboxnepal.py",
+        "lines": 292,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0168_auto_20201210_2052.py",
+        "lines": 288,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0235_auto_20221228_1950.py",
+        "lines": 281,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0080_auto_20190314_1418.py",
+        "lines": 272,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/form_migration.py",
+        "lines": 270,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0054_auto_20180613_1744.py",
+        "lines": 265,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/pvf_form.py",
+        "lines": 264,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0146_irfcommon_profile.py",
+        "lines": 261,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0149_auto_20200813_1441.py",
+        "lines": 258,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/vdf_form.py",
+        "lines": 258,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/populateStationStatistics.py",
+        "lines": 255,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0174_irfcommon_vulnerability_family_friend_arranged_travel.py",
+        "lines": 254,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/permission.py",
+        "lines": 253,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/importLogbook.py",
+        "lines": 251,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0171_irf_new_format.py",
+        "lines": 250,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0159_india_ghana_irf.py",
+        "lines": 248,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/user_location_permission.py",
+        "lines": 248,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0124_auto_20191126_1506.py",
+        "lines": 241,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/monitor_app.py",
+        "lines": 232,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/vdf_common.py",
+        "lines": 226,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/factories.py",
+        "lines": 220,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/migrateFormVersion.py",
+        "lines": 215,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/victiminterview_personbox.html",
+        "lines": 215,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/migrations/0245_auto_20230130_1903.py",
+        "lines": 210,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/interception_record.py",
+        "lines": 208,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0246_auto_20230214_1300.py",
+        "lines": 206,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0123_auto_20191113_1741.py",
+        "lines": 200,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0141_auto_20200421_1905.py",
+        "lines": 194,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0108_auto_20190813_1249.py",
+        "lines": 193,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/addresses.py",
+        "lines": 192,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/dumpFormData.py",
+        "lines": 188,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/audit.py",
+        "lines": 184,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_address_related_items.py",
+        "lines": 183,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_permissions_api_views.py",
+        "lines": 181,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/monthly_report.py",
+        "lines": 181,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/suspect.py",
+        "lines": 178,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/victiminterview_locationbox.html",
+        "lines": 177,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/migrations/0116_auto_20191023_1315.py",
+        "lines": 174,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/sf_form.py",
+        "lines": 173,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0119_auto_20191101_1318.py",
+        "lines": 172,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/exportStationStats.py",
+        "lines": 170,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0058_auto_20180807_1506.py",
+        "lines": 169,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/monthly_report_form.py",
+        "lines": 167,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_vif_apiview.py",
+        "lines": 164,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/id_management.py",
+        "lines": 163,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0146_auto_20200601_1718.py",
+        "lines": 161,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0097_auto_20190529_1355.py",
+        "lines": 158,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0142_auto_20200506_1653.py",
+        "lines": 155,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0096_auto_20190524_1842.py",
+        "lines": 154,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0145_populate_master_person.py",
+        "lines": 149,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0248_auto_20230217_1706.py",
+        "lines": 147,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/fuzzy_matching.py",
+        "lines": 145,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/photo_exporter.py",
+        "lines": 145,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0242_auto_20230123_1323.py",
+        "lines": 142,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/lf_form.py",
+        "lines": 142,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0135_auto_20200316_1728.py",
+        "lines": 139,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0184_auto_20210611_1243.py",
+        "lines": 138,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/exportStationStatistics.py",
+        "lines": 138,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_irf_new_form.py",
+        "lines": 137,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/location.py",
+        "lines": 137,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0084_auto_20190325_2108.py",
+        "lines": 135,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0099_auto_20190605_1948.py",
+        "lines": 135,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0068_auto_20181015_1123.py",
+        "lines": 135,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0076_auto_20190114_1032.py",
+        "lines": 135,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_id_management_api_views.py",
+        "lines": 135,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0238_auto_20230116_1506.py",
+        "lines": 134,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0244_auto_20230125_1406.py",
+        "lines": 132,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0251_auto_20230315_1344.py",
+        "lines": 132,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0081_auto_20190320_2040.py",
+        "lines": 132,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0144_add_master_person_model.py",
+        "lines": 131,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0098_auto_20190604_1849.py",
+        "lines": 130,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0055_auto_20180713_1237.py",
+        "lines": 128,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0241_auto_20230119_1427.py",
+        "lines": 127,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0059_auto_20180813_2109.py",
+        "lines": 126,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/moveCommonStorage.py",
+        "lines": 124,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0095_auto_20190523_2127.py",
+        "lines": 123,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/convertAddress.py",
+        "lines": 123,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/indicatorHistory.py",
+        "lines": 123,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0237_auto_20230113_1220.py",
+        "lines": 115,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0236_auto_20230111_1827.py",
+        "lines": 114,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0065_auto_20180907_1719.py",
+        "lines": 110,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0064_auto_20180902_2311.py",
+        "lines": 109,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/cif_form.py",
+        "lines": 108,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0223_auto_20220524_1725.py",
+        "lines": 107,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0231_auto_20220816_1613.py",
+        "lines": 107,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/incident.py",
+        "lines": 103,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0120_auto_20191105_1341.py",
+        "lines": 102,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/legal_case_form.py",
+        "lines": 102,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0086_auto_20190408_1602.py",
+        "lines": 101,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0085_auto_20190329_1728.py",
+        "lines": 99,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0157_legalcase_legalcaseattachment_legalcasesuspect_legalcasevictim.py",
+        "lines": 98,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0077_auto_20190122_1026.py",
+        "lines": 97,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0100_auto_20190607_1332.py",
+        "lines": 96,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0091_auto_20190425_1330.py",
+        "lines": 96,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/master_person.py",
+        "lines": 96,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0088_auto_20190418_1941.py",
+        "lines": 95,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/legal_case.py",
+        "lines": 94,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0105_formvalidation_params.py",
+        "lines": 93,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0148_auto_20200707_1952.py",
+        "lines": 91,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/person_box.py",
+        "lines": 91,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/removeUnrefPerson.py",
+        "lines": 89,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/fuzzymatching-ui.html",
+        "lines": 87,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/migrations/0126_auto_20191204_2028.py",
+        "lines": 86,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0118_auto_20191028_1425.py",
+        "lines": 85,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0254_auto_20230530_1201.py",
+        "lines": 82,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0152_vdf_v2.py",
+        "lines": 80,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0252_auto_20230404_1209.py",
+        "lines": 80,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/backupAttachmentsToCloud.py",
+        "lines": 79,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/static/dataentry/js/controllers/borderStationCtrl.js",
+        "lines": 79,
+        "type": "js"
+      },
+      {
+        "path": "dataentry/migrations/0224_irfverification.py",
+        "lines": 78,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/exportIndicators.py",
+        "lines": 76,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0110_auto_20190830_1950.py",
+        "lines": 75,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_site_settings.py",
+        "lines": 75,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0243_auto_20230124_1530.py",
+        "lines": 74,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0185_auto_20210623_1648.py",
+        "lines": 74,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0046_permission_account_permission_name.py",
+        "lines": 74,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_irfvif_exists_views.py",
+        "lines": 74,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0253_auto_20230419_1642.py",
+        "lines": 73,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/gospel.py",
+        "lines": 72,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0247_auto_20230215_1515.py",
+        "lines": 71,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0094_auto_20190509_1713.py",
+        "lines": 71,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/addresses.py",
+        "lines": 70,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0052_auto_20180529_1710.py",
+        "lines": 69,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0268_suspect_merged_location_where_spend_time_and_more.py",
+        "lines": 68,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0194_auto_20210824_1847.py",
+        "lines": 67,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0195_auto_20210902_1624.py",
+        "lines": 67,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/cleanforeignkeys.py",
+        "lines": 67,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/audit.py",
+        "lines": 67,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/auto_number.py",
+        "lines": 67,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/background_form_work.py",
+        "lines": 66,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0057_auto_20180730_1616.py",
+        "lines": 66,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0249_auto_20230221_1227.py",
+        "lines": 66,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0125_auto_20191203_1603.py",
+        "lines": 65,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/border_station_form.py",
+        "lines": 64,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0112_auto_20190828_1217.py",
+        "lines": 63,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0272_auto_20250407_2320.py",
+        "lines": 62,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/linkMasterPersons.py",
+        "lines": 62,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/border_station.py",
+        "lines": 61,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0155_audit_auditsample.py",
+        "lines": 60,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0193_auto_20210820_1551.py",
+        "lines": 60,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_photo_exporter.py",
+        "lines": 60,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_csv_exporter.py",
+        "lines": 60,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0240_auto_20230118_1403.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0230_auto_20220803_1408.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0233_auto_20221014_1526.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0228_auto_20220707_1737.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0235_auto_20221221_1650.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0234_auto_20221114_1631.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0232_auto_20220915_1523.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0239_auto_20230117_1657.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0265_permissiongroup_permission_action_display_name_and_more.py",
+        "lines": 57,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/location_box.py",
+        "lines": 57,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0179_auto_20210413_1923.py",
+        "lines": 56,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0133_auto_20200219_1854.py",
+        "lines": 56,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_fuzzy_locations.py",
+        "lines": 56,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0154_vdf_v2_continued.py",
+        "lines": 55,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0191_auto_20210712_1433.py",
+        "lines": 55,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0173_kenya_vdf_v2.py",
+        "lines": 55,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/copyPermission.py",
+        "lines": 55,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/empowerment.py",
+        "lines": 55,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0070_auto_20181025_1732.py",
+        "lines": 54,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0063_auto_20180830_1002.py",
+        "lines": 53,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0187_auto_20210628_1433.py",
+        "lines": 53,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0066_auto_20180913_0855.py",
+        "lines": 53,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0089_auto_20190423_1312.py",
+        "lines": 50,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/personFormCache.py",
+        "lines": 50,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/person.py",
+        "lines": 50,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0226_auto_20220620_1325.py",
+        "lines": 49,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/address1_create_page.html",
+        "lines": 49,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/admin.py",
+        "lines": 48,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/static/dataentry/js/services/borderStationService.js",
+        "lines": 47,
+        "type": "js"
+      },
+      {
+        "path": "dataentry/migrations/0136_zimbabwe_migrate.py",
+        "lines": 46,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/csv_exporter.py",
+        "lines": 46,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0169_gospelverification.py",
+        "lines": 45,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0255_auto_20230707_1425.py",
+        "lines": 45,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/oneFormPerPerson.py",
+        "lines": 45,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/dataentry_base.html",
+        "lines": 45,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/models/interceptee.py",
+        "lines": 43,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0114_indicatorhistory.py",
+        "lines": 42,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/helpers.py",
+        "lines": 41,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0147_auto_20200702_1306.py",
+        "lines": 41,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/formLatest.py",
+        "lines": 41,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/__init__.py",
+        "lines": 41,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/auth0.py",
+        "lines": 41,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0209_auto_20211215_2211.py",
+        "lines": 40,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0133_auto_20200224_1828.py",
+        "lines": 40,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0227_auto_20220620_1342.py",
+        "lines": 40,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0069_auto_20181019_1917.py",
+        "lines": 40,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/address2_create_page.html",
+        "lines": 40,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/fields.py",
+        "lines": 39,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0092_auto_20190429_1856.py",
+        "lines": 39,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0264_auto_20241018_2010.py",
+        "lines": 39,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/notifyCommittee.py",
+        "lines": 39,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0138_milawi_sierra_irf.py",
+        "lines": 38,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0206_personmatch_match_results.py",
+        "lines": 37,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0215_empowerment.py",
+        "lines": 37,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0045_permission_userlocationpermission.py",
+        "lines": 37,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0134_auto_20200311_1355.py",
+        "lines": 37,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0165_auto_20201112_1939.py",
+        "lines": 35,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0225_auto_20220530_1327.py",
+        "lines": 35,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0197_auto_20210915_1158.py",
+        "lines": 35,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0140_auto_20200412_1839.py",
+        "lines": 35,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0170_legalcasetimeline.py",
+        "lines": 35,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/copyCategoryData.py",
+        "lines": 35,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/clearFormLogRequest.py",
+        "lines": 35,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0166_personform.py",
+        "lines": 34,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0160_auto_20201027_1736.py",
+        "lines": 34,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/test_irf_api_view.py",
+        "lines": 34,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0198_auto_20210929_1152.py",
+        "lines": 33,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0217_gospel.py",
+        "lines": 33,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0050_auto_20180522_1704.py",
+        "lines": 33,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/site_settings.py",
+        "lines": 33,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0128_monthlyreportattachment.py",
+        "lines": 31,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0078_auto_20190214_0616.py",
+        "lines": 31,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/country.py",
+        "lines": 31,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/site_settings.py",
+        "lines": 31,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0258_auto_20230509_1844.py",
+        "lines": 30,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0178_auto_20210412_1517.py",
+        "lines": 30,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0222_auto_20220523_1621.py",
+        "lines": 30,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0196_auto_20210909_1845.py",
+        "lines": 30,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/empowerment.py",
+        "lines": 30,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/__init__.py",
+        "lines": 30,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0143_auto_20200513_1448.py",
+        "lines": 29,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0176_permission_order.py",
+        "lines": 29,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0079_cifattachmentnepal.py",
+        "lines": 29,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0075_person_estimated_birthdate.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0182_auto_20210427_1253.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0267_locationinformation_recruitment_agency_name_and_more.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0266_irfcommon_vulnerability_contract_against_law_and_more.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0137_auto_20200320_1519.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0181_auto_20210427_1233.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0262_formlog.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/checkForms.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0223_auto_20220512_1804.py",
+        "lines": 27,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0049_auto_20180516_1600.py",
+        "lines": 27,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0180_auto_20210420_1903.py",
+        "lines": 27,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0167_auto_20201204_1904.py",
+        "lines": 27,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0060_form_migration_fix.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0048_auto_20180717_2333.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0166_auditsample_monitor_notes.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0132_auto_20200212_1452.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0210_auto_20211215_2215.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/checkFileSystem.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/exportColumnNames.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/loadHolidays.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/urls.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0172_auto_20210202_1943.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0208_auto_20211207_1710.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0199_auto_20211005_1813.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0069_auto_20181030_0604.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0256_auto_20230710_1452.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0176_clientdiagnostic.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0233_auto_20220702_1437.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0161_auto_20201028_1523.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0221_irfcommon_control_under_18_recruited_for_work.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0231_auto_20220622_1751.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0162_auto_20201029_1709.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0068_auto_20181024_1729.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0250_holiday.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0150_pendingmatch.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/linkFormStation.py",
+        "lines": 25,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0175_auto_20210323_1826.py",
+        "lines": 24,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0062_auto_20180824_0720.py",
+        "lines": 24,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0265_borderstationattachment.py",
+        "lines": 24,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0183_auto_20210525_1241.py",
+        "lines": 23,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0163_audit_form_name.py",
+        "lines": 23,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0263_formlog_details_formlog_request.py",
+        "lines": 23,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0067_formversion.py",
+        "lines": 23,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0265_vdfcommon_share_gospel_give_pv_and_more.py",
+        "lines": 23,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/anonymizePhotos.py",
+        "lines": 23,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0229_stationstatistics_work_days.py",
+        "lines": 22,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/joinIrfRows.py",
+        "lines": 22,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/country.py",
+        "lines": 22,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0074_questionlayout_form_config.py",
+        "lines": 21,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0121_country_options.py",
+        "lines": 21,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0232_storage_form_tag.py",
+        "lines": 21,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0220_formcategory_form_category_question_config.py",
+        "lines": 21,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0222_borderstation_mdf_project.py",
+        "lines": 21,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0104_country_mdf_sender_email.py",
+        "lines": 21,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0186_auto_20210624_1311.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0188_auto_20210630_1943.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0190_auditsample_no_paper_form.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0218_gospel_profession_date.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0213_stationstatistics_active_shelters.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0080_country_currency.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0204_irfcommon_control_abducted.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0073_exportimportcard_index_field_name.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0261_countryexchange_date_time_last_updated.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0153_monthlyreport_paralegal_legal_advisor_appointed.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0156_irfcommon_signs_fake_documentation.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0051_formvalidation_trigger_value.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0192_auto_20210722_1359.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0205_irfcommon_pv_stopped_on_own.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0189_stationstatistics_subcommittee_members.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0219_empowerment_vdf_number.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0128_auto_20200116_1631.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0082_auto_20190322_0854.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0257_irfcommon_vulnerability_different_last_name.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/connectStationsToForms.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/match_history.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/station_statistics.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/pending_match.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/address2_create_success.html",
+        "lines": 20,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/templates/dataentry/address1_create_success.html",
+        "lines": 20,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/migrations/0211_remove_borderstation_non_transit.py",
+        "lines": 19,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0164_remove_audit_form.py",
+        "lines": 19,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0047_permission_enable_stations.py",
+        "lines": 19,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/permission.py",
+        "lines": 19,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/templates/dataentry/popover.html",
+        "lines": 19,
+        "type": "html"
+      },
+      {
+        "path": "dataentry/migrations/0266_person_photo_added_date_time.py",
+        "lines": 18,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0207_auto_20211119_1807.py",
+        "lines": 18,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0271_suspectlegal_what_caused_pvs_to_be_willing.py",
+        "lines": 18,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0139_verification_notice.py",
+        "lines": 17,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0214_auto_20220120_2011.py",
+        "lines": 17,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0200_auto_20211011_1338.py",
+        "lines": 17,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0056_merge_20180724_1837.py",
+        "lines": 17,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/location_statistics.py",
+        "lines": 17,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0072_merge_20181106_1543.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0061_merge_20180817_0743.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0071_merge_20181101_1434.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0203_auto_20211103_1743.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0212_auto_20220103_1845.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0083_merge_20190325_1509.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0053_auto_20180605_1516.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0216_auto_20220201_1515.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0158_home_situation_alert.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0103_auto_20190708_1602.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0201_auto_20211015_1510.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0202_auto_20211018_2017.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0103_auto_20190701_1244.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0074_auto_20181203_1343.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0259_auto_20240123_2155.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/auditExports.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/gospel.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/interception_alert.py",
+        "lines": 16,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/region.py",
+        "lines": 15,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0273_merge_20250411_1553.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0270_merge_20250207_1012.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0267_merge_20250130_2009.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0267_merge_20250204_1441.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0272_merge_20250404_1654.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0269_merge_20250207_0935.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0268_merge_20250207_0910.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/location_staff.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/form_log.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/views/client_diagnostic.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/0058_edit_delete_permission.py",
+        "lines": 12,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/static/dataentry/js/dataEntry.module.js",
+        "lines": 12,
+        "type": "js"
+      },
+      {
+        "path": "dataentry/dataentry_signals.py",
+        "lines": 9,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/person_identification.py",
+        "lines": 8,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/incident.py",
+        "lines": 8,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/client_diagnostic.py",
+        "lines": 7,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/interception_cache.py",
+        "lines": 7,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/holiday.py",
+        "lines": 7,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/context_processors.py",
+        "lines": 6,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/red_flags.py",
+        "lines": 6,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/interception_alert.py",
+        "lines": 5,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/region.py",
+        "lines": 5,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/models/alias_group.py",
+        "lines": 4,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/__init__.py",
+        "lines": 1,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/migrations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/tests/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "dataentry/management/commands/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 64567,
+    "file_count": 414,
+    "file_types": {
+      "py": 400,
+      "js": 3,
+      "html": 11
+    },
+    "has_tests": true,
+    "has_models": false,
+    "has_views": false,
+    "has_forms": true,
+    "has_urls": true,
+    "has_serializers": true,
+    "dependencies": [
+      "legal",
+      "rest_api",
+      "util",
+      "static_border_stations",
+      "export_import",
+      "budget",
+      "accounts"
+    ]
+  },
+  "events": {
+    "app_name": "events",
+    "files": [
+      {
+        "path": "events/tests/test_api.py",
+        "lines": 357,
+        "type": "py"
+      },
+      {
+        "path": "events/helpers.py",
+        "lines": 104,
+        "type": "py"
+      },
+      {
+        "path": "events/tests/test_helpers.py",
+        "lines": 90,
+        "type": "py"
+      },
+      {
+        "path": "events/views.py",
+        "lines": 70,
+        "type": "py"
+      },
+      {
+        "path": "events/tests/test_serializers.py",
+        "lines": 68,
+        "type": "py"
+      },
+      {
+        "path": "events/migrations/0001_initial.py",
+        "lines": 37,
+        "type": "py"
+      },
+      {
+        "path": "events/serializers.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "events/models.py",
+        "lines": 27,
+        "type": "py"
+      },
+      {
+        "path": "events/tests/factories.py",
+        "lines": 24,
+        "type": "py"
+      },
+      {
+        "path": "events/urls.py",
+        "lines": 11,
+        "type": "py"
+      },
+      {
+        "path": "events/admin.py",
+        "lines": 5,
+        "type": "py"
+      },
+      {
+        "path": "events/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "events/migrations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "events/tests/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 821,
+    "file_count": 14,
+    "file_types": {
+      "py": 14
+    },
+    "has_tests": true,
+    "has_models": true,
+    "has_views": true,
+    "has_forms": false,
+    "has_urls": true,
+    "has_serializers": true,
+    "dependencies": [
+      "accounts"
+    ]
+  },
+  "export_import": {
+    "app_name": "export_import",
+    "files": [
+      {
+        "path": "export_import/field_types.py",
+        "lines": 794,
+        "type": "py"
+      },
+      {
+        "path": "export_import/import_bangladesh.py",
+        "lines": 639,
+        "type": "py"
+      },
+      {
+        "path": "export_import/vif_io.py",
+        "lines": 549,
+        "type": "py"
+      },
+      {
+        "path": "export_import/irf_io.py",
+        "lines": 488,
+        "type": "py"
+      },
+      {
+        "path": "export_import/export_form_csv.py",
+        "lines": 485,
+        "type": "py"
+      },
+      {
+        "path": "export_import/load_form_data.py",
+        "lines": 331,
+        "type": "py"
+      },
+      {
+        "path": "export_import/data_indicator_io.py",
+        "lines": 292,
+        "type": "py"
+      },
+      {
+        "path": "export_import/export_form.py",
+        "lines": 258,
+        "type": "py"
+      },
+      {
+        "path": "export_import/form_data_tag_serializer.py",
+        "lines": 206,
+        "type": "py"
+      },
+      {
+        "path": "export_import/google_sheet_basic.py",
+        "lines": 184,
+        "type": "py"
+      },
+      {
+        "path": "export_import/google_sheet.py",
+        "lines": 179,
+        "type": "py"
+      },
+      {
+        "path": "export_import/google_sheet_work_queue.py",
+        "lines": 116,
+        "type": "py"
+      },
+      {
+        "path": "export_import/google_form_work_queue.py",
+        "lines": 111,
+        "type": "py"
+      },
+      {
+        "path": "export_import/google_sheet_import.py",
+        "lines": 96,
+        "type": "py"
+      },
+      {
+        "path": "export_import/irf_google_sheet.py",
+        "lines": 73,
+        "type": "py"
+      },
+      {
+        "path": "export_import/google_sheet_audit.py",
+        "lines": 67,
+        "type": "py"
+      },
+      {
+        "path": "export_import/form_field_types.py",
+        "lines": 66,
+        "type": "py"
+      },
+      {
+        "path": "export_import/trafficker_io.py",
+        "lines": 64,
+        "type": "py"
+      },
+      {
+        "path": "export_import/mdf_io.py",
+        "lines": 59,
+        "type": "py"
+      },
+      {
+        "path": "export_import/form_data_serializer.py",
+        "lines": 47,
+        "type": "py"
+      },
+      {
+        "path": "export_import/form_data_id_serializer.py",
+        "lines": 29,
+        "type": "py"
+      },
+      {
+        "path": "export_import/address2_io.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "export_import/form_io.py",
+        "lines": 21,
+        "type": "py"
+      },
+      {
+        "path": "export_import/google_sheet_names.py",
+        "lines": 7,
+        "type": "py"
+      },
+      {
+        "path": "export_import/__init__.py",
+        "lines": 2,
+        "type": "py"
+      }
+    ],
+    "total_lines": 5189,
+    "file_count": 25,
+    "file_types": {
+      "py": 25
+    },
+    "has_tests": false,
+    "has_models": false,
+    "has_views": false,
+    "has_forms": false,
+    "has_urls": false,
+    "has_serializers": false,
+    "dependencies": [
+      "static_border_stations",
+      "dataentry",
+      "accounts",
+      "budget"
+    ]
+  },
+  "firebase": {
+    "app_name": "firebase",
+    "files": [
+      {
+        "path": "firebase/notification_builder.py",
+        "lines": 98,
+        "type": "py"
+      },
+      {
+        "path": "firebase/notifications.py",
+        "lines": 62,
+        "type": "py"
+      },
+      {
+        "path": "firebase/management/commands/sendInterceptionAlertsNotification.py",
+        "lines": 30,
+        "type": "py"
+      },
+      {
+        "path": "firebase/apps.py",
+        "lines": 6,
+        "type": "py"
+      },
+      {
+        "path": "firebase/__init__.py",
+        "lines": 1,
+        "type": "py"
+      },
+      {
+        "path": "firebase/management/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "firebase/management/commands/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 197,
+    "file_count": 7,
+    "file_types": {
+      "py": 7
+    },
+    "has_tests": false,
+    "has_models": false,
+    "has_views": false,
+    "has_forms": false,
+    "has_urls": false,
+    "has_serializers": false,
+    "dependencies": [
+      "dataentry"
+    ]
+  },
+  "help": {
+    "app_name": "help",
+    "files": [
+      {
+        "path": "help/migrations/0001_initial.py",
+        "lines": 26,
+        "type": "py"
+      },
+      {
+        "path": "help/views/video.py",
+        "lines": 15,
+        "type": "py"
+      },
+      {
+        "path": "help/serializers.py",
+        "lines": 8,
+        "type": "py"
+      },
+      {
+        "path": "help/models/video.py",
+        "lines": 7,
+        "type": "py"
+      },
+      {
+        "path": "help/models/__init__.py",
+        "lines": 1,
+        "type": "py"
+      },
+      {
+        "path": "help/views/__init__.py",
+        "lines": 1,
+        "type": "py"
+      },
+      {
+        "path": "help/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "help/migrations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 58,
+    "file_count": 8,
+    "file_types": {
+      "py": 8
+    },
+    "has_tests": false,
+    "has_models": false,
+    "has_views": false,
+    "has_forms": false,
+    "has_urls": false,
+    "has_serializers": true,
+    "dependencies": []
+  },
+  "id_matching": {
+    "app_name": "id_matching",
+    "files": [
+      {
+        "path": "id_matching/pre_proc.py",
+        "lines": 199,
+        "type": "py"
+      },
+      {
+        "path": "id_matching/predict_matches.py",
+        "lines": 194,
+        "type": "py"
+      },
+      {
+        "path": "id_matching/link_records.py",
+        "lines": 152,
+        "type": "py"
+      },
+      {
+        "path": "id_matching/update_matches.py",
+        "lines": 112,
+        "type": "py"
+      },
+      {
+        "path": "id_matching/migrations/0001_initial.py",
+        "lines": 82,
+        "type": "py"
+      },
+      {
+        "path": "id_matching/db_conn.py",
+        "lines": 77,
+        "type": "py"
+      },
+      {
+        "path": "id_matching/match_training.py",
+        "lines": 70,
+        "type": "py"
+      },
+      {
+        "path": "id_matching/management/commands/suggestMatch.py",
+        "lines": 64,
+        "type": "py"
+      },
+      {
+        "path": "id_matching/match_ids.py",
+        "lines": 41,
+        "type": "py"
+      },
+      {
+        "path": "id_matching/migrations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 991,
+    "file_count": 10,
+    "file_types": {
+      "py": 10
+    },
+    "has_tests": false,
+    "has_models": false,
+    "has_views": false,
+    "has_forms": false,
+    "has_urls": false,
+    "has_serializers": false,
+    "dependencies": [
+      "dataentry"
+    ]
+  },
+  "legal": {
+    "app_name": "legal",
+    "files": [
+      {
+        "path": "legal/migrations/0001_initial.py",
+        "lines": 416,
+        "type": "py"
+      },
+      {
+        "path": "legal/management/commands/importLegalCharge.py",
+        "lines": 404,
+        "type": "py"
+      },
+      {
+        "path": "legal/serializers.py",
+        "lines": 133,
+        "type": "py"
+      },
+      {
+        "path": "legal/models/legal.py",
+        "lines": 130,
+        "type": "py"
+      },
+      {
+        "path": "legal/views/legal_charge_form.py",
+        "lines": 114,
+        "type": "py"
+      },
+      {
+        "path": "legal/migrations/0004_remove_legalchargesuspect_police_case_or_court_case_and_more.py",
+        "lines": 32,
+        "type": "py"
+      },
+      {
+        "path": "legal/views/country_specific_charge.py",
+        "lines": 24,
+        "type": "py"
+      },
+      {
+        "path": "legal/migrations/0003_alter_legalcharge_form_entered_by.py",
+        "lines": 21,
+        "type": "py"
+      },
+      {
+        "path": "legal/migrations/0002_auto_20240113_0104.py",
+        "lines": 20,
+        "type": "py"
+      },
+      {
+        "path": "legal/models/__init__.py",
+        "lines": 2,
+        "type": "py"
+      },
+      {
+        "path": "legal/views/__init__.py",
+        "lines": 2,
+        "type": "py"
+      },
+      {
+        "path": "legal/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "legal/migrations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "legal/management/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "legal/management/commands/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 1298,
+    "file_count": 15,
+    "file_types": {
+      "py": 15
+    },
+    "has_tests": false,
+    "has_models": false,
+    "has_views": false,
+    "has_forms": false,
+    "has_urls": false,
+    "has_serializers": true,
+    "dependencies": [
+      "dataentry"
+    ]
+  },
+  "portal": {
+    "app_name": "portal",
+    "files": [
+      {
+        "path": "portal/views.py",
+        "lines": 39,
+        "type": "py"
+      },
+      {
+        "path": "portal/urls.py",
+        "lines": 6,
+        "type": "py"
+      },
+      {
+        "path": "portal/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "portal/migrations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "portal/tests/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 45,
+    "file_count": 5,
+    "file_types": {
+      "py": 5
+    },
+    "has_tests": true,
+    "has_models": false,
+    "has_views": true,
+    "has_forms": false,
+    "has_urls": true,
+    "has_serializers": false,
+    "dependencies": [
+      "dataentry"
+    ]
+  },
+  "rest_api": {
+    "app_name": "rest_api",
+    "files": [
+      {
+        "path": "rest_api/urls.py",
+        "lines": 215,
+        "type": "py"
+      },
+      {
+        "path": "rest_api/authentication_expansion.py",
+        "lines": 91,
+        "type": "py"
+      },
+      {
+        "path": "rest_api/authentication.py",
+        "lines": 52,
+        "type": "py"
+      },
+      {
+        "path": "rest_api/pagination.py",
+        "lines": 6,
+        "type": "py"
+      },
+      {
+        "path": "rest_api/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "rest_api/tests/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 364,
+    "file_count": 6,
+    "file_types": {
+      "py": 6
+    },
+    "has_tests": true,
+    "has_models": false,
+    "has_views": false,
+    "has_forms": false,
+    "has_urls": true,
+    "has_serializers": false,
+    "dependencies": [
+      "legal",
+      "help",
+      "dataentry"
+    ]
+  },
+  "static_border_stations": {
+    "app_name": "static_border_stations",
+    "files": [
+      {
+        "path": "static_border_stations/views.py",
+        "lines": 779,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/serializers.py",
+        "lines": 401,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/models.py",
+        "lines": 379,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/tests/test_border_station_api.py",
+        "lines": 294,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0007_auto_20240125_1952.py",
+        "lines": 228,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/tests/test_staff_api.py",
+        "lines": 120,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/tests/test_committee_member_api.py",
+        "lines": 120,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/tests/factories.py",
+        "lines": 113,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/tests/test_location_api.py",
+        "lines": 111,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0001_initial.py",
+        "lines": 61,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0005_auto_20230509_1732.py",
+        "lines": 51,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0010_staff_gender.py",
+        "lines": 48,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0006_auto_20230509_1733.py",
+        "lines": 46,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0002_auto_20200630_1809.py",
+        "lines": 42,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/urls.py",
+        "lines": 40,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0004_auto_20220316_1822.py",
+        "lines": 34,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/admin.py",
+        "lines": 30,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0003_auto_20200721_1709.py",
+        "lines": 28,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0009_staff_photo.py",
+        "lines": 18,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/0008_auto_20240304_1953.py",
+        "lines": 14,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/management/commands/setStaffTotals.py",
+        "lines": 11,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/migrations/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "static_border_stations/tests/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 2968,
+    "file_count": 24,
+    "file_types": {
+      "py": 24
+    },
+    "has_tests": true,
+    "has_models": true,
+    "has_views": true,
+    "has_forms": false,
+    "has_urls": true,
+    "has_serializers": true,
+    "dependencies": [
+      "rest_api",
+      "dataentry",
+      "accounts",
+      "budget"
+    ]
+  },
+  "util": {
+    "app_name": "util",
+    "files": [
+      {
+        "path": "util/auth0.py",
+        "lines": 411,
+        "type": "py"
+      },
+      {
+        "path": "util/functions.py",
+        "lines": 11,
+        "type": "py"
+      },
+      {
+        "path": "util/templatetags/unslugify.py",
+        "lines": 11,
+        "type": "py"
+      },
+      {
+        "path": "util/templatetags/times.py",
+        "lines": 8,
+        "type": "py"
+      },
+      {
+        "path": "util/date_.py",
+        "lines": 5,
+        "type": "py"
+      },
+      {
+        "path": "util/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "util/templatetags/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "util/management/__init__.py",
+        "lines": 0,
+        "type": "py"
+      },
+      {
+        "path": "util/management/commands/__init__.py",
+        "lines": 0,
+        "type": "py"
+      }
+    ],
+    "total_lines": 446,
+    "file_count": 9,
+    "file_types": {
+      "py": 9
+    },
+    "has_tests": false,
+    "has_models": false,
+    "has_views": false,
+    "has_forms": false,
+    "has_urls": false,
+    "has_serializers": false,
+    "dependencies": [
+      "accounts"
+    ]
+  }
+}

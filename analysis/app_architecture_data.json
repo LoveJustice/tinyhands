@@ -1,0 +1,1118 @@
+{
+  "accounts": {
+    "app_name": "accounts",
+    "architecture_issues": [
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      },
+      {
+        "issue": "Complex business logic in models",
+        "description": "Models contain complex methods that should be in a service layer.",
+        "impact": "Violates separation of concerns, makes testing harder."
+      },
+      {
+        "issue": "Complex business logic in views",
+        "description": "Views contain complex methods that should be in a service layer.",
+        "impact": "Violates separation of concerns, makes testing harder."
+      },
+      {
+        "issue": "Mixing function-based and class-based views",
+        "description": "The application mixes both view styles, which can be confusing.",
+        "impact": "Inconsistent patterns make code harder to understand and maintain."
+      }
+    ],
+    "missing_components": [
+      "forms.py",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [
+      "Business logic in models",
+      "Business logic in views",
+      "Mixed view styles"
+    ],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Standardize view implementations",
+          "description": "Convert all views to a consistent style (class-based or function-based).",
+          "effort": "Medium",
+          "benefits": [
+            "Improves code consistency",
+            "Makes codebase easier to understand"
+          ]
+        },
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Extract business logic from models",
+          "description": "Move complex methods and properties from models to appropriate service classes.",
+          "effort": "Medium",
+          "benefits": [
+            "Slimmer models",
+            "Better separation of concerns",
+            "Improved testability"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        },
+        {
+          "title": "Implement proper authentication service layer",
+          "description": "Refactor authentication logic into a dedicated service with clear interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Improved security",
+            "Better user management",
+            "Cleaner authentication flow"
+          ]
+        }
+      ]
+    }
+  },
+  "budget": {
+    "app_name": "budget",
+    "architecture_issues": [
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      },
+      {
+        "issue": "Too many models in a single file",
+        "description": "Found 11 model classes in models.py.",
+        "impact": "Indicates potential lack of proper domain separation and modularity."
+      },
+      {
+        "issue": "Complex business logic in models",
+        "description": "Models contain complex methods that should be in a service layer.",
+        "impact": "Violates separation of concerns, makes testing harder."
+      },
+      {
+        "issue": "Multiple high complexity functions",
+        "description": "Found 5 functions with high cyclomatic complexity.",
+        "impact": "Indicates code that is difficult to maintain and test."
+      },
+      {
+        "issue": "Multiple large files",
+        "description": "Found 7 files with excessive line counts.",
+        "impact": "Indicates poor modularity and separation of concerns."
+      }
+    ],
+    "missing_components": [
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [
+      "Business logic in models",
+      "Overuse of .values()"
+    ],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Extract business logic from models",
+          "description": "Move complex methods and properties from models to appropriate service classes.",
+          "effort": "Medium",
+          "benefits": [
+            "Slimmer models",
+            "Better separation of concerns",
+            "Improved testability"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        },
+        {
+          "title": "Reorganize models into domain modules",
+          "description": "Split models.py into multiple domain-specific modules with related models grouped together.",
+          "effort": "Large",
+          "benefits": [
+            "Improved organization",
+            "Better domain separation",
+            "Reduced file size"
+          ]
+        }
+      ]
+    }
+  },
+  "dataentry": {
+    "app_name": "dataentry",
+    "architecture_issues": [
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      },
+      {
+        "issue": "Multiple high complexity functions",
+        "description": "Found 65 functions with high cyclomatic complexity.",
+        "impact": "Indicates code that is difficult to maintain and test."
+      },
+      {
+        "issue": "Multiple large files",
+        "description": "Found 47 files with excessive line counts.",
+        "impact": "Indicates poor modularity and separation of concerns."
+      }
+    ],
+    "missing_components": [
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [
+      "Overuse of .values()"
+    ],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        },
+        {
+          "title": "Implement Command Query Responsibility Segregation (CQRS)",
+          "description": "Separate read and write operations for complex data flows.",
+          "effort": "Large",
+          "benefits": [
+            "Improved performance",
+            "Better scalability",
+            "Clearer data flow"
+          ]
+        }
+      ]
+    }
+  },
+  "events": {
+    "app_name": "events",
+    "architecture_issues": [
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      },
+      {
+        "issue": "Complex business logic in views",
+        "description": "Views contain complex methods that should be in a service layer.",
+        "impact": "Violates separation of concerns, makes testing harder."
+      }
+    ],
+    "missing_components": [
+      "forms.py",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [
+      "Business logic in views"
+    ],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        }
+      ]
+    }
+  },
+  "export_import": {
+    "app_name": "export_import",
+    "architecture_issues": [
+      {
+        "issue": "Missing tests directory",
+        "description": "No dedicated tests directory found.",
+        "impact": "Application may lack proper test coverage."
+      },
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      },
+      {
+        "issue": "Multiple high complexity functions",
+        "description": "Found 13 functions with high cyclomatic complexity.",
+        "impact": "Indicates code that is difficult to maintain and test."
+      },
+      {
+        "issue": "Multiple large files",
+        "description": "Found 6 files with excessive line counts.",
+        "impact": "Indicates poor modularity and separation of concerns."
+      }
+    ],
+    "missing_components": [
+      "tests",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [
+      "Overuse of .values()"
+    ],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        },
+        {
+          "title": "Implement Command Query Responsibility Segregation (CQRS)",
+          "description": "Separate read and write operations for complex data flows.",
+          "effort": "Large",
+          "benefits": [
+            "Improved performance",
+            "Better scalability",
+            "Clearer data flow"
+          ]
+        }
+      ]
+    }
+  },
+  "firebase": {
+    "app_name": "firebase",
+    "architecture_issues": [
+      {
+        "issue": "Missing tests directory",
+        "description": "No dedicated tests directory found.",
+        "impact": "Application may lack proper test coverage."
+      },
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      }
+    ],
+    "missing_components": [
+      "tests",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        }
+      ]
+    }
+  },
+  "help": {
+    "app_name": "help",
+    "architecture_issues": [
+      {
+        "issue": "Missing tests directory",
+        "description": "No dedicated tests directory found.",
+        "impact": "Application may lack proper test coverage."
+      },
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      }
+    ],
+    "missing_components": [
+      "tests",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        }
+      ]
+    }
+  },
+  "id_matching": {
+    "app_name": "id_matching",
+    "architecture_issues": [
+      {
+        "issue": "Missing tests directory",
+        "description": "No dedicated tests directory found.",
+        "impact": "Application may lack proper test coverage."
+      },
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      }
+    ],
+    "missing_components": [
+      "tests",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        }
+      ]
+    }
+  },
+  "legal": {
+    "app_name": "legal",
+    "architecture_issues": [
+      {
+        "issue": "Missing tests directory",
+        "description": "No dedicated tests directory found.",
+        "impact": "Application may lack proper test coverage."
+      },
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      }
+    ],
+    "missing_components": [
+      "tests",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        }
+      ]
+    }
+  },
+  "portal": {
+    "app_name": "portal",
+    "architecture_issues": [
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      },
+      {
+        "issue": "Complex business logic in views",
+        "description": "Views contain complex methods that should be in a service layer.",
+        "impact": "Violates separation of concerns, makes testing harder."
+      }
+    ],
+    "missing_components": [
+      "forms.py",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [
+      "Business logic in views"
+    ],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        }
+      ]
+    }
+  },
+  "rest_api": {
+    "app_name": "rest_api",
+    "architecture_issues": [
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      }
+    ],
+    "missing_components": [
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        }
+      ]
+    }
+  },
+  "static_border_stations": {
+    "app_name": "static_border_stations",
+    "architecture_issues": [
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      },
+      {
+        "issue": "Too many models in a single file",
+        "description": "Found 8 model classes in models.py.",
+        "impact": "Indicates potential lack of proper domain separation and modularity."
+      },
+      {
+        "issue": "Complex business logic in models",
+        "description": "Models contain complex methods that should be in a service layer.",
+        "impact": "Violates separation of concerns, makes testing harder."
+      },
+      {
+        "issue": "Complex business logic in views",
+        "description": "Views contain complex methods that should be in a service layer.",
+        "impact": "Violates separation of concerns, makes testing harder."
+      },
+      {
+        "issue": "Multiple large files",
+        "description": "Found 3 files with excessive line counts.",
+        "impact": "Indicates poor modularity and separation of concerns."
+      }
+    ],
+    "missing_components": [
+      "forms.py",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [
+      "Business logic in models",
+      "Business logic in views"
+    ],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Extract business logic from models",
+          "description": "Move complex methods and properties from models to appropriate service classes.",
+          "effort": "Medium",
+          "benefits": [
+            "Slimmer models",
+            "Better separation of concerns",
+            "Improved testability"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        },
+        {
+          "title": "Reorganize models into domain modules",
+          "description": "Split models.py into multiple domain-specific modules with related models grouped together.",
+          "effort": "Large",
+          "benefits": [
+            "Improved organization",
+            "Better domain separation",
+            "Reduced file size"
+          ]
+        }
+      ]
+    }
+  },
+  "util": {
+    "app_name": "util",
+    "architecture_issues": [
+      {
+        "issue": "Missing tests directory",
+        "description": "No dedicated tests directory found.",
+        "impact": "Application may lack proper test coverage."
+      },
+      {
+        "issue": "Missing service layer",
+        "description": "No service layer found to separate business logic from views/models.",
+        "impact": "Business logic is likely mixed with presentation logic in views or data access in models."
+      },
+      {
+        "issue": "Missing custom model managers",
+        "description": "No custom manager layer to abstract complex queries from models and views.",
+        "impact": "Complex queries likely embedded in views or scattered across the codebase."
+      }
+    ],
+    "missing_components": [
+      "tests",
+      "services.py",
+      "managers.py"
+    ],
+    "django_anti_patterns": [],
+    "implementation_timeline": {
+      "short_term": [
+        {
+          "title": "Add type hints to function signatures",
+          "description": "Add Python type hints to critical functions for better IDE support and documentation.",
+          "effort": "Small",
+          "benefits": [
+            "Improves code clarity",
+            "Reduces bugs",
+            "Better IDE support"
+          ]
+        }
+      ],
+      "medium_term": [
+        {
+          "title": "Implement service layer",
+          "description": "Create a service.py file to house business logic extracted from views and models.",
+          "effort": "Large",
+          "benefits": [
+            "Separation of concerns",
+            "Improves testability",
+            "Centralizes business logic"
+          ]
+        },
+        {
+          "title": "Implement custom model managers",
+          "description": "Create managers.py to encapsulate complex query logic and database operations.",
+          "effort": "Medium",
+          "benefits": [
+            "Query reusability",
+            "Cleaner models",
+            "Improved abstraction"
+          ]
+        }
+      ],
+      "long_term": [
+        {
+          "title": "Implement Domain-Driven Design principles",
+          "description": "Restructure app around business domains with clear boundaries and service interfaces.",
+          "effort": "Large",
+          "benefits": [
+            "Better alignment with business needs",
+            "Improved maintainability",
+            "Clearer architecture"
+          ]
+        }
+      ]
+    }
+  }
+}
