@@ -33,7 +33,10 @@ COUNTRY_CURRENCY_CODE_MAP = {
     "Uganda": "UGX",
     "United States": "USD",
     "Zambia": "ZMW",
-    "Zimbabwe": "ZWL"
+    # Zimbabwean Dollar retired in 2024
+    # Most transactions use USD
+    # We may eventually change this to new currency Zimbabwean Gold
+    "Zimbabwe": "USD"
 }
 
 
