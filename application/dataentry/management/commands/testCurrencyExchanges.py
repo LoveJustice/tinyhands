@@ -30,6 +30,7 @@ class Command(BaseCommand):
         for exchange in example_exchanges:
             date_in_iso = exchange.date_time_last_updated.date().isoformat()
             currency_symbol = exchange.country.currency_symbol
+            # show_ask_bid is another parameter I would like to use, but it increases cost of API from free to >$100/mo
             open_exchange_rates_response = requests.get(OPEN_EXCHANGE_RATES_HISTORICAL_BASE_URL + date_in_iso + '.json', params={'app_id': OPEN_EXCHANGE_RATES_APP_ID,
                                                                                                   'base': 'USD',
                                                                                                   'symbols': currency_symbol})
