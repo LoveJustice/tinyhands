@@ -14,8 +14,6 @@ from .holiday import Holiday
 from dataentry.models import BorderStation, Form, FormCategory, IntercepteeCommon, IrfCommon, IrfVerification, Person
 from budget.models import MonthlyDistributionForm
 
-from pip._vendor.pyparsing import results
-
 class IndicatorHistory(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     year = models.PositiveIntegerField('Year')
