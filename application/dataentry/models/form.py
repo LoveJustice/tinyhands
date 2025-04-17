@@ -598,4 +598,7 @@ class BaseCard(models.Model):
     
     def is_private(self):
         return False
-    
+
+    # May be overwritten in subclass to define a label for the card in validation messages
+    def validate_label(self):
+        return None

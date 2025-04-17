@@ -67,7 +67,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfNepal",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -81,7 +81,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfIndia",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -95,7 +95,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfIndiaNetwork",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -109,7 +109,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfGhana",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -123,7 +123,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfKenya",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -137,7 +137,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfSouthAfrica",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -151,7 +151,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfNamibia",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -165,7 +165,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfLiberia",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -179,7 +179,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfEthiopia",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -193,7 +193,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfBenin",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -207,7 +207,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfMalawi",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -221,7 +221,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfBurkinaFaso",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -235,7 +235,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfBurundi",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -249,7 +249,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfIndonesia",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -263,7 +263,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfLesotho",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -277,7 +277,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfMozambique",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -291,7 +291,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfUganda",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -305,7 +305,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfZambia",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -319,7 +319,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfEcuador",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -333,7 +333,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfArgentina",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -347,7 +347,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfZimbabwe",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -361,7 +361,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfSierraLeone",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -375,7 +375,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfRwanda",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -389,7 +389,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfTanzania",
-      "version": "V2022.6",
+      "version": "2022.06",
       "client_json": null,
       "use_tag_suffix": false,
       "stations": []
@@ -403,9 +403,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfBangladesh",
-      "version": "V2022.6",
-      "client_json": null,
-      "use_tag_suffix": false,
+      "version": "2022.06",
       "stations": []
    }
 },
@@ -417,9 +415,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfCambodia",
-      "version": "V2022.6",
-      "client_json": null,
-      "use_tag_suffix": false,
+      "version": "2022.06",
       "stations": []
    }
 },
@@ -431,9 +427,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfUSA",
-      "version": "V2022.6",
-      "client_json": null,
-      "use_tag_suffix": false,
+      "version": "2022.06",
       "stations": []
    }
 },
@@ -445,9 +439,7 @@
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfOpenSource",
-      "version": "V2022.6",
-      "client_json": null,
-      "use_tag_suffix": false,
+      "version": "2022.06",
       "stations": []
    }
 },
@@ -459,9 +451,7 @@
       "start_date": "2024-03-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfPhilippines",
-      "version": "V2022.6",
-      "client_json": null,
-      "use_tag_suffix": false,
+      "version": "2022.06",
       "stations": []
    }
 },
@@ -473,9 +463,7 @@
       "start_date": "2022-12-16T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfCommon202409",
-      "version": "V2024.9",
-      "client_json": null,
-      "use_tag_suffix": false,
+      "version": "2024.09",
       "stations": []
    }
 },
@@ -4923,10 +4911,412 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfInterviewDate",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Interview date must be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfInterviewerName",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Interviewer name must be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfSourceType",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Source must be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfSourceName",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Source name should be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfSourceContact",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Source contact info should be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfAddress",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Address should be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfExactPlace",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "\"Provide all the information needed...exact place.\" should be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfPlaceType",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Type of place should be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfPlaceRole",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Role of place in trafficking should be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfPvsViisited",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Names of PVs who have visited this place should be entered",
+      "params": {
+         "starting_version": "2024.09",
+         "override_category": "Associated People"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfSuspectsAssociated",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Suspects associated with this place... should be entered",
+      "params": {
+         "starting_version": "2024.09",
+         "override_category": "Associated People"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfPvHowLong",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "How long did PV(s) stay in place should be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfBelliefs",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Beliefs about this place should be entered",
+      "params": {
+         "starting_version": "2024.09",
+         "override_category": "Narrative"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfBelliefCards",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 3,
+      "error_warning_message": "Beliefs about this place at least one should be entered",
+      "params": {
+         "category_name": "Evaluation",
+         "starting_version": "2024.09",
+         "override_category": "Narrative"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfEvidence",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "What evidence is there that this place is connected to human trafficking should be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfCommon202409"
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": "lfDateRecived",
       "question": "lfComplianceDateReceived"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfInterviewDate",
+      "question": "lfInformationInterviewDate"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfInterviewerName",
+      "question": "lfInformationInterviewerName"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfSourceType",
+      "question": "lfInformationSourceType"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfSourceName",
+      "question": "lfInformationSourceTitle"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfSourceContact",
+      "question": "lfInformationSourceContactInfo"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfAddress",
+      "question": "lfInformationAddress"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfExactPlace",
+      "question": "lfInformationDescription"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfPlaceType",
+      "question": "lfInformationPlaceKind"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfPlaceRole",
+      "question": "lfInformationPlace"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfPvsViisited",
+      "question": "lfAssociationPvsVisited"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfSuspectsAssociated",
+      "question": "lfAssociationSuspects"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfPvHowLong",
+      "question": "lfAssociationPvsStayHowLong"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfBelliefs",
+      "question": "lfEvaluationEvaluatorType"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfBelliefs",
+      "question": "lfEvaluationEvaluatorName"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfBelliefs",
+      "question": "lfEvaluationEvaluation"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfEvidence",
+      "question": "lfNarrativeEvidence"
    }
 }
 ]

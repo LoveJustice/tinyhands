@@ -319,6 +319,13 @@
    }
 },
 {
+   "model": "dataentry.formvalidationtype",
+   "pk": 14,
+   "fields": {
+      "name": "interceptee_phone_verified"
+   }
+},
+{
    "model": "dataentry.storage",
    "pk": 63,
    "fields": {

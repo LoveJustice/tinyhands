@@ -147,21 +147,22 @@ STORAGES = {
     "filesystem": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
-    "mediabackups": {
-        "BACKEND": "storages.backends.azure_storage.AzureStorage",
-        "OPTIONS": {
-            # Try a bunch of different Azure login methods until one works
-            "token_credential": DefaultAzureCredential(),
-            # Ideally we would use Managed Identities instead
-            # https://mijailovic.net/2019/11/01/django-managed-identitites/
-            # Or we would use a Key Vault
-            # But it looks like it is quite a process to set up and I don't really understand it
-            "account_name": os.environ.get("AZURE_BACKUP_STORAGE_ACCOUNT_NAME"),
-            "account_key": os.environ.get("AZURE_BACKUP_ACCOUNT_KEY"),
-            # Create this in the Storage Browser of your Azure Storage Account before use
-            "azure_container": os.environ.get("AZURE_BACKUP_CONTAINER"),
-        },
-    },
+    # We are no longer backing up Linux, we are copying files from one Azure blob storage to another blob storage
+    # "mediabackups": {
+    #     "BACKEND": "storages.backends.azure_storage.AzureStorage",
+    #     "OPTIONS": {
+    #         # Try a bunch of different Azure login methods until one works
+    #         "token_credential": DefaultAzureCredential(),
+    #         # Ideally we would use Managed Identities instead
+    #         # https://mijailovic.net/2019/11/01/django-managed-identitites/
+    #         # Or we would use a Key Vault
+    #         # But it looks like it is quite a process to set up and I don't really understand it
+    #         "account_name": os.environ.get("AZURE_BACKUP_STORAGE_ACCOUNT_NAME"),
+    #         "account_key": os.environ.get("AZURE_BACKUP_ACCOUNT_KEY"),
+    #         # Create this in the Storage Browser of your Azure Storage Account before use
+    #         "azure_container": os.environ.get("AZURE_BACKUP_CONTAINER"),
+    #     },
+    # },
 }
 
 TEST_ENVIRONMENT = len(sys.argv) > 1 and sys.argv[1] == 'test'
