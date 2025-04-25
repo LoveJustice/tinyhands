@@ -1881,7 +1881,7 @@ irf_core: FormSpec = {
                         },
                         {
                             'base_question': base_question['irfVisaDoesntMatchPurpose'],
-                            'label': "Visa/Documents don't match true purpose",
+                            'label': "Visa/documents don't match true purpose",
                             'entry_type': 'checkbox',
                             'span': 24,
                             'total_question': [base_question['irfControlComputedTotal'],
@@ -1942,7 +1942,7 @@ irf_core: FormSpec = {
                         },
                         {
                             'base_question': base_question['irfPromisedPay'],
-                            'label': "Promised Pay",
+                            'label': "Promised pay",
                             'entry_type': 'text',
                             'span': 12,
                             'total_question': [],
@@ -1952,7 +1952,7 @@ irf_core: FormSpec = {
                         },
                         {
                             'base_question': base_question['irfNormalPay'],
-                            'label': "Normal Pay",
+                            'label': "Normal pay",
                             'entry_type': 'text',
                             'span': 12,
                             'total_question': [],
