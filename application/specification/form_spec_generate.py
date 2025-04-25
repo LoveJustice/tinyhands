@@ -260,6 +260,7 @@ def update_category(section: SectionSpec, tracking: FormSpecTracking):
                 "answer_type": answer_type,
                 "params": question["base_question"]['params'],
                 "export_name": question["base_question"]['export_name'],
+                "prompt": question["base_question"]['export_name'],
                 "export_params": question["base_question"]['export_params'],
             })
             if question['points'] is not None or question['options'] is not None or question[
