@@ -1,3 +1,0 @@
-# I dont think this is used anymore... delete the cron folder?
-# m h dom mon dow user	command
-0 * * * * root /data/bin/sync-media-from-s3.sh
