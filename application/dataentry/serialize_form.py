@@ -1,8 +1,7 @@
 import logging
-from typing import Optional, Union, List
+from typing import Optional
 
 import pytz
-import traceback
 from django.conf import settings
 from dateutil import parser
 from datetime import datetime
@@ -21,7 +20,6 @@ from dataentry.models.match_history import MatchHistory, MatchAction
 from .form_data import FormData, CardData, PersonContainer
 from .models import Incident
 from .validate_form import ValidateForm
-import xxsubtype
 
 logger = logging.getLogger(__name__)
 
