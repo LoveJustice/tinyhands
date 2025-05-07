@@ -44,7 +44,7 @@ else
   bodyHTML="<p> $mailtext </p>"
   maildata='{
       "api_key": "'${api_key}'",
-      "to": ["Brad Wells <brad@lovejustice.ngo>"],
+      "to": ["Searchlight Support <support@searchlightdata.org>"],
       "sender": "Searchlight '${env}' Cron Alerts <system+'${env}'@lovejustice.ngo>",
       "subject": "[Searchlight -'${env}'] clone file backups cron failed",
       "html_body": "'${bodyHTML}'"
@@ -81,7 +81,7 @@ if [ $AZ_COPY_STATUS -ne 0 ]
   bodyHTML="<p> $mailtext </p>"
   maildata='{
       "api_key": "'${api_key}'",
-      "to": ["Brad Wells <brad@lovejustice.ngo>"],
+      "to": ["Searchlight Support <support@searchlightdata.org>"],
       "sender": "Searchlight '${env}' Cron Alerts <system+'${env}'@lovejustice.ngo>",
       "subject": "[Searchlight - '${env}'] clone file backups cron failed",
       "html_body": "'${bodyHTML}'"
