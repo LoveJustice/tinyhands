@@ -1,6 +1,9 @@
+#!/bin/bash
+# Determined just by echoing PATH with THI user under bash and removing "games" paths
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:
+
 # THIS IS RUN BY A CRONTAB!!
 
-# Assumes remote has bash... https://unix.stackexchange.com/a/129401
 while getopts ":e::k:" opt; do
   case $opt in
     e) env="$OPTARG"
@@ -41,7 +44,7 @@ else
   bodyHTML="<p> $mailtext </p>"
   maildata='{
       "api_key": "'${api_key}'",
-      "to": ["Brad Wells <brad@lovejustice.ngo>"],
+      "to": ["Searchlight Support <support@searchlightdata.org>"],
       "sender": "Searchlight '${env}' Cron Alerts <system+'${env}'@lovejustice.ngo>",
       "subject": "[Searchlight -'${env}'] clone file backups cron failed",
       "html_body": "'${bodyHTML}'"
@@ -78,7 +81,7 @@ if [ $AZ_COPY_STATUS -ne 0 ]
   bodyHTML="<p> $mailtext </p>"
   maildata='{
       "api_key": "'${api_key}'",
-      "to": ["Brad Wells <brad@lovejustice.ngo>"],
+      "to": ["Searchlight Support <support@searchlightdata.org>"],
       "sender": "Searchlight '${env}' Cron Alerts <system+'${env}'@lovejustice.ngo>",
       "subject": "[Searchlight - '${env}'] clone file backups cron failed",
       "html_body": "'${bodyHTML}'"
