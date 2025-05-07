@@ -15,7 +15,7 @@ MIDDLEWARE += [
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-ADMINS = [('Ben Duggan', 'benaduggan@gmail.com'), ('Austin Munn', "austin@tinyhands.org"), ("Stan Rishel", "scrishel@sbcglobal.net")]
+ADMINS = [('LJI System Errors', 'systemerrors@lovejustice.ngo')]
 
 IMPORT_ACCOUNT_EMAIL = 'ashishm@tinyhands.org'
 SPREADSHEET_CONFIG = {
