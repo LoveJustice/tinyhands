@@ -2,11 +2,7 @@ from django.test import TestCase
 from accounts.serializers import AccountsSerializer
 from rest_framework import serializers
 from accounts.tests.factories import SuperUserDesignation
-from dreamsuite.test_email_backend import SMTP_ERROR_EMAIL
-from django.test.utils import override_settings
 
-
-@override_settings(EMAIL_BACKEND="dreamsuite.test_email_backend.EmailBackend")
 class TestAccountsSerializer(TestCase):
     def setUp(self):
         self.serializer = AccountsSerializer()
@@ -41,6 +37,7 @@ class TestAccountsSerializer(TestCase):
         self.assertEqual(account.email, self.testUserInfo["email"])
 
     def test_create_with_invalid_email(self):
-        self.testUserInfo["email"] = SMTP_ERROR_EMAIL
-        with self.assertRaises(serializers.ValidationError):
-            self.serializer.create(self.testUserInfo)
+        self.testUserInfo["email"] = "invalid@smtperror.com"
+        # It works anyway, no email checking anymore
+        account = self.serializer.create(self.testUserInfo)
+        self.assertEqual(account.email, self.testUserInfo["email"])
