@@ -10,6 +10,7 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 SITE_DOMAIN = os.environ['SITE_DOMAIN']
 CLIENT_DOMAIN = os.environ['CLIENT_DOMAIN']
+REACT_CLIENT_DOMAIN = os.environ['REACT_CLIENT_DOMAIN']
 FCM_KEY_PATH = os.environ['FCM_KEY_PATH']
 
 BASE_DIR = Path(__file__).ancestor(3)

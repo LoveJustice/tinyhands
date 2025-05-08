@@ -316,7 +316,7 @@ class ProjectRequestDiscussionViewSet(viewsets.ModelViewSet):
             context = {}
             context['staff'] = account.get_full_name()
             context['Comment_user'] = request.user.get_full_name()
-            context['url'] = settings.CLIENT_DOMAIN +'/reviewProjectRequests?id=' + str(discussion.request.id)
+            context['url'] = settings.REACT_CLIENT_DOMAIN + '/project-request/' + str(discussion.request.id) + '/edit'
             context['Project'] = discussion.request.project.station_name
             context['Category'] = category_name
             context['Description'] = discussion.request.description
