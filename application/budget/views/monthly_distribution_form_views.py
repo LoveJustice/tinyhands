@@ -97,7 +97,8 @@ def get_national_values(country, year, month):
             monthlydistributionform__month_year__month=month,
         )
         .filter(
-            ~Q(status='Approved-Completed', completed_date_time__lt=filter_date_time)
+            Q(status='Approved') |
+            Q(status='Approved-Completed', completed_date_time__gte=filter_date_time)
         )
     )
 
@@ -311,7 +312,8 @@ def get_mdf_project_values(mdf, project):
             project=project,
         )
         .filter(
-            ~Q(status='Approved-Completed', completed_date_time__lt=mdf.month_year)
+            Q(status='Approved') |
+            Q(status='Approved-Completed', completed_date_time__gte=mdf.month_year)
         )
     )
     
