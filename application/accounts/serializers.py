@@ -8,12 +8,9 @@ class AccountsSerializer(serializers.ModelSerializer):
     user_designation_name = serializers.SerializerMethodField(read_only=True)
 
     def create(self, validated_data):
-        account = Account.objects.create(**validated_data)
-        try:
-            account.send_activation_email('activate')
-        except:
-            account.delete()
-            raise serializers.ValidationError({'email': ["Email address is invalid"]})
+        # Assumes all email addresses are valid.
+        # You should probably be creating emails through Auth0 syncing and not manually through the django UI
+        account: Account = Account.objects.create(**validated_data)
         return account
 
     def get_user_designation_name(self, obj):

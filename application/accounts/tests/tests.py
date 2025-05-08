@@ -1,6 +1,6 @@
 import unittest
 
-from accounts.models import Alert
+from accounts.models import Alert, Account
 from accounts.tests.factories import SuperUserFactory
 from django.core import mail
 
@@ -58,10 +58,3 @@ class AccountTest(unittest.TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, subject)
         self.assertEqual(mail.outbox[0].to[0], account.email)
-
-    def test_send_activation_email(self):
-        account = SuperUserFactory.create()
-
-        account.send_activation_email('activate')
-
-        self.assertEqual(mail.outbox[1].to[0], account.email)

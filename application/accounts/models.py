@@ -159,22 +159,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
             context=context
         )
 
-    def send_activation_email(self, email_type):
-        if email_type == 'reset':
-            template = 'reset_password_link'
-        else:
-            template = 'new_user_password_link'
-        activation_url = settings.CLIENT_DOMAIN + '/account/activate/' + self.activation_key
-        send_templated_mail(
-            template_name=template,
-            from_email=settings.ADMIN_EMAIL_SENDER,
-            recipient_list=[self.email],
-            context={
-                'activation_url': activation_url,
-                'account': self,
-            }
-        )
-
 
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):
