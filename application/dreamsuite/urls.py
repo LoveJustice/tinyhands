@@ -28,7 +28,6 @@ urlpatterns = [
 
     re_path(r'^login/$', auth_views.LoginView.as_view(), {'template_name': 'login.html'}, name='login'),
     re_path(r'^logout/$', auth_views.logout_then_login, name='logout'),
-    re_path(r'^api-token-auth/', account_views.ObtainExpiringAuthToken.as_view()),
 
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^interceptee_fuzzy_matching/', dataentry_views.interceptee_fuzzy_matching, name='interceptee_fuzzy_matching'),
