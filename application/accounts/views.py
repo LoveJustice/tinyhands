@@ -27,32 +27,6 @@ from rest_api.authentication import HasPermission
 
 logger = logging.getLogger(__name__)
 
-
-@login_required
-def home(request):
-    return render(request, 'home.html', locals())
-
-
-class AccountActivateClient(APIView):
-    def get(self, request, activation_key=None):
-        account = Account.objects.get(activation_key=activation_key)
-        if account and account.has_usable_password():
-            return HttpResponse("account_already_active/invalid_key")
-        serializer = AccountsSerializer(account)
-        return Response(serializer.data)
-
-    def post(self, request, activation_key=None):
-        account = Account.objects.get(activation_key=activation_key)
-        if account and account.has_usable_password():
-            return HttpResponse("account_already_active/invalid_key")
-        elif request.data['password1'] != request.data['password2']:
-            return HttpResponse("unmatching_passwords")
-        else:
-            account.set_password(request.data['password1'])
-            account.save()
-            return HttpResponse("account_saved")
-
-
 class AccountViewSet(ModelViewSet):
     queryset = Account.objects.filter(is_active=True)
     serializer_class = AccountsSerializer
@@ -94,31 +68,6 @@ class AccountNameViewSet(ModelViewSet):
             account_name = ''
         return Response(account_name)
 
-
-@api_view(['POST'])
-def password_reset(request):
-    try:
-        # Check if the email belongs to one of the accounts in the database
-        email = request.data.get('email','')
-        if email == '':
-            return Response({"message": "An email was not included in the request!"}, HTTP_400_BAD_REQUEST)
-
-        account = Account.objects.filter(email=email).first()
-        if not account:
-            return Response({"message": "An account with that email was not found!"}, HTTP_404_NOT_FOUND)
-
-        # Set unusable password and Generate new activation key
-        account.set_unusable_password()
-        account.activation_key = make_activation_key()
-        account.save()
-
-        # Send an activation email to the email
-        account.send_activation_email('reset')
-        return Response({"message": "Email sent!"}, HTTP_200_OK)
-    except:
-        return Response({"message": "There was a problem sending the email, please try again!"}, HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 class DefaultPermissionsSetViewSet(ModelViewSet):
     queryset = DefaultPermissionsSet.objects.all()
     serializer_class = DefaultPermissionsSetSerializer
@@ -141,54 +90,6 @@ class CurrentUserView(APIView):
     def get(self, request):
         serializer = AccountsSerializer(request.user)
         return Response(serializer.data)
-
-
-class ResendActivationEmailView(APIView):
-    permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_accounts_manage']
-
-    def post(self, request, pk=None):
-        email_sent = False
-        account = get_object_or_404(Account, pk=pk)
-        if not account.has_usable_password():
-            account.send_activation_email('activate')
-            email_sent = True
-        return Response(email_sent)
-
-class Logout(APIView):
-    def get(self, request):
-        if hasattr(request.user, 'auth_token'):
-            request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
-
-class ObtainExpiringAuthToken(ObtainAuthToken):
-
-    model = ExpiringToken
-
-    def post(self, request):
-        """Respond to POSTed username/password with token."""
-        serializer = AuthTokenSerializer(data=request.data)
-
-        if serializer.is_valid():
-            token, _ = ExpiringToken.objects.get_or_create(
-                user=serializer.validated_data['user']
-            )
-
-            if token.expired():
-                # If the token is expired, generate a new one.
-                token.delete()
-                token = ExpiringToken.objects.create(
-                    user=serializer.validated_data['user']
-                )
-
-            login(request, serializer.validated_data['user'], None)
-            data = {
-                'token': token.key,
-                'sessionid': request.session.session_key
-            }
-            return Response(data)
-
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 class AuthenticateRequest(APIView):
     permission_classes = [IsAuthenticated]
