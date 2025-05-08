@@ -1,4 +1,5 @@
 import datetime
+from typing import List
 from dateutil.relativedelta import relativedelta
 from rest_framework import viewsets, status
 from rest_framework import serializers
@@ -85,31 +86,33 @@ def get_national_values(country, year, month):
     else:
         exchange = Decimal(1.0)
 
-    total = 0
     filter_date_time = datetime.datetime(year, month, 15, 0, 0, 0, 0, datetime.timezone.utc)
-    for category in request_categories:
-        subtotal = Decimal(0)
-        requests = ProjectRequest.objects.filter(
-            category=category,
+
+    requests: List[ProjectRequest] = list(
+        ProjectRequest.objects
+        .filter(
+            category__in=request_categories,
             project__operating_country=country,
             monthlydistributionform__month_year__year=year,
-            monthlydistributionform__month_year__month=month).exclude(benefit_type_name='Deductions')
-        for request in requests:
-            if not (request.status == 'Approved-Completed' and request.completed_date_time < filter_date_time):
-                subtotal += request.cost
+            monthlydistributionform__month_year__month=month,
+        )
+        .filter(
+            ~Q(status='Approved-Completed', completed_date_time__lt=filter_date_time)
+        )
+    )
+
+    total = Decimal(0)
+    for category in request_categories:
+        category_requests = [r for r in requests if r.category == category and r.benefit_type_name != 'Deductions']
+
+        subtotal = Decimal(0)
+        subtotal += sum(r.cost for r in category_requests)
 
         if category == constants.STAFF_BENEFITS:
-            deductions = ProjectRequest.objects.filter(
-                category=category,
-                project__operating_country=country,
-                benefit_type_name='Deductions',
-                monthlydistributionform__month_year__year=year,
-                monthlydistributionform__month_year__month=month)
-            for deduction in deductions:
-                if not (deduction.status == 'Approved-Completed' and
-                        deduction.completed_date_time < filter_date_time):
-                    subtotal -= deduction.cost
-            
+            deduction_requests = [r for r in requests if r.category == category and r.benefit_type_name == 'Deductions']
+            total_deductions = sum(d.cost for d in deduction_requests)
+            subtotal -= total_deductions
+
         total += subtotal
         result[category] = {'local':subtotal, 'USD':round(subtotal/exchange,2)}
     
@@ -300,20 +303,30 @@ def get_mdf_project_values(mdf, project):
         person__role = 'PVOT'
         ).exclude(interception_record__verified_evidence_categorization__startswith='Should not')
     results['intercepts'] = len(interceptions)
+
+    requests: List[ProjectRequest] = list(
+        mdf.requests
+        .filter(
+            category__in=request_categories,
+            project=project,
+        )
+        .filter(
+            ~Q(status='Approved-Completed', completed_date_time__lt=mdf.month_year)
+        )
+    )
     
     total = Decimal(0)
     for category in request_categories:
-        requests = mdf.requests.filter(category=category, project=project).exclude(benefit_type_name='Deductions')
+        category_requests = [r for r in requests if r.category == category and r.benefit_type_name != 'Deductions']
+
         subtotal = Decimal(0)
-        for request in requests:
-            if not (request.status == 'Approved-Completed' and request.completed_date_time < mdf.month_year):
-                subtotal += request.cost
+        subtotal += sum(r.cost for r in category_requests)
 
         if category == constants.STAFF_BENEFITS:
-            deductions = mdf.requests.filter(category=category, project=project, benefit_type_name='Deductions')
-            for request in deductions:
-                if not (request.status == 'Approved-Completed' and request.completed_date_time < mdf.month_year):
-                    subtotal -= request.cost
+            category_deductions = [r for r in requests if r.category == category and r.benefit_type_name == 'Deductions']
+
+            total_deductions = sum(r.cost for r in category_deductions)
+            subtotal -= total_deductions
 
         results[category] = {'local': subtotal, 'USD': round(subtotal/exchange,2)}
         total += subtotal
@@ -675,6 +688,5 @@ class MdfItemViewSet(viewsets.ModelViewSet):
     ordering_fields = ['category', 'description', 'work_project']
     ordering = ['work_project']
 
-        
         
         
