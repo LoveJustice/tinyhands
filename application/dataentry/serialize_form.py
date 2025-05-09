@@ -9,7 +9,6 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 
-from dataentry.file_name_helpers import remove_hidden_whitespace_characters
 from dataentry.models.addresses import Address1, Address2
 from dataentry.models.border_station import BorderStation
 from dataentry.models.form import Answer, Category, Form, FormCategory, Question, QuestionLayout
@@ -421,11 +420,7 @@ class ResponseImageSerializer(serializers.Serializer):
         else:
             subdirectory = ''
         if isinstance(data,dict) and 'value' in data and isinstance(data['value'],dict) and 'name' in data['value']:
-            file_name = data['value']['name']
-
-            file_name = remove_hidden_whitespace_characters(file_name)
-
-            self.image_name = subdirectory + file_name
+            self.image_name = subdirectory + data['value']['name']
         else:
             
             self.image_name = None

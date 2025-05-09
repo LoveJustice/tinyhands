@@ -14,7 +14,6 @@ from django.core.files.storage import default_storage
 from django.db import IntegrityError
 from django.db.models import Q
 from django.db import transaction
-from dataentry.file_name_helpers import remove_hidden_whitespace_characters
 from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer
 from dataentry.dataentry_signals import form_done
@@ -115,9 +114,6 @@ class BaseFormViewSet(viewsets.ModelViewSet):
     def save_files(self, files, subdirectory):
         for file_obj in files:
             filename = file_obj.name
-
-            filename = remove_hidden_whitespace_characters(filename)
-
             with default_storage.open(subdirectory + filename, 'wb+') as destination:
                 for chunk in file_obj.chunks():
                     destination.write(chunk)
