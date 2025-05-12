@@ -2,6 +2,7 @@ from django.urls import reverse
 from storages.backends.azure_storage import AzureStorage
 import re
 
+# WARN: These rules must match Azure's blob naming rules
 def remove_hidden_whitespace_characters(string: str):
     """
     Removes the following Unicode characters:
