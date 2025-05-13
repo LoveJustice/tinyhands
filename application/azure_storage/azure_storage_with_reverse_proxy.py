@@ -11,8 +11,9 @@ def remove_hidden_whitespace_characters(string: str):
       - Zero-width non-joiner (\u200C)
       - Zero-width joiner (\u200D)
       - Zero-width no-break space (\uFEFF)
+      - Narrow no-break space (\u202F)
     """
-    pattern = r'[\u00A0\u200B\u200C\u200D\uFEFF]'
+    pattern = r'[\u00A0\u200B\u200C\u200D\uFEFF\u202F]'
     return re.sub(pattern, '', string)
 
 class AzureStorageWithReverseProxy(AzureStorage):
