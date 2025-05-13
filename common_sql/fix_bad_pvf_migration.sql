@@ -61,20 +61,12 @@ update dataentry_vdfcommon pvf_to_update set date_time_last_updated = now(), whe
         and pvf.where_victim_sent = 'Government agency'
 );
 
-
-select pvf.share_gospel_resource, pvf.share_gospel_tract, pvf.share_gospel_film, pvf.share_gospel_oral, pvf.share_gospel_other from dataentry_vdfcommon pvf
-left join public.dataentry_borderstation db on pvf.station_id = db.id
-left join public.dataentry_country dc on db.operating_country_id = dc.id
-where dc.name in ('Rwanda', 'South Africa', 'Sierra Leone')
-and not pvf.share_gospel_film and not pvf.share_gospel_tract and pvf.share_gospel_other = '' and pvf.share_gospel_resource
-
--- Shouldn't have to run this one
--- update dataentry_vdfcommon pvf_to_update set date_time_last_updated = now(), share_gospel_resource = False
---     where pvf_to_update.id in (
---         select pvf.id from dataentry_vdfcommon pvf
---         left join public.dataentry_borderstation db on pvf.station_id = db.id
---         left join public.dataentry_country dc on db.operating_country_id = dc.id
---         where dc.name in ('Rwanda', 'South Africa', 'Sierra Leone')
---         and not pvf.share_gospel_film and not pvf.share_gospel_tract and pvf.share_gospel_other = '' and pvf.share_gospel_resource
--- );
+update dataentry_vdfcommon pvf_to_update set date_time_last_updated = now(), share_gospel_resource = False
+    where pvf_to_update.id in (
+        select pvf.share_gospel_resource, pvf.share_gospel_tract, pvf.share_gospel_film, pvf.share_gospel_oral, pvf.share_gospel_other from dataentry_vdfcommon pvf
+        left join public.dataentry_borderstation db on pvf.station_id = db.id
+        left join public.dataentry_country dc on db.operating_country_id = dc.id
+        where dc.name in ('Rwanda', 'South Africa', 'Sierra Leone')
+        and not pvf.share_gospel_film and not pvf.share_gospel_tract and pvf.share_gospel_other = '' and pvf.share_gospel_resource
+);
 
