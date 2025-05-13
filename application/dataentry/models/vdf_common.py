@@ -144,6 +144,7 @@ class VdfCommon(BaseForm):
     service_travel_support = models.BooleanField('Travel Support', default=False)
     service_food = models.BooleanField('Food', default=False)
     service_safe_foreign_employment = models.BooleanField('Safe Foreign Employment Info', default=False)
+    service_none = models.BooleanField('None', default=False)
     country_pv_sent = models.CharField('What country was the PV sent back to?', max_length=126, null=True)
     pv_spent_time_at_shelter = models.CharField('Did the PV spend time at LJ’s short-term shelter?', max_length=126, null=True)
     shelter_nights = models.PositiveIntegerField('nights', null=True, blank=True)

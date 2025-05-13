@@ -333,12 +333,31 @@ class Command(BaseCommand):
         pvfs = VdfCommon.objects.filter(station__operating_country=country)
         for pvf in pvfs:
             modified = False
-            if pvf.share_gospel_film or pvf.share_gospel_tract or pvf.share_gospel_oral or pvf.share_gospel_other:
+            if pvf.share_gospel_film or pvf.share_gospel_tract or pvf.share_gospel_other:
                 pvf.share_gospel_resource = True
                 modified = True
 
             if pvf.how_pv_released == 'Someone came to pick the PV up from the station/shelter':
-                pvf.how_pv_released = 'Someone came to station/shelter to pick up the PV'
+                pvf.how_pv_released = 'Someone else picked up the PV from staff care'
+                modified = True
+            elif pvf.how_pv_released == 'Staff arranged transportation for the PV to travel alone':
+                pvf.how_pv_released = 'Staff arranged transport for the PV to go alone'
+                modified = True
+            elif pvf.how_pv_released == 'Staff accompanied the PV during travel':
+                pvf.how_pv_released = 'Staff took PV to the next place'
+                modified = True
+
+            if pvf.where_victim_sent == 'Home to stay with guardians':
+                pvf.where_victim_sent = 'Home (back to permanent residence)'
+                modified = True
+            elif pvf.where_victim_sent == 'Sent to stay with other relatives':
+                pvf.where_victim_sent = 'Residence of other relatives'
+                modified = True
+            elif pvf.where_victim_sent == 'Sent to Partner Organization':
+                pvf.where_victim_sent = 'Partner organization or another NGO'
+                modified = True
+            elif pvf.where_victim_sent == 'Government agency':
+                pvf.where_victim_sent = 'Government Agency'
                 modified = True
 
             if pvf.overnight_lodging == 'Yes':

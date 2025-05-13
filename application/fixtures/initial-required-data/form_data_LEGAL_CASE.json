@@ -1998,23 +1998,6 @@
 {
    "model": "dataentry.formvalidation",
    "fields": {
-      "form_tag": "lcDateLastContacted",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Date last contacted should be provided",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         "legalCaseCommon"
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "fields": {
       "form_tag": "lcAtLeastOneCourtCase",
       "level": 3,
       "trigger": null,
@@ -2323,13 +2306,6 @@
    "fields": {
       "validation": "lcHumanTraffickingNarrative",
       "question": "lcHumanTrafficking"
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": "lcDateLastContacted",
-      "question": "lcDateLastContacted"
    }
 },
 {

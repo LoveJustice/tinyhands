@@ -5370,6 +5370,18 @@
    }
 },
 {
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "pvfReleaseNone",
+      "prompt": "None",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Service None",
+      "export_params": null
+   }
+},
+{
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "pvfTopPvfNumber",
@@ -7487,6 +7499,15 @@
    }
 },
 {
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "pvfReleaseNone",
+      "category": "pvfRelease202408",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
    "model": "dataentry.questionstorage",
    "fields": {
       "question": "pvfTopPvfNumber",
@@ -8362,6 +8383,13 @@
    }
 },
 {
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "pvfReleaseNone",
+      "field_name": "service_none"
+   }
+},
+{
    "model": "dataentry.formvalidation",
    "fields": {
       "form_tag": "pvfDateRecived",
@@ -8376,8 +8404,6 @@
       "retrieve": false,
       "update": true,
       "forms": [
-         "pvfPhilippines",
-         "pvfCommon202408",
          "pvfNepal",
          "pvfIndia",
          "pvfIndiaNetwork",
@@ -8405,7 +8431,9 @@
          "pvfBangladesh",
          "pvfCambodia",
          "pvfUSA",
-         "pvfOpenSource"
+         "pvfOpenSource",
+         "pvfPhilippines",
+         "pvfCommon202408"
       ]
    }
 },
@@ -9095,11 +9123,11 @@
    "model": "dataentry.formvalidation",
    "fields": {
       "form_tag": "pvfServicesProvided",
-      "level": 3,
+      "level": 2,
       "trigger": null,
       "trigger_value": null,
       "validation_type": 2,
-      "error_warning_message": "\"What services were provided to the PV?\" should be entered",
+      "error_warning_message": "\"What services were provided to the PV?\" must be entered",
       "params": {
          "starting_version": "2024.08"
       },
@@ -9475,6 +9503,13 @@
    "fields": {
       "validation": "pvfSomeoneRecruit",
       "question": "pvfRecruitmentRecrutedBroker"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "pvfServicesProvided",
+      "question": "pvfReleaseNone"
    }
 }
 ]

@@ -1,8 +1,7 @@
 import logging
-from typing import Optional, Union, List
+from typing import Optional
 
 import pytz
-import traceback
 from django.conf import settings
 from dateutil import parser
 from datetime import datetime
@@ -20,7 +19,6 @@ from dataentry.models.match_history import MatchHistory, MatchAction
 from .form_data import FormData, CardData, PersonContainer
 from .models import Incident
 from .validate_form import ValidateForm
-import xxsubtype
 
 logger = logging.getLogger(__name__)
 
@@ -907,7 +905,7 @@ class QuestionResponseSerializer(serializers.Serializer):
             try:
                 question = Question.objects.get(form_tag=question_tag)
             except Question.DoesNotExist:
-                raise NameError('Question with tag ' + question_tag + ' does not exist');
+                raise NameError('Question with tag ' + question_tag + ' does not exist, is formData.json right? Did you load it?')
         else:
             question = Question.objects.get(id=int(question_id))
         storage_id = data.get('storage_id')
@@ -1254,7 +1252,7 @@ class FormDataSerializer(serializers.Serializer):
             self.context['form_version'] = '.' + form.version
         else:
             self.context['form_version'] = ''
-        
+
         responses = data.get('responses')
         self.form_serializers = []
         for response in responses:
