@@ -126,7 +126,7 @@ def get_national_values(country, year, month):
     if past_sent is None:
         past_sent = Decimal(0)
     total += past_sent
-    result[constants.PAST_MONTH_SENT] = {'local':subtotal, 'USD':round(subtotal/exchange,2)}
+    result[constants.PAST_MONTH_SENT] = {'local':past_sent, 'USD':round(past_sent/exchange,2)}
     
     subtotal = MdfItem.objects.filter(
         category=constants.MONEY_NOT_SPENT,
