@@ -9140,7 +9140,7 @@
    "model": "dataentry.formvalidation",
    "fields": {
       "form_tag": "pvfHowReleased",
-      "level": 3,
+      "level": 2,
       "trigger": null,
       "trigger_value": null,
       "validation_type": 1,
@@ -9159,11 +9159,11 @@
    "model": "dataentry.formvalidation",
    "fields": {
       "form_tag": "pvfCountrySent",
-      "level": 3,
+      "level": 2,
       "trigger": null,
       "trigger_value": null,
       "validation_type": 1,
-      "error_warning_message": "\"What country was the PV sent back to?\" should be entered",
+      "error_warning_message": "\"What country was the PV sent back to?\" must be entered",
       "params": {
          "starting_version": "2024.08"
       },
