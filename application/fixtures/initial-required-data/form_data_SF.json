@@ -5204,7 +5204,7 @@
       "trigger": null,
       "trigger_value": null,
       "validation_type": 1,
-      "error_warning_message": "Reason for hessitation/concern should be entered",
+      "error_warning_message": "Reason for hesitation/concern should be entered",
       "params": {
          "starting_version": "2024.09"
       },
