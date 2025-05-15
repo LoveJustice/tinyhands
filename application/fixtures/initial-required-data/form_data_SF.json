@@ -5311,6 +5311,25 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "sfLegalWhatCausedWilling",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "\"If willing, what caused them?\" should be entered",
+      "params": {
+         "starting_version": "2024.09"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "sfCommon202409"
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": "legalCaseArrested",
@@ -5497,6 +5516,13 @@
    "fields": {
       "validation": "sfWhatMakePoliceWilling",
       "question": "sfLegalWhatNeededForArrest"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "sfLegalWhatCausedWilling",
+      "question": "sfLegalWhatCausedWilling"
    }
 }
 ]
