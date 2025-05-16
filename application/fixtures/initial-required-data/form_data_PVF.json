@@ -380,6 +380,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "pvfCommon202408",
       "version": "2024.08",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -5384,8 +5386,8 @@
    "fields": {
       "question": "pvfTopPvfNumber",
       "category": "pvfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5393,8 +5395,8 @@
    "fields": {
       "question": "pvfTopInterviewer",
       "category": "pvfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5402,8 +5404,8 @@
    "fields": {
       "question": "pvfTopInterviewDate",
       "category": "pvfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5411,8 +5413,8 @@
    "fields": {
       "question": "pvfTopLocation",
       "category": "pvfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5420,8 +5422,8 @@
    "fields": {
       "question": "pvfPvInfoPv",
       "category": "pvfPvFamily",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5429,8 +5431,8 @@
    "fields": {
       "question": "pvfRecruitmentRecrutedNo",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5438,8 +5440,8 @@
    "fields": {
       "question": "pvfRecruitmentAgency",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5447,8 +5449,8 @@
    "fields": {
       "question": "pvfRecruitmentBroker",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5456,8 +5458,8 @@
    "fields": {
       "question": "pvfRecruitmentHowRecruited",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5465,8 +5467,8 @@
    "fields": {
       "question": "pvfRecruitmentTravelExpenses",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5474,8 +5476,8 @@
    "fields": {
       "question": "pvfRecruitmentPvCurrency",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5483,8 +5485,8 @@
    "fields": {
       "question": "pvfRecruitmentPvAmount",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5492,8 +5494,8 @@
    "fields": {
       "question": "pvfRecruitmentBrokerCurrency",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5501,8 +5503,8 @@
    "fields": {
       "question": "pvfRecruitmentBrokerAmount",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5510,8 +5512,8 @@
    "fields": {
       "question": "pvfRecruitmentDateLeftHome",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5519,8 +5521,8 @@
    "fields": {
       "question": "pvfRecruitmentJobPromised",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5528,8 +5530,8 @@
    "fields": {
       "question": "pvfRecruitmentPromisedCurrency",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5537,8 +5539,8 @@
    "fields": {
       "question": "pvfRecruitmentPromisedAmount",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5546,8 +5548,8 @@
    "fields": {
       "question": "pvfTravelHow",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5555,8 +5557,8 @@
    "fields": {
       "question": "pvfTravelWouldBeTrafficked",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5564,8 +5566,8 @@
    "fields": {
       "question": "pvfTravelProstitutionYearsAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5573,8 +5575,8 @@
    "fields": {
       "question": "pvfTravelProstitutionDaysAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5582,8 +5584,8 @@
    "fields": {
       "question": "pvfTravelProstitutionForYears",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5591,8 +5593,8 @@
    "fields": {
       "question": "pvfTravelProstitutionForDays",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5600,8 +5602,8 @@
    "fields": {
       "question": "pvfTravelProstitutionExplain",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5609,8 +5611,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseYearsAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5618,8 +5620,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseDaysAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5627,8 +5629,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseForYears",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5636,8 +5638,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseForDays",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5645,8 +5647,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseExplain",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5654,8 +5656,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseYearsAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5663,8 +5665,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseDaysAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5672,8 +5674,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseForYears",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5681,8 +5683,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseForDays",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5690,8 +5692,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseExplain",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5699,8 +5701,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageYearsAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5708,8 +5710,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageDaysAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5717,8 +5719,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageForYears",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5726,8 +5728,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageForDays",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5735,8 +5737,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageExplain",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5744,8 +5746,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborYearsAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5753,8 +5755,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborDaysAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5762,8 +5764,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborForYears",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5771,8 +5773,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborForDays",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5780,8 +5782,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborExplain",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5789,8 +5791,8 @@
    "fields": {
       "question": "pvfTravelOtherYearsAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5798,8 +5800,8 @@
    "fields": {
       "question": "pvfTravelOtherDaysAgo",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5807,8 +5809,8 @@
    "fields": {
       "question": "pvfTravelOtherForYears",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5816,8 +5818,8 @@
    "fields": {
       "question": "pvfTravelOtherForDays",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5825,8 +5827,8 @@
    "fields": {
       "question": "pvfTravelOtherExplain",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5834,8 +5836,8 @@
    "fields": {
       "question": "pvfHsaGuardianPressure",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5843,8 +5845,8 @@
    "fields": {
       "question": "pvfHsaGuardianTryAgain",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5852,8 +5854,8 @@
    "fields": {
       "question": "pvfHsaSaveAtHome",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5861,8 +5863,8 @@
    "fields": {
       "question": "pvfHsaWantToGoHome",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5870,8 +5872,8 @@
    "fields": {
       "question": "pvfHsaSexualAbuse",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5879,8 +5881,8 @@
    "fields": {
       "question": "pvfHsaPhysicalAbuse",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5888,8 +5890,8 @@
    "fields": {
       "question": "pvfHsaEmotiionalAbuse",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5897,8 +5899,8 @@
    "fields": {
       "question": "pvfHsaGuardianAlchol",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5906,8 +5908,8 @@
    "fields": {
       "question": "pvfHsaGuardianDrugs",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5915,8 +5917,8 @@
    "fields": {
       "question": "pvfHsaEconomic",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5924,8 +5926,8 @@
    "fields": {
       "question": "pvfHsaPvSuicide",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5933,10 +5935,10 @@
    "fields": {
       "question": "pvfHsaTotalAlarms",
       "category": "pvfHomeAssessment",
-      "weight": 0,
       "form_config": {
          "TotalFlagId": "pvfHsaTotalAlarms"
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -5944,8 +5946,8 @@
    "fields": {
       "question": "pvfHsaGuardianSellingPv",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5953,8 +5955,8 @@
    "fields": {
       "question": "pvfHsaGuardianSellingEvidence",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5962,8 +5964,8 @@
    "fields": {
       "question": "pvfHsaWhySentHome",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5971,8 +5973,8 @@
    "fields": {
       "question": "pvfHsaContactNationalOffice",
       "category": "pvfHomeAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5980,8 +5982,8 @@
    "fields": {
       "question": "pvfAwarenessShareGospel",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5989,8 +5991,8 @@
    "fields": {
       "question": "pvfAwarenessTract",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -5998,8 +6000,8 @@
    "fields": {
       "question": "pvfAwarenessOralPreaching",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6007,8 +6009,8 @@
    "fields": {
       "question": "pvfAwarenessTestimony",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6016,8 +6018,8 @@
    "fields": {
       "question": "pvfAwarenessBible",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6025,8 +6027,8 @@
    "fields": {
       "question": "pvfAwarenessOther",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6034,8 +6036,8 @@
    "fields": {
       "question": "pvfAwarenessPvAware",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6043,8 +6045,8 @@
    "fields": {
       "question": "pvfAwarenessHeardMessage",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6052,8 +6054,8 @@
    "fields": {
       "question": "pvfAwarenessWhatBelieveNow",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6061,8 +6063,8 @@
    "fields": {
       "question": "pvfAwarenessWhyNotShare",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6070,8 +6072,8 @@
    "fields": {
       "question": "pvfReleaseDateLeave",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6079,7 +6081,6 @@
    "fields": {
       "question": "pvfReleaseHowReleased",
       "category": "pvfRelease",
-      "weight": 0,
       "form_config": {
          "RadioItems": {
             "1175": [
@@ -6088,7 +6089,8 @@
                "Staff accompanied the PV during travel"
             ]
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -6096,8 +6098,8 @@
    "fields": {
       "question": "pvfReleaseEducationHt",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6105,8 +6107,8 @@
    "fields": {
       "question": "pvfReleaseLegalSupport",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6114,8 +6116,8 @@
    "fields": {
       "question": "pvfReleaseMedicalSupport",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6123,8 +6125,8 @@
    "fields": {
       "question": "pvfReleaseTravelSupport",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6132,8 +6134,8 @@
    "fields": {
       "question": "pvfReleaseFood",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6141,8 +6143,8 @@
    "fields": {
       "question": "pvfReleaseSfe",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6150,14 +6152,14 @@
    "fields": {
       "question": "pvfReleaseCountry",
       "category": "pvfRelease",
-      "weight": 0,
       "form_config": {
          "RadioItems": {
             "1182": [
                "Monitoring Country"
             ]
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -6165,8 +6167,8 @@
    "fields": {
       "question": "pvfReleaseShortTermShelter",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6174,8 +6176,8 @@
    "fields": {
       "question": "pvfReleaseShelterNights",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6183,8 +6185,8 @@
    "fields": {
       "question": "pvfReleaseHours",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6192,7 +6194,6 @@
    "fields": {
       "question": "pvfReleaseVictimSent",
       "category": "pvfRelease",
-      "weight": 0,
       "form_config": {
          "RadioItems": {
             "1186": [
@@ -6202,7 +6203,8 @@
                "Social Welfare"
             ]
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -6210,8 +6212,8 @@
    "fields": {
       "question": "pvfFinalNotes",
       "category": "pvfStaffAssessment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6219,10 +6221,10 @@
    "fields": {
       "question": "pvfAttachmentCardNumber",
       "category": "pvfAttachment",
-      "weight": 0,
       "form_config": {
          "IndexQuestion": "question_identifier"
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -6230,8 +6232,8 @@
    "fields": {
       "question": "pvfAttachmentDescription",
       "category": "pvfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6239,8 +6241,8 @@
    "fields": {
       "question": "pvfAttachmentsAttachment",
       "category": "pvfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6248,12 +6250,12 @@
    "fields": {
       "question": "pvfAttachmentPrivate",
       "category": "pvfAttachment",
-      "weight": 0,
       "form_config": {
          "FormDefault": {
             "value": true
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -6261,8 +6263,8 @@
    "fields": {
       "question": "pvfAttachmentsOption",
       "category": "pvfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6270,8 +6272,8 @@
    "fields": {
       "question": "pvfComplianceDateReceived",
       "category": "pvfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6279,8 +6281,8 @@
    "fields": {
       "question": "pvfComplianceIncomplete",
       "category": "pvfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6288,8 +6290,8 @@
    "fields": {
       "question": "pvfComplianceIncompleteSections",
       "category": "pvfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6297,8 +6299,8 @@
    "fields": {
       "question": "pvfComplianceDateComplete",
       "category": "pvfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6306,8 +6308,8 @@
    "fields": {
       "question": "pvfComplianceNotes",
       "category": "pvfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6315,8 +6317,8 @@
    "fields": {
       "question": "pvfComplianceDateSubmitted",
       "category": "pvfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6324,8 +6326,8 @@
    "fields": {
       "question": "pvfAwarenessFilm",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6333,8 +6335,8 @@
    "fields": {
       "question": "pvfAwarenessPvTestimony",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6342,8 +6344,8 @@
    "fields": {
       "question": "pvfAwarenessLocalChurch",
       "category": "pvfAwareness",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6351,8 +6353,8 @@
    "fields": {
       "question": "pvfReleaseOvernight",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6360,8 +6362,8 @@
    "fields": {
       "question": "pvfReleaseOtherLodging",
       "category": "pvfRelease",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6369,8 +6371,8 @@
    "fields": {
       "question": "pvfTravelProstitutionSuspects",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6378,8 +6380,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseSuspects",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6387,8 +6389,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseSuspects",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6396,8 +6398,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageSuspects",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6405,8 +6407,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborSuspects",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6414,8 +6416,8 @@
    "fields": {
       "question": "pvfTravelOtherSuspects",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6423,8 +6425,8 @@
    "fields": {
       "question": "pvfTravelProstitution",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6432,8 +6434,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuse",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6441,8 +6443,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuse",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6450,8 +6452,8 @@
    "fields": {
       "question": "pvfTravelDebtBondage",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6459,8 +6461,8 @@
    "fields": {
       "question": "pvfTravelForcedLabor",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6468,8 +6470,8 @@
    "fields": {
       "question": "pvfTravelOther",
       "category": "pvTravelExploitation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6477,8 +6479,8 @@
    "fields": {
       "question": "pvfRecruitmentRecrutedAgency",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6486,8 +6488,8 @@
    "fields": {
       "question": "pvfRecruitmentRecrutedBroker",
       "category": "pvfRecruitment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6495,8 +6497,8 @@
    "fields": {
       "question": "pvfPvGuardianKnowDest",
       "category": "pvfPvFamily",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6504,8 +6506,8 @@
    "fields": {
       "question": "pvfPvInfoPv",
       "category": "pvfPvFamily202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6513,8 +6515,8 @@
    "fields": {
       "question": "pvfPvGuardianKnowDest",
       "category": "pvfPvFamily202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6522,8 +6524,8 @@
    "fields": {
       "question": "pvfHsaEconomic",
       "category": "pvfPvFamily202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6531,8 +6533,8 @@
    "fields": {
       "question": "pvfTravelProstitutionYearsAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6540,8 +6542,8 @@
    "fields": {
       "question": "pvfTravelProstitutionDaysAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6549,8 +6551,8 @@
    "fields": {
       "question": "pvfTravelProstitutionForYears",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6558,8 +6560,8 @@
    "fields": {
       "question": "pvfTravelProstitutionForDays",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6567,8 +6569,8 @@
    "fields": {
       "question": "pvfTravelProstitutionExplain",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6576,8 +6578,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseYearsAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6585,8 +6587,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseDaysAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6594,8 +6596,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseForYears",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6603,8 +6605,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseForDays",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6612,8 +6614,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseExplain",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6621,8 +6623,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseYearsAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6630,8 +6632,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseDaysAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6639,8 +6641,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseForYears",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6648,8 +6650,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseForDays",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6657,8 +6659,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseExplain",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6666,8 +6668,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageYearsAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6675,8 +6677,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageDaysAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6684,8 +6686,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageForYears",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6693,8 +6695,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageForDays",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6702,8 +6704,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageExplain",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6711,8 +6713,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborYearsAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6720,8 +6722,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborDaysAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6729,8 +6731,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborForYears",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6738,8 +6740,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborForDays",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6747,8 +6749,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborExplain",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6756,8 +6758,8 @@
    "fields": {
       "question": "pvfTravelOtherYearsAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6765,8 +6767,8 @@
    "fields": {
       "question": "pvfTravelOtherDaysAgo",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6774,8 +6776,8 @@
    "fields": {
       "question": "pvfTravelOtherForYears",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6783,8 +6785,8 @@
    "fields": {
       "question": "pvfTravelOtherForDays",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6792,8 +6794,8 @@
    "fields": {
       "question": "pvfTravelOtherExplain",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6801,8 +6803,8 @@
    "fields": {
       "question": "pvfTravelProstitutionSuspects",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6810,8 +6812,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuseSuspects",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6819,8 +6821,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuseSuspects",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6828,8 +6830,8 @@
    "fields": {
       "question": "pvfTravelDebtBondageSuspects",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6837,8 +6839,8 @@
    "fields": {
       "question": "pvfTravelForcedLaborSuspects",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6846,8 +6848,8 @@
    "fields": {
       "question": "pvfTravelOtherSuspects",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6855,8 +6857,8 @@
    "fields": {
       "question": "pvfTravelProstitution",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6864,8 +6866,8 @@
    "fields": {
       "question": "pvfTravelSexualAbuse",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6873,8 +6875,8 @@
    "fields": {
       "question": "pvfTravelPhysicalAbuse",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6882,8 +6884,8 @@
    "fields": {
       "question": "pvfTravelDebtBondage",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6891,8 +6893,8 @@
    "fields": {
       "question": "pvfTravelForcedLabor",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6900,8 +6902,8 @@
    "fields": {
       "question": "pvfTravelOther",
       "category": "pvPriorExploitation202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6909,8 +6911,8 @@
    "fields": {
       "question": "pvfRecruitmentRecrutedNo",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6918,8 +6920,8 @@
    "fields": {
       "question": "pvfRecruitmentAgency",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6927,8 +6929,8 @@
    "fields": {
       "question": "pvfRecruitmentBroker",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6936,8 +6938,8 @@
    "fields": {
       "question": "pvfRecruitmentHowRecruited",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6945,8 +6947,8 @@
    "fields": {
       "question": "pvfRecruitmentTravelExpenses",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6954,8 +6956,8 @@
    "fields": {
       "question": "pvfRecruitmentPvCurrency",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6963,8 +6965,8 @@
    "fields": {
       "question": "pvfRecruitmentPvAmount",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6972,8 +6974,8 @@
    "fields": {
       "question": "pvfRecruitmentBrokerCurrency",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6981,8 +6983,8 @@
    "fields": {
       "question": "pvfRecruitmentBrokerAmount",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6990,8 +6992,8 @@
    "fields": {
       "question": "pvfRecruitmentDateLeftHome",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -6999,8 +7001,8 @@
    "fields": {
       "question": "pvfRecruitmentJobPromised",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7008,8 +7010,8 @@
    "fields": {
       "question": "pvfRecruitmentPromisedCurrency",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7017,8 +7019,8 @@
    "fields": {
       "question": "pvfRecruitmentPromisedAmount",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7026,8 +7028,8 @@
    "fields": {
       "question": "pvfRecruitmentRecrutedAgency",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7035,8 +7037,8 @@
    "fields": {
       "question": "pvfRecruitmentRecrutedBroker",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7044,8 +7046,8 @@
    "fields": {
       "question": "pvfHsaGuardianPressure",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7053,8 +7055,8 @@
    "fields": {
       "question": "pvfHsaGuardianTryAgain",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7062,8 +7064,8 @@
    "fields": {
       "question": "pvfHsaSaveAtHome",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7071,8 +7073,8 @@
    "fields": {
       "question": "pvfHsaWantToGoHome",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7080,8 +7082,8 @@
    "fields": {
       "question": "pvfHsaSexualAbuse",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7089,8 +7091,8 @@
    "fields": {
       "question": "pvfHsaPhysicalAbuse",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7098,8 +7100,8 @@
    "fields": {
       "question": "pvfHsaEmotiionalAbuse",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7107,8 +7109,8 @@
    "fields": {
       "question": "pvfHsaGuardianAlchol",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7116,8 +7118,8 @@
    "fields": {
       "question": "pvfHsaGuardianDrugs",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7125,8 +7127,8 @@
    "fields": {
       "question": "pvfHsaPvSuicide",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7134,10 +7136,10 @@
    "fields": {
       "question": "pvfHsaTotalAlarms",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
       "form_config": {
          "TotalFlagId": "pvfHsaTotalAlarms"
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -7145,8 +7147,8 @@
    "fields": {
       "question": "pvfHsaGuardianSellingPv",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7154,8 +7156,8 @@
    "fields": {
       "question": "pvfHsaGuardianSellingEvidence",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7163,8 +7165,8 @@
    "fields": {
       "question": "pvfHsaWhySentHome",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7172,8 +7174,8 @@
    "fields": {
       "question": "pvfHsaContactNationalOffice",
       "category": "pvfHomeAssessment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7181,8 +7183,8 @@
    "fields": {
       "question": "pvfTravelHow",
       "category": "pvfRecruitment202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7190,8 +7192,8 @@
    "fields": {
       "question": "pvfAwarenessShareGospel",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7199,8 +7201,8 @@
    "fields": {
       "question": "pvfAwarenessTract",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7208,8 +7210,8 @@
    "fields": {
       "question": "pvfAwarenessOralPreaching",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7217,8 +7219,8 @@
    "fields": {
       "question": "pvfAwarenessTestimony",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7226,8 +7228,8 @@
    "fields": {
       "question": "pvfAwarenessBible",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7235,8 +7237,8 @@
    "fields": {
       "question": "pvfAwarenessOther",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7244,8 +7246,8 @@
    "fields": {
       "question": "pvfAwarenessPvAware",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7253,8 +7255,8 @@
    "fields": {
       "question": "pvfAwarenessHeardMessage",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7262,8 +7264,8 @@
    "fields": {
       "question": "pvfAwarenessWhatBelieveNow",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7271,8 +7273,8 @@
    "fields": {
       "question": "pvfAwarenessWhyNotShare",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7280,8 +7282,8 @@
    "fields": {
       "question": "pvfAwarenessFilm",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7289,8 +7291,8 @@
    "fields": {
       "question": "pvfAwarenessPvTestimony",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7298,8 +7300,8 @@
    "fields": {
       "question": "pvfAwarenessLocalChurchString",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7307,8 +7309,8 @@
    "fields": {
       "question": "pvfTravelWouldBeTrafficked",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7316,8 +7318,8 @@
    "fields": {
       "question": "pvfReleaseDateLeave",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7325,7 +7327,6 @@
    "fields": {
       "question": "pvfReleaseHowReleased",
       "category": "pvfRelease202408",
-      "weight": 0,
       "form_config": {
          "RadioItems": {
             "1175": [
@@ -7334,7 +7335,8 @@
                "Staff accompanied the PV during travel"
             ]
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -7342,8 +7344,8 @@
    "fields": {
       "question": "pvfReleaseEducationHt",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7351,8 +7353,8 @@
    "fields": {
       "question": "pvfReleaseLegalSupport",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7360,8 +7362,8 @@
    "fields": {
       "question": "pvfReleaseMedicalSupport",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7369,8 +7371,8 @@
    "fields": {
       "question": "pvfReleaseTravelSupport",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7378,8 +7380,8 @@
    "fields": {
       "question": "pvfReleaseFood",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7387,8 +7389,8 @@
    "fields": {
       "question": "pvfReleaseSfe",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7396,14 +7398,14 @@
    "fields": {
       "question": "pvfReleaseCountry",
       "category": "pvfRelease202408",
-      "weight": 0,
       "form_config": {
          "RadioItems": {
             "1182": [
                "Monitoring Country"
             ]
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -7411,8 +7413,8 @@
    "fields": {
       "question": "pvfReleaseShortTermShelter",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7420,8 +7422,8 @@
    "fields": {
       "question": "pvfReleaseShelterNights",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7429,8 +7431,8 @@
    "fields": {
       "question": "pvfReleaseHours",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7438,7 +7440,6 @@
    "fields": {
       "question": "pvfReleaseVictimSent",
       "category": "pvfRelease202408",
-      "weight": 0,
       "form_config": {
          "RadioItems": {
             "1186": [
@@ -7448,7 +7449,8 @@
                "Social Welfare"
             ]
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -7456,8 +7458,8 @@
    "fields": {
       "question": "pvfReleaseOvernight",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7465,8 +7467,8 @@
    "fields": {
       "question": "pvfReleaseOtherLodging",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7474,8 +7476,8 @@
    "fields": {
       "question": "pvfAwarenessResourcesGiven",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7483,8 +7485,8 @@
    "fields": {
       "question": "pvHowVictimReleased",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7492,8 +7494,8 @@
    "fields": {
       "question": "pvfAwarenessResource",
       "category": "pvfAwareness202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7501,8 +7503,8 @@
    "fields": {
       "question": "pvfReleaseNone",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {

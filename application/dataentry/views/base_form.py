@@ -89,7 +89,13 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 station_list.append(station)
                 form = Form.current_form(self.get_form_type_name(), station.id)
                 if form is not None and form.storage not in form_storage_list:
-                    form_storage_list.append(form.storage)
+                    found = False
+                    for form_storage in form_storage_list:
+                        if form_storage.form_model_name == form.storage.form_model_name:
+                            found = True
+                            break
+                    if not found:
+                        form_storage_list.append(form.storage)
         
         q_filter = self.build_query_filter(status_list, station_list, in_progress, account_id)
         queryset = None

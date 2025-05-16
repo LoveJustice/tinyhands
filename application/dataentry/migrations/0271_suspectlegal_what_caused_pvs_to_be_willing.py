@@ -7,6 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('dataentry', '0270_merge_20250207_1012'),
+        ('dataentry', '0270_merge_20250303_2100'),
     ]
 
     operations = [

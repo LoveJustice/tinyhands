@@ -8,6 +8,54 @@ from .border_station import BorderStation
 from dataentry.models import Category, Form, FormCategory, FormType, QuestionLayout, QuestionStorage
 from export_import.load_form_data import LoadFormData
 
+irf_2024_8_map = {
+    'vulnerability_minor_without_guardian': 'minor_without_guardian',
+    'vulnerability_insufficient_resource': 'insufficient_resources_to_get_home',
+    'vulnerability_no_mobile_phone': 'no_phone',
+    'vulnerability_first_time_traveling_abroad': 'first_time_traveling_abroad',
+    'vulnerability_first_time_traveling_to_city': 'first_time_traveling_to_city_from_rural_area',
+    'vulnerability_travel_met_recently': 'traveling_with_someone_recently_met',
+    'vulnerability_stranded_or_abandoned': 'stranded_abandoned',
+    'where_going_destination':'destination',    # may be removed
+    'vulnerability_doesnt_speak_destination_language': 'doesnt_speak_destination_language',
+    'industry': 'purpose',
+    'evade_no_bags_long_trip': 'no_bags_though_claim_going_long_time',
+    'evade_noticed_carrying_full_bags': 'full_bags_but_claim_going_for_a_short_time',
+    'evade_visa_misuse': 'forged_falsified_documents',
+    'control_passport_with_broker': 'passport_with_suspect',
+    'control_id_or_permit_with_broker': 'id_or_work_permit_with_suspect',
+    'control_promised_double': 'promised_pay_significantly_more_than_normal_pay',
+    'control_promised_pay': 'promised_pay',
+    'control_normal_pay': 'normal_pay',
+    'control_job_underqualified': 'pv_lacks_relevant_experience',
+    'evade_signs_confirmed_deception': 'staff_confirmed_deception_by_phone',
+    'evade_couldnt_confirm_job': 'staff_could_not_confirm_job',
+    'control_no_address_phone': 'lack_destination_contact_info',
+    'evade_caught_in_lie ': 'caught_in_lie',
+    'control_contradiction_stories': 'contradiction_between_stories_of_suspect_pv',
+    'control_traveling_with_someone_not_with_them': 'pv_traveling_with_someone_not_with_them_now',
+    'vulnerability_person_speaking_on_their_behalf': 'pv_not_speaking_on_their_own_behalf',
+    'control_married_in_past_2_8_weeks': 'married_in_the_past_2_8_weeks',
+    'control_less_than_2_weeks_before_eloping': 'met_in_the_past_2_weeks',
+    'control_relationship_to_get_married': 'on_their_way_to_get_married',
+    'control_wife_under_18': 'wife_under_18',
+    'control_under_18_family_unwilling': 'under_18_enticed_without_consent_of_family',
+    'control_under_16_recruited_for_work': 'under_16_recruited_for_work',
+    'control_traveling_because_of_threat': 'traveling_because_of_a_threat',
+    'control_owes_debt': 'owes_debt_to_person_who_paid_travel',
+    'control_where_going_someone_paid_expenses': 'someone_not_a_relative_paid_travel_expenses',
+    'control_drugged_or_drowsy': 'drugged_or_drowsy',
+    'control_abducted': 'mobile_phone_taken_away',
+    'control_mobile_phone_taken_away': 'forcibly_abducted',
+    'control_connected_known_trafficker': 'known_trafficker',
+}
+
+def map_field_name(in_name, mapping):
+    out_name = in_name
+    if mapping is not None and in_name in mapping:
+        out_name = mapping[in_name]
+    return out_name
+
 class FormMigration:
     form_model_names = [
         'FormType',
@@ -92,7 +140,7 @@ class FormMigration:
 #             print('Fixture ' + file_path + 'not found - skipping form migration')
     
     @staticmethod
-    def buildView(form_type_name):
+    def buildView(form_type_name, version_extension, query_filter, mapping):
         cxn = transaction.get_connection()
         if cxn.in_atomic_block:
             in_transaction = True
@@ -114,8 +162,9 @@ class FormMigration:
                 
                 if form_category.form.form_name not in storage_map[field]:
                     storage_map[field].append(form_category.form.form_name)
+        view_name = form_type_name.lower() + version_extension + 'combined'
         
-        sql = 'CREATE or REPLACE VIEW ' + form_type_name.lower() + 'combined as select '
+        sql = 'CREATE or REPLACE VIEW ' + view_name + ' as select '
         storage_class = forms[0].storage.get_form_storage_class()
         dummy = storage_class()
         sep = ''
@@ -128,7 +177,7 @@ class FormMigration:
                     for code in storage_map[member]:
                         sql += sep2 + "'" + code + "'"
                         sep2 = ','
-                    sql += ') THEN ' + 'f.' + member + '  ELSE null END as ' + member
+                    sql += ') THEN ' + 'f.' + member + '  ELSE null END as ' + map_field_name(member, mapping)
             else:
                 sql += sep + 'f.' + member
             
@@ -140,18 +189,18 @@ class FormMigration:
             'inner join dataentry_form_stations as fs on s.id = fs.borderstation_id '\
             'inner join dataentry_form as f2 on fs.form_id = f2.id '\
             'inner join dataentry_formtype as f3 on f2.form_type_id = f3.id '\
-            "where f3.name='" + form_type_name + "' "\
-            'group by s.id) as fn '\
+            "where f3.name='" + form_type_name + "' " + query_filter +\
+            ' group by s.id) as fn '\
             'on f.station_id = fn.id'
             
         
         cursor = connection.cursor()
-        cursor.execute('DROP VIEW IF EXISTS ' + form_type_name.lower() + 'combined')
+        cursor.execute('DROP VIEW IF EXISTS ' + view_name)
         cursor.execute(sql)
         if not in_transaction:
             transaction.commit()
         
-        print ('View ' + form_type_name.lower() + 'combined recreated')
+        print ('View ' + view_name + ' recreated')
         
     @staticmethod
     def pending_match_view():
@@ -263,8 +312,13 @@ class FormMigration:
             form_version.checksum = checksums[tag_form_name]['checksum']
             form_version.blocks = checksums[tag_form_name]['blocks']
             form_version.save()
-        
-        FormMigration.buildView('IRF')
-        #FormMigration.buildView('CIF')
-        #FormMigration.buildView('VDF')
+
+        # All IRFs using current field names in model
+        FormMigration.buildView('IRF', '', '', None)
+
+        # All non 2024.8 version IRFs using current field names in model
+        FormMigration.buildView('IRF', 'Pre2024_08', "and version!='2024.8'", None)
+
+        # 2024.8 version IRFs using the mapped names
+        FormMigration.buildView('IRF', '2024_08', "and version='2024.8'", irf_2024_8_map)
         FormMigration.pending_match_view()

@@ -878,7 +878,12 @@ class QuestionResponseSerializer(serializers.Serializer):
         
         answer = form_data.get_answer(instance)
         ret['question_id']  = serializers.IntegerField().to_representation(instance.id)
-        ret['question_tag']  = serializers.CharField().to_representation(instance.form_tag)
+        dot_index = instance.form_tag.find('.')
+        if dot_index == -1:
+            form_tag = instance.form_tag
+        else:
+            form_tag = instance.form_tag[:dot_index]
+        ret['question_tag']  = serializers.CharField().to_representation(form_tag)
         if form_data.get_answer_storage(instance) is not None:
             ret['storage_id'] = serializers.IntegerField().to_representation(form_data.get_answer_storage(instance))
         if answer is not None:
@@ -895,10 +900,12 @@ class QuestionResponseSerializer(serializers.Serializer):
         question_id = data.get('question_id')
         if question_id is None:
             question_tag = data.get('question_tag')
+            form_version = self.context['form_version']
+            question_tag = question_tag + form_version
             try:
                 question = Question.objects.get(form_tag=question_tag)
             except Question.DoesNotExist:
-                raise Exception(f"Could not find question with tag '{question_tag}', is formData.json right? Did you load it?")
+                raise NameError('Question with tag ' + question_tag + ' does not exist, is formData.json right? Did you load it?')
         else:
             question = Question.objects.get(id=int(question_id))
         storage_id = data.get('storage_id')
@@ -1077,7 +1084,12 @@ class CardCategorySerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['category_id'] = serializers.IntegerField().to_representation(instance.id)
-        ret['category_tag'] = instance.form_tag
+        dot_index = instance.form_tag.find('.')
+        if dot_index == -1:
+            form_tag = instance.form_tag
+        else:
+            form_tag = instance.form_tag[:dot_index]
+        ret['category_tag'] = form_tag
         context = dict(self.context)
         context['category'] = instance
         form_data = context['form_data']
@@ -1232,7 +1244,15 @@ class FormDataSerializer(serializers.Serializer):
             station = None
         form_date_holder = {'creation_date':self.context['creation_date'], 'form_date':None, 'card_date':None}
         self.context['form_date_holder'] = form_date_holder
-        
+
+        form_type = self.context.get('form_type')
+        form = Form.current_form(form_type.name, station_id)
+        self.context['form'] = form
+        if form.use_tag_suffix:
+            self.context['form_version'] = '.' + form.version
+        else:
+            self.context['form_version'] = ''
+
         responses = data.get('responses')
         self.form_serializers = []
         for response in responses:
@@ -1247,8 +1267,8 @@ class FormDataSerializer(serializers.Serializer):
             serializer.is_valid()
             self.card_serializers.append(serializer)
         
-        form_type = self.context.get('form_type')
-        form = Form.current_form(form_type.name, station_id)
+
+
         if self.instance is None:
             form_class = form.find_form_class()
             form_object = form_class()

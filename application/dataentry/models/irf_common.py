@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import JSONField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
@@ -170,6 +171,7 @@ class IrfCommon(BaseForm):
     talked_to_family_member = models.CharField(max_length=127, blank=True)
     which_contact = models.CharField(max_length=127, blank=True)
     who_noticed = models.CharField(max_length=127, null=True)
+    contact_is_hvc = models.CharField('Contact is HVC', null=True, blank=True)
     
     #Reason
     call_subcommittee = models.BooleanField('Call Subcommittee Chairperson/Vice-Chairperson/Secretary', default=False)
@@ -224,6 +226,56 @@ class IrfCommon(BaseForm):
     logbook_second_verification_name = models.CharField(max_length=127, blank=True)
     
     logbook_champion_verification = models.BooleanField('Champion verification', default=False)
+
+    # Added 2024.8
+    age_0_5 = models.BooleanField(default=False)
+    age_6_9 = models.BooleanField(default=False)
+    age_10_14 = models.BooleanField(default=False)
+    age_15_17 = models.BooleanField(default=False)
+    age_18_22 = models.BooleanField(default=False)
+    age_23_29 = models.BooleanField(default=False)
+    age_30_35 = models.BooleanField(default=False)
+    female = models.BooleanField(default=False)
+    seductive_appearance = models.BooleanField(default=False)
+    adult_unemployed = models.BooleanField(default=False)
+    moving_from_poor_area = models.BooleanField(default=False)
+    recently_enslaved = models.BooleanField(default=False)
+    runaway = models.BooleanField(default=False)
+    not_in_school = models.BooleanField(default=False)
+    vulnerable_monitor_total = models.PositiveIntegerField(default=0)
+    vulnerable_computed_total = models.PositiveIntegerField(default=0)
+
+    destination_address = JSONField(null=True)
+    destination_notes = models.CharField(max_length=127, null=True, blank=True)
+    city_or_country_known_for_trafficking = models.CharField(max_length=127, null=True, blank=True)
+    area_known_for_trafficking = models.CharField(max_length=127, null=True, blank=True)
+    travel_different_country = models.BooleanField(default=False)
+    travel_new_area_first_time = models.BooleanField(default=False)
+    kafala_country = models.BooleanField(default=False)
+    remote_without_transportation = models.BooleanField(default=False)
+    stationed_on_boat_or_ship = models.BooleanField(default=False)
+    domestic_work = models.BooleanField(default=False)
+    massage = models.BooleanField(default=False)
+    dance_bar = models.BooleanField(default=False)
+    other_industry = models.CharField(max_length=127, null=True, blank=True)
+    minor_moving_to_streets = models.BooleanField(default=False)
+    monitors_suspect_pv_not_told_truth = models.BooleanField(default=False)
+    thing_pv_told = models.CharField(max_length=127, null=True, blank=True)
+    thing_monitors_suspect = models.CharField(max_length=127, null=True, blank=True)
+    destination_purpose_monitor_total = models.PositiveIntegerField(default=0)
+    destination_purpose_moving_computed_total = models.PositiveIntegerField(default=0)
+
+    no_documentation_for_purpose = models.BooleanField(default=False)
+    over_18_family_doesnt_know_going = models.BooleanField(default=False)
+    pv_led_to_other_country_without_knowledge = models.BooleanField(default=False)
+    pv_does_not_know_destination = models.BooleanField(default=False)
+    given_hormone_injections = models.BooleanField(default=False)
+    location_suspected_for_trafficking = models.BooleanField(default=False)
+    control_monitor_total = models.PositiveIntegerField(default=0)
+    control_computed_total = models.PositiveIntegerField(default=0)
+
+    monitor_total = models.PositiveIntegerField(default=0)
+    computed_total = models.PositiveIntegerField(default=0)
     
     def get_key(self):
         return self.irf_number
@@ -266,6 +318,8 @@ class IntercepteeCommon(BaseCard):
     not_physically_present = models.CharField(max_length=127, blank=True)
     consent_to_use_photo = models.CharField(max_length=255, null=True)
     consent_to_use_information = models.CharField(max_length=255, null=True)
+    family_contacted = models.CharField(max_length=255, null=True)   # Yes/No
+    family_contacted_detail = models.CharField(max_length=255, null=True)
 
     def address1_as_string(self):
         rtn = ''
@@ -290,6 +344,12 @@ class IntercepteeCommon(BaseCard):
     
     def set_parent(self, the_parent):
         self.interception_record = the_parent
+
+    def validate_label(self):
+        label = '<blank name>'
+        if self.person is not None and self.person.full_name is not None:
+            label = self.person.full_name
+        return label
 
 class IrfAttachmentCommon(BaseCard):
     interception_record = models.ForeignKey(IrfCommon, on_delete=models.CASCADE)

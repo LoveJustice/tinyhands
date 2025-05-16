@@ -56,6 +56,8 @@ class Form(models.Model):
     end_date = models.DateTimeField(null=True)
     form_name = models.CharField(max_length=126, unique=True)
     version = models.CharField(max_length=126, null=True)
+    client_json = JSONField(null=True)
+    use_tag_suffix = models.BooleanField(default=False)
 
     # String to avoid circular import of BaseCard in border_station.py
     # Needs app prefix because otherwise subclass for legal cases thinks its in the legal Django app
@@ -354,9 +356,9 @@ class Question(models.Model):
 class QuestionLayout(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    weight = models.IntegerField(default=0)
     form_config = JSONField(null=True)
-    
+    flag_points = JSONField(null=True)
+
     @staticmethod
     def get_objects_by_form_type(form_type_list):
         categories = Category.get_objects_by_form_type(form_type_list)
@@ -597,4 +599,7 @@ class BaseCard(models.Model):
     
     def is_private(self):
         return False
-    
+
+    # May be overwritten in subclass to define a label for the card in validation messages
+    def validate_label(self):
+        return None

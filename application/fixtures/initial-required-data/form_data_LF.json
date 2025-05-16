@@ -68,6 +68,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfNepal",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -80,6 +82,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfIndia",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -92,6 +96,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfIndiaNetwork",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -104,6 +110,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfGhana",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -116,6 +124,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfKenya",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -128,6 +138,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfSouthAfrica",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -140,6 +152,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfNamibia",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -152,6 +166,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfLiberia",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -164,6 +180,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfEthiopia",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -176,6 +194,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfBenin",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -188,6 +208,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfMalawi",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -200,6 +222,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfBurkinaFaso",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -212,6 +236,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfBurundi",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -224,6 +250,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfIndonesia",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -236,6 +264,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfLesotho",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -248,6 +278,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfMozambique",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -260,6 +292,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfUganda",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -272,6 +306,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfZambia",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -284,6 +320,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfEcuador",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -296,6 +334,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfArgentina",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -308,6 +348,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfZimbabwe",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -320,6 +362,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfSierraLeone",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -332,6 +376,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfRwanda",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -344,6 +390,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "lfTanzania",
       "version": "2022.06",
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -3542,8 +3590,8 @@
    "fields": {
       "question": "lfTopLfNumber",
       "category": "lfTop",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3551,8 +3599,8 @@
    "fields": {
       "question": "lfMergedPlace",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3560,8 +3608,8 @@
    "fields": {
       "question": "lfMergedPlaceDetail",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3569,8 +3617,8 @@
    "fields": {
       "question": "lfMergedPlaceKind",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3578,8 +3626,8 @@
    "fields": {
       "question": "lfMergedAddress",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3587,8 +3635,8 @@
    "fields": {
       "question": "lfMergedLatitude",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3596,8 +3644,8 @@
    "fields": {
       "question": "lfMergedLongitude",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3605,8 +3653,8 @@
    "fields": {
       "question": "lfMergedPhone",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3614,8 +3662,8 @@
    "fields": {
       "question": "lfMergedSignboard",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3623,8 +3671,8 @@
    "fields": {
       "question": "lfMergedLocationInTown",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3632,8 +3680,8 @@
    "fields": {
       "question": "lfMergedColor",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3641,8 +3689,8 @@
    "fields": {
       "question": "lfMergedNumberOfLevels",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3650,8 +3698,8 @@
    "fields": {
       "question": "lfMergedDescription",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3659,8 +3707,8 @@
    "fields": {
       "question": "lfMergedLandmarks",
       "category": "lfMerged",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3668,8 +3716,8 @@
    "fields": {
       "question": "lfInformationIncident",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3677,8 +3725,8 @@
    "fields": {
       "question": "lfInformationSourceType",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3686,8 +3734,8 @@
    "fields": {
       "question": "lfInformationSourceTitle",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3695,8 +3743,8 @@
    "fields": {
       "question": "lfInformationInterviewerName",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3704,8 +3752,8 @@
    "fields": {
       "question": "lfInformationInterviewDate",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3713,8 +3761,8 @@
    "fields": {
       "question": "lfInformationLocation",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3722,8 +3770,8 @@
    "fields": {
       "question": "lfInformationPlace",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3731,8 +3779,8 @@
    "fields": {
       "question": "lfInformationPlaceDetail",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3740,8 +3788,8 @@
    "fields": {
       "question": "lfInformationPlaceKind",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3749,8 +3797,8 @@
    "fields": {
       "question": "lfInformationAddress",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3758,8 +3806,8 @@
    "fields": {
       "question": "lfInformationLatitude",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3767,8 +3815,8 @@
    "fields": {
       "question": "lfInformationLongitude",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3776,8 +3824,8 @@
    "fields": {
       "question": "lfInformationPhone",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3785,8 +3833,8 @@
    "fields": {
       "question": "lfInformationSignboard",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3794,8 +3842,8 @@
    "fields": {
       "question": "lfInformationLocationInTown",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3803,8 +3851,8 @@
    "fields": {
       "question": "lfInformationColor",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3812,8 +3860,8 @@
    "fields": {
       "question": "lfInformationNumberOfLevels",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3821,8 +3869,8 @@
    "fields": {
       "question": "lfInformationDescription",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3830,8 +3878,8 @@
    "fields": {
       "question": "lfInformationLandmarks",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3839,8 +3887,8 @@
    "fields": {
       "question": "lfAssociationPersonsInCharge",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3848,8 +3896,8 @@
    "fields": {
       "question": "lfAssociationPvsVisited",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3857,14 +3905,14 @@
    "fields": {
       "question": "lfAssociationPvsStayHowLong",
       "category": "lfInformation",
-      "weight": 0,
       "form_config": {
          "RadioItems": {
             "lfAssociationPvsStayHowLong": [
                "N/A (Not Applicable)"
             ]
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -3872,8 +3920,8 @@
    "fields": {
       "question": "lfAssociationPvsStayStartDate",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3881,8 +3929,8 @@
    "fields": {
       "question": "lfAssociationPvHide",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3890,8 +3938,8 @@
    "fields": {
       "question": "lfAssociationPvHideExplain",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3899,8 +3947,8 @@
    "fields": {
       "question": "lfAssociationPvFreeToGo",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3908,8 +3956,8 @@
    "fields": {
       "question": "lfAssociationPvFreeToGoExplain",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3917,8 +3965,8 @@
    "fields": {
       "question": "lfAssociationSuspects",
       "category": "lfInformation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3926,8 +3974,8 @@
    "fields": {
       "question": "lfEvaluationIncident",
       "category": "lfEvaluation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3935,8 +3983,8 @@
    "fields": {
       "question": "lfEvaluationEvaluatorType",
       "category": "lfEvaluation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3944,8 +3992,8 @@
    "fields": {
       "question": "lfEvaluationEvaluatorName",
       "category": "lfEvaluation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3953,8 +4001,8 @@
    "fields": {
       "question": "lfEvaluationEvaluation",
       "category": "lfEvaluation",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3962,8 +4010,8 @@
    "fields": {
       "question": "lfNarrativeEvidence",
       "category": "lfNarrative",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3971,8 +4019,8 @@
    "fields": {
       "question": "lfNarrativeFacilitate",
       "category": "lfNarrative",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -3980,10 +4028,10 @@
    "fields": {
       "question": "lfAttachmentNumber",
       "category": "lfAttachment",
-      "weight": 0,
       "form_config": {
          "IndexQuestion": "lfAttachmentNumber"
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -3991,8 +4039,8 @@
    "fields": {
       "question": "lfAttachmentDescription",
       "category": "lfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4000,8 +4048,8 @@
    "fields": {
       "question": "lfAttachmentAttachment",
       "category": "lfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4009,8 +4057,8 @@
    "fields": {
       "question": "lfAttachmentPrivate",
       "category": "lfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4018,8 +4066,8 @@
    "fields": {
       "question": "lfAttachmentOption",
       "category": "lfAttachment",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4027,8 +4075,8 @@
    "fields": {
       "question": "lfComplianceDateComplete",
       "category": "lfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4036,8 +4084,8 @@
    "fields": {
       "question": "lfComplianceDateReceived",
       "category": "lfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4045,8 +4093,8 @@
    "fields": {
       "question": "lfComplianceDateSubmitted",
       "category": "lfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4054,8 +4102,8 @@
    "fields": {
       "question": "lfComplianceIncomplete",
       "category": "lfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4063,8 +4111,8 @@
    "fields": {
       "question": "lfComplianceIncompleteSections",
       "category": "lfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4072,8 +4120,8 @@
    "fields": {
       "question": "lfComplianceNotes",
       "category": "lfCompliance",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4081,8 +4129,8 @@
    "fields": {
       "question": "lfInformationIncident",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4090,8 +4138,8 @@
    "fields": {
       "question": "lfInformationSourceType",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4099,8 +4147,8 @@
    "fields": {
       "question": "lfInformationSourceTitle",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4108,8 +4156,8 @@
    "fields": {
       "question": "lfInformationInterviewerName",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4117,8 +4165,8 @@
    "fields": {
       "question": "lfInformationInterviewDate",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4126,8 +4174,8 @@
    "fields": {
       "question": "lfInformationLocation",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4135,8 +4183,8 @@
    "fields": {
       "question": "lfInformationPlace",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4144,8 +4192,8 @@
    "fields": {
       "question": "lfInformationPlaceDetail",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4153,8 +4201,8 @@
    "fields": {
       "question": "lfInformationPlaceKind",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4162,8 +4210,8 @@
    "fields": {
       "question": "lfInformationAddress",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4171,8 +4219,8 @@
    "fields": {
       "question": "lfInformationLatitude",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4180,8 +4228,8 @@
    "fields": {
       "question": "lfInformationLongitude",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4189,8 +4237,8 @@
    "fields": {
       "question": "lfInformationPhone",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4198,8 +4246,8 @@
    "fields": {
       "question": "lfInformationSignboard",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4207,8 +4255,8 @@
    "fields": {
       "question": "lfInformationDescription",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4216,8 +4264,8 @@
    "fields": {
       "question": "lfAssociationPvsVisited",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4225,14 +4273,14 @@
    "fields": {
       "question": "lfAssociationPvsStayHowLong",
       "category": "lfInformation202409",
-      "weight": 0,
       "form_config": {
          "RadioItems": {
             "lfAssociationPvsStayHowLong": [
                "N/A (Not Applicable)"
             ]
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -4240,8 +4288,8 @@
    "fields": {
       "question": "lfAssociationPvsStayStartDate",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4249,8 +4297,8 @@
    "fields": {
       "question": "lfAssociationPvHide",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4258,8 +4306,8 @@
    "fields": {
       "question": "lfAssociationPvHideExplain",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4267,8 +4315,8 @@
    "fields": {
       "question": "lfAssociationPvFreeToGo",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4276,8 +4324,8 @@
    "fields": {
       "question": "lfAssociationPvFreeToGoExplain",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4285,8 +4333,8 @@
    "fields": {
       "question": "lfAssociationSuspects",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4294,8 +4342,8 @@
    "fields": {
       "question": "lfInformationSourceContactInfo",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4303,8 +4351,8 @@
    "fields": {
       "question": "lfInformationRecruitmentAgencyName",
       "category": "lfInformation202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4312,8 +4360,8 @@
    "fields": {
       "question": "lfMergedPlace",
       "category": "lfMerged202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4321,8 +4369,8 @@
    "fields": {
       "question": "lfMergedPlaceDetail",
       "category": "lfMerged202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4330,8 +4378,8 @@
    "fields": {
       "question": "lfMergedPlaceKind",
       "category": "lfMerged202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4339,8 +4387,8 @@
    "fields": {
       "question": "lfMergedAddress",
       "category": "lfMerged202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4348,8 +4396,8 @@
    "fields": {
       "question": "lfMergedLatitude",
       "category": "lfMerged202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4357,8 +4405,8 @@
    "fields": {
       "question": "lfMergedLongitude",
       "category": "lfMerged202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4366,8 +4414,8 @@
    "fields": {
       "question": "lfMergedPhone",
       "category": "lfMerged202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4375,8 +4423,8 @@
    "fields": {
       "question": "lfMergedSignboard",
       "category": "lfMerged202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -4384,8 +4432,8 @@
    "fields": {
       "question": "lfMergedDescription",
       "category": "lfMerged202409",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {

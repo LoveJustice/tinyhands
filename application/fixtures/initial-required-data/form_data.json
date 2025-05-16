@@ -319,6 +319,13 @@
    }
 },
 {
+   "model": "dataentry.formvalidationtype",
+   "pk": 14,
+   "fields": {
+      "name": "interceptee_phone_verified"
+   }
+},
+{
    "model": "dataentry.storage",
    "pk": 63,
    "fields": {
@@ -380,6 +387,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "monthlyReportIndia",
       "version": null,
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -393,6 +402,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "monthlyReportNepal",
       "version": null,
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -406,6 +417,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "monthlyReportBangladesh",
       "version": null,
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -419,6 +432,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "gospelVerification",
       "version": null,
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -432,6 +447,8 @@
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "mdfCommon",
       "version": null,
+      "client_json": null,
+      "use_tag_suffix": false,
       "stations": []
    }
 },
@@ -7667,8 +7684,8 @@
    "fields": {
       "question": 716,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7676,8 +7693,8 @@
    "fields": {
       "question": 717,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7685,8 +7702,8 @@
    "fields": {
       "question": 718,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7694,8 +7711,8 @@
    "fields": {
       "question": 719,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7703,8 +7720,8 @@
    "fields": {
       "question": 720,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7712,8 +7729,8 @@
    "fields": {
       "question": 721,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7721,8 +7738,8 @@
    "fields": {
       "question": 722,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7730,8 +7747,8 @@
    "fields": {
       "question": 723,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7739,8 +7756,8 @@
    "fields": {
       "question": 724,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7748,8 +7765,8 @@
    "fields": {
       "question": 725,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7757,8 +7774,8 @@
    "fields": {
       "question": 731,
       "category": 135,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7766,8 +7783,8 @@
    "fields": {
       "question": 732,
       "category": 135,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7775,8 +7792,8 @@
    "fields": {
       "question": 733,
       "category": 135,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7784,8 +7801,8 @@
    "fields": {
       "question": 734,
       "category": 135,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7793,8 +7810,8 @@
    "fields": {
       "question": 735,
       "category": 135,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7802,8 +7819,8 @@
    "fields": {
       "question": 736,
       "category": 135,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7811,8 +7828,8 @@
    "fields": {
       "question": 737,
       "category": 135,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7820,8 +7837,8 @@
    "fields": {
       "question": 738,
       "category": 135,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7829,8 +7846,8 @@
    "fields": {
       "question": 739,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7838,8 +7855,8 @@
    "fields": {
       "question": 740,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7847,8 +7864,8 @@
    "fields": {
       "question": 741,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7856,8 +7873,8 @@
    "fields": {
       "question": 742,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7865,8 +7882,8 @@
    "fields": {
       "question": 743,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7874,8 +7891,8 @@
    "fields": {
       "question": 744,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7883,8 +7900,8 @@
    "fields": {
       "question": 745,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7892,8 +7909,8 @@
    "fields": {
       "question": 746,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7901,8 +7918,8 @@
    "fields": {
       "question": 747,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7910,8 +7927,8 @@
    "fields": {
       "question": 748,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7919,8 +7936,8 @@
    "fields": {
       "question": 749,
       "category": 137,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7928,8 +7945,8 @@
    "fields": {
       "question": 750,
       "category": 137,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7937,8 +7954,8 @@
    "fields": {
       "question": 751,
       "category": 137,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7946,8 +7963,8 @@
    "fields": {
       "question": 752,
       "category": 137,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7955,8 +7972,8 @@
    "fields": {
       "question": 753,
       "category": 137,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7964,8 +7981,8 @@
    "fields": {
       "question": 754,
       "category": 137,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7973,8 +7990,8 @@
    "fields": {
       "question": 755,
       "category": 137,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7982,8 +7999,8 @@
    "fields": {
       "question": 756,
       "category": 137,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -7991,8 +8008,8 @@
    "fields": {
       "question": 757,
       "category": 137,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8000,8 +8017,8 @@
    "fields": {
       "question": 758,
       "category": 138,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8009,8 +8026,8 @@
    "fields": {
       "question": 759,
       "category": 138,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8018,8 +8035,8 @@
    "fields": {
       "question": 760,
       "category": 138,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8027,8 +8044,8 @@
    "fields": {
       "question": 761,
       "category": 138,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8036,8 +8053,8 @@
    "fields": {
       "question": 762,
       "category": 138,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8045,8 +8062,8 @@
    "fields": {
       "question": 763,
       "category": 138,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8054,8 +8071,8 @@
    "fields": {
       "question": 764,
       "category": 138,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8063,8 +8080,8 @@
    "fields": {
       "question": 765,
       "category": 139,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8072,8 +8089,8 @@
    "fields": {
       "question": 766,
       "category": 139,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8081,8 +8098,8 @@
    "fields": {
       "question": 767,
       "category": 139,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8090,8 +8107,8 @@
    "fields": {
       "question": 768,
       "category": 139,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8099,8 +8116,8 @@
    "fields": {
       "question": 769,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8108,8 +8125,8 @@
    "fields": {
       "question": 770,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8117,8 +8134,8 @@
    "fields": {
       "question": 771,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8126,8 +8143,8 @@
    "fields": {
       "question": 772,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8135,8 +8152,8 @@
    "fields": {
       "question": 773,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8144,8 +8161,8 @@
    "fields": {
       "question": 774,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8153,8 +8170,8 @@
    "fields": {
       "question": 775,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8162,8 +8179,8 @@
    "fields": {
       "question": 776,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8171,8 +8188,8 @@
    "fields": {
       "question": 777,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8180,8 +8197,8 @@
    "fields": {
       "question": 778,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8189,8 +8206,8 @@
    "fields": {
       "question": 779,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8198,8 +8215,8 @@
    "fields": {
       "question": 780,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8207,8 +8224,8 @@
    "fields": {
       "question": 781,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8216,8 +8233,8 @@
    "fields": {
       "question": 782,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8225,8 +8242,8 @@
    "fields": {
       "question": 783,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8234,8 +8251,8 @@
    "fields": {
       "question": 784,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8243,8 +8260,8 @@
    "fields": {
       "question": 785,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8252,8 +8269,8 @@
    "fields": {
       "question": 786,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8261,8 +8278,8 @@
    "fields": {
       "question": 787,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8270,8 +8287,8 @@
    "fields": {
       "question": 788,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8279,8 +8296,8 @@
    "fields": {
       "question": 789,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8288,8 +8305,8 @@
    "fields": {
       "question": 790,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8297,8 +8314,8 @@
    "fields": {
       "question": 791,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8306,8 +8323,8 @@
    "fields": {
       "question": 792,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8315,8 +8332,8 @@
    "fields": {
       "question": 793,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8324,8 +8341,8 @@
    "fields": {
       "question": 794,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8333,8 +8350,8 @@
    "fields": {
       "question": 795,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8342,8 +8359,8 @@
    "fields": {
       "question": 796,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8351,8 +8368,8 @@
    "fields": {
       "question": 797,
       "category": 136,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8360,8 +8377,8 @@
    "fields": {
       "question": 798,
       "category": 144,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8369,8 +8386,8 @@
    "fields": {
       "question": 799,
       "category": 144,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8378,8 +8395,8 @@
    "fields": {
       "question": 800,
       "category": 144,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8387,8 +8404,8 @@
    "fields": {
       "question": 801,
       "category": 144,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8396,8 +8413,8 @@
    "fields": {
       "question": 802,
       "category": 144,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8405,8 +8422,8 @@
    "fields": {
       "question": 714,
       "category": 143,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8414,8 +8431,8 @@
    "fields": {
       "question": 715,
       "category": 143,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8423,8 +8440,8 @@
    "fields": {
       "question": 803,
       "category": 143,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8432,8 +8449,8 @@
    "fields": {
       "question": 804,
       "category": 143,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8441,8 +8458,8 @@
    "fields": {
       "question": 805,
       "category": 143,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8450,8 +8467,8 @@
    "fields": {
       "question": 806,
       "category": 143,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8459,8 +8476,8 @@
    "fields": {
       "question": 864,
       "category": 134,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8468,8 +8485,8 @@
    "fields": {
       "question": 865,
       "category": 134,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8477,8 +8494,8 @@
    "fields": {
       "question": 866,
       "category": 134,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8486,8 +8503,8 @@
    "fields": {
       "question": 867,
       "category": 134,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8495,8 +8512,8 @@
    "fields": {
       "question": 868,
       "category": 139,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8504,8 +8521,8 @@
    "fields": {
       "question": 869,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8513,8 +8530,8 @@
    "fields": {
       "question": 870,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8522,8 +8539,8 @@
    "fields": {
       "question": 871,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8531,8 +8548,8 @@
    "fields": {
       "question": 872,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8540,8 +8557,8 @@
    "fields": {
       "question": 873,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8549,8 +8566,8 @@
    "fields": {
       "question": 874,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8558,8 +8575,8 @@
    "fields": {
       "question": 875,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8567,8 +8584,8 @@
    "fields": {
       "question": 876,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8576,8 +8593,8 @@
    "fields": {
       "question": 877,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8585,8 +8602,8 @@
    "fields": {
       "question": 730,
       "category": 134,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8594,8 +8611,8 @@
    "fields": {
       "question": 728,
       "category": 134,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8603,8 +8620,8 @@
    "fields": {
       "question": 729,
       "category": 134,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8612,8 +8629,8 @@
    "fields": {
       "question": 902,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8621,8 +8638,8 @@
    "fields": {
       "question": 903,
       "category": 135,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8630,8 +8647,8 @@
    "fields": {
       "question": 904,
       "category": 139,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8639,8 +8656,8 @@
    "fields": {
       "question": 905,
       "category": 139,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8648,8 +8665,8 @@
    "fields": {
       "question": 906,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8657,8 +8674,8 @@
    "fields": {
       "question": 907,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8666,8 +8683,8 @@
    "fields": {
       "question": 908,
       "category": 134,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8675,8 +8692,8 @@
    "fields": {
       "question": 909,
       "category": 142,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8684,8 +8701,8 @@
    "fields": {
       "question": 900,
       "category": 188,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8693,12 +8710,12 @@
    "fields": {
       "question": 700,
       "category": 188,
-      "weight": 0,
       "form_config": {
          "FormDefault": {
             "value": true
          }
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -8706,8 +8723,8 @@
    "fields": {
       "question": 910,
       "category": 188,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8715,8 +8732,8 @@
    "fields": {
       "question": 611,
       "category": 188,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8724,10 +8741,10 @@
    "fields": {
       "question": 610,
       "category": 188,
-      "weight": 0,
       "form_config": {
          "IndexQuestion": 610
-      }
+      },
+      "flag_points": null
    }
 },
 {
@@ -8735,8 +8752,8 @@
    "fields": {
       "question": 944,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8744,8 +8761,8 @@
    "fields": {
       "question": 945,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8753,8 +8770,8 @@
    "fields": {
       "question": 946,
       "category": 133,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8762,8 +8779,8 @@
    "fields": {
       "question": 947,
       "category": 140,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8771,8 +8788,8 @@
    "fields": {
       "question": 995,
       "category": 141,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8780,8 +8797,8 @@
    "fields": {
       "question": 1033,
       "category": 212,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8789,8 +8806,8 @@
    "fields": {
       "question": 1034,
       "category": 212,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8798,8 +8815,8 @@
    "fields": {
       "question": 1060,
       "category": 212,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8807,8 +8824,8 @@
    "fields": {
       "question": 1061,
       "category": 212,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8816,8 +8833,8 @@
    "fields": {
       "question": 1062,
       "category": 212,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8825,8 +8842,8 @@
    "fields": {
       "question": 1063,
       "category": 212,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8834,8 +8851,8 @@
    "fields": {
       "question": 1064,
       "category": 212,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
@@ -8843,8 +8860,8 @@
    "fields": {
       "question": 1065,
       "category": 212,
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
