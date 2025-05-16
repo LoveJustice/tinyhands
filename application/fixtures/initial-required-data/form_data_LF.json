@@ -5083,7 +5083,8 @@
       "validation_type": 1,
       "error_warning_message": "How long did PV(s) stay in place should be entered",
       "params": {
-         "starting_version": "2024.09"
+         "starting_version": "2024.09",
+         "override_category": "Associated People"
       },
       "retrieve": false,
       "update": true,
