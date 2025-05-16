@@ -839,7 +839,7 @@
     "fields": {
       "question": "borderStationAttachmentNumber",
       "category": "borderStationAttachment",
-      "weight": 0,
+      "flag_points": null,
       "form_config": {
         "IndexQuestion": "borderStationAttachmentNumber"
       }
@@ -850,7 +850,8 @@
     "fields": {
       "question": "borderStationAttachmentOption",
       "category": "borderStationAttachment",
-      "weight": 0
+      "form_config": null,
+      "flag_points": null
     }
   },
 

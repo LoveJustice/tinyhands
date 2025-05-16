@@ -7503,8 +7503,8 @@
    "fields": {
       "question": "pvfReleaseNone",
       "category": "pvfRelease202408",
-      "weight": 0,
-      "form_config": null
+      "form_config": null,
+      "flag_points": null
    }
 },
 {
